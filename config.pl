@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 # Configure frontend for Shadow.
-# $Id: config.pl,v 1.1 2004/04/30 18:12:50 nenolod Exp $
+# $Id: config.pl,v 1.2 2004/06/10 23:03:16 nenolod Exp $
 
 print "Welcome to the configuration wizard for ShadowIRCd.\n";
 
@@ -9,6 +9,7 @@ $prefix = "/home/ircd/shadow";
 print "[$prefix] ";
 $prefix = <STDIN>;
 chomp $prefix;
+$prefix = "/home/ircd/shadow" if (!$prefix);
 
 print "\n";
 
@@ -19,7 +20,7 @@ print "$os\n";
 print "\n";
 
 print "Which I/O system do you want to use?\n";
-print "rtsigio............. Great on Linux without SSL support.\n" if ($os eq "linux");
+print "rtsigio............. Great on Linux.\n" if ($os eq "linux");
 print "kqueue.............. Great on FreeBSD.\n" if ($os eq "freebsd");
 print "devpoll............. Great on Solaris.\n" if ($os eq "sunos");
 print "poll................ No issues.\n";
@@ -30,14 +31,20 @@ chomp $ioeng;
 $ioeng = "poll" if (!$ioeng);
 
 print "\n";
+print "Do you want to enable OpenSSL support? May have issues on Linux if\n";
+print "using rtsigio as the I/O system.\n";
+print "[no] ";
+$openssl = <STDIN>;
+chomp $openssl;
+$openssl = "no" if (!$openssl);
 
-if ($ioeng ne "rtsigio") {
-  print "Do you want to enable OpenSSL support?\n";
-  print "[yes] ";
-  $openssl = <STDIN>;
-  chomp $openssl;
-  $openssl = "yes" if (!$openssl);
-}
+print "\n";
+print "Do you want to disable Module support? This may be helpful\n";
+print "if you are experiencing issues with stability.\n";
+print "[no] ";
+$dismod = <STDIN>;
+chomp $dismod;
+$dismod = "no" if (!$dismod);
 
 print "\n";
 
@@ -48,9 +55,8 @@ $topiclen = 450;
 $editval = <STDIN>;
 chomp $editval;
 
-print "\n";
-
 if ($editval eq "yes") {
+  print "\n";
   print "What value do you want for your NICKLEN?\n";
   print "[$nicklen] ";
   $nicklen = <STDIN>;
@@ -97,6 +103,7 @@ $configure .= " --with-nicklen=$nicklen --with-topiclen=$topiclen";
 $configure .= " --enable-small-net" if ($smallnet eq "yes");
 $configure .= " --enable-assert" if ($assert eq "yes");
 $configure .= " --disable-assert" if ($assert eq "no");
+$configure .= " --disable-shared-modules" if ($dismod eq "yes");
 
 print "done.\n";
 
