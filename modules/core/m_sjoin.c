@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_sjoin.c,v 1.4 2004/07/15 12:27:09 nenolod Exp $
+ *  $Id: m_sjoin.c,v 1.5 2004/08/24 03:57:47 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,7 +63,7 @@ _moddeinit(void)
   mod_del_cmd(&sjoin_msgtab);
 }
 
-const char *_version = "$Revision: 1.4 $";
+const char *_version = "$Revision: 1.5 $";
 #endif
 
 static char modebuf[MODEBUFLEN];
@@ -374,11 +374,13 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
         fl |= CHFL_CHANOP;
         s++;
       }
+#ifndef DISABLE_CHAN_OWNER
       else if (*s == '!')
       {
         fl |= CHFL_CHANOWNER;
         s++;
       }
+#endif
       else if (*s == '+')
       {
         fl |= CHFL_VOICE;
@@ -428,11 +430,13 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
         *nick_ptr++ = '+';
         *uid_ptr++  = '+';
       }
+#ifndef DISABLE_CHAN_OWNER
       if (fl & CHFL_CHANOWNER)
       {
         *nick_ptr++ = '!';
         *uid_ptr++  = '!';
       }
+#endif
     }
 
     /* copy the nick to the two buffers */
@@ -488,6 +492,7 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
                            GET_CLIENT_HOST(target_p), parv[2]);
     }
 
+#ifndef DIABLE_CHAN_OWNER
     if (fl & CHFL_CHANOWNER)
     {
       *mbuf++ = 'u';
@@ -506,6 +511,7 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
         pargs = 0;
       }
     }
+#endif
     if (fl & CHFL_CHANOP)
     {
       *mbuf++ = 'o';
@@ -737,7 +743,9 @@ remove_our_modes(struct Channel *chptr, struct Client *source_p)
   remove_a_mode(chptr, source_p, CHFL_CHANOP, 'o');
   remove_a_mode(chptr, source_p, CHFL_HALFOP, 'h');
   remove_a_mode(chptr, source_p, CHFL_VOICE, 'v');
+#ifndef DISABLE_CHAN_OWNER
   remove_a_mode(chptr, source_p, CHFL_CHANOWNER, 'u');
+#endif
 }
 
 /* remove_a_mode()

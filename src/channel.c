@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.c,v 1.6 2004/07/18 04:07:58 nenolod Exp $
+ *  $Id: channel.c,v 1.7 2004/08/24 03:57:47 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -179,8 +179,10 @@ send_members(struct Client *client_p, struct Channel *chptr,
     ms = ptr->data;
 
     tlen = strlen(ms->client_p->name) + 1;  /* nick + space */
+#ifndef DISABLE_CHAN_OWNER
     if (ms->flags & CHFL_CHANOWNER)
       tlen++;
+#endif
     if (ms->flags & CHFL_CHANOP)
       tlen++;
     if (ms->flags & CHFL_HALFOP)
@@ -575,12 +577,14 @@ get_member_status(struct Membership *ms, int combine)
     return("");
   p = buffer;
 
+#ifndef DISABLE_CHAN_OWNER
   if (ms->flags & CHFL_CHANOWNER)
   {
     if (!combine)
       return "!";
     *p++ = '!';
   }
+#endif
 
   if (ms->flags & CHFL_CHANOP)
   {

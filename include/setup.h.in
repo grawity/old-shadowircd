@@ -319,3 +319,6 @@
 
 /* If system does not define u_int32_t, define to unsigned long int here. */
 #undef u_int32_t
+
+/* Define to 1 if you do not want channel owner permissions. */
+#undef DISABLE_CHAN_OWNER

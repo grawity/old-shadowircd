@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 1.8 2004/08/23 01:39:54 nenolod Exp $
+ *  $Id: channel_mode.c,v 1.9 2004/08/24 03:57:47 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -912,7 +912,11 @@ chm_ban (struct Client *client_p, struct Client *source_p,
       return;
     }
 
+#ifndef DISABLE_CHAN_OWNER
   if ((alev < CHACCESS_CHANOWNER) && (chptr->mode.mode & MODE_PEACE))
+#else
+  if ((alev < CHACCESS_CHANOP) && (chptr->mode.mode & MODE_PEACE))
+#endif
     {
       sendto_one (source_p, form_str (ERR_CHANPEACE), me.name, source_p->name,
 		  chname);
@@ -1020,7 +1024,11 @@ chm_quiet (struct Client *client_p, struct Client *source_p,
       return;
     }
 
+#ifndef DISABLE_CHAN_OWNER
   if ((alev < CHACCESS_CHANOWNER) && (chptr->mode.mode & MODE_PEACE))
+#else
+  if ((alev < CHACCESS_CHANOP) && (chptr->mode.mode & MODE_PEACE))
+#endif
     {
       sendto_one (source_p, form_str (ERR_CHANPEACE), me.name, source_p->name,
 		  chname);
@@ -1128,7 +1136,11 @@ chm_restrict (struct Client *client_p, struct Client *source_p,
       return;
     }
 
+#ifndef DISABLE_CHAN_OWNER
   if ((alev < CHACCESS_CHANOWNER) && (chptr->mode.mode & MODE_PEACE))
+#else
+  if ((alev < CHACCESS_CHANOP) && (chptr->mode.mode & MODE_PEACE))
+#endif
     {
       sendto_one (source_p, form_str (ERR_CHANPEACE), me.name, source_p->name,
 		  chname);
@@ -1431,12 +1443,14 @@ chm_op (struct Client *client_p, struct Client *source_p,
   struct Client *targ_p;
   struct Membership *member;
 
+#ifndef DISABLE_CHAN_OWNER
   if ((alev < CHACCESS_CHANOWNER) && (chptr->mode.mode & MODE_PEACE))
     {
       sendto_one (source_p, form_str (ERR_CHANPEACE), me.name, source_p->name,
 		  chname);
       return;
     }
+#endif
 
   if (alev < CHACCESS_CHANOP)
     {
@@ -1609,12 +1623,14 @@ chm_hop (struct Client *client_p, struct Client *source_p,
   struct Client *targ_p;
   struct Membership *member;
 
+#ifndef DISABLE_CHAN_OWNER
   if ((alev < CHACCESS_CHANOWNER) && (chptr->mode.mode & MODE_PEACE))
     {
       sendto_one (source_p, form_str (ERR_CHANPEACE), me.name, source_p->name,
 		  chname);
       return;
     }
+#endif
 
   /* *sigh* - dont allow halfops to set +/-h, they could fully control a
    * channel if there were no ops - it doesnt solve anything.. MODE_PRIVATE
@@ -1713,13 +1729,6 @@ chm_voice (struct Client *client_p, struct Client *source_p,
   char *opnick;
   struct Client *targ_p;
   struct Membership *member;
-
-  if ((alev < CHACCESS_CHANOWNER) && (chptr->mode.mode & MODE_PEACE))
-    {
-      sendto_one (source_p, form_str (ERR_CHANPEACE), me.name, source_p->name,
-		  chname);
-      return;
-    }
 
   if ((alev < CHACCESS_HALFOP) && !(chptr->mode.mode & MODE_FREEVOICE))
     {
@@ -1942,11 +1951,19 @@ static struct ChannelMode ModeTable[255] =
   {chm_nosuch, NULL},                             /* M */
   {chm_simple, (void *) MODE_STICKYNICK},         /* N */
   {chm_operonly, NULL},                           /* O */
+#ifndef DISABLE_CHAN_OWNER
   {chm_owneronly, (void *) MODE_PEACE},           /* P */
+#else
+  {chm_owneronly, (void *) MODE_PEACE},           /* P */
+#endif
   {chm_nosuch, NULL},                             /* Q */
   {chm_nosuch, NULL},                             /* R */
   {chm_simple, (void *) MODE_STRIPCOLOR},         /* S */
+#ifndef DISABLE_CHAN_OWNER
   {chm_owneronly, (void *) MODE_TOPICLOCK},       /* T */
+#else
+  {chm_nosuch, NULL},                             /* T */
+#endif
   {chm_nosuch, NULL},                             /* U */
   {chm_simple, (void *) MODE_FREEVOICE},          /* V */
   {chm_nosuch, NULL},                             /* W */
@@ -1979,7 +1996,11 @@ static struct ChannelMode ModeTable[255] =
   {chm_simple, (void *) MODE_REGISTERED},         /* r */
   {chm_simple, (void *) MODE_SECRET},             /* s */
   {chm_simple, (void *) MODE_TOPICLIMIT},         /* t */
+#ifndef DISABLE_CHAN_OWNER
   {chm_owner, NULL},                              /* u */
+#else
+  {chm_nosuch, NULL},                             /* u */
+#endif
   {chm_voice, NULL},                              /* v */
   {chm_nosuch, NULL},                             /* w */
   {chm_nosuch, NULL},                             /* x */

@@ -16,7 +16,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *   $Id: m_ojoin.c,v 1.1 2004/04/30 18:14:12 nenolod Exp $
+ *   $Id: m_ojoin.c,v 1.2 2004/08/24 03:57:47 nenolod Exp $
  */
 
 /* Remove this if you do not wish /OJOIN to support multiple channels
@@ -62,7 +62,7 @@ _moddeinit(void)
   mod_del_cmd(&ojoin_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 
 #endif
 
@@ -100,8 +100,10 @@ mo_ojoin(struct Client *client_p, struct Client *source_p,
     
     switch (*name)
     {
+#ifndef DISABLE_CHAN_OWNER
       case '!': tmp_flags = CHFL_CHANOWNER;
                 modeletter = 'u'; name++; break;
+#endif
       case '@': tmp_flags = CHFL_CHANOP;
                 modeletter = 'o'; name++; break;
       case '+': tmp_flags = CHFL_VOICE;

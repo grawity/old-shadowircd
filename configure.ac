@@ -1,4 +1,4 @@
-dnl $Id: configure.ac,v 1.4 2004/08/03 06:26:22 eddie Exp $
+dnl $Id: configure.ac,v 1.5 2004/08/24 03:57:47 nenolod Exp $
 dnl Process this file with autoconf to produce a configure script.
 
 dnl TODO: clean up all the OpenSSL and shared module checking stuff;
@@ -8,7 +8,7 @@ dnl said functions need to be just about as complex as they already are.
 AC_PREREQ(2.57)
 
 dnl Sneaky way to get an Id tag into the configure script
-AC_COPYRIGHT([$Id: configure.ac,v 1.4 2004/08/03 06:26:22 eddie Exp $])
+AC_COPYRIGHT([$Id: configure.ac,v 1.5 2004/08/24 03:57:47 nenolod Exp $])
 
 AC_INIT([shadowircd],[2.0])
 
@@ -591,6 +591,12 @@ AC_CHECK_HEADER(zlib.h, [
 
 fi
 
+dnl Disabling support for +u (prefix: !)
+
+AC_ARG_ENABLE(no-chan-owner,
+AC_HELP_STRING([--enable-no-chan-owner],[Disable +u (channel admin/owner)]),
+[DISABLE_CHAN_OWNER="yes"; AC_DEFINE(DISABLE_CHAN_OWNER, 1, [Disable support for channel owner modes])],)
+
 dnl IO Loop Selection
 dnl =================
 
@@ -1163,3 +1169,10 @@ cat << __EOF__
 
 __EOF__
 
+if test ! -z "$DISABLE_CHAN_OWNER"; then
+cat << __EOF__
+  Warning! Channel ownership flags have been disabled. Make sure services
+  and the other servers linked on the network are adequately configured,
+  otherwise desyncs may occur.
+
+__EOF__

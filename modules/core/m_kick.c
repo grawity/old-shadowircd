@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_kick.c,v 1.6 2004/08/21 07:34:03 nenolod Exp $
+ *  $Id: m_kick.c,v 1.7 2004/08/24 03:57:47 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -59,7 +59,7 @@ _moddeinit(void)
   mod_del_cmd(&kick_msgtab);
 }
 
-const char *_version = "$Revision: 1.6 $";
+const char *_version = "$Revision: 1.7 $";
 #endif
 
 /* m_kick()
@@ -137,7 +137,11 @@ m_kick(struct Client *client_p, struct Client *source_p,
       }
     }
 
+#ifndef DISABLE_CHAN_OWNER
     if (!has_member_flags(ms, CHFL_CHANOWNER) && (chptr->mode.mode & MODE_PEACE))
+#else
+    if (!has_member_flags(ms, CHFL_CHANOP) && (chptr->mode.mode & MODE_PEACE))
+#endif
     {
       /* don't kick in +P mode. */
       sendto_one(source_p, form_str(ERR_CHANPEACE), me.name, source_p->name, name);
@@ -206,6 +210,7 @@ m_kick(struct Client *client_p, struct Client *source_p,
       }
     }
 
+#ifndef DISABLE_CHAN_OWNER
    /* Actually protect the +u's. We were silly and forgot about this one.
     * Thanks to akba on Subnova for discovering this.
     *
@@ -230,6 +235,7 @@ m_kick(struct Client *client_p, struct Client *source_p,
           return;
       }
    }
+#endif
 
    /* jdc
     * - In the case of a server kicking a user (i.e. CLEARCHAN),
