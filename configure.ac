@@ -1,4 +1,4 @@
-dnl $Id: configure.ac,v 1.1 2004/04/30 18:13:01 nenolod Exp $
+dnl $Id: configure.ac,v 1.2 2004/06/09 01:49:20 nenolod Exp $
 dnl Process this file with autoconf to produce a configure script.
 
 dnl TODO: clean up all the OpenSSL and shared module checking stuff;
@@ -8,7 +8,7 @@ dnl said functions need to be just about as complex as they already are.
 AC_PREREQ(2.57)
 
 dnl Sneaky way to get an Id tag into the configure script
-AC_COPYRIGHT([$Id: configure.ac,v 1.1 2004/04/30 18:13:01 nenolod Exp $])
+AC_COPYRIGHT([$Id: configure.ac,v 1.2 2004/06/09 01:49:20 nenolod Exp $])
 
 AC_INIT([shadowircd],[2.0])
 
@@ -1146,18 +1146,20 @@ else
 	tmpresult=static
 fi
 
-echo " _____________________________Compiling ShadowIRCd 2.0"
-echo "/"
-echo "| Installation target ................ $prefix"
-echo "| Ziplinks ........................... $zlib"
-echo "| OpenSSL (Cryptlinks)................ $sslresult"
-echo "| Modules ............................ $tmpresult"
-echo "| IPv6 support ....................... $have_v6"
-echo "| Net I/O implementation ............. $SELECT_TYPE"
-echo "| Small network optimizations ........ $small_net"
-echo "|"
-echo "| Configured limits:"
-echo "| NICKLEN ............................ $NICKLEN"
-echo "| TOPICLEN ........................... $TOPICLEN"
-echo "| MAXCONN ............................ $MAXCONN"
-echo "\_____________________________________________________"
+cat << __EOF__
+
+  Compiling ShadowIRCd 3.1
+
+  Installation target directory:         $prefix
+  Ziplinks:                              $zlib
+  Modules:                               $tmpresult
+  IPv6 support:                          $have_v6
+  Network I/O Implementation:            $SELECT_TYPE
+  Small network optimizations:           $small_net
+
+  Type 'make' or maybe 'gmake' to compile the ircd. Be sure to edit example.conf
+  and save it as ircd.conf. It will be located in the etc/ subdirectory in your
+  installation target directory.
+
+__EOF__
+
