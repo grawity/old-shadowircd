@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_grant.c,v 1.4 2004/02/12 20:12:03 nenolod Exp $
+ *  $Id: m_grant.c,v 1.5 2004/02/12 20:19:30 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -66,7 +66,7 @@ _moddeinit (void)
   mod_del_cmd (&grant_msgtab);
 }
 
-const char *_version = "$Revision: 1.4 $";
+const char *_version = "$Revision: 1.5 $";
 #endif
 
 /* this is a struct, associating operator permissions with letters. */
@@ -161,7 +161,7 @@ mo_grant (struct Client *client_p, struct Client *source_p,
   struct Client *target_p;
   unsigned int old;
 
-  if (!strcmp (parv[1], "GIVE"))
+  if (!strcasecmp (parv[1], "GIVE"))
     {
       if (!parv[2])
 	{
@@ -228,7 +228,7 @@ mo_grant (struct Client *client_p, struct Client *source_p,
       return;
     }
 
-  if (!strcmp (parv[1], "TAKE"))
+  if (!strcasecmp (parv[1], "TAKE"))
     {
       if (!parv[2])
 	{
@@ -284,7 +284,7 @@ mo_grant (struct Client *client_p, struct Client *source_p,
       return;
     }
 
-  if (!strcmp (parv[1], "CLEAR"))
+  if (!strcasecmp (parv[1], "CLEAR"))
     {
       if (!parv[2])
 	{
