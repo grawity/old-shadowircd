@@ -2,7 +2,7 @@
  * shadowircd: an advanced IRC daemon.
  * umodes.h: part of new usermodes system
  *
- * $Id: umodes.h,v 1.4 2004/05/13 19:23:58 nenolod Exp $
+ * $Id: umodes.h,v 1.5 2004/07/12 14:27:30 nenolod Exp $
  */
 
 /* nice flashy bitfield math, care of asuffield and dancer-ircd.
@@ -84,26 +84,28 @@ typedef u_int32_t user_modes[2];
 #define UMODE_IDENTIFY    18 /* Identified. */                            /* +e */
 #define UMODE_HIDEOPER    19 /* Hide operator status. */                  /* +h */
 #define UMODE_CLOAK       20 /* Usercloak. */                             /* +v */
-#define UMODE_BLOCKINVITE 21 /* Block Invites. */                         /* +I */
-#define UMODE_PMFILTER    22 /* Allow only registered users to PM */      /* +E */
-#define UMODE_HELPOP      23 /* Help operator. */                         /* +H */
-#define UMODE_SVSOPER     24 /* Services operator. */                     /* +O */
-#define UMODE_SVSADMIN    25 /* Services admin. */                        /* +A */
-#define UMODE_SVSROOT     26 /* Services root. */                         /* +R */
-#define UMODE_SERVICE     27 /* Network service. */                       /* +S */
-#define UMODE_SECURE      28 /* client is using SSL */                    /* +Z */
-#define UMODE_DEAF        29 /* User is deaf. */                          /* +D */
+#define UMODE_PROTECTED   21 /* user cannot be kicked from channels */    /* +q */
+#define UMODE_BLOCKINVITE 22 /* Block Invites. */                         /* +I */
+#define UMODE_PMFILTER    23 /* Allow only registered users to PM */      /* +E */
+#define UMODE_HELPOP      24 /* Help operator. */                         /* +H */
+#define UMODE_SVSOPER     25 /* Services operator. */                     /* +O */
+#define UMODE_SVSADMIN    26 /* Services admin. */                        /* +A */
+#define UMODE_SVSROOT     27 /* Services root. */                         /* +R */
+#define UMODE_SERVICE     28 /* Network service. */                       /* +S */
+#define UMODE_SECURE      29 /* client is using SSL */                    /* +Z */
+#define UMODE_DEAF        30 /* User is deaf. */                          /* +D */
 
 /* vanity flags */
-#define UMODE_NETADMIN    30 /* network administrator */                  /* +N */
-#define UMODE_TECHADMIN   31 /* technical administrator */                /* +T */
+#define UMODE_NETADMIN    31 /* network administrator */                  /* +N */
+#define UMODE_TECHADMIN   32 /* technical administrator */                /* +T */
 
-#define UMODE_NOCOLOUR    32 /* block message colours */                  /* +C */
-#define UMODE_SENSITIVE   33 /* user has "sensitive ears" */              /* +G */
+#define UMODE_NOCOLOUR    33 /* block message colours */                  /* +C */
+#define UMODE_SENSITIVE   34 /* user has "sensitive ears" */              /* +G */
 
-#define UMODE_ROUTING     34 /* user is on routing team */                /* +L */
+#define UMODE_ROUTING     35 /* user is on routing team */                /* +L */
 
-#define UMODE_WANTSWHOIS  35 /* Whois notifications */                    /* +W */
+#define UMODE_KILLPROT    36 /* user cannot be killed, except by NA */    /* +K */
+#define UMODE_WANTSWHOIS  37 /* Whois notifications */                    /* +W */
 
 /* macros for tests... cleaner code */
 

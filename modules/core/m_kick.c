@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_kick.c,v 1.2 2004/05/26 14:30:58 nenolod Exp $
+ *  $Id: m_kick.c,v 1.3 2004/07/12 14:27:30 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -38,7 +38,6 @@
 #include "hash.h"
 #include "packet.h"
 #include "s_serv.h"
-
 
 static void m_kick(struct Client *, struct Client *, int, char **);
 
@@ -60,7 +59,7 @@ _moddeinit(void)
   mod_del_cmd(&kick_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 /* m_kick()
@@ -124,7 +123,8 @@ m_kick(struct Client *client_p, struct Client *source_p,
     return;
   }
 
-  if (!IsServer(source_p))
+  if (!IsServer(source_p) || (!MyConnect(source_p) || 
+       (MyConnect(source_p) && source_p->localClient->operflags & OPER_FLAG_OVERRIDE)))
   {
     if ((ms = find_channel_link(source_p, chptr)) == NULL)
     {
@@ -135,17 +135,6 @@ m_kick(struct Client *client_p, struct Client *source_p,
         return;
       }
     }
-
-    if (MyConnect(source_p))
-    {
-      if (source_p->localClient->operflags & OPER_FLAG_OVERRIDE)
-      {
-        goto opercheat;
-      }
-    }
-
-    if (!MyConnect(source_p))
-      goto opercheat;
 
     if (!has_member_flags(ms, CHFL_CHANOWNER) && (chptr->mode.mode & MODE_PEACE))
     {
@@ -172,29 +161,6 @@ m_kick(struct Client *client_p, struct Client *source_p,
                    from, to, name);
         return;
       }
-
-      opercheat:
-
-      /* Its a user doing a kick, but is not showing as chanop locally
-       * its also not a user ON -my- server, and the channel has a TS.
-       * There are two cases we can get to this point then...
-       *
-       *     1) connect burst is happening, and for some reason a legit
-       *        op has sent a KICK, but the SJOIN hasn't happened yet or 
-       *        been seen. (who knows.. due to lag...)
-       *
-       *     2) The channel is desynced. That can STILL happen with TS
-       *        
-       *     Now, the old code roger wrote, would allow the KICK to 
-       *     go through. Thats quite legit, but lets weird things like
-       *     KICKS by users who appear not to be chanopped happen,
-       *     or even neater, they appear not to be on the channel.
-       *     This fits every definition of a desync, doesn't it? ;-)
-       *     So I will allow the KICK, otherwise, things are MUCH worse.
-       *     But I will warn it as a possible desync.
-       *
-       *     -Dianora
-       */
     }
   }
 
@@ -212,6 +178,19 @@ m_kick(struct Client *client_p, struct Client *source_p,
   if ((who = find_chasing(source_p, user, &chasing)) == NULL)
     return;
 
+  if (HasUmode(who, UMODE_PROTECTED))
+  {
+    /* If it isnt an oper overriding the kick, well, then we deny it if the person is umode +q */
+    if (MyConnect(source_p) && !(source_p->localClient->operflags & OPER_FLAG_OVERRIDE))
+    {
+      sendto_one(source_p, ":%s NOTICE %s :*** Can't kick user from channel, he/she is umode +q. (protected oper)",
+                 me.name, source_p->name);
+      return;
+    }
+
+    /* if it is not from us, we let it through --nenolod */
+  }
+    
   if ((ms_target = find_channel_link(who, chptr)) != NULL)
   {
     /* half ops cannot kick other halfops on private channels */

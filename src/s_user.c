@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.16 2004/05/26 14:30:58 nenolod Exp $
+ *  $Id: s_user.c,v 1.17 2004/07/12 14:27:30 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -981,6 +981,20 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
           else
           {
             ClearUmode(target_p, UMODE_ROUTING);
+          }
+          break;
+
+        case 'q':
+          if (what == MODE_ADD)
+          {
+            if (HasUmode(target_p, UMODE_NETADMIN))
+            {
+              SetUmode(target_p, UMODE_PROTECTED);
+            }
+          }
+          else
+          {
+            ClearUmode(target_p, UMODE_PROTECTED);
           }
           break;
 
