@@ -16,7 +16,7 @@
 #*   along with this program; if not, write to the Free Software
 #*   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #*
-#*   $Id: Makefile.in,v 3.3 2004/09/08 01:18:06 nenolod Exp $
+#*   $Id: Makefile.in,v 3.4 2004/09/22 21:44:37 nenolod Exp $
 #*/
 
 RM          = @RM@
@@ -25,7 +25,7 @@ RM          = @RM@
 #MFLAGS   = -j 4
 DEPEND_DIRS  = modules src servlink
 BUILD_DIRS   = ${DEPEND_DIRS} tools
-INSTALL_DIRS = ${BUILD_DIRS} etc doc include messages
+INSTALL_DIRS = ${BUILD_DIRS} etc doc messages
 CLEAN_DIRS   = ${BUILD_DIRS} contrib
 # Anywhere that we can make install, we obviously can rm -f Makefile
 DISTCLEAN_DIRS = ${INSTALL_DIRS} contrib
