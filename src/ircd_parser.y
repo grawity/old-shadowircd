@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.21 2004/02/26 23:20:01 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.22 2004/03/11 03:24:34 nenolod Exp $
  */
 
 %{
@@ -161,6 +161,7 @@ unhook_hub_leaf_confs(void)
 %token  CLOAK_KEY_1
 %token  CLOAK_KEY_2
 %token  CLOAK_KEY_3
+%token  FLAGS
 %token  ON_OPER_HOST
 %token  GLINE_ADDRESS
 %token  IMMUNE
@@ -1070,7 +1071,7 @@ oper_item:      oper_name  | oper_user | oper_password | oper_hidden_admin |
                 oper_die | oper_rehash | oper_admin |
 		oper_rsa_public_key_file | oper_auspex |
                 oper_set_owncloak | oper_set_anycloak |
-                oper_immune | oper_override | oper_grant |
+                oper_immune | oper_override | oper_grant | oper_flags_entry |
                 error;
 
 oper_name: NAME '=' QSTRING ';'
@@ -1345,6 +1346,96 @@ oper_admin: ADMIN '=' TBOOL ';'
     else
       yy_aconf->port &= ~OPER_FLAG_ADMIN;
   }
+};
+
+oper_flags_entry: FLAGS '{' oper_flags '}' ';'
+oper_flags: oper_flags oper_flag | oper_flag;
+oper_flag: oper_flag_auspex | oper_flag_admin | oper_flag_die |
+           oper_flag_rehash | oper_flag_override |
+           oper_flag_nc | oper_flag_unkline | oper_flag_kline |
+           oper_flag_xline | oper_flag_grant | oper_flag_immune |
+           oper_flag_remote | oper_flag_globalkill |
+           oper_flag_setowncloak | oper_flag_setanycloak |
+           oper_flag_hiddenadmin;
+
+oper_flag_auspex: AUSPEX ';'
+{
+  yy_aconf->port |= OPER_FLAG_AUSPEX;
+};
+
+oper_flag_admin: ADMIN ';'
+{
+  yy_aconf->port |= OPER_FLAG_ADMIN;
+};
+
+oper_flag_die: DIE ';'
+{
+  yy_aconf->port |= OPER_FLAG_DIE;
+};
+
+oper_flag_rehash: REHASH ';'
+{
+  yy_aconf->port |= OPER_FLAG_REHASH;
+};
+
+oper_flag_override: OVERRIDE ';'
+{
+  yy_aconf->port |= OPER_FLAG_OVERRIDE;
+};
+
+oper_flag_nc: NICK_CHANGES ';'
+{
+  yy_aconf->port |= OPER_FLAG_N;
+};
+
+oper_flag_unkline: UNKLINE ';'
+{
+  yy_aconf->port |= OPER_FLAG_UNKLINE;
+};
+
+oper_flag_kline: KLINE ';'
+{
+  yy_aconf->port |= OPER_FLAG_K;
+};
+
+oper_flag_xline: XLINE ';'
+{
+  yy_aconf->port |= OPER_FLAG_X;
+};
+
+oper_flag_grant: GRANT ';'
+{
+  yy_aconf->port |= OPER_FLAG_GRANT;
+};
+
+oper_flag_immune: IMMUNE ';'
+{
+  yy_aconf->port |= OPER_FLAG_IMMUNE;
+};
+
+oper_flag_remote: REMOTE ';'
+{
+  yy_aconf->port |= OPER_FLAG_REMOTE;
+};
+
+oper_flag_globalkill: GLOBAL_KILL ';'
+{
+  yy_aconf->port |= OPER_FLAG_GLOBAL_KILL;
+};
+
+oper_flag_setowncloak: SET_OWNCLOAK ';'
+{
+  yy_aconf->port |= OPER_FLAG_OWNCLOAK;
+};
+
+oper_flag_setanycloak: SET_ANYCLOAK ';'
+{
+  yy_aconf->port |= OPER_FLAG_SETCLOAK;
+};
+
+oper_flag_hiddenadmin: HIDDEN_ADMIN ';'
+{
+  yy_aconf->port |= OPER_FLAG_HIDDEN_ADMIN;
 };
 
 /***************************************************************************
