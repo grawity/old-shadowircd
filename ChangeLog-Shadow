@@ -1,0 +1,22 @@
+ShadowIRCd 4.0 alpha16 (public):
+
+* Implement keyless cloaking (MD5).
+
+ShadowIRCd 4.0 alpha15:
+
+* Copy SVSNICK, SVSKILL from ShadowIRCd 3.x. Remove TS6 crap from them.
+  Add ENCAP handlers where appropriate.
+
+ShadowIRCd 4.0 alpha14:
+
+* Services aliases.
+
+ShadowIRCd 4.0 alpha13 (and lower):
+
+* Implemented server-server modesetting logic.
+* Changed umode +r (rejections) to umode +j.
+* Added umode +r (registered).
+* Implement basic hostcloaking code.
+* Implement halfops in ratbox.
+
+
