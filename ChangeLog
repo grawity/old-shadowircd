@@ -1,3 +1,8 @@
+ShadowIRCd 3.1-1:
+
+* Really fix socket dequeing bug.
+* Make silence actually work.
+
 ShadowIRCd 3.1:
 
 * Fix socket dequeing bug in old hybrid basecode.

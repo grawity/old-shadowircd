@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_message.c,v 1.5 2004/06/09 21:07:27 nenolod Exp $
+ *  $Id: m_message.c,v 1.6 2004/07/12 12:48:33 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -124,7 +124,7 @@ _moddeinit (void)
   mod_del_cmd (&notice_msgtab);
 }
 
-const char *_version = "$Revision: 1.5 $";
+const char *_version = "$Revision: 1.6 $";
 #endif
 
 /*
@@ -628,10 +628,12 @@ msg_client (int p_or_n, const char *command, struct Client *source_p,
   if (MyClient (target_p))
     {
       if (!IsServer (source_p) &&
-	  (IsSetCallerId (target_p) || !is_silenced(target_p, source_p)
-	   || (IsPMFiltered (target_p) && !IsIdentified (source_p))))
+	  (IsSetCallerId (target_p) || (IsPMFiltered (target_p) && !IsIdentified (source_p))))
 
 	{
+          if (is_silenced (target_p, source_p))
+            return;
+
 	  if (IsPMFiltered (target_p))
 	    {
 	      sendto_anywhere (source_p, target_p,
