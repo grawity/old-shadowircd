@@ -1,9 +1,0 @@
-# $Id: ungline,v 3.3 2004/09/08 01:18:07 nenolod Exp $
-UNGLINE <user@host>
-
--- if glines are enabled --
-Will attempt to remove gline matching <user@host>
-This will only remove the gline from YOUR server, it
-does not try to remove it globally.
-
-- Requires Oper Privs: G
