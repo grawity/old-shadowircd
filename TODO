@@ -1,0 +1,26 @@
+/*
+ * TODO file for KageServ ShadowIRCd Services
+ * $ID$
+ * When you finish something, mark the box.  If you have an idea, put it as a NOTE: under that item.
+ */
+
+/* For 0.1-RC1 */
+[ ] Configuration File and Parser
+[ ] Make an INSTALL file
+[ ] Database structure batch creation file
+[ ] Get channel modes saved in the Simulation, and kept up-to-date
+[ ] Get channel status saved in the Simulation, and kept up-to-date
+[X] KageServ (service control service)
+[ ] NickServ
+[ ] ChanServ
+    [ ] Add and implement chanserv_access_list table
+[ ] HostServ
+[ ] OperServ
+    [X] GLOBAL command
+
+/* Future Releases
+[ ] Google (search service)
+[ ] BotServ (new generation? discuss at some later time)
+[ ] NOOP
+[ ] KageServ Logo
+[ ] Restrict OperServ commands etc. to services specific users, instead of just checking +o

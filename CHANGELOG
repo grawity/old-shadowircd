@@ -1,0 +1,8 @@
+- pre-v0.1 (initial CVS import )
+  - Initial Simulation code
+  - Minimal NickServ code
+  - Database integration
+  - OperServ
+  - Netsplit notices
+  - Services Modularity (via shared object files)
+  - Initial ChanServ work
