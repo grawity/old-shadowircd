@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.16 2004/04/01 18:07:57 nenolod Exp $
+ *  $Id: client.h,v 1.17 2004/04/01 20:07:14 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -407,7 +407,7 @@ struct LocalUser
  */
 #define UMODE_SERVNOTICE   0x000001 /* server notices such as kill */
 #define UMODE_CCONN        0x000002 /* Client Connections */
-#define UMODE_REJ          0x000004 /* Bot Rejections */
+#define UMODE_WHOIS        0x000004 /* Send whois notices. */
 #define UMODE_SKILL        0x000008 /* Server Killed */
 #define UMODE_FULL         0x000010 /* Full messages */
 #define UMODE_SPY          0x000020 /* see STATS / LINKS */
@@ -436,22 +436,26 @@ struct LocalUser
 #define UMODE_SERVICE      0x8000000 /* Network service. */
 #define UMODE_SECURE       0x10000000 /* client is using SSL */
 #define UMODE_DEAF         0x20000000 /* User is deaf. */
+#define UMODE_NETADMIN     0x40000000 /* network admin */
+#define UMODE_TECHADMIN    0x80000000 /* technical admin */
 
 #define UMODE_ALL	   UMODE_SERVNOTICE /* what is that? */
 
 #define SEND_UMODES  (UMODE_INVISIBLE | UMODE_OPER | UMODE_WALLOP | \
                       UMODE_ADMIN | UMODE_CLOAK | UMODE_IDENTIFY | UMODE_HIDEOPER | \
                       UMODE_HELPOP | UMODE_SVSOPER | UMODE_SVSADMIN | UMODE_SVSROOT | \
-                      UMODE_SERVICE | UMODE_SECURE | UMODE_DEAF)
+                      UMODE_SERVICE | UMODE_SECURE | UMODE_DEAF | UMODE_NETADMIN | \
+                      UMODE_TECHADMIN | UMODE_WHOIS)
 #define ALL_UMODES   (SEND_UMODES | UMODE_SERVNOTICE | UMODE_CCONN | \
-                      UMODE_REJ | UMODE_SKILL | UMODE_FULL | UMODE_SPY | \
+                      UMODE_WHOIS | UMODE_SKILL | UMODE_FULL | UMODE_SPY | \
                       UMODE_NCHANGE | UMODE_OPERWALL | UMODE_DEBUG | \
                       UMODE_BOTS | UMODE_EXTERNAL | UMODE_LOCOPS | \
                       UMODE_ADMIN | UMODE_UNAUTH | UMODE_CALLERID | \
 		      UMODE_IDENTIFY | UMODE_HIDEOPER | UMODE_CLOAK | \
 		      UMODE_BLOCKINVITE | UMODE_PMFILTER | UMODE_HELPOP | \
                       UMODE_SVSADMIN | UMODE_SVSROOT | UMODE_SVSOPER | \
-                      UMODE_SERVICE | UMODE_SECURE | UMODE_DEAF)
+                      UMODE_SERVICE | UMODE_SECURE | UMODE_DEAF | UMODE_NETADMIN | \
+                      UMODE_TECHADMIN)
 
 /* oper priv flags */
 #define OPER_FLAG_GLOBAL_KILL  0x00000001 /* oper can global kill        */
@@ -471,6 +475,8 @@ struct LocalUser
 #define OPER_FLAG_IMMUNE       0x00004000 /* oper is immune to all       */
 #define OPER_FLAG_OVERRIDE     0x00008000 /* oper can override channels  */
 #define OPER_FLAG_GRANT        0x00010000 /* oper can grant privileges   */
+#define OPER_FLAG_NETADMIN     0x00020000 /* oper is netadmin            */
+#define OPER_FLAG_TECHADMIN    0x00040000 /* oper is techadmin           */
 
 #define SetOFlag(x, y) ((x)->localClient->operflags |= (y))
 

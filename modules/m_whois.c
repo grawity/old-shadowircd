@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_whois.c,v 1.10 2004/02/26 23:20:01 nenolod Exp $
+ *  $Id: m_whois.c,v 1.11 2004/04/01 20:07:14 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -84,7 +84,7 @@ _moddeinit (void)
   mod_del_cmd (&whois_msgtab);
 }
 
-const char *_version = "$Revision: 1.10 $";
+const char *_version = "$Revision: 1.11 $";
 #endif
 
 /* m_whois
@@ -368,6 +368,11 @@ whois_person (struct Client *source_p, struct Client *target_p, int glob)
 	      source_p->name, target_p->name,
 	      target_p->username, GET_CLIENT_HOST (target_p), target_p->info);
 
+  if (target_p->umodes & UMODE_WHOIS)
+    sendto_one (target_p, ":%s NOTICE %s :*** Notice -- %s (%s@%s) has /whois'ed you.",
+                me.name, target_p->name, source_p->name, source_p->username,
+                GET_CLIENT_HOST(source_p));
+
   ircsprintf (buf, form_str (RPL_WHOISCHANNELS),
 	      me.name, source_p->name, target_p->name, "");
 
@@ -421,7 +426,19 @@ whois_person (struct Client *source_p, struct Client *target_p, int glob)
     {
       if (!(target_p->umodes & UMODE_HIDEOPER))
 	{
-	  if (target_p->umodes & UMODE_SERVICE)
+          if (target_p->umodes & UMODE_NETADMIN)
+            {
+              sendto_one (source_p, form_str (RPL_WHOISOPERATOR),
+                          me.name, source_p->name, target_p->name,
+                          "an IRC Operator - Network Administrator");
+            }
+          else if (target_p->umodes & UMODE_TECHADMIN)
+            {
+              sendto_one (source_p, form_str (RPL_WHOISOPERATOR),
+                          me.name, source_p->name, target_p->name,
+                          "an IRC Operator - Technical Administrator");
+            }
+	  else if (target_p->umodes & UMODE_SERVICE)
 	    {
 	      sendto_one (source_p, form_str (RPL_WHOISOPERATOR),
 			  me.name, source_p->name, target_p->name,

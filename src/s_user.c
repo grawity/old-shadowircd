@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.35 2004/04/01 18:07:57 nenolod Exp $
+ *  $Id: s_user.c,v 1.36 2004/04/01 20:07:14 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -76,7 +76,6 @@ static const struct flag_item
   { UMODE_BOTS,       'b' },
   { UMODE_CCONN,      'c' },
   { UMODE_DEBUG,      'd' },
-  { UMODE_IDENTIFY,   'e' },
   { UMODE_FULL,       'f' },
   { UMODE_CALLERID,   'g' },
   { UMODE_HIDEOPER,   'h' },
@@ -85,7 +84,7 @@ static const struct flag_item
   { UMODE_LOCOPS,     'l' },
   { UMODE_NCHANGE,    'n' },
   { UMODE_OPER,       'o' },
-  { UMODE_REJ,        'r' },
+  { UMODE_IDENTIFY,   'r' },
   { UMODE_SERVNOTICE, 's' },
   { UMODE_UNAUTH,     'u' },
   { UMODE_CLOAK,      'v' },
@@ -97,8 +96,11 @@ static const struct flag_item
   { UMODE_PMFILTER,   'E' },
   { UMODE_HELPOP,     'H' },
   { UMODE_BLOCKINVITE, 'I' },
+  { UMODE_NETADMIN,   'N' },
   { UMODE_SVSOPER,    'O' },
   { UMODE_SVSROOT,    'R' },
+  { UMODE_TECHADMIN,  'T' },
+  { UMODE_WHOIS,      'W' },
   { UMODE_SECURE,     'Z' },
   { UMODE_DEAF,       'D' },
   { 0, '\0' }
@@ -125,16 +127,16 @@ const unsigned int user_modes_from_c_to_bitmask[] =
   0,                /* K */
   0,                /* L */
   0,                /* M */
-  0,                /* N */
+  UMODE_NETADMIN,   /* N */
   UMODE_SVSOPER,    /* O */
   0,                /* P */
   0,                /* Q */
   UMODE_SVSROOT,    /* R */
   0,                /* S */
-  0,                /* T */
+  UMODE_TECHADMIN,  /* T */
   0,                /* U */
   0,                /* V */
-  0,                /* W */
+  UMODE_WHOIS,      /* W */
   0,                /* X */
   0,                /* Y */
   UMODE_SECURE,     /* Z 0x5A */
@@ -144,7 +146,7 @@ const unsigned int user_modes_from_c_to_bitmask[] =
   UMODE_BOTS,       /* b */
   UMODE_CCONN,      /* c */
   UMODE_DEBUG,      /* d */
-  UMODE_IDENTIFY,   /* e */
+  0,                /* e */
   UMODE_FULL,       /* f */
   UMODE_CALLERID,   /* g */
   UMODE_HIDEOPER,   /* h */
@@ -157,7 +159,7 @@ const unsigned int user_modes_from_c_to_bitmask[] =
   UMODE_OPER,       /* o */
   0,                /* p */
   0,                /* q */
-  UMODE_REJ,        /* r */
+  UMODE_IDENTIFY,   /* r */
   UMODE_SERVNOTICE, /* s */
   0,                /* t */
   UMODE_UNAUTH,     /* u */
@@ -477,7 +479,7 @@ register_local_user(struct Client *client_p, struct Client *source_p,
   {
     char tmpstr2[IRCD_BUFSIZE];
 
-    sendto_realops_flags(UMODE_REJ, L_ALL, "Invalid username: %s (%s@%s)",
+    sendto_realops_flags(UMODE_ADMIN, L_ALL, "Invalid username: %s (%s@%s)",
                          nick, source_p->username, source_p->host);
     ServerStats->is_ref++;
     ircsprintf(tmpstr2, "Invalid username [%s]", source_p->username);
@@ -1053,6 +1055,18 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
 
           break;
 
+	case 'N':
+	  if (MyClient(target_p))
+             if (!target_p->localClient->operflags & OPER_FLAG_NETADMIN)
+                break;
+	case 'T':
+          if (MyClient(target_p))
+             if (!target_p->localClient->operflags & OPER_FLAG_TECHADMIN)
+                break;
+        case 'H':
+          if (!IsOper(target_p))
+             break;
+
         /* we may not get these,
          * but they shouldnt be in default
          */
@@ -1062,9 +1076,6 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
         case '\t':
           break;
 
-        case 'H':
-          if (!IsOper(target_p))
-             break;
 
 
 	/*
@@ -1297,7 +1308,7 @@ check_x_line(struct Client *client_p, struct Client *source_p)
     {
       if (match_item->action == 1)
       {
-        sendto_realops_flags(UMODE_REJ, L_ALL,
+        sendto_realops_flags(UMODE_ADMIN, L_ALL,
                              "X-line Rejecting [%s] [%s], user %s [%s]",
                              source_p->info, reason,
                              get_client_name(client_p, HIDE_IP),
@@ -1309,7 +1320,7 @@ check_x_line(struct Client *client_p, struct Client *source_p)
       return(CLIENT_EXITED);
     }
     else
-      sendto_realops_flags(UMODE_REJ, L_ALL,
+      sendto_realops_flags(UMODE_ADMIN, L_ALL,
                            "X-line Warning [%s] [%s], user %s [%s]",
                            source_p->info, reason,
                            get_client_name(client_p, HIDE_IP),
@@ -1356,6 +1367,12 @@ oper_up(struct Client *source_p)
   if (!IsOperN(source_p))
     source_p->umodes &= ~UMODE_NCHANGE;
 
+  if (source_p->localClient->operflags & OPER_FLAG_NETADMIN)
+    source_p->umodes |= UMODE_NETADMIN;
+
+  if (source_p->localClient->operflags & OPER_FLAG_TECHADMIN)
+    source_p->umodes |= UMODE_TECHADMIN;  
+
   source_p->umodes |= UMODE_HELPOP;
 
   /* set the network staff virtual host. */
@@ -1371,6 +1388,7 @@ oper_up(struct Client *source_p)
                    source_p->virthost);
 
     source_p->flags |= FLAGS_USERCLOAK;
+    source_p->umodes |= UMODE_CLOAK;
   }
 
   sendto_realops_flags(UMODE_ALL, L_ALL, "%s (%s@%s) is now an operator",
