@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.15 2004/01/12 20:28:48 nenolod Exp $
+ *  $Id: s_user.c,v 1.16 2004/01/12 20:38:33 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -721,7 +721,7 @@ introduce_client(struct Client *client_p, struct Client *source_p)
                  source_p->info);
     }
     if (source_p->flags & FLAGS_USERCLOAK)
-      sendto_one(uplink, ":%s SVSCLOAK %s :%s",
+      sendto_one(uplink, ":%s SVSCLOAK %s :%s", source_p->user->server->name,
 		source_p->name, source_p->virthost);
   }
   else
@@ -749,7 +749,7 @@ introduce_client(struct Client *client_p, struct Client *source_p)
 		   source_p->user->server->name,
                    source_p->info);
     if (source_p->flags & FLAGS_USERCLOAK)
-      sendto_one(server, ":%s SVSCLOAK %s :%s",
+      sendto_one(server, ":%s SVSCLOAK %s :%s", source_p->user->server->name,
                 source_p->name, source_p->virthost);
     }
   }
