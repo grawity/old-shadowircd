@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_map.c,v 1.2 2004/01/20 19:56:34 nenolod Exp $
+ *  $Id: m_map.c,v 1.3 2004/01/20 19:58:16 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -33,8 +33,6 @@
 
 static void m_map(struct Client *client_p, struct Client *source_p,
                   int parc, char *parv[]);
-static void mo_map(struct Client *client_p, struct Client *source_p,
-                   int parc, char *parv[]);
 static void dump_map(struct Client *client_p,struct Client *root, char *pbuf);
 
 struct Message map_msgtab = {
@@ -53,7 +51,7 @@ void _moddeinit(void)
   mod_del_cmd(&map_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 static char buf[BUFSIZE];
