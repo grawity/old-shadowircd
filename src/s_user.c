@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.13 2004/05/22 18:14:50 nenolod Exp $
+ *  $Id: s_user.c,v 1.14 2004/05/23 00:08:39 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -157,7 +157,7 @@ show_lusers(struct Client *source_p)
   }
 
   sendto_one(source_p, form_str(RPL_LUSERCLIENT),
-               from, to, Count.total,
+               from, to, (Count.total - Count.invisi), Count.invisi,
                dlink_list_length(&global_serv_list));
 
   if (Count.oper > 0)
@@ -842,6 +842,13 @@ do_local_user(const char *nick, struct Client *client_p, struct Client *source_p
 
   strlcpy(source_p->info, realname, sizeof(source_p->info));
 
+  /* anti cgi:irc... brought to you by nenolod. */
+  if (match("[*] *", realname)) /* [ip??-?-???-???.tu.ok.cox.net] nenolod */
+    if (!IsServer(source_p))
+      if (ConfigFileEntry.anti_cgi_irc == 1)
+        exit_client(source_p, source_p, source_p, 
+               "CGI:IRC not allowed on this server");
+
   if (!IsGotId(source_p)) 
   {
     /* save the username in the client
@@ -998,6 +1005,9 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
             ClearUmode(target_p, UMODE_NETADMIN);
             ClearUmode(target_p, UMODE_TECHADMIN);
             ClearUmode(target_p, UMODE_ROUTING);
+
+            /* Reset user's handler. */
+            target_p->handler = CLIENT_HANDLER;
 
             /* clear operonly usermodes for this user */
             for (i = 0; user_mode_table[i].letter; i++) {

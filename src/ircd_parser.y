@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.3 2004/05/22 18:03:10 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.4 2004/05/23 00:08:39 nenolod Exp $
  */
 
 %{
@@ -276,6 +276,7 @@ unhook_hub_leaf_confs(void)
 %token  RSA_PUBLIC_KEY_FILE
 %token  SSL_CERTIFICATE_FILE
 %token  SSL_CA_CERTIFICATE_FILE
+%token  ANTI_CGI_IRC
 %token  RESV
 %token  SECONDS MINUTES HOURS DAYS WEEKS
 %token  SENDQ
@@ -2900,7 +2901,7 @@ general_item:       general_hide_spoof_ips | general_ignore_bogus_ts |
                     general_caller_id_wait | general_default_floodcount |
                     general_min_nonwildcard | general_min_nonwildcard_simple |
                     general_servlink_path | general_disable_remote_commands |
-                    general_default_cipher_preference |
+                    general_default_cipher_preference | general_anti_cgi_irc |
                     general_compression_level | general_client_flood |
                     general_throttle_time | general_havent_read_conf |
                     general_dot_in_ip6_addr | general_ping_cookie |
@@ -2928,6 +2929,12 @@ general_disable_remote_commands: DISABLE_REMOTE_COMMANDS '=' TBOOL ';'
 {
   if (ypass == 2)
     ConfigFileEntry.disable_remote = yylval.number;
+};
+
+general_anti_cgi_irc: ANTI_CGI_IRC '=' TBOOL ';'
+{
+  if (ypass == 2)
+    ConfigFileEntry.anti_cgi_irc = yylval.number;
 };
 
 general_failed_oper_notice: FAILED_OPER_NOTICE '=' TBOOL ';'
