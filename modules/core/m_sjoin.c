@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_sjoin.c,v 1.11 2004/01/20 19:56:34 nenolod Exp $
+ *  $Id: m_sjoin.c,v 1.12 2004/04/01 18:20:18 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,7 +63,7 @@ _moddeinit(void)
   mod_del_cmd(&sjoin_msgtab);
 }
 
-const char *_version = "$Revision: 1.11 $";
+const char *_version = "$Revision: 1.12 $";
 #endif
 
 static char modebuf[MODEBUFLEN];
@@ -486,9 +486,20 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
     if (!IsMember(target_p, chptr))
     {
       add_user_to_channel(chptr, target_p, fl);
-      sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s JOIN :%s",
-                           target_p->name, target_p->username,
-                           GET_CLIENT_HOST(target_p), parv[2]);
+      if (chptr->mode.mode & MODE_AUDITORIUM)
+      {
+        sendto_one(source_p, ":%s!%s@%s JOIN :%s",
+                   source_p->name, source_p->username,
+                   GET_CLIENT_HOST(source_p), chptr->chname);
+        sendto_channel_local(CHFL_CHANOWNER | CHFL_CHANOP, chptr,
+                             ":%s!%s@%s JOIN :%s",
+                             source_p->name, source_p->username,
+                             GET_CLIENT_HOST(source_p), chptr->chname);
+      }
+      else
+        sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s JOIN :%s",
+                           source_p->name, source_p->username,
+                           GET_CLIENT_HOST(source_p), chptr->chname);
     }
 
     if (fl & CHFL_CHANOWNER)

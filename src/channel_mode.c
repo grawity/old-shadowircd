@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 1.19 2004/04/01 18:07:57 nenolod Exp $
+ *  $Id: channel_mode.c,v 1.20 2004/04/01 18:20:18 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -2103,7 +2103,7 @@ static struct ChannelMode ModeTable[255] =
   {chm_nosuch, NULL},
   {chm_nosuch, NULL},
   {chm_nosuch, NULL},
-  {chm_nosuch, NULL},				  /* a */
+  {chm_simple, (void *) MODE_AUDITORIUM},	  /* a */
   {chm_ban, NULL},                                /* b */
   {chm_simple, (void *) MODE_NOCOLOR},            /* c */
   {chm_restrict, NULL},                           /* d */

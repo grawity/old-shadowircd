@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_join.c,v 1.10 2004/02/14 02:09:07 nenolod Exp $
+ *  $Id: m_join.c,v 1.11 2004/04/01 18:20:18 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -88,7 +88,7 @@ _moddeinit(void)
   mod_del_cmd(&join_msgtab);
 }
 
-const char *_version = "$Revision: 1.10 $";
+const char *_version = "$Revision: 1.11 $";
 #endif
 
 /* m_join()
@@ -151,23 +151,34 @@ m_join(struct Client *client_p, struct Client *source_p,
     if (flags & CHFL_CHANOP)
     {
       chptr->channelts = CurrentTime;
-      chptr->mode.mode |= MODE_TOPICLIMIT;
       chptr->mode.mode |= MODE_NOPRIVMSGS;
 
       sendto_server(client_p, source_p, chptr, CAP_TS6, NOCAPS, LL_ICLIENT,
-                    ":%s SJOIN %lu %s +nt :@%s",
+                    ":%s SJOIN %lu %s +n :@%s",
                     me.id, (unsigned long)chptr->channelts,
                     chptr->chname, source_p->id);
       sendto_server(client_p, source_p, chptr, NOCAPS, CAP_TS6, LL_ICLIENT,
-                    ":%s SJOIN %lu %s +nt :@%s",
+                    ":%s SJOIN %lu %s +n :@%s",
                     me.name, (unsigned long)chptr->channelts,
                     chptr->chname, parv[0]);
-      sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s JOIN :%s",
+
+      if (chptr->mode.mode & MODE_AUDITORIUM)
+      {
+        sendto_one(source_p, ":%s!%s@%s JOIN :%s",
+                   source_p->name, source_p->username,
+                   GET_CLIENT_HOST(source_p), chptr->chname);
+        sendto_channel_local(CHFL_CHANOWNER | CHFL_CHANOP, chptr,
+                             ":%s!%s@%s JOIN :%s",
+                             source_p->name, source_p->username,
+                             GET_CLIENT_HOST(source_p), chptr->chname);
+      }
+      else
+        sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s JOIN :%s",
                            source_p->name, source_p->username,
                            GET_CLIENT_HOST(source_p), chptr->chname);
 
       sendto_channel_local(ALL_MEMBERS, chptr,
-                           ":%s MODE %s +nt", me.name, chptr->chname);
+                           ":%s MODE %s +n", me.name, chptr->chname);
     }
     else
     {
@@ -180,7 +191,18 @@ m_join(struct Client *client_p, struct Client *source_p,
                     me.name, (unsigned long)chptr->channelts,
                     chptr->chname, source_p->name);
 
-      sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s JOIN :%s",
+      if (chptr->mode.mode & MODE_AUDITORIUM)
+      {
+        sendto_one(source_p, ":%s!%s@%s JOIN :%s",
+                   source_p->name, source_p->username,
+                   GET_CLIENT_HOST(source_p), chptr->chname);
+        sendto_channel_local(CHFL_CHANOWNER | CHFL_CHANOP, chptr,
+                             ":%s!%s@%s JOIN :%s",
+                             source_p->name, source_p->username,
+                             GET_CLIENT_HOST(source_p), chptr->chname);
+      }
+      else
+        sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s JOIN :%s",
                            source_p->name, source_p->username,
                            GET_CLIENT_HOST(source_p), chptr->chname);
     }
