@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.37 2004/04/02 04:27:00 nenolod Exp $
+ *  $Id: s_user.c,v 1.38 2004/04/06 19:23:57 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -378,6 +378,9 @@ register_local_user(struct Client *client_p, struct Client *source_p,
        source_p->localClient->random_ping == 0)
     {
       source_p->localClient->random_ping = (unsigned long)rand();
+      sendto_one(source_p, "NOTICE %s :*** If you are having problems connecting "
+                   "due to ping timeouts, please type /quote PONG :%lu now.",
+                   source_p->name, source_p->localClient->random_ping);
       sendto_one(source_p, "PING :%lu",
                  source_p->localClient->random_ping);
       SetPingSent(source_p);
