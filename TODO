@@ -1,11 +1,9 @@
-$Id: TODO,v 1.2 2003/12/03 19:51:04 nenolod Exp $
-
-nenolod's list for rc1:
+$Id: TODO,v 1.3 2003/12/04 04:00:34 nenolod Exp $
 
 - colorblock, colorstrip (done)
 - identified umode (done)
 - cloaking (done)
-- invite block, knock deny
-- possible antiflood code (at least the ability to disable throttling)
-
+- invite block, knock deny (50% done)
+- channel mode +z: Disable throttling
+- channel mode +a: Auditorium (Eko)
 
