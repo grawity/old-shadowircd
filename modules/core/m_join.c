@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_join.c,v 1.4 2003/12/19 02:12:08 nenolod Exp $
+ *  $Id: m_join.c,v 1.5 2003/12/19 02:55:56 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -87,7 +87,7 @@ _moddeinit(void)
   mod_del_cmd(&join_msgtab);
 }
 
-const char *_version = "$Revision: 1.4 $";
+const char *_version = "$Revision: 1.5 $";
 #endif
 
 /* m_join()
@@ -449,7 +449,7 @@ build_target_list(struct Client *client_p, struct Client *source_p,
 {
   int error_reported, flags = 0;
   char *p, *p2, *chan, *key = keys;
-  struct Channel *chptr = NULL;
+  struct Channel *chptr, *chptr2 = NULL;
 
   ntargets = error_reported = 0;
   join_0 = -1;
@@ -559,8 +559,14 @@ build_target_list(struct Client *client_p, struct Client *source_p,
       }
     }
 
-    if (chptr->mode.forwardtarget)
-      chptr = hash_find_channel(chptr->mode.forwardtarget);
+    if (chptr->mode.forwardtarget[0] != '\0')
+      if ((chptr2 = hash_find_channel(chptr->mode.forwardtarget)) != NULL) {
+        targets[ntargets].chptr = chptr2;
+        targets[ntargets].key = key;
+        targets[ntargets++].flags = flags;
+        continue;
+      }
+
 
     if (is_target(chptr))
       continue;
