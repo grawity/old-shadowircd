@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_serv.c,v 3.7 2004/09/25 17:24:16 nenolod Exp $
+ *  $Id: s_serv.c,v 3.8 2004/09/25 17:25:07 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -872,7 +872,7 @@ sendnick_TS(struct Client *client_p, struct Client *target_p)
       sendto_one(client_p, ":%s SVSCLOAK %s :%s",
 		me.name, target_p->name, target_p->virthost);
 
-  if (target_p->swhois && IsCapable(client_p, CAP_TS6)
+  if (target_p->swhois && IsCapable(client_p, CAP_TS6))
     sendto_one(client_p, ":%s SWHOIS %s :%s",
                 me.id, target_p->id, target_p->swhois);
 }
