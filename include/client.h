@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.8 2004/05/26 14:30:58 nenolod Exp $
+ *  $Id: client.h,v 1.9 2004/06/04 21:05:12 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -193,6 +193,9 @@ struct Client
    */
   dlink_list	allow_list;	/* clients I'll allow to talk to me */
   dlink_list	on_allow_list;	/* clients that have =me= on their allow list*/
+
+  /* silence list... masks i have on silence, i.e. rejections */
+  dlink_list    silence_list;
 
   struct LocalUser *localClient;
 };

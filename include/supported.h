@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: supported.h,v 1.1 2004/04/30 18:14:21 nenolod Exp $
+ *  $Id: supported.h,v 1.2 2004/06/04 21:05:12 nenolod Exp $
  */
 
 #ifndef INCLUDED_supported_h
@@ -40,7 +40,8 @@
                  " MAXTARGETS=%i"  \
                  " NICKLEN=%i"     \
                  " TOPICLEN=%i"    \
-                 " KICKLEN=%i"
+                 " KICKLEN=%i"     \
+                 " SILENCE=%i"     \
 #else
 #define FEATURES "WALLCHOPS"       \
                  "%s%s%s"          \
@@ -50,7 +51,8 @@
                  " MAXTARGETS=%i"  \
                  " NICKLEN=%i"     \
                  " TOPICLEN=%i"    \
-                 " KICKLEN=%i"
+                 " KICKLEN=%i"     \
+                 " SILENCE=%i"     \
 #endif
 
 #define FEATURESVALUES ConfigChannel.use_knock ? " KNOCK" : "", \
@@ -58,7 +60,8 @@
         ConfigChannel.use_invex ? " INVEX" : "", \
         MAXMODEPARAMS,ConfigChannel.max_chans_per_user, \
         ConfigChannel.max_bans, \
-        ConfigFileEntry.max_targets,NICKLEN-1,TOPICLEN,TOPICLEN
+        ConfigFileEntry.max_targets,NICKLEN-1,TOPICLEN,TOPICLEN, \
+        ConfigFileEntry.max_silence
 
 #define FEATURES2 "CHANTYPES=%s"      \
                   " PREFIX=%s"        \

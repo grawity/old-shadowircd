@@ -16,7 +16,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *   $Id: messages.tab,v 1.7 2004/05/23 00:08:39 nenolod Exp $
+ *   $Id: messages.tab,v 1.8 2004/06/04 21:05:12 nenolod Exp $
  */
 
 static struct NumericInfo replies[] = {
@@ -401,7 +401,7 @@ static struct NumericInfo replies[] = {
 /* 378 */  {"RPL_QUIETLIST", ":%s 378 %s %s %s %s %lu", NULL},
 /* 379 */  {"RPL_ENDOFQUIETLIST", ":%s 379 %s %s :End of Channel Quiet List", NULL},
 /* 380 */  {NULL, NULL, NULL},
-/* 381 */  {"RPL_YOUREOPER", ":%s 381 %s :You have entered... the Twilight Zone!", NULL},
+/* 381 */  {"RPL_YOUREOPER", ":%s 381 %s :Congratulations! You can /kill with prejudice!", NULL},
 /* 382 */  {"RPL_REHASHING", ":%s 382 %s %s :Rehashing", NULL},
 /* 383 */  {NULL, NULL, NULL},
 /* 384 */  {"RPL_RESTRICTLIST", ":%s 384 %s %s %s %s %lu", NULL},
