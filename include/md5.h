@@ -1,28 +1,20 @@
-/*
- * This is an OpenSSL-compatible implementation of the RSA Data Security,
- * Inc. MD5 Message-Digest Algorithm.
- *
- * Written by Solar Designer <solar@openwall.com> in 2001, and placed in
- * the public domain.  See md5.c for more information.
- */
-
 #if defined(USE_SSL)
 #include <openssl/md5.h>
 #elif !defined(_MD5_H)
 #define _MD5_H
 
 /* Any 32-bit or wider unsigned integer data type will do */
-typedef unsigned long MD5_u32plus;
+typedef unsigned long My_MD5_u32plus;
 
 typedef struct {
-	MD5_u32plus lo, hi;
-	MD5_u32plus a, b, c, d;
+	My_MD5_u32plus lo, hi;
+	My_MD5_u32plus a, b, c, d;
 	unsigned char buffer[64];
-	MD5_u32plus block[16];
-} MD5_CTX;
+	My_MD5_u32plus block[16];
+} My_MD5_CTX;
 
-extern void MD5_Init(MD5_CTX *ctx);
-extern void MD5_Update(MD5_CTX *ctx, void *data, unsigned long size);
-extern void MD5_Final(unsigned char *result, MD5_CTX *ctx);
+extern void My_MD5_Init(My_MD5_CTX *ctx);
+extern void My_MD5_Update(My_MD5_CTX *ctx, void *data, unsigned long size);
+extern void My_MD5_Final(unsigned char *result, My_MD5_CTX *ctx);
 
 #endif

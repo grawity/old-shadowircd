@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.9 2004/07/18 13:11:38 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.10 2004/07/18 16:56:40 nenolod Exp $
  */
 
 %{
@@ -377,7 +377,9 @@ unhook_hub_leaf_confs(void)
 %type <number> sizespec_
 
 %%
-conf: | conf conf_item;
+conf: 
+       | conf conf_item
+       ;
 
 conf_item:        admin_entry
                 | logging_entry

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_hidehost.c,v 1.5 2004/07/18 12:24:34 nenolod Exp $
+ *  $Id: s_hidehost.c,v 1.6 2004/07/18 16:56:40 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -81,7 +81,7 @@ void
 hidehost_ipv4 (char *host, char *out)
 {
   unsigned int a, b, c, d;
-  MD5_CTX hash;
+  My_MD5_CTX hash;
   static char buf[512];
   static unsigned char res[512];
   unsigned int alpha, beta, gamma;
@@ -89,75 +89,75 @@ hidehost_ipv4 (char *host, char *out)
   sscanf (host, "%u.%u.%u.%u", &a, &b, &c, &d);
 
   ircsprintf (buf, "%s-%s-%s-%s", KEY1, KEY2, host, KEY3);
-  MD5_Init (&hash);
-  MD5_Update (&hash, buf, strlen (buf));
-  MD5_Final (res, &hash);
+  My_MD5_Init (&hash);
+  My_MD5_Update (&hash, buf, strlen (buf));
+  My_MD5_Final (res, &hash);
   alpha = convert_md5_to_int (res);
 
   ircsprintf (buf, "%d-%s.%s-%d.%d-%s", a, KEY1, KEY2, b, c, KEY3);
-  MD5_Init (&hash);
-  MD5_Update (&hash, buf, strlen (buf));
-  MD5_Final (res, &hash);
+  My_MD5_Init (&hash);
+  My_MD5_Update (&hash, buf, strlen (buf));
+  My_MD5_Final (res, &hash);
   beta = convert_md5_to_int (res);
 
   ircsprintf (buf, "%s-%d.%s.%d-%s", KEY3, a, KEY2, b, KEY1);
-  MD5_Init (&hash);
-  MD5_Update (&hash, buf, strlen (buf));
-  MD5_Final (res, &hash);
+  My_MD5_Init (&hash);
+  My_MD5_Update (&hash, buf, strlen (buf));
+  My_MD5_Final (res, &hash);
   gamma = convert_md5_to_int (res);
 
   ircsprintf (out, "%X.%X.%X.IP", alpha, beta, gamma);
 }
 
 void
-hidehost_ipv6(char *host, char *out)
+hidehost_ipv6 (char *host, char *out)
 {
-	unsigned int a, b, c, d, e, f, g, h;
-	MD5_CTX hash;
-	static char buf[512];
-	static unsigned char res[512];
-	unsigned int alpha, beta, gamma;
+  unsigned int a, b, c, d, e, f, g, h;
+  My_MD5_CTX hash;
+  static char buf[512];
+  static unsigned char res[512];
+  unsigned int alpha, beta, gamma;
 
-        sscanf(host, "%x:%x:%x:%x:%x:%x:%x:%x",
-                &a, &b, &c, &d, &e, &f, &g, &h);
+  sscanf (host, "%x:%x:%x:%x:%x:%x:%x:%x", &a, &b, &c, &d, &e, &f, &g, &h);
 
-        /* ALPHA... */
-        ircsprintf(buf, "%s-%s-%s-%s", KEY2, host, KEY3, KEY1);
-        MD5_Init(&hash);
-        MD5_Update(&hash, buf, strlen(buf));
-        MD5_Final(res, &hash);
-        alpha = convert_md5_to_int(res);
+  /* ALPHA... */
+  ircsprintf (buf, "%s-%s-%s-%s", KEY2, host, KEY3, KEY1);
+  My_MD5_Init (&hash);
+  My_MD5_Update (&hash, buf, strlen (buf));
+  My_MD5_Final (res, &hash);
+  alpha = convert_md5_to_int (res);
 
-        /* BETA... */
-        ircsprintf(buf, "%s-%x:%x:%x:%x-%s-%x:%x:%x-%s", KEY3, e, d, f, b, KEY2, a, g, c, KEY1);
-        MD5_Init(&hash);
-        MD5_Update(&hash, buf, strlen(buf));
-        MD5_Final(res, &hash);
-        beta = convert_md5_to_int(res);
+  /* BETA... */
+  ircsprintf (buf, "%s-%x:%x:%x:%x-%s-%x:%x:%x-%s", KEY3, e, d, f, b, KEY2, a,
+	      g, c, KEY1);
+  My_MD5_Init (&hash);
+  My_MD5_Update (&hash, buf, strlen (buf));
+  My_MD5_Final (res, &hash);
+  beta = convert_md5_to_int (res);
 
-        /* GAMMA... */
-        ircsprintf(buf, "%s:%x:%x-%s-%x:%x:%s", KEY1, c, a, KEY3, d, b, KEY2);
-        MD5_Init(&hash);
-        MD5_Update(&hash, buf, strlen(buf));
-        MD5_Final(res, &hash);
-        gamma = convert_md5_to_int(res);
+  /* GAMMA... */
+  ircsprintf (buf, "%s:%x:%x-%s-%x:%x:%s", KEY1, c, a, KEY3, d, b, KEY2);
+  My_MD5_Init (&hash);
+  My_MD5_Update (&hash, buf, strlen (buf));
+  My_MD5_Final (res, &hash);
+  gamma = convert_md5_to_int (res);
 
-        ircsprintf(out, "%X:%X:%X:IP", alpha, beta, gamma);
+  ircsprintf (out, "%X:%X:%X:IP", alpha, beta, gamma);
 }
 
 void
 hidehost_normalhost (char *host, char *out)
 {
   char *p;
-  MD5_CTX hash;
+  My_MD5_CTX hash;
   static char buf[512];
   static unsigned char res[512];
   unsigned int alpha;
 
-  ircsprintf(buf, "%s-%s-%s-%s", KEY3, host, KEY1, KEY2);
-  MD5_Init (&hash);
-  MD5_Update (&hash, buf, strlen (buf));
-  MD5_Final (res, &hash);
+  ircsprintf (buf, "%s-%s-%s-%s", KEY3, host, KEY1, KEY2);
+  My_MD5_Init (&hash);
+  My_MD5_Update (&hash, buf, strlen (buf));
+  My_MD5_Final (res, &hash);
   alpha = convert_md5_to_int (res);
 
   for (p = host; *p; p++)
