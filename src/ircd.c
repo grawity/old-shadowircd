@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd.c,v 3.4 2004/09/22 19:27:01 nenolod Exp $
+ *  $Id: ircd.c,v 3.5 2004/09/25 03:13:36 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -633,7 +633,7 @@ main (int argc, char *argv[])
   init_auth ();			/* Initialise the auth code */
   init_resolver ();		/* Needs to be setup before the io loop */
   init_reject ();               /* Set up the reject code. */
-  init_umodes ();               /* Set up the usermode system. */
+  setup_umodesys ();            /* Set up the usermode system. */
 
   initialize_foundation_signals(); /* register things that modules need */
 

@@ -2,59 +2,15 @@
  * shadowircd: an advanced IRC daemon.
  * umodes.c: New usermode system, derived from dancer-ircd's usermode code.
  *
- * $Id: umodes.c,v 3.5 2004/09/25 03:07:19 nenolod Exp $
+ * $Id: umodes.c,v 3.6 2004/09/25 03:13:36 nenolod Exp $
  */
 #include "stdinc.h"
 #include "s_user.h"
 #include "umodes.h"
 
-#ifdef OLD_SYSTEM
 FLAG_ITEM user_mode_table[256] = {
-  { UMODE_SERVNOTICE,	's', 0 },
-  { UMODE_CCONN,	'c', 1 },
-  { UMODE_REJ,		'r', 1 },
-  { UMODE_SKILL,	'k', 1 },
-  { UMODE_FULL,		'f', 1 },
-  { UMODE_SPY,		'y', 1 },
-  { UMODE_DEBUG, 	'd', 1 },
-  { UMODE_NCHANGE, 	'n', 1 },
-  { UMODE_WALLOP,	'w', 0 },
-  { UMODE_OPERWALL,	'z', 1 },
-  { UMODE_INVISIBLE,	'i', 0 },
-  { UMODE_BOTS,         'b', 1 },
-  { UMODE_EXTERNAL,	'x', 1 },
-  { UMODE_CALLERID, 	'g', 0 }, 
-  { UMODE_UNAUTH, 	'u', 1 },
-  { UMODE_LOCOPS,	'l', 1 },
-  { UMODE_OPER,		'o', 1 },
-  { UMODE_ADMIN,        'a', 1 },
-  { UMODE_IDENTIFY, 	'e', 1 },
-  { UMODE_HIDEOPER,     'h', 1 },
-  { UMODE_CLOAK,	'v', 0 },
-  { UMODE_PROTECTED,    'q', 1 },
-  { UMODE_BLOCKINVITE,	'I', 0 },
-  { UMODE_PMFILTER,	'E', 0 },
-  { UMODE_HELPOP,       'H', 1 },
-  { UMODE_SVSOPER,	'O', 1 },
-  { UMODE_SVSADMIN,	'A', 1 },
-  { UMODE_SVSROOT,	'R', 1 },
-  { UMODE_SERVICE,      'S', 1 },
-  { UMODE_SECURE,	'Z', 1 },
-  { UMODE_DEAF,		'D', 0 },
-  { UMODE_NETADMIN,	'N', 1 },
-  { UMODE_TECHADMIN,	'T', 1 },
-  { UMODE_NOCOLOUR, 	'C', 0 },
-  { UMODE_SENSITIVE,    'G', 0 },
-  { UMODE_ROUTING,      'L', 1 },
-  { UMODE_KILLPROT,     'K', 1 },
-  { UMODE_WANTSWHOIS, 	'W', 1 },
   { 0, 0, 0 }
 };
-#else
-FLAG_ITEM user_mode_table[256] {
-  { 0, 0, 0 }
-};
-#endif
 
 int user_modes_from_c_to_bitmask[256];
 char umode_list[256];
