@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.14 2004/01/20 19:56:34 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.15 2004/01/20 20:03:37 nenolod Exp $
  */
 
 %{
@@ -153,7 +153,6 @@ unhook_hub_leaf_confs(void)
 %token  USERCLOAK
 %token  CLOAKSTRING
 %token  CONFIGURATION
-%token  CRYPT_USERCLOAK
 %token  AUSPEX
 %token  OVERRIDE
 %token  SET_OWNCLOAK
@@ -2554,8 +2553,7 @@ general_item:       general_hide_spoof_ips | general_ignore_bogus_ts |
                     general_compression_level | general_client_flood |
                     general_throttle_time | general_havent_read_conf |
                     general_dot_in_ip6_addr | general_ping_cookie |
-                    general_disable_auth | general_crypt_usercloak |
-		    error;
+                    general_disable_auth | error;
 
 general_kill_chase_time_limit: KILL_CHASE_TIME_LIMIT '=' NUMBER ';'
 {
@@ -3024,12 +3022,6 @@ general_crypt_oper_password: CRYPT_OPER_PASSWORD '=' TBOOL ';'
 {
   if (ypass == 2)
     ConfigFileEntry.crypt_oper_password = yylval.number;
-};
-
-general_crypt_usercloak: CRYPT_USERCLOAK '=' TBOOL ';'
-{
-  if (ypass == 2)
-    ConfigFileEntry.crypt_usercloak = yylval.number;
 };
 
 general_min_nonwildcard: MIN_NONWILDCARD '=' NUMBER ';'
