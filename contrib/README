@@ -1,0 +1,105 @@
+$Id: README,v 1.1 2004/04/30 18:13:53 nenolod Exp $
+
+This directory contains modules and patches that have been contributed
+by other people, or aren't suitable for including into the 
+hybrid tree.  The coding team do not officially support the contrib/ 
+modules, or guarantee any of them will actually work.
+
+There is also a lone ircII script (challenge.irc) that works alongwith
+rsa_respond so you can authenticate within your client.
+
+Once again. WITH feeling. Not all of these modules have been thoroughly
+tested! That's why some of them are in contrib not in the main tree yet.
+At least one module in contrib has been known to core servers when used.
+You have been warned. 
+
+To repeat, ONE OR MORE OF THESE MAY CRASH YOUR SERVER.  USE AT YOUR
+OWN RISK.
+
+
+Modules
+-------
+
+m_clearchan.c  - CLEARCHAN - clears all users out of a channel and joins person
+                             issuing command
+                 Syntax: CLEARCHAN <channel>
+
+m_flags.c      - FLAGS - csircd like support of changing usermodes
+                 Syntax:  FLAGS :+OWALLOPS -SWALLOPS
+
+m_force.c      - FORCE - forces a user to either part or join a channel with
+                         an optional status (@%+)
+                 Syntax: FORCEJOIN <nick> [status]<channel>
+                         FORCEPART <nick> <channel>
+
+m_help.c       - HELP - provide help for IRC commands. See bottom of document.
+                 Syntax: HELP :command
+
+m_jupe.c       - JUPE - Server juping command
+                 Syntax:  JUPE juped.server.name :Reason
+
+m_ltrace.c     - LTRACE - Limited trace.  Similar to TRACE except only reports
+                          current opers and servers.
+                 Syntax: LTRACE [nick|mask [server]]
+
+m_map.c        - MAP - Display the server routing graph in a visually pleasing
+                       format
+                 Syntax:  MAP
+		 
+m_mkpasswd.c   - MKPASSWD - generate a DES or MD5 encryption of a password
+                 Syntax:  MKPASSWD <plaintext> [MD5|DES]
+
+m_ojoin.c      - OJOIN - Join a channel through any modes or limits with 
+                         an optional status (@%+)
+                 Syntax: OJOIN [status]<channel>
+
+m_operspy.c    - OPERSPY - Allows operators with access to spy on users
+                 Syntax: OPERSPY <LIST/WHO/MODE/WHOIS/NAMES> <paramter>
+
+m_opme.c       - OPME - Allows an admin to op themselves in an opless channel
+                 Syntax: OPME <channel>
+
+m_tburst.c     - TBURST - module that will make servers send channel topics
+                          to each other after a netsplit/restart.
+
+m_whois.c      - WHOIS - is a modified form of the standard
+		  	  whois provided. It adds the real IP
+			  to a remote whois if applicable. 
+			  	  
+example_module.c - An example module to be used for creating your own.
+                   Syntax: TEST
+
+
+Spy Modules
+-----------
+
+The following are the 'spy' parts, accessible via the +y usermode
+
+spy_admin_notice.c   - Spy on clients doing ADMIN
+spy_info_notice.c    - Spy on clients doing INFO
+spy_links_notice.c   - Spy on clients doing LINKS
+spy_motd_notice.c    - Spy on clients doing MOTD
+spy_stats_notice.c   - Spy on clients doing all STATS
+spy_stats_p_notice.c - Spy on clients doing STATS p only
+spy_trace_notice.c   - Spy on clients doing TRACE/LTRACE
+spy_whois_notice.c   - Spy on local clients who WHOIS you.
+
+Note: if you have both spy_stats_notice.c and spy_stats_p_notice.c loaded
+you will get two messages.
+
+Patches
+_______
+
+halfops.diff	- This patch will add halfops support to the ircd. To
+		  use this patch, type "patch -p1 < contrib/halfops.diff"
+		  in the main ircd-hybrid directory. You will then need
+		  to add the --enable-halfops switch when running configure
+		  to enable halfops.
+
+Help files
+----------
+
+Previously part of the default install, these are the help files that 
+display information about every command with /quote HELP :whatever.
+
+They are installed if you make install in this directory.

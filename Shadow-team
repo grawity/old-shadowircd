@@ -1,0 +1,10 @@
+$Id: Shadow-team,v 1.1 2004/04/30 18:13:02 nenolod Exp $
+
+ShadowIRCd is the collaboration of many people's ideas.
+The following people currently maintain the ShadowIRCd codebase:
+ 
+nenolod                  nenolod@kpanic.org
+Zippoboy7                zippoboy7@criten.net
+ 
+For information concerning previous coders, see the Shadow-team file in 
+the doc/ subdirectory of the source tree.

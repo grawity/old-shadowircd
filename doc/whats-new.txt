@@ -1,0 +1,49 @@
+                           ------------------------
+			   What's new in ShadowIRCd
+			   ------------------------
+
+===================
+configure and build
+===================
+
+- The configure script has been massively revamped, and all of the Makefiles
+  have undergone serious spring cleaning.
+- Most noticeable is that we generate make dependencies on the fly now. This
+  requires you to have some sort of program that does this, which we detect;
+  currently supported are X11 makedepend, mkdep, cc -xM if using Sun Workshop
+  and falling back to cc -MM if none work. If your C compiler has options to
+  generate make-style dependency info and you have none of the other programs,
+  send a note to nenolod@nenolod.net.
+- We now support an --enable-clobber option so that binaries are not moved to
+  $NAME.old when making install if they already exist. This does not apply to 
+  modules as a running ircd could core if the loaded modules are moved and then
+  unloaded. If you forget this when configuring, use make CLOBBER=yes install;
+  depending on your variety of make, this may or may not work.
+- It is now possible to build the contrib modules into your statically linked
+  ircd.
+
+==================
+networking support
+==================
+
+- IPv6 support is now automatically enabled/disabled depending on whether your
+  kernel supports it or not and can co-exist peacefully with IPv4.
+- Cryptlinks now use Nagle's TCP_NODELAY algorithm to save overhead and is
+  hence, more stable. (Previously only used with ziplinks)
+
+=============
+ircd features
+=============
+
+- X-line (gecos ban) support has been added. X-lines are stored xline.conf
+  just like klines and dlines are stored in kline.conf and dline.conf,
+  respectively.
+- Nick and channel RESVs are now stored in nresv.conf and cresv.conf, respectively.
+- Bill Jonus has written clustering support for IRC networks that wish to share
+  a common list of resvs, klines, xlines, and locops.
+- New ACL G-lines can now be 'rejected' from being placed on the local server as
+  well as 'blocked' from being propogated through the local server onto another
+  server. Failures can also be logged for rejected and/or blocked glines.
+- Many new channel modes.
+
+$Id: whats-new.txt,v 1.1 2004/04/30 18:13:03 nenolod Exp $

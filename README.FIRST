@@ -1,0 +1,109 @@
+******************************* IMPORTANT *************************************
+
+  ************ Note for those who don't bother reading docs ***************
+  * - Reading INSTALL is now a must, as the old DPATH is now specified    *
+  *   when configure is run.                                              *
+  *   You now need to ./configure --prefix="/path/to/install/it"          *
+  * - The old config format WILL NOT WORK.  Please see etc/example.conf ! *
+  * - The old kline format WILL NOT WORK.  Please use convertklines which *
+  *   will be installed with your ircd!					  *
+  *************************************************************************
+
+  ALSO, IF YOU ARE UPGRADING YOUR CURRENT SOURCE TREE, AND YOU TRY TO BUILD
+  IN IT WITHOUT PERFORMING AT LEAST 'make clean', THINGS _WILL_ BREAK.  IT IS
+  RECOMMENDED THAT YOU RUN 'make distclean' AND THEN RERUN './configure'!
+
+******************************* REQUIREMENTS **********************************
+
+Necessary Requirements:
+
+- A supported platform (look below)
+
+- A working dynamic load library, unless
+  compiling statically, without module
+  support.
+
+- A working lex.  Solaris /usr/ccs/bin/lex
+  appears to be broken, on this system flex
+  should be used.
+
+- A working bison or byacc.  FreeBSD and BSD/OS
+  byacc are broken in some releases, and will
+  dump core when building the ircd_parser.y. The
+  solution to this is to upgrade to the most
+  recent release, or to simply obtain a current
+  copy of byacc (such as building source from
+  FreeBSD CVS/CVSup). This is fixed in FreeBSD
+  4.4-STABLE and later.
+
+Feature Specific Requirements:
+
+- For the SSL Challenge controlled OPER feature and encrypted server links,
+  a working OpenSSL library
+
+- For compressed server links,
+  a working zlib library and includes (zlib.h)
+
+- For encrypted oper and (optional) server passwords, a working DES and/or
+  MD5 library
+
+*******************************************************************************
+
+- To report bugs in hybrid, send the bug report to ircd-hybrid@the-project.org
+
+- Known bugs are listed in the BUGS file
+
+- See the INSTALL document for info on configuring and compiling
+  ircd-hybrid.
+
+- Please read doc/index.txt to get an overview of the current documentation.
+
+- Old ShadowIRCd configuration files are no longer supported.  All conf
+  files will have to be converted to the ShadowIRCd 2 format.  A convertconf
+  utility is provided and installed into bin/.
+
+- If you are wondering why config.h no longer exists, it's because most
+  things that were once in config.h are now specified in the 'general'
+  block of ircd.conf.  Look at example.conf for more information about
+  these options. Many, more are now configure options (see ./configure --help for details.).
+  This is the same behaviour as is in ShadowIRCd 1.4+.
+
+- /etc/resolv.conf is at present required to exist for our resolver to start
+  properly.
+
+- There is now a mailing list for general discussion of ShadowIRCd.  To subscribe
+  to the Hybrid List, send email to listmanager@lists.berlios.de with
+  the subject "subscribe shadow".
+
+- If you run in to a problem you think may be specific to your platform,
+  check README.PLATFORMS for some hints.
+
+- SOLARIS USERS: this code appears to tickle a bug in older gcc and 
+  egcs ONLY on 64-bit Solaris7.  gcc-2.95 and SunPro C on 64bit should
+  work fine, and any gcc or SunPro compiled on 32bit.
+
+- DARWIN AND MACOS X USERS: You must be using at least the December 2001
+  Development Tools from Apple to build ircd-hybrid with shared modules.
+  Before then you MUST disable shared modules, as we do not have the proper
+  flags for cc(1) prior to that point to produce shared modules.
+
+- TESTED PLATFORMS:  The code has been tested on the following platforms, and
+  is known to run properly.
+  FreeBSD 3.x/4.x/5.x (gcc only, TenDRA will work but only with the latest
+  cvs version from ten15.org)
+  Linux glibc 2.2/2.3
+  Solaris 2.6/7/8
+  Cygwin 1.3.22 (no shared modules yet)
+  OpenBSD 2.8-3.2
+  HP-UX 11.00-11.22
+  IRIX64 6.5.19 (gcc only; MIPSpro is unconfirmed)
+  NetBSD 1.4-1.6
+  Tru64 UNIX 5.2b (only tested with native cc)
+  
+- Please read RELNOTES and doc/whats-new.txt for information about what is in
+  this release
+
+- Other files recommended for reading: BUGS, INSTALL
+
+--------------------------------------------------------------------------------
+$Id: README.FIRST,v 1.1 2004/04/30 18:13:01 nenolod Exp $

@@ -1,0 +1,10 @@
+; shadowircd custom message file
+; $Id: fantasy.lang,v 1.1 2004/04/30 18:13:56 nenolod Exp $
+
+RPL_WELCOME:                :%s 001 %s :Welcome to the cauldron of %s, %s.
+RPL_CREATED:                :%s 003 %s :This server was cobbled together on %s.
+RPL_ISUPPORT:               :%s 005 %s %s :aren't eaten by the dragon
+RPL_REDIR:                  :%s 010 %s %s :Please move to this dragon-free area.
+RPL_STATSUPTIME:            :%s 242 %s :Someone last conjured this server %d days, %d:%02d:%02d ago.
+RPL_LUSERCLIENT:            :%s 251 %s :There are %d victims and %d hiding on %d portals
+RPL_LUSEROP:                :%s 252 %s :Ancient Wizards Online
