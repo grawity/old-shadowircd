@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  ircd_parser.y: Parses the ircd configuration file.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.1.1.1 2003/12/02 20:47:08 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.2 2003/12/05 18:08:59 nenolod Exp $
  */
 
 %{
@@ -150,6 +150,9 @@ unhook_hub_leaf_confs(void)
 %token  CONNECT
 %token  CONNECTFREQ
 %token  CRYPTLINK
+%token  USERCLOAK
+%token  CLOAKSTRING
+%token  CRYPT_USERCLOAK
 %token  DEFAULT_CIPHER_PREFERENCE
 %token  DEFAULT_FLOODCOUNT
 %token  DEFAULT_SPLIT_SERVER_COUNT
@@ -370,6 +373,7 @@ conf_item:        admin_entry
 		| gline_entry
                 | gecos_entry
                 | modules_entry
+		| usercloak_entry
                 | error ';'
                 | error '}'
         ;
@@ -2413,7 +2417,7 @@ general_item:       general_hide_spoof_ips | general_ignore_bogus_ts |
                     general_compression_level | general_client_flood |
                     general_throttle_time | general_havent_read_conf |
                     general_dot_in_ip6_addr | general_ping_cookie |
-                    general_disable_auth |
+                    general_disable_auth | general_crypt_usercloak |
 		    error;
 
 general_kill_chase_time_limit: KILL_CHASE_TIME_LIMIT '=' NUMBER ';'
@@ -2885,6 +2889,12 @@ general_crypt_oper_password: CRYPT_OPER_PASSWORD '=' TBOOL ';'
     ConfigFileEntry.crypt_oper_password = yylval.number;
 };
 
+general_crypt_usercloak: CRYPT_USERCLOAK '=' TBOOL ';'
+{
+  if (ypass == 2)
+    ConfigFileEntry.crypt_usercloak = yylval.number;
+};
+
 general_min_nonwildcard: MIN_NONWILDCARD '=' NUMBER ';'
 {
   if (ypass == 2)
@@ -3223,4 +3233,84 @@ serverhide_hide_server_ips: HIDE_SERVER_IPS '=' TBOOL ';'
 {
   if (ypass == 2)
     ConfigServerHide.hide_server_ips = yylval.number;
+};
+
+/***************************************************************************
+ * section usercloak
+ ***************************************************************************/
+usercloak_entry: USERCLOAK
+{
+  if (ypass == 2)
+  {
+    yy_conf = make_conf_item(CLOAK_TYPE);
+    yy_aconf = (struct AccessItem *)map_to_conf(yy_conf);
+  }
+  else
+  {
+    MyFree(class_name);
+    class_name = NULL;
+  }
+} '{' usercloak_items '}' ';' ;
+
+usercloak_items: usercloak_items usercloak_item | usercloak_item;
+usercloak_item:  usercloak_name | usercloak_host | usercloak_password |
+                 usercloak_cloakstring | error;
+
+usercloak_name: NAME '=' QSTRING ';'
+{
+  if (ypass == 2)
+  {
+    if (strlen(yylval.string) > OPERNICKLEN)
+      yylval.string[OPERNICKLEN] = '\0';
+
+    MyFree(yy_conf->name);
+    DupString(yy_conf->name, yylval.string);
+  }
+};
+
+usercloak_host: USER '=' QSTRING ';'
+{
+  if (ypass == 2)
+  {
+    struct CollectItem *yy_tmp;
+
+    if (yy_aconf->user == NULL)
+    {
+      DupString(yy_aconf->host, yylval.string);
+      split_user_host(yy_aconf->host, &yy_aconf->user, &yy_aconf->host);
+    }
+    else
+    {
+      yy_tmp = (struct CollectItem *)MyMalloc(sizeof(struct CollectItem));
+
+      DupString(yy_tmp->host, yylval.string);
+      split_user_host(yy_tmp->host, &yy_tmp->user, &yy_tmp->host);
+
+      dlinkAdd(yy_tmp, &yy_tmp->node, &col_conf_list);
+    }
+  }
+};
+
+usercloak_password: PASSWORD '=' QSTRING ';'
+{
+  if (ypass == 2)
+  {
+    if (yy_aconf->passwd != NULL)
+      memset(yy_aconf->passwd, 0, strlen(yy_aconf->passwd));
+
+    MyFree(yy_aconf->passwd);
+    DupString(yy_aconf->passwd, yylval.string);
+  }
+};
+
+usercloak_cloakstring: CLOAKSTRING '=' QSTRING ';'
+{
+  if (ypass == 2)
+  {
+    if (yy_aconf->cloakstring != NULL)
+      memset(yy_aconf->cloakstring, 0, strlen(yy_aconf->cloakstring));
+
+    MyFree(yy_aconf->cloakstring);
+    DupString(yy_aconf->cloakstring, yylval.string);
+  }
 };

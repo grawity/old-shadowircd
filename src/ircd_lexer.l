@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  ircd_lexer.l: Scans the ircd configuration file for tokens.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_lexer.l,v 1.1.1.1 2003/12/02 20:46:48 nenolod Exp $
+ *  $Id: ircd_lexer.l,v 1.2 2003/12/05 18:08:59 nenolod Exp $
  */
 
 %option case-insensitive
@@ -345,6 +345,11 @@ minutes			{ return MINUTES; }
 minute			{ return MINUTES; }
 seconds			{ return SECONDS; }
 second			{ return SECONDS; }
+
+usercloak		{ return USERCLOAK; }
+cloakstring		{ return CLOAKSTRING; }
+
+crypt_usercloak		{ return CRYPT_USERCLOAK; }
 
 bytes			{ return BYTES; }
 byte			{ return BYTES; }

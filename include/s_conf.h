@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.h,v 1.1.1.1 2003/12/02 20:47:55 nenolod Exp $
+ *  $Id: s_conf.h,v 1.2 2003/12/05 18:08:59 nenolod Exp $
  */
 
 #ifndef INCLUDED_s_conf_h
@@ -67,7 +67,8 @@ typedef enum {
   GLINE_TYPE,
   CRESV_TYPE,     
   NRESV_TYPE,
-  GDENY_TYPE
+  GDENY_TYPE,
+  CLOAK_TYPE
 } ConfType;
 
 struct ConfItem
@@ -105,6 +106,7 @@ struct AccessItem
   char *	   reason;
   char *	   oper_reason;
   char *           user;     /* user part of user@host */
+  char *	   cloakstring;
   int              port;
   char *           fakename;   /* Mask name */
   time_t           hold;     /* Hold action until this time (calendar time) */
@@ -312,6 +314,7 @@ struct config_file_entry
   int oper_only_umodes;
   int oper_umodes;
   int crypt_oper_password;
+  int crypt_usercloak;
   int max_targets;
   int caller_id_wait;
   int min_nonwildcard;
