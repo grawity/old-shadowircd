@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_svscloak.c,v 1.2 2003/12/12 20:40:16 nenolod Exp $
+ *  $Id: m_svscloak.c,v 1.3 2003/12/19 02:21:09 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -41,6 +41,7 @@
 #include "parse.h"
 #include "modules.h"
 #include "whowas.h" /* off_history */
+#include "s_user.h"
 
 void m_svscloak(struct Client *client_p, struct Client *source_p, int parc, char *parv[]);
 
@@ -60,7 +61,7 @@ _moddeinit(void)
     mod_del_cmd(&svscloak_msgtab);
 }
 
-const char* _version = "$Revision: 1.2 $";
+const char* _version = "$Revision: 1.3 $";
 
 
 /* m_svscloak
@@ -72,6 +73,7 @@ void m_svscloak(struct Client *client_p, struct Client *source_p, int parc, char
 {
   struct Client *target_p;
   char *hostname, *target;
+  unsigned int old;
 
   if(parc < 3 || EmptyString(parv[2]))
   {   
@@ -83,7 +85,7 @@ void m_svscloak(struct Client *client_p, struct Client *source_p, int parc, char
 
   if ((target_p= find_person(target)))
   {   
-    if(MyClient(target_p) && irccmp(target_p->host, hostname) != 0)
+    if(MyClient(target_p) && irccmp(target_p->virthost, hostname) != 0)
     {   
       sendto_one(target_p, ":%s NOTICE %s :Activating Cloak: %s",
           me.name, target_p->name, hostname);
@@ -93,6 +95,9 @@ void m_svscloak(struct Client *client_p, struct Client *source_p, int parc, char
       sendto_server(client_p, NULL, NULL, NOCAPS, NOCAPS, NOFLAGS, 
           ":%s SVSCLOAK %s :%s", parv[0], parv[1], parv[2]);
     strncpy(target_p->virthost, hostname, HOSTLEN);
+    old = target_p->umodes;
+    target_p->umodes |= UMODE_CLOAK; /* +v so we enable the cloak. */
+    send_umode_out(target_p, target_p, old);
     target_p->flags |= FLAGS_USERCLOAK;  /* set the usercloak flag so that in the
                                           * future, the server will burst the new vhost
                                           * in case of netsplit.

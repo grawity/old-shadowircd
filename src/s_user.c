@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.11 2003/12/19 02:12:08 nenolod Exp $
+ *  $Id: s_user.c,v 1.12 2003/12/19 02:21:09 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,8 +63,6 @@ static void user_welcome(struct Client *);
 static void report_and_set_user_flags(struct Client *, struct AccessItem *);
 static int check_x_line(struct Client *, struct Client *);
 static int introduce_client(struct Client *, struct Client *);
-
-void docloak(struct Client *);
 
 /* table of ascii char letters
  * to corresponding bitmask
@@ -572,9 +570,6 @@ register_local_user(struct Client *client_p, struct Client *source_p,
   add_user_host(source_p->username, source_p->host, 0);
   SetUserHost(source_p);
 
-  source_p->umodes |= UMODE_CLOAK;
-  docloak(source_p);
-
   return(introduce_client(client_p, source_p));
 }
 
@@ -651,8 +646,6 @@ register_remote_user(struct Client *client_p, struct Client *source_p,
 
   add_user_host(source_p->username, source_p->host, 1);
   SetUserHost(source_p);
-
-  docloak(source_p);
 
   return(introduce_client(client_p, source_p));
 }
@@ -1474,39 +1467,3 @@ add_one_to_uid(int i)
     else new_uid[i] = new_uid[i] + 1;
   }
 }
-
-/*
- * docloak -- derived from hybrid-7+nenolod-1.4 (OpenIRCd-1.0.12)
- *            and modified for shadow2 by nenolod.
- */
-void docloak (struct Client *source_p) {
-
-    int alpha = 0, dots = 0;
-    char buf[HOSTLEN+1];
-    char *p = source_p->host;
-
-    while (*p) {
-      if (isalpha(*p)) alpha = 1;
-      if (*p++ == '.') ++dots;
-    }
-    strcpy(buf, source_p->host);
-
-    if (alpha && (dots > 1)) {
-      p = strchr(buf, '.'); *p++ = 0;
-      strcpy(source_p->virthost, "cloaked.");
-      strcat(source_p->virthost, p);
-    } else if (!alpha) {
-      p = strrchr(buf, '.'); *p++ = 0;
-      strcpy(source_p->virthost, buf);
-      strcat(source_p->virthost, ".0");
-    } else if (alpha) {
-      strcpy(source_p->virthost, "cloaked");
-    }
-
-  if (MyClient(source_p)) {
-    sendto_one(source_p, ":%s NOTICE %s :*** Notice -- Your usercloak is [%s]. Use of it is controlled by umode +/-v.",
-		me.name, source_p->name, source_p->virthost);
-  }
-
-}
-
