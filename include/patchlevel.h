@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: patchlevel.h,v 1.16 2004/08/23 01:46:43 nenolod Exp $
+ *  $Id: patchlevel.h,v 1.17 2004/08/24 04:04:13 nenolod Exp $
  */
 
 #ifndef PATCHLEVEL
@@ -34,7 +34,7 @@
 #define MAJOR 3
 #define MINOR 2
 
-#define PATCH1 "-beta2"
+#define PATCH1 "-current"
 #define PATCH2 ""
 #define PATCH3 ""
 #define PATCH4 ""
