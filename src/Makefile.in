@@ -1,7 +1,7 @@
 #
 # Makefile.in for ircd/src
 #
-# $Id: Makefile.in,v 1.9 2004/09/06 22:24:49 nenolod Exp $
+# $Id: Makefile.in,v 1.10 2004/09/06 22:47:46 nenolod Exp $
 #
 @SET_MAKE@
 
@@ -37,7 +37,7 @@ PROGS		= ircd
 SSL_LIBS	= @SSL_LIBS@
 SSL_INCLUDES	= @SSL_INCLUDES@
 IRCDLIBS	= @MODULES_LIBS@ @LIBS@ $(SSL_LIBS) ../adns/libadns.a
-INCLUDES	= -I../include $(SSL_INCLUDES)
+INCLUDES	= -I../include -I../adns $(SSL_INCLUDES)
 CPPFLAGS	= ${INCLUDES} @CPPFLAGS@
  
 default:	all

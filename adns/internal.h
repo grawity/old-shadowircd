@@ -26,7 +26,7 @@
  *  along with this program; if not, write to the Free Software Foundation,
  *  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * $Id: internal.h,v 1.2 2004/09/06 22:28:29 nenolod Exp $
+ * $Id: internal.h,v 1.3 2004/09/06 22:47:46 nenolod Exp $
  */
 
 #ifndef ADNS_INTERNAL_H_INCLUDED
@@ -49,6 +49,7 @@ typedef unsigned char byte;
 
 #include <sys/time.h>
 
+#include "fileio.h"
 #include "adns.h"
 #include "dlist.h"
 

@@ -1,7 +1,7 @@
 #
 # Makefile.in for ircd/src
 #
-# $Id: Makefile.in,v 1.4 2004/09/06 22:33:48 nenolod Exp $
+# $Id: Makefile.in,v 1.5 2004/09/06 22:47:46 nenolod Exp $
 #
 CC		= @CC@
 INSTALL		= @INSTALL@
@@ -11,9 +11,9 @@ INSTALL_SUID	= @INSTALL_PROGRAM@ -o root -m 4755
 RM		= @RM@
 LEX		= @LEX@
 LEXLIB		= @LEXLIB@
-CFLAGS		= @IRC_CFLAGS@ -DIRCD_PREFIX=\"@prefix@\"
+CFLAGS		= @IRC_CFLAGS@
 LDFLAGS   	= @LDFLAGS@
-MKDEP		= @MKDEP@ -DIRCD_PREFIX=\"@prefix@\"
+MKDEP		= @MKDEP@
 MV		= @MV@
 RM		= @RM@
 YACC		= @YACC@
