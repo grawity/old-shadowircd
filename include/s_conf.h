@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.h,v 1.9 2004/02/05 20:15:48 nenolod Exp $
+ *  $Id: s_conf.h,v 1.10 2004/02/12 22:27:12 nenolod Exp $
  */
 
 #ifndef INCLUDED_s_conf_h
@@ -65,10 +65,8 @@ typedef enum {
   CLUSTER_TYPE,
   XLINE_TYPE,    
   ULINE_TYPE,
-  GLINE_TYPE,
   CRESV_TYPE,     
   NRESV_TYPE,
-  GDENY_TYPE,
   CLOAK_TYPE
 } ConfType;
 
@@ -206,7 +204,7 @@ struct ClassItem
 #define CONF_FLAGS_SPOOF_IP             0x00000200
 #define CONF_FLAGS_SPOOF_NOTICE         0x00000400
 #define CONF_FLAGS_REDIR                0x00000800
-#define CONF_FLAGS_EXEMPTGLINE          0x00001000
+/*                                      0x00001000 */
 #define CONF_FLAGS_RESTRICTED           0x00002000
 #define CONF_FLAGS_CAN_FLOOD            0x00100000
 #define CONF_FLAGS_NEED_PASSWORD        0x00200000
@@ -229,7 +227,6 @@ struct ClassItem
 #define IsNoMatchIp(x)          ((x)->flags & CONF_FLAGS_NOMATCH_IP)
 #define IsConfExemptKline(x)    ((x)->flags & CONF_FLAGS_EXEMPTKLINE)
 #define IsConfExemptLimits(x)   ((x)->flags & CONF_FLAGS_NOLIMIT)
-#define IsConfExemptGline(x)    ((x)->flags & CONF_FLAGS_EXEMPTGLINE)
 #define IsConfIdlelined(x)      ((x)->flags & CONF_FLAGS_IDLE_LINED)
 #define IsConfDoIdentd(x)       ((x)->flags & CONF_FLAGS_DO_IDENTD)
 #define IsConfDoSpoofIp(x)      ((x)->flags & CONF_FLAGS_SPOOF_IP)
@@ -256,10 +253,6 @@ struct ClassItem
 #define SHARED_ALL		(SHARED_KLINE | SHARED_UNKLINE | SHARED_XLINE |\
 				 SHARED_UNXLINE | SHARED_RESV | SHARED_UNRESV)
 
-/* gline acl entry actions */
-#define GDENY_BLOCK		0x1
-#define GDENY_REJECT		0x2
-
 struct config_file_entry
 {
   const char *dpath;          /* DPATH if set from command line */
@@ -267,7 +260,6 @@ struct config_file_entry
   const char *klinefile;
   const char *xlinefile;
   const char *dlinefile;
-  const char *glinefile;
   const char *cresvfile;
   const char *nresvfile;
 
@@ -306,9 +298,6 @@ struct config_file_entry
   int no_oper_flood;
   int true_no_oper_flood;
   int oper_pass_resv;
-  int glines;
-  int gline_time;
-  int gline_logging;
   int hide_spoof_ips;
   int idletime;
   int ignore_bogus_ts;
@@ -407,7 +396,6 @@ extern dlink_list server_items;
 extern dlink_list cluster_items;
 extern dlink_list hub_items;
 extern dlink_list leaf_items;
-extern dlink_list gline_items;
 extern dlink_list temporary_klines;
 extern dlink_list temporary_dlines;
 extern struct logging_entry ConfigLoggingEntry;

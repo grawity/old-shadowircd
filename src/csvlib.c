@@ -6,7 +6,7 @@
  *  Use it anywhere you like, if you like it buy us a beer.
  *  If it's broken, don't bother us with the lawyers.
  *
- *  $Id: csvlib.c,v 1.2 2003/12/05 22:42:56 nenolod Exp $
+ *  $Id: csvlib.c,v 1.3 2004/02/12 22:27:12 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -109,8 +109,6 @@ parse_csv_file(FBFILE *file, ConfType conf_type)
       break;
 
     case CLOAK_TYPE:
-    case GLINE_TYPE:
-    case GDENY_TYPE:
     case CONF_TYPE:
     case OPER_TYPE:
     case CLIENT_TYPE:
@@ -257,19 +255,6 @@ write_conf_line(const struct Client *source_p, struct ConfItem *conf,
 		   conf->name, xconf->reason, xconf->oper_reason,
 		   xconf->action,
 		   current_date, get_oper_name(source_p), (long)cur_time);
-    break;
-
-  case GLINE_TYPE:
-    aconf = (struct AccessItem *)map_to_conf(conf);
-    sendto_realops_flags(UMODE_ALL, L_ALL,
-			 "%s added G-Line for [%s@%s] [%s]",
-			 get_oper_name(source_p),
-			 aconf->user, aconf->host, aconf->reason);
-    ilog(L_TRACE, "%s added G-Line for [%s@%s] [%s]",
-         get_oper_name(source_p), aconf->user, aconf->host, aconf->reason);
-    write_csv_line(out, "%s%s%s%d%s%s%ld",
-		   aconf->user, aconf->host, aconf->reason, "", current_date,
-		   get_oper_name(source_p), (long)aconf->hold);
     break;
 
   case CRESV_TYPE:

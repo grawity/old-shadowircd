@@ -1,7 +1,7 @@
 #
 # Makefile.in for ircd/src
 #
-# $Id: Makefile.in,v 1.3 2004/02/05 20:29:06 nenolod Exp $
+# $Id: Makefile.in,v 1.4 2004/02/12 22:27:12 nenolod Exp $
 #
 @SET_MAKE@
 
@@ -95,7 +95,6 @@ BASE_SRCS =	\
  s_bsd.c \
  s_conf.c \
  s_debug.c \
- s_gline.c \
  s_hidehost.c \
  s_log.c \
  s_misc.c \

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd.c,v 1.10 2004/02/05 20:15:48 nenolod Exp $
+ *  $Id: ircd.c,v 1.11 2004/02/12 22:27:12 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -39,7 +39,6 @@
 #include "ircdauth.h"
 #include "ircd_signal.h"
 #include "list.h"
-#include "s_gline.h"
 #include "motd.h"
 #include "ircd_handler.h"
 #include "msg.h"		/* msgtab */
@@ -534,7 +533,6 @@ main (int argc, char *argv[])
   ConfigFileEntry.klinefile = KPATH;	/* Server kline file         */
   ConfigFileEntry.xlinefile = XPATH;	/* Server xline file         */
   ConfigFileEntry.dlinefile = DLPATH;	/* dline file                */
-  ConfigFileEntry.glinefile = GPATH;	/* gline log file            */
   ConfigFileEntry.cresvfile = CRESVPATH;	/* channel resv file      */
   ConfigFileEntry.nresvfile = NRESVPATH;	/* nick resv file         */
   myargv = argv;
@@ -677,7 +675,6 @@ main (int argc, char *argv[])
 
   ilog (L_NOTICE, "Server Ready");
 
-  eventAddIsh ("cleanup_glines", cleanup_glines, NULL, CLEANUP_GLINES_TIME);
   eventAddIsh ("cleanup_tklines", cleanup_tklines, NULL,
 	       CLEANUP_TKLINES_TIME);
 

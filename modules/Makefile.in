@@ -1,7 +1,7 @@
 #
 # Makefile.in for ircd/modules
 #
-# $Id: Makefile.in,v 1.12 2004/02/12 20:12:03 nenolod Exp $
+# $Id: Makefile.in,v 1.13 2004/02/12 22:27:12 nenolod Exp $
 #
 CC		= @CC@
 AR		= @AR@
@@ -64,7 +64,6 @@ SRCS =       \
   m_encap.c \
   m_eob.c \
   m_force.c \
-  m_gline.c \
   m_grant.c \
   m_help.c \
   m_info.c \

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_lexer.l,v 1.11 2004/02/05 20:15:48 nenolod Exp $
+ *  $Id: ircd_lexer.l,v 1.12 2004/02/12 22:27:12 nenolod Exp $
  */
 
 %option case-insensitive
@@ -174,9 +174,6 @@ foperlog   	{ return FOPERLOG; }
 fuserlog   	{ return FUSERLOG; }
 gecos		{ return GECOS; }
 general		{ return GENERAL; }
-gline		{ return GLINE; }
-glines		{ return GLINES; }
-gline_exempt    { return GLINE_EXEMPT; }
 global_kill	{ return GLOBAL_KILL; }
 have_ident	{ return HAVE_IDENT; }
 havent_read_conf { return HAVENT_READ_CONF; }

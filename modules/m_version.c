@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  m_version.c: Shows ircd version information.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_version.c,v 1.1.1.1 2003/12/02 20:47:44 nenolod Exp $
+ *  $Id: m_version.c,v 1.2 2004/02/12 22:27:12 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -73,7 +73,7 @@ _moddeinit(void)
   mod_del_cmd(&version_msgtab);
 }
 
-const char *_version = "$Revision: 1.1.1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /*
@@ -168,8 +168,6 @@ confopts(struct Client *source_p)
 
   if (ConfigChannel.use_except)
     *p++ = 'e';
-  if (ConfigFileEntry.glines)
-    *p++ = 'g';
   *p++ = 'G';
 
   /* might wanna hide this :P */

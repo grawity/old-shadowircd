@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  m_kline.c: Bans a user.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_kline.c,v 1.2 2004/02/09 23:02:24 nenolod Exp $
+ *  $Id: m_kline.c,v 1.3 2004/02/12 22:27:12 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -43,7 +43,6 @@
 #include "handlers.h"
 #include "s_serv.h"
 #include "msg.h"
-#include "s_gline.h"
 #include "parse.h"
 #include "modules.h"
 #include "cluster.h"
@@ -106,7 +105,7 @@ _moddeinit (void)
   delete_capability ("KLN");
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 #define TK_SECONDS 0

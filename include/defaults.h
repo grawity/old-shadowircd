@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: defaults.h,v 1.2 2004/01/15 20:16:20 nenolod Exp $
+ *  $Id: defaults.h,v 1.3 2004/02/12 22:27:12 nenolod Exp $
  */
 
 #ifndef INCLUDED_defaults_h
@@ -61,7 +61,6 @@
 #define CRESVPATH   ETCPATH "/cresv.conf"       /* channel resvs file */
 #define NRESVPATH   ETCPATH "/nresv.conf"       /* nick resvs file */
 #define DLPATH  ETCPATH "/dline.conf"           /* dline file */
-#define GPATH   ETCPATH "/gline.conf"           /* gline conffile */
 #define XPATH   ETCPATH "/xline.conf"           /* xline file */
 #define MPATH   ETCPATH "/ircd.motd"            /* MOTD file */
 #define SMPATH  ETCPATH "/ircd.smotd"           /* Short MOTD file */

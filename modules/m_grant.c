@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_grant.c,v 1.7 2004/02/12 20:36:16 nenolod Exp $
+ *  $Id: m_grant.c,v 1.8 2004/02/12 22:27:12 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -66,7 +66,7 @@ _moddeinit (void)
   mod_del_cmd (&grant_msgtab);
 }
 
-const char *_version = "$Revision: 1.7 $";
+const char *_version = "$Revision: 1.8 $";
 #endif
 
 /* this is a struct, associating operator permissions with letters. */
@@ -91,7 +91,7 @@ static struct oper_flag_item oper_flags[] = {
   {"u", OPER_FLAG_UNKLINE},
   {"R", OPER_FLAG_REMOTE},
   {"K", OPER_FLAG_GLOBAL_KILL},
-  {"\0", 0}
+  {NULL, 0}
 };
 
 /* these are support functions for grant, based on the ones I wrote for

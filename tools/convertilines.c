@@ -25,7 +25,7 @@
  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *
- * $Id: convertilines.c,v 1.1.1.1 2003/12/02 20:47:29 nenolod Exp $
+ * $Id: convertilines.c,v 1.2 2004/02/12 22:27:12 nenolod Exp $
  */
 
 #include <stdio.h>
@@ -49,7 +49,6 @@ struct AuthBlock
     int restricted;
     int exceed_limit;
     int kline_exempt;
-    int gline_exempt;
     int require_ident;
     int no_tilde;
 
@@ -418,9 +417,6 @@ static void write_specific(FILE *out, struct AuthBlock *ptr)
     if(ptr->kline_exempt)
 	fprintf(out, "\tkline_exempt = yes;\n");
 
-    if(ptr->gline_exempt)
-	fprintf(out, "\tgline_exempt = yes;\n");
-
     if(ptr->no_tilde)
 	fprintf(out, "\tno_tilde = yes;\n");
 
@@ -506,7 +502,6 @@ static int match(struct AuthBlock *ptr, struct AuthBlock *acptr)
        (ptr->require_ident == acptr->require_ident) &&
        (ptr->exceed_limit == acptr->exceed_limit) &&
        (ptr->kline_exempt == acptr->kline_exempt) &&
-       (ptr->gline_exempt == acptr->gline_exempt) &&
        (ptr->no_tilde == acptr->no_tilde))
     {
 	const char *p1, *p2;
@@ -575,11 +570,6 @@ void set_flags(struct AuthBlock *ptr, const char *user_field, const char *host_f
 
 	  case '>':
 	      ptr->exceed_limit = 1;
-	      ptr->special = 1;
-	      break;
-
-	  case '_':
-	      ptr->gline_exempt = 1;
 	      ptr->special = 1;
 	      break;
 

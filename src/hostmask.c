@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: hostmask.c,v 1.1.1.1 2003/12/02 20:47:00 nenolod Exp $
+ *  $Id: hostmask.c,v 1.2 2004/02/12 22:27:12 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -755,8 +755,6 @@ show_iline_prefix(struct Client *sptr, struct AccessItem *aconf, char *name)
     *prefix_ptr++ = '=';
   if (MyOper(sptr) && IsConfExemptKline(aconf))
     *prefix_ptr++ = '^';
-  if (MyOper(sptr) && IsConfExemptGline(aconf))
-    *prefix_ptr++ = '_';
   if (MyOper(sptr) && IsConfExemptLimits(aconf))
     *prefix_ptr++ = '>';
   if (MyOper(sptr) && IsConfIdlelined(aconf))

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_info.c,v 1.2 2004/01/20 19:56:34 nenolod Exp $
+ *  $Id: m_info.c,v 1.3 2004/02/12 22:27:12 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -71,7 +71,7 @@ _moddeinit(void)
   mod_del_cmd(&info_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 /*
@@ -143,18 +143,6 @@ static struct InfoStruct info_table[] =
     OUTPUT_BOOLEAN,
     &ConfigFileEntry.failed_oper_notice,
     "Inform opers if someone /oper's with the wrong password"
-  },
-  {
-    "glines",
-    OUTPUT_BOOLEAN,
-    &ConfigFileEntry.glines,
-    "G-line (network-wide K-line) support"
-  },
-  {
-    "gline_time",
-    OUTPUT_DECIMAL,
-    &ConfigFileEntry.gline_time,
-    "Expiry time for G-lines"
   },
   {
     "hide_spoof_ips",

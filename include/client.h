@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.9 2004/02/12 01:47:12 nenolod Exp $
+ *  $Id: client.h,v 1.10 2004/02/12 22:27:12 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -362,7 +362,7 @@ struct LocalUser
 #define FLAGS_SERVLINK    0x00000800 /* servlink has servlink process            */
 #define FLAGS_MARK	  0x00001000 /* marked client                            */
 #define FLAGS_CANFLOOD	  0x00002000 /* client has the ability to flood          */
-#define FLAGS_EXEMPTGLINE 0x00004000 /* client can't be G-lined                  */
+/*                        0x00004000  */
 #define FLAGS_EXEMPTKLINE 0x00008000 /* client is exempt from kline              */
 #define FLAGS_NOLIMIT     0x00010000 /* client is exempt from limits             */
 #define FLAGS_RESTRICTED  0x00020000 /* client cannot op others                  */
@@ -437,7 +437,7 @@ struct LocalUser
 #define OPER_FLAG_GLOBAL_KILL  0x00000001 /* oper can global kill        */
 #define OPER_FLAG_REMOTE       0x00000002 /* oper can do squits/connects */
 #define OPER_FLAG_UNKLINE      0x00000004 /* oper can use unkline        */
-#define OPER_FLAG_GLINE        0x00000008 /* oper can use gline          */
+#define OPER_FLAG_ROUTING      0x00000008 /* oper can see routing info   */
 #define OPER_FLAG_N            0x00000010 /* oper can umode n            */
 #define OPER_FLAG_K            0x00000020 /* oper can kill/kline         */
 #define OPER_FLAG_X            0x00000040 /* oper can xline              */
@@ -529,8 +529,6 @@ struct LocalUser
 #define SetExemptKline(x)       ((x)->flags |= FLAGS_EXEMPTKLINE)
 #define IsExemptLimits(x)       ((x)->flags & FLAGS_NOLIMIT)
 #define SetExemptLimits(x)      ((x)->flags |= FLAGS_NOLIMIT)
-#define IsExemptGline(x)        ((x)->flags & FLAGS_EXEMPTGLINE)
-#define SetExemptGline(x)       ((x)->flags |= FLAGS_EXEMPTGLINE)
 #define SetIPSpoof(x)           ((x)->flags |= FLAGS_IP_SPOOFING)
 #define IsIPSpoof(x)            ((x)->flags & FLAGS_IP_SPOOFING)
 
@@ -558,7 +556,6 @@ struct LocalUser
 #define IsOperGlobalKill(x)     (MyConnect(x) ? (x)->localClient->operflags & OPER_FLAG_GLOBAL_KILL : 0)
 #define IsOperRemote(x)         (MyConnect(x) ? (x)->localClient->operflags & OPER_FLAG_REMOTE : 0)
 #define IsOperUnkline(x)        (MyConnect(x) ? (x)->localClient->operflags & OPER_FLAG_UNKLINE : 0)
-#define IsOperGline(x)          (MyConnect(x) ? (x)->localClient->operflags & OPER_FLAG_GLINE : 0)
 #define IsOperN(x)              (MyConnect(x) ? (x)->localClient->operflags & OPER_FLAG_N : 0)
 #define IsOperK(x)              (MyConnect(x) ? (x)->localClient->operflags & OPER_FLAG_K : 0)
 #define IsOperDie(x)            (MyConnect(x) ? (x)->localClient->operflags & OPER_FLAG_DIE : 0)

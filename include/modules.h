@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  modules.h: A header for the modules functions.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: modules.h,v 1.1.1.1 2003/12/02 20:47:54 nenolod Exp $
+ *  $Id: modules.h,v 1.2 2004/02/12 22:27:12 nenolod Exp $
  */
 
 #ifndef INCLUDED_modules_h
@@ -96,8 +96,6 @@ extern struct Message dmem_msgtab;
 extern struct Message drop_msgtab;
 extern struct Message eob_msgtab;
 extern struct Message error_msgtab;
-extern struct Message gline_msgtab;
-extern struct Message ungline_msgtab;
 extern struct Message info_msgtab;
 extern struct Message invite_msgtab;
 extern struct Message ison_msgtab;
@@ -175,6 +173,7 @@ extern struct Message omotd_msgtab;
 extern struct Message operspy_msgtab;
 extern struct Message opme_msgtab;
 extern struct Message tburst_msgtab;
+extern struct Message grant_msgtab;
 #endif
 
 extern void load_all_modules(int check);

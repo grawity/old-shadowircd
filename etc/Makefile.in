@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.1.1.1 2003/12/02 20:46:34 nenolod Exp $
+# $Id: Makefile.in,v 1.2 2004/02/12 22:27:12 nenolod Exp $
 
 INSTALL		= @INSTALL@
 INSTALL_DATA	= @INSTALL_DATA@
@@ -34,6 +34,7 @@ install:
 	@if test ! -f "$(sysconfdir)/ircd.motd"; then \
 		echo "Creating generic $(sysconfdir)/ircd.motd"; \
 		echo "This is ircd-hybrid MOTD replace it with something better" > $(sysconfdir)/ircd.motd; \
+		echo "otherwise people might find out how much you like goats!" >> $(sysconfdir)/ircd.motd; \
 	fi
 	
 	@for i in d k x; do \

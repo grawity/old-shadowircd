@@ -15,7 +15,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * $Id: convertconf.c,v 1.1.1.1 2003/12/02 20:47:29 nenolod Exp $
+ * $Id: convertconf.c,v 1.2 2004/02/12 22:27:12 nenolod Exp $
  */
 
 #include <stdio.h>
@@ -791,14 +791,6 @@ static void OperPrivsFromString(FILE* out, const char *privs)
       else if(*privs == 'k')                /* disallow kill and kline privs */
 	{
 	  fprintf(out,"\tkline=no;\n");
-	}
-      else if(*privs == 'G')                /* allow gline */
-	{
-	  fprintf(out,"\tgline=yes;\n");
-	}
-      else if(*privs == 'g')                /* disallow gline */
-	{
-	  fprintf(out,"\tgline=no;\n");
 	}
       else if(*privs == 'H')                /* allow rehash */
 	{

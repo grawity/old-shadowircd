@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.c,v 1.6 2004/01/20 19:56:34 nenolod Exp $
+ *  $Id: s_conf.c,v 1.7 2004/02/12 22:27:12 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -49,7 +49,6 @@
 #include "fdlist.h"
 #include "s_log.h"
 #include "send.h"
-#include "s_gline.h"
 #include "fileio.h"
 #include "memory.h"
 #include "irc_res.h"
@@ -65,8 +64,6 @@ dlink_list uconf_items   = { NULL, NULL, 0 };
 dlink_list xconf_items   = { NULL, NULL, 0 };
 dlink_list nresv_items   = { NULL, NULL, 0 };
 dlink_list class_items   = { NULL, NULL, 0 };
-dlink_list gline_items   = { NULL, NULL, 0 };
-dlink_list gdeny_items	 = { NULL, NULL, 0 };
 
 dlink_list temporary_klines = { NULL, NULL, 0 };
 dlink_list temporary_dlines = { NULL, NULL, 0 };
@@ -206,7 +203,6 @@ make_conf_item(ConfType type)
   {
   case DLINE_TYPE:
   case EXEMPTDLINE_TYPE:
-  case GLINE_TYPE:
   case KLINE_TYPE:
   case CLIENT_TYPE:
   case OPER_TYPE:
@@ -226,11 +222,6 @@ make_conf_item(ConfType type)
 
     case DLINE_TYPE:
       status = CONF_DLINE;
-      break;
-
-    case GLINE_TYPE:
-      status = CONF_KILL;
-      dlinkAdd(conf, &conf->node, &gline_items);
       break;
 
     case KLINE_TYPE:
@@ -274,12 +265,6 @@ make_conf_item(ConfType type)
     conf = (struct ConfItem *)MyMalloc(sizeof(struct ConfItem) +
                                        sizeof(struct MatchItem));
     dlinkAdd(conf, &conf->node, &uconf_items);
-    break;
-
-  case GDENY_TYPE:
-    conf = (struct ConfItem *)MyMalloc(sizeof(struct ConfItem) +
-                                       sizeof(struct AccessItem));
-    dlinkAddTail(conf, &conf->node, &gdeny_items);
     break;
 
   case XLINE_TYPE:
@@ -377,7 +362,6 @@ delete_conf_item(struct ConfItem *conf)
     {
     case EXEMPTDLINE_TYPE:
     case DLINE_TYPE:
-    case GLINE_TYPE:
     case KLINE_TYPE:
     case CLIENT_TYPE:
       MyFree(conf);
@@ -456,14 +440,6 @@ delete_conf_item(struct ConfItem *conf)
     MyFree(conf);
     break;
 
-  case GDENY_TYPE:
-    aconf = (struct AccessItem *)map_to_conf(conf);
-    MyFree(aconf->user);
-    MyFree(aconf->host);
-    dlinkDelete(&conf->node, &gdeny_items);
-    MyFree(conf);
-    break;
-
   case CLUSTER_TYPE:
     match_item = (struct MatchItem *)map_to_conf(conf);
     MyFree(match_item->user);
@@ -471,16 +447,6 @@ delete_conf_item(struct ConfItem *conf)
     MyFree(match_item->reason);
     MyFree(match_item->oper_reason);
     dlinkDelete(&conf->node, &cluster_items);
-    MyFree(conf);
-    break;
-
-  case GLINE_TYPE:
-    aconf = (struct AccessItem *)map_to_conf(conf);
-    MyFree(aconf->user);
-    MyFree(aconf->host);
-    MyFree(aconf->reason);
-    MyFree(aconf->oper_reason);
-    dlinkDelete(&conf->node, &gline_items);
     MyFree(conf);
     break;
 
@@ -536,33 +502,6 @@ report_confitem_types(struct Client *source_p, ConfType type)
 
   switch (type)
   {
-  case GDENY_TYPE:
-    DLINK_FOREACH(ptr, gdeny_items.head)
-    {
-      conf = ptr->data;
-      aconf = (struct AccessItem *)map_to_conf(conf);
-
-      buf[0] = '\0';
-      p = buf;
-
-      if (aconf->flags & GDENY_BLOCK)
-        *p++ = 'B';
-      else
-        *p++ = 'b';
-
-      if (aconf->flags & GDENY_REJECT)
-        *p++ = 'R';
-      else
-        *p++ = 'r';
-
-     *p++ = '\0';
-
-      sendto_one(source_p, ":%s %d %s V %s@%s %s %s",
-                 me.name, RPL_STATSDEBUG, source_p->name, 
-                 aconf->user, aconf->host, conf->name, buf);
-    }
-    break;
-
   case XLINE_TYPE:
     DLINK_FOREACH(ptr, xconf_items.head)
     {
@@ -771,7 +710,6 @@ report_confitem_types(struct Client *source_p, ConfType type)
   case KLINE_TYPE:
   case DLINE_TYPE:
   case EXEMPTDLINE_TYPE:
-  case GLINE_TYPE:
   case CRESV_TYPE:
   case NRESV_TYPE:
   case CLOAK_TYPE:
@@ -885,7 +823,6 @@ verify_access(struct Client *client_p, const char *username)
 {
   struct AccessItem *aconf;
   struct ConfItem *conf;
-  struct AccessItem *gkill_conf;
   char non_ident[USERLEN + 1];
 
   if (IsGotId(client_p))
@@ -918,27 +855,6 @@ verify_access(struct Client *client_p, const char *username)
                    conf->name ? conf->name : "",
                    aconf->port);
         return(NOT_AUTHORIZED);
-      }
-
-      if (ConfigFileEntry.glines)
-      {
-	if (!IsConfExemptKline(aconf) && !IsConfExemptGline(aconf))
-	{
-	  if (IsGotId(client_p))
-	    gkill_conf = find_gkill(client_p, client_p->username);
-	  else
-	    gkill_conf = find_gkill(client_p, non_ident);
-	  
-	  if (gkill_conf != NULL)
-	  {
-	    sendto_one(client_p, ":%s NOTICE %s :*** G-lined", me.name,
-		       client_p->name);
-	    sendto_one(client_p, ":%s NOTICE %s :*** Banned %s",
-		       me.name, client_p->name, 
-		       gkill_conf->passwd);
-	    return(BANNED_CLIENT);
-	  }
-	}
       }
 
       if (IsConfDoIdentd(aconf))
@@ -1693,7 +1609,6 @@ map_to_list(ConfType type)
   case KLINE_TYPE:
   case DLINE_TYPE:
   case CRESV_TYPE:
-  case GLINE_TYPE:
   default:
     return(NULL);
   }
@@ -2023,8 +1938,6 @@ set_default_conf(void)
   ConfigFileEntry.no_oper_flood = NO;     /* XXX */
   ConfigFileEntry.true_no_oper_flood = NO;  /* XXX */
   ConfigFileEntry.oper_pass_resv = YES;
-  ConfigFileEntry.glines = NO;            /* XXX */
-  ConfigFileEntry.gline_time = 12 * 3600; /* XXX */
   ConfigFileEntry.idletime = 0;
   ConfigFileEntry.maximum_links = MAXIMUM_LINKS_DEFAULT;
   ConfigFileEntry.max_targets = MAX_TARGETS_DEFAULT;
@@ -2502,7 +2415,7 @@ clear_out_old_conf(void)
   struct MatchItem *match_item;
   dlink_list * free_items [] = {
     &server_items, &oconf_items, &hub_items, &leaf_items, &uconf_items,
-    &xconf_items, &nresv_items, &cluster_items, &gdeny_items, NULL
+    &xconf_items, &nresv_items, &cluster_items, NULL
   };
 
   dlink_list ** iterator = free_items; /* C is dumb */
@@ -2706,9 +2619,6 @@ get_conf_name(ConfType type)
       break;
     case NRESV_TYPE:
       return(ConfigFileEntry.nresvfile);
-      break;
-    case GLINE_TYPE:
-      return(ConfigFileEntry.glinefile);
       break;
 
     default:
