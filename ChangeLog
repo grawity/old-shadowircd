@@ -1,5 +1,12 @@
 (n) = nenolod; (z) = Zippoboy7
 
+ShadowIRCd 2.4.4
+
+* Fixed compatibility with older ShadowIRCd protocol. (n)
+* Fixed compatibility mode (TS5). (n)
+* Added a reject cache. (n)
+* Fixed some errors in the config file. (n)
+
 ShadowIRCd 2.4.3
 
 * Added vhost to UID statement. (n)

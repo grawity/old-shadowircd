@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.c,v 1.2 2004/04/30 19:46:58 nenolod Exp $
+ *  $Id: s_conf.c,v 1.3 2004/04/30 22:57:59 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1953,9 +1953,6 @@ set_default_conf(void)
   ConfigFileEntry.oper_umodes = UMODE_LOCOPS | UMODE_SERVNOTICE |
     UMODE_OPERWALL | UMODE_WALLOP;        /* XXX */
   ConfigFileEntry.crypt_oper_password = YES;
-  ConfigFileEntry.reject_after_count = 5;
-  ConfigFileEntry.reject_ban_time = 300;
-  ConfigFileEntry.reject_duration = 120;
 
   DupString(ConfigFileEntry.servlink_path, SLPATH);
 #ifdef HAVE_LIBCRYPTO

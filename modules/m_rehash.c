@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_rehash.c,v 1.1 2004/04/30 18:14:03 nenolod Exp $
+ *  $Id: m_rehash.c,v 1.2 2004/04/30 22:57:59 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -37,6 +37,7 @@
 #include "msg.h"
 #include "parse.h"
 #include "modules.h"
+#include "reject.h"
 
 static void mo_rehash(struct Client *, struct Client *, int, char **);
 
@@ -58,7 +59,7 @@ _moddeinit(void)
   mod_del_cmd(&rehash_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /*
@@ -89,6 +90,14 @@ mo_rehash(struct Client *client_p, struct Client *source_p,
                                and close/re-open res socket */
       found = 1;
     }
+    else if (irccmp(parv[1], "REJECTS") == 0)
+    {
+      sendto_realops_flags(UMODE_ALL, L_ALL,
+                           "%s is clearing the reject cache",
+                           get_oper_name(source_p));
+      flush_reject();
+      found = 1;
+    }
     else if (irccmp(parv[1], "MOTD") == 0)
     {
       sendto_realops_flags(UMODE_ALL, L_ALL,
@@ -114,7 +123,7 @@ mo_rehash(struct Client *client_p, struct Client *source_p,
     }
     else
     {
-      sendto_one(source_p, ":%s NOTICE %s :rehash one of :DNS MOTD OMOTD",
+      sendto_one(source_p, ":%s NOTICE %s :rehash one of :DNS MOTD OMOTD REJECTS",
                  me.name, source_p->name);
       return;
     }
