@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_bsd.c,v 1.3 2003/12/05 22:42:56 nenolod Exp $
+ *  $Id: s_bsd.c,v 1.4 2003/12/05 23:07:32 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -857,14 +857,11 @@ comm_accept(int fd, struct irc_ssaddr *pn, int is_ssl)
         }
         SSL_set_fd(ssl, newfd);
 
-
-again:
         retval = SSL_accept(ssl);
         if (retval <= 0) {
                 switch ((retval = SSL_get_error(ssl, retval))) {
 
                 case SSL_ERROR_SYSCALL:
-                                if (errno==EINTR || errno==EWOULDBLOCK || errno==EAGAIN)
 
                         case SSL_ERROR_WANT_READ:
                         case SSL_ERROR_WANT_WRITE:

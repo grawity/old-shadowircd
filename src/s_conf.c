@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  s_conf.c: Configuration file functions.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.c,v 1.1.1.1 2003/12/02 20:46:53 nenolod Exp $
+ *  $Id: s_conf.c,v 1.2 2003/12/05 23:07:32 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -212,6 +212,7 @@ make_conf_item(ConfType type)
   case KLINE_TYPE:
   case CLIENT_TYPE:
   case OPER_TYPE:
+  case CLOAK_TYPE:
   case SERVER_TYPE:
     conf = (struct ConfItem *)MyMalloc(sizeof(struct ConfItem) +
                                        sizeof(struct AccessItem));
