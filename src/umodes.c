@@ -2,7 +2,7 @@
  * shadowircd: an advanced IRC daemon.
  * umodes.c: New usermode system, derived from dancer-ircd's usermode code.
  *
- * $Id: umodes.c,v 3.3 2004/09/08 01:18:08 nenolod Exp $
+ * $Id: umodes.c,v 3.4 2004/09/25 02:49:53 nenolod Exp $
  */
 #include "stdinc.h"
 #include "s_user.h"
@@ -52,6 +52,7 @@ FLAG_ITEM user_mode_table[256] = {
 
 int user_modes_from_c_to_bitmask[256];
 char umode_list[256];
+int available_slot = 0;
 
 struct  bitfield_lookup_t bitfield_lookup[BITFIELD_SIZE];
 
@@ -59,11 +60,13 @@ void init_umodes(void)
 {
   unsigned int i, field, bit;
   char *p = umode_list;
+  available_slot = 0;
   /* Fill out the reverse umode map */
   for (i = 0; user_mode_table[i].letter; i++)
     {
       user_modes_from_c_to_bitmask[(unsigned char)user_mode_table[i].letter] = user_mode_table[i].mode;
       *p++ = user_mode_table[i].letter;
+      available_slot++;
     }
   *p = '\0';
   /* Fill out the bitfield map */
@@ -160,3 +163,22 @@ umode_difference(user_modes *old_modes, user_modes *new_modes)
   return buf;
 }
 
+/*
+ * register_umode: adds a umode to the ircd :)
+ *
+ * input        - letter, slot, operonly (true or false)
+ * output       - none
+ * side effects - umode is added to the umode table
+ */
+void
+register_umode(char letter, int slot, int operonly)
+{
+  user_mode_table[available_slot].letter = letter;
+  user_mode_table[available_slot].mode = slot;
+  user_mode_table[available_slot].operonly = operonly;
+
+  available_slot++;
+
+  /* rebuild things */
+  init_umodes();
+}
