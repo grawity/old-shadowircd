@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_message.c,v 1.2 2004/09/08 03:44:29 nenolod Exp $
+ *  $Id: m_message.c,v 1.3 2004/09/22 19:27:01 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -126,7 +126,7 @@ _moddeinit (void)
   mod_del_cmd (&notice_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 const char *_desc = "Implements /privmsg and /notice commands -- sends text to other users on the network";
 #endif
 
@@ -268,14 +268,7 @@ build_target_list (int p_or_n, const char *command, struct Client *client_p,
   struct Channel *chptr = NULL;
   struct Client *target_p;
 
-  /* Sigh, we can't mutilate parv[1] incase we need it to send to a hub */
-  if (!ServerInfo.hub && (uplink != NULL) && IsCapable (uplink, CAP_LL))
-    {
-      strncpy (ncbuf, nicks_channels, BUFSIZE);
-      target_list = ncbuf;
-    }
-  else
-    target_list = nicks_channels;	/* skip strcpy for non-lazyleafs */
+  target_list = nicks_channels;	/* skip strcpy for non-lazyleafs */
 
   ntargets = 0;
 
@@ -311,9 +304,6 @@ build_target_list (int p_or_n, const char *command, struct Client *client_p,
 	    }
 	  else
 	    {
-	      if (!ServerInfo.hub && (uplink != NULL)
-		  && IsCapable (uplink, CAP_LL))
-		return -1;
 	      else if (p_or_n != NOTICE)
 		sendto_one (source_p, form_str (ERR_NOSUCHNICK),
 			    ID_or_name (&me, client_p),
@@ -401,9 +391,6 @@ build_target_list (int p_or_n, const char *command, struct Client *client_p,
 	    }
 	  else
 	    {
-	      if (!ServerInfo.hub && (uplink != NULL)
-		  && IsCapable (uplink, CAP_LL))
-		return -1;
 	      else if (p_or_n != NOTICE)
 		sendto_one (source_p, form_str (ERR_NOSUCHNICK),
 			    ID_or_name (&me, client_p),
@@ -418,9 +405,6 @@ build_target_list (int p_or_n, const char *command, struct Client *client_p,
 	}
       else
 	{
-	  if (!ServerInfo.hub && (uplink != NULL)
-	      && IsCapable (uplink, CAP_LL))
-	    return -1;
 	  else if (p_or_n != NOTICE)
 	    sendto_one (source_p, form_str (ERR_NOSUCHNICK),
 			ID_or_name (&me, client_p),

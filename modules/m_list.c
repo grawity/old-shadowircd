@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_list.c,v 3.3 2004/09/08 01:18:07 nenolod Exp $
+ *  $Id: m_list.c,v 3.4 2004/09/22 19:27:01 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -61,7 +61,7 @@ _moddeinit(void)
 {
   mod_del_cmd(&list_msgtab);
 }
-const char *_version = "$Revision: 3.3 $";
+const char *_version = "$Revision: 3.4 $";
 #endif
 
 
@@ -210,16 +210,6 @@ m_list(struct Client *client_p, struct Client *source_p,
   else
     last_used = CurrentTime;
 
-  /* If its a LazyLinks connection, let uplink handle the list */
-  if(uplink && IsCapable(uplink, CAP_LL))
-    {
-      if(parc < 2)
-	sendto_one( uplink, ":%s LIST", source_p->name );
-      else
-	sendto_one( uplink, ":%s LIST %s", source_p->name, parv[1] );
-      return;
-    }
-
   do_list(source_p, parc, parv);
 }
 
@@ -233,19 +223,6 @@ static void
 mo_list(struct Client *client_p, struct Client *source_p,
 	int parc, char *parv[])
 {
-  /* If its a LazyLinks connection, let uplink handle the list
-   * even for opers!
-   */
-
-  if(uplink && IsCapable(uplink, CAP_LL))
-    {
-      if(parc < 2)
-	sendto_one(uplink, ":%s LIST", source_p->name);
-      else
-	sendto_one(uplink, ":%s LIST %s", source_p->name, parv[1]);
-      return;
-    }
-
   do_list(source_p, parc, parv);
 }
 
@@ -258,13 +235,8 @@ static void
 ms_list(struct Client *client_p, struct Client *source_p,
 	int parc, char *parv[])
 {
-  /* Only allow remote list if LazyLink request */
-
   if(ServerInfo.hub)
     {
-      if(!IsCapable(client_p->from, CAP_LL) && !MyConnect(source_p))
-	return;
-
       do_list(source_p, parc, parv);
     }
 }

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_serv.h,v 3.3 2004/09/08 01:18:07 nenolod Exp $
+ *  $Id: s_serv.h,v 3.4 2004/09/22 19:27:01 nenolod Exp $
  */
 
 #ifndef INCLUDED_serv_h
@@ -54,7 +54,7 @@ struct Capability
 #define CAP_QS		0x00000002 /* Can handle quit storm removal       */
 #define CAP_EX		0x00000004 /* Can do channel +e exemptions        */
 #define CAP_CHW		0x00000008 /* Can do channel wall @#              */
-#define CAP_LL		0x00000010 /* Can do lazy links                   */
+                     /* 0x00000010 */
 #define CAP_IE		0x00000020 /* Can do invite exceptions            */
 #define CAP_EOB		0x00000040 /* Can do EOB message                  */
 #define CAP_KLN		0x00000080 /* Can do KLINE message                */

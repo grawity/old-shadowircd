@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_invite.c,v 3.4 2004/09/22 18:52:55 nenolod Exp $
+ *  $Id: m_invite.c,v 3.5 2004/09/22 19:27:01 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,7 +63,7 @@ _moddeinit(void)
   mod_del_cmd(&invite_msgtab);
 }
 
-const char *_version = "$Revision: 3.4 $";
+const char *_version = "$Revision: 3.5 $";
 #endif
 
 /*
@@ -179,18 +179,6 @@ m_invite(struct Client *client_p, struct Client *source_p,
     sendto_one(source_p, form_str(RPL_AWAY),
                me.name, parv[0], target_p->name,
                target_p->user->away);
-
-  if (!MyConnect(target_p) && ServerInfo.hub &&
-      IsCapable(target_p->from, CAP_LL))
-  {
-    /* target_p is connected to a LL leaf, connected to us */
-    if (IsPerson(source_p))
-      client_burst_if_needed(target_p->from, source_p);
-
-    if ((chptr->lazyLinkChannelExists &
-         target_p->from->localClient->serverMask) == 0)
-      burst_channel(target_p->from, chptr);
-  }
 
   if (MyConnect(target_p) && chop)
     add_invite(chptr, target_p);

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_join.c,v 1.3 2004/09/22 18:52:55 nenolod Exp $
+ *  $Id: m_join.c,v 1.4 2004/09/22 19:27:01 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -88,7 +88,7 @@ _moddeinit(void)
   mod_del_cmd(&join_msgtab);
 }
 
-const char *_version = "$Revision: 1.3 $";
+const char *_version = "$Revision: 1.4 $";
 const char *_desc = "Implements /join command -- allows users to join channels.";
 #endif
 
@@ -538,15 +538,6 @@ build_target_list(struct Client *client_p, struct Client *source_p,
       }
 
       flags = CHFL_CHANOP;
-      if (!ServerInfo.hub)
-      {
-        if ((*chan != '&') && uplink && IsCapable(uplink, CAP_LL))
-        {
-          sendto_one(uplink, ":%s CBURST %s %s %s",
-                     me.name, chan, source_p->name, key ? key : "");
-          continue;
-        }
-      }
 
       if ((chptr = get_or_create_channel(source_p, chan, NULL)) == NULL)
       {

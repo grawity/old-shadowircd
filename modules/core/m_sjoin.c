@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_sjoin.c,v 1.3 2004/09/22 18:52:55 nenolod Exp $
+ *  $Id: m_sjoin.c,v 1.4 2004/09/22 19:27:01 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,7 +63,7 @@ _moddeinit(void)
   mod_del_cmd(&sjoin_msgtab);
 }
 
-const char *_version = "$Revision: 1.3 $";
+const char *_version = "$Revision: 1.4 $";
 const char *_desc = "Used in server to server communications";
 #endif
 
@@ -452,38 +452,6 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
         fl = 0;
     }
     people++;
-
-    /* LazyLinks - Introduce unknown clients before sending the sjoin */
-    if (ServerInfo.hub)
-    {
-      DLINK_FOREACH(m, serv_list.head)
-      {
-        lclient_p = m->data;
-
-        /* Hopefully, the server knows about it's own clients. */
-        if (client_p == lclient_p)
-	  continue;
-
-        /* Ignore non lazylinks */
-        if (!IsCapable(lclient_p,CAP_LL))
-	  continue;
-
-        /* Ignore servers we won't tell anyway */
-        if (!chptr->lazyLinkChannelExists &
-            (lclient_p->localClient->serverMask))
-          continue;
-
-        /* Ignore servers that already know target_p */
-        if (!(target_p->lazyLinkClientExists &
-	    lclient_p->localClient->serverMask))
-        {
-	  /* Tell LazyLink Leaf about client_p,
-	   * as the leaf is about to get a SJOIN */
-	  sendnick_TS(lclient_p, target_p);
-          add_lazylinkclient(lclient_p,target_p);
-        }
-      }
-    }
 
     if (!IsMember(target_p, chptr))
     {

@@ -20,7 +20,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_svsnick.c,v 3.4 2004/09/22 18:52:55 nenolod Exp $
+ *  $Id: m_svsnick.c,v 3.5 2004/09/22 19:27:01 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -71,7 +71,7 @@ _moddeinit (void)
   mod_del_cmd (&svsnick_msgtab);
 }
 
-const char *_version = "$Revision: 3.4 $";
+const char *_version = "$Revision: 3.5 $";
 #endif
 
 /*
@@ -178,18 +178,8 @@ ms_svsnick (struct Client *client_p, struct Client *source_p,
 	}
       else
 	{
-	  if (!ServerInfo.hub && uplink && IsCapable (uplink, CAP_LL))
-	    {
-	      /* The uplink might know someone by this name already. */
-	      sendto_one (uplink, ":%s NBURST %s %s %s", me.name, newnick,
-			  newnick, oldnickname->name);
-	      return;
-	    }
-	  else
-	    {
-	      change_local_nick (oldnickname->servptr, oldnickname, newnick);
-	      return;
-	    }
+          change_local_nick (oldnickname->servptr, oldnickname, newnick);
+          return;
 	}
     }
   else

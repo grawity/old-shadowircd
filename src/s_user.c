@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 3.4 2004/09/22 18:52:56 nenolod Exp $
+ *  $Id: s_user.c,v 3.5 2004/09/22 19:27:01 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -642,7 +642,7 @@ introduce_client(struct Client *client_p, struct Client *source_p)
     {
       struct Client *server = server_node->data;
 
-      if (IsCapable(server, CAP_LL) || server == client_p)
+      if (server == client_p)
         continue;
 
       if (IsCapable(server, CAP_TS6) && HasID(source_p))

@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  m_names.c: Shows the users who are online.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_names.c,v 3.3 2004/09/08 01:18:07 nenolod Exp $
+ *  $Id: m_names.c,v 3.4 2004/09/22 19:27:01 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -67,7 +67,7 @@ _moddeinit(void)
   mod_del_cmd(&names_msgtab);
 }
 
-const char *_version = "$Revision: 3.3 $";
+const char *_version = "$Revision: 3.4 $";
 #endif
 
 /************************************************************************
@@ -224,16 +224,6 @@ static void
 ms_names(struct Client *client_p, struct Client *source_p,
          int parc, char *parv[])
 { 
-  /* If its running as a hub, and linked with lazy links
-   * then allow leaf to use normal client m_names()
-   * other wise, ignore it.
-   */
-  if (ServerInfo.hub)
-  {
-    if (!IsCapable(client_p->from, CAP_LL))
-      return;
-  }
-
   if (IsClient(source_p))
     m_names(client_p, source_p, parc, parv);
 }

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_kill.c,v 1.2 2004/09/08 03:44:29 nenolod Exp $
+ *  $Id: m_kill.c,v 1.3 2004/09/22 19:27:01 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -65,7 +65,7 @@ _moddeinit(void)
   mod_del_cmd(&kill_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 const char *_desc = "Implements /kill command -- disconnects a user from the network";
 #endif
 
@@ -335,26 +335,7 @@ relay_kill(struct Client *one, struct Client *source_p,
 
     if (client_p == NULL || client_p == one)
       continue;
-
-    if (!introduce_killed_client)
-    {
-      if (ServerInfo.hub && IsCapable(client_p, CAP_LL))
-      {
-        if ((client_p->localClient->serverMask &
-             target_p->lazyLinkClientExists) == 0)
-        {
-          /* target isn't known to lazy leaf, skip it */
-          continue;
-        }
-      }
     }
-    /* force introduction of killed client but check that
-     * its not on the server we're bursting too.. */
-    else if (strcmp(target_p->user->server->name, client_p->name))
-      client_burst_if_needed(client_p, target_p);
-
-    /* introduce source of kill */
-    client_burst_if_needed(client_p, source_p);
 
     /* use UID if possible */
     from = ID_or_name(source_p, client_p);

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_server.c,v 1.3 2004/09/22 18:52:55 nenolod Exp $
+ *  $Id: m_server.c,v 1.4 2004/09/22 19:27:01 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -77,7 +77,7 @@ _moddeinit(void)
   mod_del_cmd(&sid_msgtab);
 }
 
-const char *_version = "$Revision: 1.3 $";
+const char *_version = "$Revision: 1.4 $";
 const char *_desc = "Used in server to server communications.";
 #endif
 
@@ -212,36 +212,6 @@ mr_server(struct Client *client_p, struct Client *source_p,
     sendto_one(client_p, "ERROR :Server already exists.");
     exit_client(client_p, client_p, client_p, "Server Exists");
     return;
-  }
-
-  if (ServerInfo.hub && IsCapable(client_p, CAP_LL))
-  {
-    if (IsCapable(client_p, CAP_HUB))
-    {
-      ClearCap(client_p, CAP_LL);
-      sendto_realops_flags(UMODE_ALL, L_ALL,
-               "*** LazyLinks to a hub from a hub, that's a no-no.");
-    }
-    else
-    {
-      client_p->localClient->serverMask = nextFreeMask();
-
-      if (!client_p->localClient->serverMask)
-      {
-        sendto_realops_flags(UMODE_ALL, L_ALL, "serverMask is full!");
-        /* try and negotiate a non LL connect */
-        ClearCap(client_p, CAP_LL);
-      }
-    }
-  }
-  else if (IsCapable(client_p, CAP_LL))
-  {
-    if (!IsCapable(client_p, CAP_HUB))
-    {
-      ClearCap(client_p, CAP_LL);
-      sendto_realops_flags(UMODE_ALL, L_ALL,
-               "*** LazyLinks to a leaf from a leaf, that's a no-no.");
-    }
   }
 
   /* if we are connecting (Handshake), we already have the name from the
@@ -408,7 +378,7 @@ ms_server(struct Client *client_p, struct Client *source_p,
    */
 
   /* Ok, check client_p can hub the new server, and make sure it's not a LL */
-  if (!hlined || (IsCapable(client_p, CAP_LL) && !IsCapable(client_p, CAP_HUB)))
+  if (!hlined || !IsCapable(client_p, CAP_HUB))
   {
     /* OOOPs nope can't HUB */
     sendto_realops_flags(UMODE_ALL, L_ADMIN, "Non-Hub link %s introduced %s.",
@@ -656,7 +626,7 @@ ms_sid(struct Client *client_p, struct Client *source_p,
    */
 
   /* Ok, check client_p can hub the new server, and make sure it's not a LL */
-  if (!hlined || (IsCapable(client_p, CAP_LL) && !IsCapable(client_p, CAP_HUB)))
+  if (!hlined || !IsCapable(client_p, CAP_HUB))
   {
     /* OOOPs nope can't HUB */
     sendto_realops_flags(UMODE_ALL, L_ADMIN, "Non-Hub link %s introduced %s.",

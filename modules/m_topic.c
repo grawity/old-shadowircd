@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_topic.c,v 3.4 2004/09/22 18:52:55 nenolod Exp $
+ *  $Id: m_topic.c,v 3.5 2004/09/22 19:27:01 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -62,7 +62,7 @@ _moddeinit (void)
   mod_del_cmd (&topic_msgtab);
 }
 
-const char *_version = "$Revision: 3.4 $";
+const char *_version = "$Revision: 3.5 $";
 #endif
 
 /* m_topic()
@@ -107,22 +107,9 @@ m_topic (struct Client *client_p, struct Client *source_p,
     {
       if ((chptr = hash_find_channel (parv[1])) == NULL)
 	{
-	  /* if chptr isn't found locally, it =could= exist
-	   * on the uplink. so forward reqeuest
-	   */
-	  if (!ServerInfo.hub && uplink && IsCapable (uplink, CAP_LL))
-	    {
-	      sendto_one (uplink, ":%s TOPIC %s %s",
-			  ID_or_name (source_p, uplink), parv[1],
-			  ((parc > 2) ? parv[2] : ""));
-	      return;
-	    }
-	  else
-	    {
-	      sendto_one (source_p, form_str (ERR_NOSUCHCHANNEL),
-			  from, to, parv[1]);
-	      return;
-	    }
+          sendto_one (source_p, form_str (ERR_NOSUCHCHANNEL),
+    		      from, to, parv[1]);
+	  return;
 	}
 
       /* setting topic */

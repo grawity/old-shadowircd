@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_mode.c,v 1.3 2004/09/22 18:52:55 nenolod Exp $
+ *  $Id: m_mode.c,v 1.4 2004/09/22 19:27:01 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -76,7 +76,7 @@ _moddeinit(void)
   mod_del_cmd(&bmask_msgtab);
 }
 
-const char *_version = "$Revision: 1.3 $";
+const char *_version = "$Revision: 1.4 $";
 const char *_desc = "Implements /mode command -- alters user/channel settings and channel acl's";
 #endif
 
@@ -120,29 +120,10 @@ m_mode(struct Client *client_p, struct Client *source_p,
 
   if (chptr == NULL)
   {
-      /* if chptr isn't found locally, it =could= exist
-       * on the uplink. So ask.
-       */
-      
-      /* LazyLinks */
-      /* only send a mode upstream if a local client sent this request
-       * -davidt
-       */
-      if (MyClient(source_p) && !ServerInfo.hub && uplink &&
-	   IsCapable(uplink, CAP_LL))
-	{
-	  sendto_one(uplink, ":%s MODE %s %s",
-                     ID_or_name(source_p, uplink),
-		     parv[1], (parv[2] ? parv[2] : ""));
-	  return;
-	}
-      else
-	{
-	  sendto_one(source_p, form_str(ERR_NOSUCHCHANNEL),
-		     me.name, parv[0], parv[1]);
-	  return;
-	}
-    }
+    sendto_one(source_p, form_str(ERR_NOSUCHCHANNEL),
+               me.name, parv[0], parv[1]);
+    return;
+  }
 
   /* Now known the channel exists */
   if (parc < 3)

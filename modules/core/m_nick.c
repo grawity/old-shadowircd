@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_nick.c,v 1.3 2004/09/22 18:52:55 nenolod Exp $
+ *  $Id: m_nick.c,v 1.4 2004/09/22 19:27:01 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -99,7 +99,7 @@ _moddeinit(void)
   mod_del_cmd(&uid_msgtab);
 }
 
-const char *_version = "$Revision: 1.3 $";
+const char *_version = "$Revision: 1.4 $";
 const char *_desc = "Implements /nick command -- declares a client's nickname.";
 #endif
 
@@ -149,39 +149,8 @@ mr_nick(struct Client *client_p, struct Client *source_p,
 
   if ((target_p = find_client(nick)) == NULL)
   {
-    if (!ServerInfo.hub && uplink && IsCapable(uplink, CAP_LL))
-    {
-      /* We don't know anyone called nick, but our hub might */
-      DLINK_FOREACH(ptr, unknown_list.head)
-      {
-        uclient_p = ptr->data;
-
-        if (!strcmp(nick, uclient_p->llname))
-        {
-
-          /* We're already waiting for a reply about this nick
-           * for someone else. */
-
-          sendto_one(source_p, form_str(ERR_NICKNAMEINUSE), me.name,
-                     "*", nick);
-          return;
-        }
-      }
-
-      /* Set their llname so we can find them later */
-      strcpy(source_p->llname, nick);
-
-      /* Ask the hub about their requested name */
-      sendto_one(uplink, ":%s NBURST %s %s !%s", me.name, nick, nick, nick);
-
-      /* wait for LLNICK */
-      return;
-    }
-    else
-    {
-      set_initial_nick(client_p, source_p, nick);
-      return;
-    }
+    set_initial_nick(client_p, source_p, nick);
+    return;
   }
   else if (source_p == target_p)
   {
@@ -310,15 +279,6 @@ m_nick(struct Client *client_p, struct Client *source_p,
   }
   else
   {
-    if (!ServerInfo.hub && uplink && IsCapable(uplink, CAP_LL))
-    {
-      /* The uplink might know someone by this name already. */
-      sendto_one(uplink, ":%s NBURST %s %s %s",
-                 ID_or_name(&me, uplink), nick, nick, source_p->name);
-      return;
-    }
-    else
-    {
       DLINK_FOREACH(lp, source_p->user->channel.head)
       {
         ms = lp->data;
@@ -340,7 +300,6 @@ m_nick(struct Client *client_p, struct Client *source_p,
       }
       change_local_nick(client_p, source_p, nick);
       return;
-    }
   }
 }
 
@@ -540,9 +499,6 @@ ms_uid(struct Client *client_p, struct Client *source_p,
                          "ID collision on %s(%s <- %s)(both killed)",
                          target_p->name, target_p->from->name,
                          client_p->name);
-
-    if (ServerInfo.hub && IsCapable(client_p, CAP_LL))
-      add_lazylinkclient(client_p, source_p);
 
     kill_client_ll_serv_butone(NULL, target_p, "%s (ID collision)", me.name);
 
@@ -762,8 +718,6 @@ nick_from_server(struct Client *client_p, struct Client *source_p, int parc,
     dlinkAdd(source_p, &source_p->node, &global_client_list);
 
     /* We don't need to introduce leafs clients back to them! */
-    if (ServerInfo.hub && IsCapable(client_p, CAP_LL))
-      add_lazylinkclient(client_p, source_p);
 
     if (parc > 2)
       source_p->hopcount = atoi(ID_HOP);
@@ -860,8 +814,6 @@ client_from_server(struct Client *client_p,
   source_p = make_client(client_p);
   dlinkAdd(source_p, &source_p->node, &global_client_list);
   /* We don't need to introduce leafs clients back to them! */
-  if (ServerInfo.hub && IsCapable(client_p, CAP_LL))
-    add_lazylinkclient(client_p, source_p);
   source_p->hopcount = atoi(ID_HOP);
   source_p->tsinfo = newts;
   /* copy the nick in place */
@@ -911,8 +863,6 @@ perform_nick_collides(struct Client *source_p,
                            "Nick collision on %s(%s <- %s)(both killed)",
                            target_p->name, target_p->from->name,
                            client_p->name);
-      if (ServerInfo.hub && IsCapable(client_p, CAP_LL))
-        add_lazylinkclient(client_p, target_p);
       kill_client_ll_serv_butone(NULL, target_p,
                                  "%s (Nick collision (new))", me.name);
       ServerStats->is_kill++;
@@ -985,8 +935,6 @@ perform_nick_collides(struct Client *source_p,
                                "%s (Nick change collision)", me.name);
     ServerStats->is_kill++;
     /* If we got the message from a LL, ensure it gets the kill */
-    if (ServerInfo.hub && IsCapable(client_p, CAP_LL))
-      add_lazylinkclient(client_p, target_p);
     kill_client_ll_serv_butone(NULL, target_p,
                                "%s (Nick change collision)", me.name);
     SetKilled(target_p);

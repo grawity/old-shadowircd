@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_ping.c,v 3.3 2004/09/08 01:18:07 nenolod Exp $
+ *  $Id: m_ping.c,v 3.4 2004/09/22 19:27:01 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -57,7 +57,7 @@ _moddeinit(void)
   mod_del_cmd(&ping_msgtab);
 }
 
-const char *_version = "$Revision: 3.3 $";
+const char *_version = "$Revision: 3.4 $";
 #endif
 
 /*
@@ -99,12 +99,6 @@ m_ping(struct Client *client_p, struct Client *source_p,
     {
       /* use the direct link for LL checking */
       target_p = target_p->from;
-
-      if(ServerInfo.hub && IsCapable(target_p, CAP_LL))
-      {
-        if((source_p->lazyLinkClientExists & target_p->localClient->serverMask) == 0)
-          client_burst_if_needed(target_p, source_p);
-      }
 
       sendto_one(target_p,":%s PING %s :%s", parv[0],
                  origin, destination);

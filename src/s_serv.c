@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_serv.c,v 3.3 2004/09/08 01:18:08 nenolod Exp $
+ *  $Id: s_serv.c,v 3.4 2004/09/22 19:27:01 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -641,8 +641,6 @@ check_server(const char *name, struct Client *client_p, int cryptlink)
 
   server_aconf = (struct AccessItem *)map_to_conf(server_conf);
 
-  if (!(server_aconf->flags & CONF_FLAGS_LAZY_LINK))
-    ClearCap(client_p,CAP_LL);
 #ifdef HAVE_LIBZ /* otherwise, clear it unconditionally */
   if (!(server_aconf->flags & CONF_FLAGS_COMPRESSED))
 #endif
@@ -879,30 +877,6 @@ sendnick_TS(struct Client *client_p, struct Client *target_p)
 		me.name, target_p->name, target_p->virthost);
 }
 
-/* client_burst_if_needed()
- *
- * inputs	- pointer to server
- * 		- pointer to client to add
- * output	- NONE
- * side effects - If this client is not known by this lazyleaf, send it
- */
-void
-client_burst_if_needed(struct Client *client_p, struct Client *target_p)
-{
-  if (!ServerInfo.hub)
-    return;
-  if (!MyConnect(client_p))
-    return;
-  if (!IsCapable(client_p,CAP_LL))
-    return;
-
-  if ((target_p->lazyLinkClientExists & client_p->localClient->serverMask) == 0)
-  {
-    sendnick_TS(client_p, target_p);
-    add_lazylinkclient(client_p,target_p);
-  }
-}
-
 /*
  * show_capabilities - show current server capabilities
  *
@@ -1030,15 +1004,8 @@ server_estab(struct Client *client_p)
                    aconf->spasswd);
     }
 
-    /* Pass my info to the new server
-     *
-     * If trying to negotiate LazyLinks, pass on CAP_LL
-     * If this is a HUB, pass on CAP_HUB
-     */
-
      send_capabilities(client_p, aconf,
-       ((aconf->flags & CONF_FLAGS_LAZY_LINK) ? CAP_LL : 0)
-       | ((aconf->flags & CONF_FLAGS_COMPRESSED) ? CAP_ZIP_SUPPORTED : 0) , 0);
+       (0) | ((aconf->flags & CONF_FLAGS_COMPRESSED) ? CAP_ZIP_SUPPORTED : 0) , 0);
 
     /* SERVER is the last command sent before switching to ziplinks.
      * We set TCPNODELAY on the socket to make sure it gets sent out
@@ -1559,24 +1526,7 @@ server_burst(struct Client *client_p)
   ** -orabidoo
   */
 
-  /* On a "lazy link" hubs send nothing.
-   * Leafs always have to send nicks plus channels
-   */
-  if (IsCapable(client_p, CAP_LL))
-  {
-    if (!ServerInfo.hub)
-    {
-      /* burst all our info */
-      burst_all(client_p);
-
-      /* Now, ask for channel info on all our current channels */
-      cjoin_all(client_p);
-    }
-  }
-  else
-  {
-    burst_all(client_p);
-  }
+  burst_all(client_p);
 
   /* EOB stuff is now in burst_all */
   /* Always send a PING after connect burst is done */
@@ -2195,14 +2145,8 @@ serv_connect_callback(int fd, int status, void *data)
     sendto_one(client_p, "PASS %s TS %d %s",
                aconf->spasswd, TS_CURRENT, me.id);
     
-  /* Pass my info to the new server
-   *
-   * If trying to negotiate LazyLinks, pass on CAP_LL
-   * If this is a HUB, pass on CAP_HUB
-   */
   send_capabilities(client_p, aconf,
- 		    ((aconf->flags & CONF_FLAGS_LAZY_LINK) ? CAP_LL : 0)
-		    | ((aconf->flags & CONF_FLAGS_COMPRESSED) ? CAP_ZIP_SUPPORTED : 0)
+ 		    (0) | ((aconf->flags & CONF_FLAGS_COMPRESSED) ? CAP_ZIP_SUPPORTED : 0)
 		    , 0);
 
   sendto_one(client_p, "SERVER %s 1 :%s",
@@ -2294,8 +2238,7 @@ cryptlink_init(struct Client *client_p, struct ConfItem *conf, int fd)
   }
 
   send_capabilities(client_p, aconf,
-		    ((aconf->flags & CONF_FLAGS_LAZY_LINK) ? CAP_LL : 0)
-    		    | ((aconf->flags & CONF_FLAGS_COMPRESSED) ? CAP_ZIP_SUPPORTED : 0) ,
+		    (0) | ((aconf->flags & CONF_FLAGS_COMPRESSED) ? CAP_ZIP_SUPPORTED : 0) ,
          	    CAP_ENC_MASK);
 
   sendto_one(client_p, "CRYPTLINK SERV %s %s :%s",

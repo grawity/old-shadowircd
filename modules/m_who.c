@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_who.c,v 3.3 2004/09/08 01:18:08 nenolod Exp $
+ *  $Id: m_who.c,v 3.4 2004/09/22 19:27:01 nenolod Exp $
  */
 #include "stdinc.h"
 #include "tools.h"
@@ -62,7 +62,7 @@ _moddeinit(void)
   mod_del_cmd(&who_msgtab);
 }
 
-const char *_version = "$Revision: 3.3 $";
+const char *_version = "$Revision: 3.4 $";
 #endif
 
 static void who_global(struct Client *source_p, char *mask, int server_oper);
@@ -395,15 +395,5 @@ static void
 ms_who(struct Client *client_p, struct Client *source_p,
        int parc, char *parv[])
 {
-  /* If its running as a hub, and linked with lazy links
-   * then allow leaf to use normal client m_who()
-   * other wise, ignore it.
-   */
-  if (ServerInfo.hub)
-  {
-    if (!IsCapable(client_p->from, CAP_LL))
-      return;
-  }
-
   m_who(client_p, source_p, parc, parv);
 }

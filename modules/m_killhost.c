@@ -21,7 +21,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_killhost.c,v 3.3 2004/09/08 01:18:07 nenolod Exp $
+ *  $Id: m_killhost.c,v 3.4 2004/09/22 19:27:01 nenolod Exp $
  *
  */
 
@@ -67,7 +67,7 @@ _moddeinit(void)
   mod_del_cmd(&killhost_msgtab);
 }
 
-const char *_version = "$Revision: 3.3 $";
+const char *_version = "$Revision: 3.4 $";
 #endif
 
 /*
@@ -179,18 +179,6 @@ static void kh_relay_kill(struct Client *one, struct Client *source_p,
     if(client_p == one)
       continue;
 
-    if( !introduce_killed_client )
-    {
-      if( ServerInfo.hub && IsCapable(client_p, CAP_LL) )
-      {
-        if(((client_p->localClient->serverMask &
-             target_p->lazyLinkClientExists) == 0))
-        {
-          /* target isn't known to lazy leaf, skip it */
-          continue;
-        }
-      }
-    }
     /* force introduction of killed client but check that
      * its not on the server we're bursting too.. */
     else if(strcmp(target_p->user->server->name,client_p->name))

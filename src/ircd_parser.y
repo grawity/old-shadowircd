@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 3.3 2004/09/08 01:18:08 nenolod Exp $
+ *  $Id: ircd_parser.y,v 3.4 2004/09/22 19:27:01 nenolod Exp $
  */
 
 %{
@@ -43,7 +43,7 @@
 #include "ircdauth.h"
 #include "memory.h"
 #include "modules.h"
-#include "s_serv.h" /* for CAP_LL / IsCapable */
+#include "s_serv.h" /* for IsCapable */
 #include "hostmask.h"
 #include "send.h"
 #include "listener.h"
@@ -871,20 +871,10 @@ serverinfo_hub: HUB '=' TBOOL ';'
   {
     if (yylval.number)
     {
-      /* Don't become a hub if we have a lazylink active. */
-      if (!ServerInfo.hub && uplink && IsCapable(uplink, CAP_LL))
-      {
-        sendto_realops_flags(UMODE_ALL, L_ALL,
-                             "Ignoring config file line hub=yes; "
-                             "due to active LazyLink (%s)", uplink->name);
-      }
-      else
-      {
-        ServerInfo.hub = 1;
-        uplink = NULL;
-        delete_capability("HUB");
-        add_capability("HUB", CAP_HUB, 1);
-      }
+      ServerInfo.hub = 1;
+      uplink = NULL;
+      delete_capability("HUB");
+      add_capability("HUB", CAP_HUB, 1);
     }
     else if (ServerInfo.hub)
     {
@@ -892,22 +882,6 @@ serverinfo_hub: HUB '=' TBOOL ';'
 
       ServerInfo.hub = 0;
       delete_capability("HUB");
-
-      /* Don't become a leaf if we have a lazylink active. */
-      DLINK_FOREACH(ptr, serv_list.head)
-      {
-        if (MyConnect((struct Client *)ptr->data) &&
-            IsCapable((struct Client *)ptr->data, CAP_LL))
-        {
-          sendto_realops_flags(UMODE_ALL, L_ALL,
-                               "Ignoring config file line hub=no; "
-                               "due to active LazyLink (%s)",
-                               ((struct Client *)ptr->data)->name);
-          add_capability("HUB", CAP_HUB, 1);
-          ServerInfo.hub = 1;
-          break;
-        }
-      }
     }
   }
 };

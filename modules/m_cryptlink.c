@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_cryptlink.c,v 3.3 2004/09/08 01:18:07 nenolod Exp $
+ *  $Id: m_cryptlink.c,v 3.4 2004/09/22 19:27:01 nenolod Exp $
  */
 
 /*
@@ -95,7 +95,7 @@ _moddeinit(void)
   mod_del_cmd(&cryptlink_msgtab);
 }
 
-const char *_version = "$Revision: 3.3 $";
+const char *_version = "$Revision: 3.4 $";
 #endif
 
 
@@ -351,37 +351,6 @@ cryptlink_serv(struct Client *client_p, struct Client *source_p,
                     "Attempt to re-introduce existing server",
                     "Server Exists");
     return;
-  }
-
-  if (ServerInfo.hub && IsCapable(client_p, CAP_LL))
-  {
-      if (IsCapable(client_p, CAP_HUB))
-      {
-          ClearCap(client_p,CAP_LL);
-          sendto_realops_flags(UMODE_ALL, L_ALL,
-               "*** LazyLinks to a hub from a hub, that's a no-no.");
-      }
-      else
-      {
-          client_p->localClient->serverMask = nextFreeMask();
-
-          if(!client_p->localClient->serverMask)
-          {
-              sendto_realops_flags(UMODE_ALL, L_ALL,
-                                   "serverMask is full!");
-              /* try and negotiate a non LL connect */
-              ClearCap(client_p,CAP_LL);
-          }
-      }
-  }
-  else if (IsCapable(client_p, CAP_LL))
-  {
-      if (!IsCapable(client_p, CAP_HUB))
-      {
-        ClearCap(client_p,CAP_LL);
-        sendto_realops_flags(UMODE_ALL, L_ALL,
-          "*** LazyLinks to a leaf from a leaf, that's a no-no.");
-      }
   }
 
   conf = find_conf_name(&client_p->localClient->confs,

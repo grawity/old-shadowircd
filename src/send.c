@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: send.c,v 3.5 2004/09/22 18:52:56 nenolod Exp $
+ *  $Id: send.c,v 3.6 2004/09/22 19:27:01 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -176,13 +176,6 @@ send_message_remote(struct Client *to, struct Client *from,
 			 "server send message to %s [%s] dropped from %s(Not local server)",
 			 to->name, to->from->name, from->name);
     return;
-  }
-
-  if (ServerInfo.hub && IsCapable(to, CAP_LL))
-  {
-    if (((from->lazyLinkClientExists &
-          to->localClient->serverMask) == 0))
-      client_burst_if_needed(to, from);
   }
 
   /* Optimize by checking if (from && to) before everything */
@@ -1221,15 +1214,9 @@ kill_client_ll_serv_butone(struct Client *one, struct Client *source_p,
     if (IsDefunct(client_p))
       continue;
 
-    /* XXX perhaps IsCapable should test for localClient itself ? -db */
-    if (client_p->localClient == NULL || !IsCapable(client_p, CAP_LL) ||
-        !ServerInfo.hub ||
-        (source_p->lazyLinkClientExists & client_p->localClient->serverMask))
-    {
-      if (have_uid && IsCapable(client_p, CAP_TS6))
-        send_message(client_p, buf_uid, len_uid);
-      else
-        send_message(client_p, buf_nick, len_nick);
-    }
+    if (have_uid && IsCapable(client_p, CAP_TS6))
+      send_message(client_p, buf_uid, len_uid);
+    else
+      send_message(client_p, buf_nick, len_nick);
   }
 } 

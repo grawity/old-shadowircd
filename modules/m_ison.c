@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_ison.c,v 3.3 2004/09/08 01:18:07 nenolod Exp $
+ *  $Id: m_ison.c,v 3.4 2004/09/22 19:27:01 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -59,7 +59,7 @@ _moddeinit(void)
 {
   mod_del_cmd(&ison_msgtab);
 }
-const char *_version = "$Revision: 3.3 $";
+const char *_version = "$Revision: 3.4 $";
 #endif
 
 
@@ -79,7 +79,7 @@ m_ison(struct Client *client_p, struct Client *source_p,
 {
   struct Client *up = NULL;
 
-  if (!ServerInfo.hub && uplink && IsCapable(uplink, CAP_LL))
+  if (!ServerInfo.hub && uplink)
     up = uplink;
 
   do_ison(up, source_p, parc, parv);
@@ -97,7 +97,7 @@ static void
 ms_ison(struct Client *client_p, struct Client *source_p,
         int parc, char *parv[])
 {
-  if (ServerInfo.hub && IsCapable(client_p, CAP_LL))
+  if (ServerInfo.hub)
     do_ison(NULL, source_p, parc, parv);
 }
 

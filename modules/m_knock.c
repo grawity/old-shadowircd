@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_knock.c,v 3.4 2004/09/22 18:52:55 nenolod Exp $
+ *  $Id: m_knock.c,v 3.5 2004/09/22 19:27:01 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -60,10 +60,6 @@ struct Message knock_msgtab = {
   "KNOCK", 0, 0, 2, 0, MFLG_SLOW, 0,
   {m_unregistered, m_knock, ms_knock, m_knock, m_ignore}
 };
-struct Message knockll_msgtab = {
-  "KNOCKLL", 0, 0, 2, 0, MFLG_SLOW, 0,
-  {m_unregistered, m_ignore, m_knock, m_ignore, m_ignore}
-};
 
 #ifndef STATIC_MODULES
 
@@ -71,7 +67,6 @@ void
 _modinit(void)
 {
   mod_add_cmd(&knock_msgtab);
-  mod_add_cmd(&knockll_msgtab);
   add_capability("KNOCK", CAP_KNOCK, 1);
 }
 
@@ -79,11 +74,10 @@ void
 _moddeinit(void)
 {
   mod_del_cmd(&knock_msgtab);
-  mod_del_cmd(&knockll_msgtab);
   delete_capability("KNOCK");
 }
 
-const char *_version = "$Revision: 3.4 $";
+const char *_version = "$Revision: 3.5 $";
 #endif
 
 /* m_knock
@@ -116,28 +110,6 @@ m_knock(struct Client *client_p, struct Client *source_p,
     return;
   }
 
-  /* a remote KNOCKLL request, check we're capable of handling it.. */
-  if (!MyConnect(source_p))
-  {
-    if (!ServerInfo.hub || !IsCapable(client_p, CAP_LL) || parc < 3)
-      return;
-    else
-    {
-      /* set sockhost to parv[2] here to save messing in parse_knock_local() */
-      sockhost = parv[2];
-
-      if(parc > 3)
-      {
-        parv[2] = parv[3];
-        parv[3] = NULL;
-      }
-      else
-        parv[2] = NULL;
-
-      parc--;
-    }
-  }
-    
   if (IsClient(source_p))
     parse_knock_local(client_p, source_p, parc, parv, sockhost);
 }
@@ -199,20 +171,8 @@ parse_knock_local(struct Client *client_p, struct Client *source_p,
 
   if ((chptr = hash_find_channel(name)) == NULL)
   {
-    if (!ServerInfo.hub && uplink && IsCapable(uplink, CAP_LL))
-    {
-      sendto_one(uplink, ":%s KNOCKLL %s %s %s",
-                 ID_or_name(source_p, uplink), parv[1],
-		 IsIPSpoof(source_p) ? "255.255.255.255" :
-		 source_p->localClient->sockhost,
-		 (parc > 2) ? parv[2] : "");
-    }
-    else
-    {
-      sendto_one(source_p, form_str(ERR_NOSUCHCHANNEL),
-                 me.name, source_p->name, name);
-    }
-
+    sendto_one(source_p, form_str(ERR_NOSUCHCHANNEL),
+               me.name, source_p->name, name);
     return;
   }
 
