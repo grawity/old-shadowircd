@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.23 2004/08/21 08:15:39 nenolod Exp $
+ *  $Id: s_user.c,v 1.24 2004/08/21 08:25:09 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -415,6 +415,9 @@ register_local_user(struct Client *client_p, struct Client *source_p,
 
   if (IsSSL(source_p))
     SetUmode(source_p, UMODE_SECURE);
+
+  if (ConfigFileEntry.filter_on_connect != 0)
+    SetUmode(source_p, UMODE_SENSITIVE);
 
   if ((++Count.local) > Count.max_loc)
   {

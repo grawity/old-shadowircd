@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.h,v 1.8 2004/08/21 08:11:53 nenolod Exp $
+ *  $Id: s_conf.h,v 1.9 2004/08/21 08:25:09 nenolod Exp $
  */
 
 #ifndef INCLUDED_s_conf_h
@@ -323,6 +323,7 @@ struct config_file_entry
   int disable_remote;
   int anti_cgi_irc; /* nenolod */
   int disable_hostmasking;
+  int filter_on_connect;
 #ifdef HAVE_LIBCRYPTO
   struct EncCapability *default_cipher_preference;
 #endif

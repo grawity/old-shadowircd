@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.12 2004/08/21 08:15:38 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.13 2004/08/21 08:25:09 nenolod Exp $
  */
 
 %{
@@ -193,6 +193,7 @@ unhook_hub_leaf_confs(void)
 %token  EXCEED_LIMIT
 %token  EXEMPT
 %token  FAILED_OPER_NOTICE
+%token  FILTER_ON_CONNECT
 %token  FAKENAME
 %token  FFAILED_OPERLOG
 %token  FOPERLOG
@@ -512,7 +513,8 @@ network_item:           network_name | network_description |
                         network_cloak_key_1 | network_cloak_key_2 |
                         network_cloak_key_3 | network_on_oper_host |
                         network_cloak_on_oper | network_gline_address |
-                        network_cloak_on_connect | network_disable_hostmasking | error;
+                        network_cloak_on_connect | network_disable_hostmasking |
+                        network_filter_on_connect | error;
 
 network_name:           NAME '=' QSTRING ';'
 {
@@ -608,6 +610,12 @@ network_cloak_on_connect: CLOAK_ON_CONNECT '=' TBOOL ';'
 {
   if (ypass == 2)
     ServerInfo.network_cloak_on_connect = yylval.number;
+};
+
+network_filter_on_connect: FILTER_ON_CONNECT '=' TBOOL ';'
+{
+  if (ypass == 2)
+    ConfigFileEntry.filter_on_connect = yylval.number;
 };
 
 /***************************************************************************
