@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: listener.c,v 1.6 2004/01/12 20:28:48 nenolod Exp $
+ *  $Id: listener.c,v 1.7 2004/02/05 20:15:48 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -109,7 +109,7 @@ show_ports(struct Client *source_p)
     listener = ptr->data;
     sendto_one(source_p, form_str(RPL_STATSPLINE),
                me.name, source_p->name,
-               'P', listener->port,
+               listener->is_ssl ? 'S' : 'P', listener->port,
                IsAdmin(source_p) ? listener->name : me.name,
                listener->ref_count,
                (listener->active)?"active":"disabled");
@@ -242,7 +242,7 @@ find_listener(int port, struct irc_ssaddr *addr)
  * the format "255.255.255.255"
  */
 void 
-add_listener(int port, const char* vhost_ip)
+add_listener(int port, const char* vhost_ip, int is_ssl)
 {
   struct Listener *listener;
   struct irc_ssaddr vaddr;
@@ -310,7 +310,7 @@ add_listener(int port, const char* vhost_ip)
   {
     /* add the ipv4 listener if we havent already */
     pass = 1;
-    add_listener(port, "0.0.0.0");
+    add_listener(port, "0.0.0.0", is_ssl);
   }
   pass = 0;
 #endif
@@ -323,6 +323,7 @@ add_listener(int port, const char* vhost_ip)
   else
   {
     listener = make_listener(port, &vaddr);
+    listener->is_ssl = is_ssl;
     dlinkAdd(listener, &listener->listener_node, &ListenerPollList);
   }
 

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.h,v 1.8 2004/01/20 19:56:34 nenolod Exp $
+ *  $Id: s_conf.h,v 1.9 2004/02/05 20:15:48 nenolod Exp $
  */
 
 #ifndef INCLUDED_s_conf_h
@@ -27,6 +27,7 @@
 #include "setup.h"
 #ifdef HAVE_LIBCRYPTO
 #include <openssl/rsa.h>
+#include <openssl/ssl.h>
 #endif
 #include "fileio.h"             /* FBFILE */
 #include "ircd_defs.h"
@@ -366,6 +367,7 @@ struct server_info
   char *rsa_private_key_file;
   RSA *rsa_private_key;
   char *      ssl_certificate_file;
+  char *      ssl_ca_certificate_file;
   SSL_CTX *   ctx;
   SSL_METHOD *meth;
 #endif

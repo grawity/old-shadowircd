@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- * $Id: stdinc.h,v 1.2 2003/12/05 21:59:50 nenolod Exp $
+ * $Id: stdinc.h,v 1.3 2004/02/05 20:15:48 nenolod Exp $
  *
  */
 
@@ -63,6 +63,17 @@
 # ifndef offsetof
 #  define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
 # endif
+#endif
+
+#ifdef HAVE_LIBCRYPTO
+#include <openssl/rand.h>
+#include <openssl/err.h>
+#include <openssl/bn.h>
+#include <openssl/dh.h>
+#include <openssl/rsa.h>
+#include <openssl/crypto.h>
+#include <openssl/pem.h>
+#include <openssl/ssl.h>
 #endif
 
 #ifdef HAVE_CRYPT_H

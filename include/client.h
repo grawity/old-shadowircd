@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.5 2004/01/15 23:57:05 nenolod Exp $
+ *  $Id: client.h,v 1.6 2004/02/05 20:15:48 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -130,6 +130,10 @@ struct Client
 					   * bit mapped lazylink servers 
 					   * mapped here
 					   */
+#ifdef HAVE_LIBCRYPTO
+  SSL *ssl;
+#endif
+
   /*
    * client->name is the unique name for a client nick or host
    */
@@ -372,14 +376,14 @@ struct LocalUser
 #define FLAGS_SBLOCKED    0x02000000 /* slinkq is blocked                        */
 #define FLAGS_USERHOST    0x04000000 /* client is in userhost hash               */
 #define FLAGS_USERCLOAK   0x08000000 /* client is using nonstandard usercloak    */
-/*                        0x10000000  */
+#define FLAGS_SSL         0x10000000 /* client is using SSL */
 /*                        0x20000000  */
 /*                        0x40000000  */
 /*                        0x80000000  */
 
 
 /* umodes, settable flags
- * currently: +abcdeghiklnorsvwxyzAEIRS
+ * currently: +abcdeghiklnorsvwxyzAEIRSZ
  */
 #define UMODE_SERVNOTICE   0x000001 /* server notices such as kill */
 #define UMODE_CCONN        0x000002 /* Client Connections */
@@ -410,13 +414,14 @@ struct LocalUser
 #define UMODE_SVSADMIN     0x2000000 /* Services admin. */
 #define UMODE_SVSROOT      0x4000000 /* Services root. */
 #define UMODE_SERVICE      0x8000000 /* Network service. */
+#define UMODE_SECURE       0x10000000 /* client is using SSL */
 
 #define UMODE_ALL	   UMODE_SERVNOTICE /* what is that? */
 
 #define SEND_UMODES  (UMODE_INVISIBLE | UMODE_OPER | UMODE_WALLOP | \
                       UMODE_ADMIN | UMODE_CLOAK | UMODE_IDENTIFY | UMODE_HIDEOPER | \
                       UMODE_HELPOP | UMODE_SVSOPER | UMODE_SVSADMIN | UMODE_SVSROOT | \
-                      UMODE_SERVICE)
+                      UMODE_SERVICE | UMODE_SECURE)
 #define ALL_UMODES   (SEND_UMODES | UMODE_SERVNOTICE | UMODE_CCONN | \
                       UMODE_REJ | UMODE_SKILL | UMODE_FULL | UMODE_SPY | \
                       UMODE_NCHANGE | UMODE_OPERWALL | UMODE_DEBUG | \
@@ -425,7 +430,7 @@ struct LocalUser
 		      UMODE_IDENTIFY | UMODE_HIDEOPER | UMODE_CLOAK | \
 		      UMODE_BLOCKINVITE | UMODE_PMFILTER | UMODE_HELPOP | \
                       UMODE_SVSADMIN | UMODE_SVSROOT | UMODE_SVSOPER | \
-                      UMODE_SERVICE)
+                      UMODE_SERVICE | UMODE_SECURE)
 
 
 /* oper priv flags */
@@ -475,6 +480,9 @@ struct LocalUser
 #define IsCanFlood(x)		((x)->flags & FLAGS_CANFLOOD)
 #define IsDefunct(x)            ((x)->flags & (FLAGS_DEADSOCKET|FLAGS_CLOSING| \
 					       FLAGS_KILLED))
+
+#define SetSSL(x)		((x)->flags |= FLAGS_SSL)
+#define IsSSL(x)		(((x)->flags & FLAGS_SSL) && (x)->ssl)
 
 /* oper flags */
 #define MyOper(x)               (MyConnect(x) && IsOper(x))

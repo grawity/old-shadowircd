@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_lexer.l,v 1.10 2004/01/20 19:56:34 nenolod Exp $
+ *  $Id: ircd_lexer.l,v 1.11 2004/02/05 20:15:48 nenolod Exp $
  */
 
 %option case-insensitive
@@ -246,6 +246,7 @@ password	{ return PASSWORD; }
 ping_cookie	{ return PING_COOKIE; }
 ping_time	{ return PING_TIME; }
 port		{ return PORT; }
+sslport         { return SSLPORT; }
 quarantine	{ return RESV; }
 quiet_on_ban    { return QUIET_ON_BAN; }
 reason		{ return REASON; }
@@ -258,6 +259,8 @@ restricted      { return RESTRICTED; }
 resv		{ return RESV; }
 rsa_private_key_file		{ return RSA_PRIVATE_KEY_FILE; }
 rsa_public_key_file		{ return RSA_PUBLIC_KEY_FILE; }
+ssl_certificate_file            { return SSL_CERTIFICATE_FILE; }
+ssl_ca_certificate_file                { return SSL_CA_CERTIFICATE_FILE; }
 send_password	{ return SEND_PASSWORD; }
 sendq		{ return SENDQ; }
 serverinfo	{ return SERVERINFO; }

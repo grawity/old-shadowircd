@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: numeric.h,v 1.9 2004/01/15 23:15:11 nenolod Exp $
+ *  $Id: numeric.h,v 1.10 2004/02/05 20:15:48 nenolod Exp $
  */
 
 #ifndef INCLUDED_numeric_h
@@ -229,6 +229,7 @@ extern const char *get_locale(void);
 
 #define RPL_ENDOFWHOIS       318
 #define RPL_WHOISCHANNELS    319
+#define RPL_WHOISSECURE      320
 /*      RPL_WHOIS_HIDDEN     320         Anothernet +h, ick! */
 /*	RPL_WHOISSPECIAL     320	unreal */
 #define RPL_LISTSTART        321

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd.c,v 1.9 2004/01/20 19:56:34 nenolod Exp $
+ *  $Id: ircd.c,v 1.10 2004/02/05 20:15:48 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -62,6 +62,7 @@
 #include "hook.h"
 #include "ircd_getopt.h"
 #include "balloc.h"
+#include "dh.h"
 
 
 /* Try and find the correct name to use with getrlimit() for setting the max.
@@ -557,6 +558,22 @@ main (int argc, char *argv[])
     make_daemon ();
   else
     print_startup (getpid ());
+
+#ifdef HAVE_LIBCRYPTO
+  dh_init();
+  fprintf(stderr, "SSL: Initialize\n");
+
+  SSL_load_error_strings();
+  SSLeay_add_ssl_algorithms();
+  ServerInfo.ctx = SSL_CTX_new(SSLv23_server_method());
+
+  if (!ServerInfo.ctx) {
+       ERR_print_errors_fp(stderr);
+       return 0;
+  }
+
+  fprintf(stderr, "SSL: Client based SSL connections are enabled.\n");
+#endif
 
   setup_signals ();
   /* We need this to initialise the fd array before anything else */

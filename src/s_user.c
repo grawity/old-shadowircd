@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.26 2004/01/20 19:56:34 nenolod Exp $
+ *  $Id: s_user.c,v 1.27 2004/02/05 20:15:48 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -99,6 +99,7 @@ static const struct flag_item
   { UMODE_BLOCKINVITE, 'I' },
   { UMODE_SVSOPER,    'O' },
   { UMODE_SVSROOT,    'R' },
+  { UMODE_SECURE,     'Z' },
   { 0, '\0' }
 };
 
@@ -135,7 +136,7 @@ const unsigned int user_modes_from_c_to_bitmask[] =
   0,                /* W */
   0,                /* X */
   0,                /* Y */
-  0,                /* Z 0x5A */
+  UMODE_SECURE,     /* Z 0x5A */
   0, 0, 0, 0, 0,    /* 0x5F   */ 
   0,                /* 0x60   */
   UMODE_ADMIN,      /* a */
@@ -518,6 +519,9 @@ register_local_user(struct Client *client_p, struct Client *source_p,
 
   source_p->umodes |= UMODE_INVISIBLE;
   Count.invisi++;
+
+  if (IsSSL(source_p))
+    source_p->umodes |= UMODE_SECURE;
 
   if ((++Count.local) > Count.max_loc)
   {

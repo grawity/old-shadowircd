@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.15 2004/01/20 20:03:37 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.16 2004/02/05 20:15:48 nenolod Exp $
  */
 
 %{
@@ -267,6 +267,7 @@ unhook_hub_leaf_confs(void)
 %token  PING_COOKIE
 %token  PING_TIME
 %token  PORT
+%token  SSLPORT
 %token  QSTRING
 %token  QUIET_ON_BAN
 %token  REASON
@@ -277,6 +278,8 @@ unhook_hub_leaf_confs(void)
 %token  RESTRICTED
 %token  RSA_PRIVATE_KEY_FILE
 %token  RSA_PUBLIC_KEY_FILE
+%token  SSL_CERTIFICATE_FILE
+%token  SSL_CA_CERTIFICATE_FILE
 %token  RESV
 %token  SECONDS MINUTES HOURS DAYS WEEKS
 %token  SENDQ
@@ -564,8 +567,10 @@ serverinfo_items:       serverinfo_items serverinfo_item |
 serverinfo_item:        serverinfo_name | serverinfo_vhost |
                         serverinfo_hub | serverinfo_description |
                         serverinfo_max_clients | 
-                        serverinfo_rsa_private_key_file | serverinfo_vhost6 |
-                        serverinfo_sid | error;
+                        serverinfo_rsa_private_key_file | serverinfo_ssl_certificate_file |
+                        serverinfo_ssl_ca_certificate_file |
+                        serverinfo_vhost6 | serverinfo_sid | 
+                        error;
 
 serverinfo_rsa_private_key_file: RSA_PRIVATE_KEY_FILE '=' QSTRING ';'
 {
@@ -634,6 +639,79 @@ serverinfo_name: NAME '=' QSTRING ';'
         DupString(ServerInfo.name, yylval.string);
     }
   }
+};
+
+serverinfo_ssl_certificate_file: SSL_CERTIFICATE_FILE '=' QSTRING ';'
+  {
+#ifdef HAVE_LIBCRYPTO
+    if (ypass == 2)
+    {
+      if (ServerInfo.ctx) {
+
+        if (ServerInfo.ssl_certificate_file)
+        {
+          MyFree(ServerInfo.ssl_certificate_file);
+          ServerInfo.ssl_certificate_file = NULL;
+        }
+
+        DupString(ServerInfo.ssl_certificate_file, yylval.string);
+
+        if (!ServerInfo.rsa_private_key_file) {
+          yyerror("Ignoring config file entry ssl_certificate -- no rsa_private_key");
+          break;
+        }
+
+        if (SSL_CTX_use_certificate_file(ServerInfo.ctx,
+            ServerInfo.ssl_certificate_file, SSL_FILETYPE_PEM) <= 0) {
+          yyerror(strncat("Error using config file entry ssl_certificate -- ",
+                               ERR_error_string(ERR_get_error(), NULL),
+                               strlen(ERR_error_string(ERR_get_error(), NULL))));
+          break;
+        }
+
+        if (SSL_CTX_use_PrivateKey_file(ServerInfo.ctx,
+            ServerInfo.rsa_private_key_file, SSL_FILETYPE_PEM) <= 0) {
+          yyerror(strncat("Error using config file entry rsa_private_key -- ",
+                               ERR_error_string(ERR_get_error(), NULL),
+                               strlen(ERR_error_string(ERR_get_error(), NULL))));
+          break;
+        }
+
+        if (!SSL_CTX_check_private_key(ServerInfo.ctx)) {
+          yyerror("RSA private key doesn't match the SSL certificate public key!");
+          break;
+        }
+      }
+    }
+#endif
+  };
+
+serverinfo_ssl_ca_certificate_file: SSL_CA_CERTIFICATE_FILE '=' QSTRING ';'
+  {
+#ifdef HAVE_LIBCRYPTO
+    if (ypass == 2)
+    {
+      if (ServerInfo.ctx) {
+
+        if (ServerInfo.ssl_ca_certificate_file)
+        {
+          MyFree(ServerInfo.ssl_ca_certificate_file);
+          ServerInfo.ssl_ca_certificate_file = NULL;
+        }
+
+        DupString(ServerInfo.ssl_ca_certificate_file, yylval.string);
+
+        if (ServerInfo.ssl_ca_certificate_file != NULL &&
+            SSL_CTX_load_verify_locations(ServerInfo.ctx,
+            ServerInfo.ssl_ca_certificate_file, NULL) != 1) {
+          yyerror(strncat("Error using config file entry ssl_ca_certificate -- ",
+                               ERR_error_string(ERR_get_error(), NULL),
+                               strlen(ERR_error_string(ERR_get_error(), NULL))));
+          break;
+        }
+      }
+    }
+#endif
 };
 
 serverinfo_sid: SID '=' QSTRING ';' 
@@ -1419,7 +1497,7 @@ listen_entry: LISTEN
 };
 
 listen_items:   listen_items listen_item | listen_item;
-listen_item:    listen_port | listen_address | listen_host | 
+listen_item:    listen_port | listen_sslport | listen_address | listen_host | 
                 error;
 
 listen_port: PORT '=' port_items ';' ;
@@ -1429,7 +1507,7 @@ port_items: port_items ',' port_item | port_item;
 port_item: NUMBER
 {
   if (ypass == 2)
-    add_listener($1, listener_address);
+    add_listener($1, listener_address, 0);
 } | NUMBER TWODOTS NUMBER
 {
   if (ypass == 2)
@@ -1438,7 +1516,28 @@ port_item: NUMBER
 
     for (i = $1; i <= $3; i++)
     {
-      add_listener(i, listener_address);
+      add_listener(i, listener_address, 0);
+    }
+  }
+};
+
+listen_sslport: SSLPORT '=' sslport_items ';' ;
+
+sslport_items: sslport_items ',' sslport_item | sslport_item;
+
+sslport_item: NUMBER
+{
+  if (ypass == 2)
+    add_listener($1, listener_address, 1);
+} | NUMBER TWODOTS NUMBER
+{
+  if (ypass == 2)
+  {
+    int i;
+
+    for (i = $1; i <= $3; i++)
+    {
+      add_listener(i, listener_address, 1);
     }
   }
 };

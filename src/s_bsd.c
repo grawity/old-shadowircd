@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_bsd.c,v 1.7 2004/01/12 20:20:13 nenolod Exp $
+ *  $Id: s_bsd.c,v 1.8 2004/02/05 20:15:48 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -49,6 +49,7 @@
 #include "s_stats.h"
 #include "send.h"
 #include "memory.h"
+#include "dh.h"
 
 #ifndef IN_LOOPBACKNET
 #define IN_LOOPBACKNET        0x7f
@@ -66,6 +67,7 @@ static void comm_connect_callback(int fd, int status);
 static PF comm_connect_timeout;
 static void comm_connect_dns_callback(void *vptr, struct DNSReply *reply);
 static PF comm_connect_tryconnect;
+static void comm_tryssl_callback(int fd, void *data);
 
 /* close_all_connections() can be used *before* the system come up! */
 void
@@ -376,6 +378,9 @@ add_connection(struct Listener* listener, int fd)
   struct Client*     new_client;
   socklen_t len = sizeof(struct irc_ssaddr);
   struct irc_ssaddr   irn;
+#ifdef HAVE_LIBCRYPTO
+  int new_ssl = 0;
+#endif
   assert(NULL != listener);
 
 #ifdef USE_IAUTH
@@ -444,11 +449,53 @@ add_connection(struct Listener* listener, int fd)
   new_client->localClient->listener  = listener;
   ++listener->ref_count;
 
+#ifdef HAVE_LIBCRYPTO
+  if ((listener->is_ssl) && !(new_client->ssl))
+  {
+    new_ssl = 1;
+
+    /*SSL client init */
+    if((new_client->ssl = SSL_new(ServerInfo.ctx)) == NULL)
+    {
+      dlink_node * m;
+      m = dlinkFind(&unknown_list, new_client);
+      if (m)
+        dlinkDeleteNode(m, &unknown_list);
+      report_error(L_ALL, "Could not create new ssl connection %s :%s",
+          get_listener_name(listener), errno);
+      ServerStats->is_ref++;
+      free_client(new_client);
+      return;
+    }
+    SetSSL(new_client);
+  }
+#endif
+
   if (!set_non_blocking(new_client->localClient->fd))
     report_error(L_ALL, NONB_ERROR_MSG, get_client_name(new_client, SHOW_IP), errno);
   if (!disable_sock_options(new_client->localClient->fd))
     report_error(L_ALL, OPT_ERROR_MSG, get_client_name(new_client, SHOW_IP), errno);
-  start_auth(new_client);
+
+#ifdef HAVE_LIBCRYPTO
+  if (IsSSL(new_client) && new_ssl)
+  {
+    SSL_set_fd(new_client->ssl, new_client->localClient->fd);
+    if (!safe_SSL_accept(new_client, new_client->localClient->fd))
+    {
+      dlink_node * m;
+      m = dlinkFind(&unknown_list, new_client);
+      if (m)
+        dlinkDeleteNode(m, &unknown_list);
+      SSL_set_shutdown(new_client->ssl, SSL_RECEIVED_SHUTDOWN);
+      SSL_smart_shutdown(new_client->ssl);
+      SSL_free(new_client->ssl);
+      ServerStats->is_ref++;
+      free_client(new_client);
+      return;
+    }
+  }
+#endif
+  comm_setselect(fd, FDLIST_SERVER, COMM_SELECT_WRITE, comm_tryssl_callback, new_client, 0);
 }
 
 /*
@@ -745,6 +792,40 @@ comm_connect_tryconnect(int fd, void *notused)
  }
  /* If we get here, we've suceeded, so call with COMM_OK */
  comm_connect_callback(fd, COMM_OK);
+}
+
+static void
+comm_tryssl_callback(int fd, void *data)
+{
+  int doauth = -1;
+  struct Client *new_client = data;
+
+  fdlist_t fdlist = FDLIST_NONE;
+
+  fdlist = FDLIST_SERVER;
+  doauth = 1;
+
+#ifdef HAVE_LIBCRYPTO
+  if (IsSSL(new_client))
+  {
+    if (!SSL_is_init_finished(new_client->ssl))
+    {
+      if (!safe_SSL_accept(new_client, new_client->localClient->fd))
+      {
+        dead_link_on_read(new_client, errno);
+        return;
+      }
+      else
+      {
+        comm_setselect(fd, fdlist, COMM_SELECT_WRITE, comm_tryssl_callback, new_client, 0);
+        return;
+      }
+    }
+  }
+#endif
+
+  if (doauth == 1)
+    start_auth(new_client);
 }
 
 /*

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: supported.h,v 1.3 2003/12/12 17:58:42 nenolod Exp $
+ *  $Id: supported.h,v 1.4 2004/02/05 20:15:48 nenolod Exp $
  */
 
 #ifndef INCLUDED_supported_h
@@ -31,6 +31,17 @@
 
 #define CASEMAP "rfc1459"
 
+#ifdef HAVE_LIBCRYPTO
+#define FEATURES "SSL WALLCHOPS"   \
+                 "%s%s%s"          \
+                 " MODES=%i"       \
+                 " MAXCHANNELS=%i" \
+                 " MAXBANS=%i"     \
+                 " MAXTARGETS=%i"  \
+                 " NICKLEN=%i"     \
+                 " TOPICLEN=%i"    \
+                 " KICKLEN=%i"
+#else
 #define FEATURES "WALLCHOPS"       \
                  "%s%s%s"          \
                  " MODES=%i"       \
@@ -40,6 +51,7 @@
                  " NICKLEN=%i"     \
                  " TOPICLEN=%i"    \
                  " KICKLEN=%i"
+#endif
 
 #define FEATURESVALUES ConfigChannel.use_knock ? " KNOCK" : "", \
         ConfigChannel.use_except ? " EXCEPTS" : "", \

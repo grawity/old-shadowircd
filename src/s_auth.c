@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_auth.c,v 1.1.1.1 2003/12/02 20:46:48 nenolod Exp $
+ *  $Id: s_auth.c,v 1.2 2004/02/05 20:15:48 nenolod Exp $
  */
 
 /*
@@ -53,6 +53,7 @@
 #include "s_stats.h"
 #include "send.h"
 #include "memory.h"
+#include "dh.h"
 
 /*
  * a bit different approach
@@ -85,8 +86,17 @@ enum {
   REPORT_HOST_TOOLONG
 };
 
+#ifdef HAVE_LIBCRYPTO
+#define sendheader(c, r) \
+   if (IsSSL(c)) { \
+     safe_SSL_write(c, HeaderMessages[(r)].message, HeaderMessages[(r)].length); \
+   } else { \
+     send((c)->localClient->fd, HeaderMessages[(r)].message, HeaderMessages[(r)].length, 0); \
+   }
+#else
 #define sendheader(c, r) \
    send((c)->localClient->fd, HeaderMessages[(r)].message, HeaderMessages[(r)].length, 0)
+#endif
 
 /*
  * Ok, the original was confusing.

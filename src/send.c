@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: send.c,v 1.5 2003/12/19 02:12:08 nenolod Exp $
+ *  $Id: send.c,v 1.6 2004/02/05 20:15:48 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -42,6 +42,7 @@
 #include "s_log.h"
 #include "memory.h"
 #include "hook.h"
+#include "dh.h"
 
 #define LOG_BUFSIZE 2048
 
@@ -278,6 +279,14 @@ send_queued_write(struct Client *to)
 #endif
     do {
       first = to->localClient->buf_sendq.blocks.head->data;
+#ifdef HAVE_LIBCRYPTO
+      if(IsSSL(to))
+      {
+        if ((retlen = safe_SSL_write(to, first->data, first->size)) <= 0)
+         break;
+      }
+      else
+#endif
       if ((retlen = send(to->localClient->fd, first->data,
                          first->size, 0)) <= 0)
         break;

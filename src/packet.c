@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: packet.c,v 1.5 2004/01/12 20:16:36 nenolod Exp $
+ *  $Id: packet.c,v 1.6 2004/02/05 20:15:48 nenolod Exp $
  */
 #include "stdinc.h"
 #include "tools.h"
@@ -37,6 +37,7 @@
 #include "memory.h"
 #include "hook.h"
 #include "send.h"
+#include "dh.h"
 
 static char readBuf[READBUF_SIZE];
 static void client_dopacket(struct Client *client_p, char *buffer, size_t length);
@@ -427,7 +428,12 @@ read_packet(int fd, void *data)
    * I personally think it makes the code too hairy to make sane.
    *     -- adrian
    */
-  length = recv(fd_r, readBuf, READBUF_SIZE, 0);
+#ifdef HAVE_LIBCRYPTO
+  if (IsSSL(client_p))
+    length = safe_SSL_read(client_p, readBuf, READBUF_SIZE);
+  else
+#endif
+    length = recv(fd_r, readBuf, READBUF_SIZE, 0);
 
   if (length <= 0)
   {
