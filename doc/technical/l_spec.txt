@@ -1,0 +1,47 @@
+####
+#
+# New Channelmode +L
+#  LINK
+#
+# $Id: l_spec.txt,v 1.1 2003/12/04 20:58:09 eko Exp $
+#
+####
++L Specifications
+
+To be able to set +L: (satisfy any)
+1) the setting user must be +u in BOTH channels
+2) the other channel's +u must accept the CHANLINK
+3) neither channel must be set +D(isable Linking)
+4) the second channel must have no users
+
+New Channelmodes:
++L Link channel to another (must be set in both)
+   only settable by services and +u users
++D Disable linking with channel.  Deny all CHANLINKs
+
+New Commands:
+CHANLINK [*/+/-][channel]
+   Request/Accept/Decline channel link
+   Examples:
+      CHANLINK *#chatB ;Request a channel link to #chat
+      CHANLINK +#chatA ;Accept a channel link with #chat
+      CHANLINK -#chatA ;Decline a channel link with #chat
+
+New Numerics:
+  RPL_LINKEDJOIN
+  RPL_LINKEDPART
+    :<server> RPL_LINKEDJOIN <you> <nick!user@host> <#channel>
+
+Behavior:
+  PRIVMSG/NOTICE
+    All messages put to either channel are put to both, as well as
+     any other channels linked to both
+  NAMES/WHO
+    Only the names of the users in the current channel are
+     returned.
+  MODE
+    Modes are separate for both channels. they are only required
+     to share the +L mode.
+  JOIN/PART
+    These are ignored, but they are sent via RPL_LINKEDJOIN and
+     RPL_LINKEDPART
