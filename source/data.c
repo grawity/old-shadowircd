@@ -6,7 +6,7 @@
  * do so under the terms of the GNU General Public License under which
  * this program is distributed.
  *
- * $Id: data.c,v 1.1 2003/12/16 19:52:12 nenolod Exp $
+ * $Id: data.c,v 1.2 2003/12/18 23:04:40 nenolod Exp $
  */
 
 #include "defs.h"
@@ -741,6 +741,9 @@ WriteNicks()
 
           if (nptr->url)
             fprintf(fp, "->URL %s\n", nptr->url);
+
+          if (nptr->vhost)
+            fprintf(fp, "->VHOST %s\n", nptr->vhost);
 
           if (nptr->gsm)
             fprintf(fp, "->GSM %s\n", nptr->gsm);

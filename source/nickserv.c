@@ -6,7 +6,7 @@
  * do so under the terms of the GNU General Public License under which
  * this program is distributed.
  *
- * $Id: nickserv.c,v 1.2 2003/12/18 23:01:36 nenolod Exp $
+ * $Id: nickserv.c,v 1.3 2003/12/18 23:04:40 nenolod Exp $
  */
 
 #include "defs.h"
@@ -428,6 +428,20 @@ ns_loaddata()
               else
                 {
                   fatal(1, "%s:%d NickServ entry for [%s] has multiple URL lines (using first)",
+                        NickServDB,
+                        cnt,
+                        nptr->nick);
+                  if (ret > 0)
+                    ret = -1;
+                }
+            }
+          else if (!ircncmp(keyword, "CLOAK", 5))
+            {
+              if (!nptr->vhost)
+                nptr->vhost = MyStrdup(av[1]);
+              else
+                {
+                  fatal(1, "%s:%d NickServ entry for [%s] has multiple CLOAK lines (using first)",
                         NickServDB,
                         cnt,
                         nptr->nick);
