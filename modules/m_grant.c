@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_grant.c,v 1.6 2004/02/12 20:26:48 nenolod Exp $
+ *  $Id: m_grant.c,v 1.7 2004/02/12 20:36:16 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -66,7 +66,7 @@ _moddeinit (void)
   mod_del_cmd (&grant_msgtab);
 }
 
-const char *_version = "$Revision: 1.6 $";
+const char *_version = "$Revision: 1.7 $";
 #endif
 
 /* this is a struct, associating operator permissions with letters. */
@@ -205,8 +205,8 @@ mo_grant (struct Client *client_p, struct Client *source_p,
 
 	  sendto_realops_flags (UMODE_ALL, L_ALL,
 				"%s (%s@%s) is now an operator",
-				source_p->name, source_p->username,
-				source_p->host);
+				target_p->name, target_p->username,
+				target_p->host);
 	  sendto_one (target_p, form_str (RPL_YOUREOPER), me.name,
 		      target_p->name);
 
