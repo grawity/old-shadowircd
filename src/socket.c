@@ -2,7 +2,7 @@
  * NetworkBOPM: The ShadowIRCd Anti-Proxy System.
  * socket.c: Socket handling functions.
  *
- * $Id: socket.c,v 1.6 2004/08/29 06:48:12 nenolod Exp $
+ * $Id: socket.c,v 1.7 2004/08/29 07:08:49 nenolod Exp $
  */
 
 #include "netbopm.h"
@@ -10,6 +10,8 @@
 int             sockfd = -1;
 char            irc_raw[1025];
 int             irc_raw_length = 0;
+char		readline_raw[1025];
+int		readline_length = 0;
 
 /*
  * conn           - connects to uplink
@@ -159,4 +161,26 @@ init_psuedoclient(char *nick, char *user, char *gecos, char *host)
     return uid;
 }
 
+char *
+my_readline(int sock)
+{
+    int             len;
+    char            ch;
+
+    while ((len = read(sock, &ch, 1))) {
+	if (len != 1)
+            continue;
+        if (ch == '\r')
+            continue;
+        if (ch == '\n') {
+            readline_raw[readline_length] = 0;
+            readline_length = 0;
+	    return readline_raw;
+            break;
+        }
+        if (ch != '\r' && ch != '\n' && ch != 0)
+            readline_raw[readline_length++] = ch;
+    }
+    return readline_raw;
+}
 
