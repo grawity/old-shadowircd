@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.h,v 1.5 2004/01/15 20:30:04 nenolod Exp $
+ *  $Id: s_conf.h,v 1.6 2004/01/16 00:18:15 nenolod Exp $
  */
 
 #ifndef INCLUDED_s_conf_h
@@ -368,6 +368,11 @@ struct server_info
   char *description;
   char *network_name;
   char *network_desc;
+  char *network_operhost;
+  char *network_glineaddr;
+  long cloakkey1;
+  long cloakkey2;
+  long cloakkey3;
 #ifdef HAVE_LIBCRYPTO
   char *rsa_private_key_file;
   RSA *rsa_private_key;

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.9 2004/01/12 20:28:48 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.10 2004/01/16 00:18:15 nenolod Exp $
  */
 
 %{
@@ -158,6 +158,12 @@ unhook_hub_leaf_confs(void)
 %token  OVERRIDE
 %token  SET_OWNCLOAK
 %token  SET_ANYCLOAK
+%token  NETWORK
+%token  CLOAK_KEY_1
+%token  CLOAK_KEY_2
+%token  CLOAK_KEY_3
+%token  ON_OPER_HOST
+%token  GLINE_ADDRESS
 %token  IMMUNE
 %token  DEFAULT_CIPHER_PREFERENCE
 %token  DEFAULT_FLOODCOUNT
@@ -362,6 +368,7 @@ conf: conf conf_item | conf_item;
 conf_item:        admin_entry
                 | logging_entry
                 | oper_entry
+                | network_entry
 		| channel_entry
                 | class_entry 
                 | listen_entry
@@ -457,6 +464,119 @@ modules_path: PATH '=' QSTRING ';'
 };
 
 /***************************************************************************
+ *  section network
+ ***************************************************************************/
+network_entry: NETWORK
+  '{' network_items '}' ';';
+
+network_items:          network_items network_item |
+                        network_item;
+
+network_item:           network_name | network_description |
+                        network_cloak_key_1 | network_cloak_key_2 |
+                        network_cloak_key_3 | network_on_oper_host |
+                        network_gline_address;
+
+network_name:           NAME '=' QSTRING ';'
+{
+  if (ypass == 2)
+  {
+    char *p;
+                                                                                                                                               
+    if ((p = strchr(yylval.string, ' ')) != NULL)
+      p = '\0';
+                                                                                                                                               
+    MyFree(ServerInfo.network_name);
+    DupString(ServerInfo.network_name, yylval.string);
+  }
+};
+
+network_description:           DESCRIPTION '=' QSTRING ';'
+{
+  if (ypass == 2)
+  {
+    MyFree(ServerInfo.network_desc);
+    DupString(ServerInfo.network_desc, yylval.string);
+  }
+};
+
+network_on_oper_host:           ON_OPER_HOST '=' QSTRING ';'
+{
+  if (ypass == 2)
+  {
+    char *p;
+                                                                                                                                               
+    if ((p = strchr(yylval.string, ' ')) != NULL)
+      p = '\0';
+                                                                                                                                               
+    MyFree(ServerInfo.network_operhost);
+    DupString(ServerInfo.network_operhost, yylval.string);
+  }
+};
+
+network_gline_address:           GLINE_ADDRESS '=' QSTRING ';'
+{
+  if (ypass == 2)
+  {
+    char *p;
+                                                                                                                                               
+    if ((p = strchr(yylval.string, ' ')) != NULL)
+      p = '\0';
+                                                                                                                                               
+    MyFree(ServerInfo.network_glineaddr);
+    DupString(ServerInfo.network_glineaddr, yylval.string);
+  }
+};
+
+network_cloak_key_1:  CLOAK_KEY_1 '=' NUMBER ';'
+{
+  if (ypass == 2)
+  {
+    if ($3 >= 10000)
+    {
+      ServerInfo.network_cloakkey1 = $3;
+    }
+    else
+    {
+      ilog(L_ERROR, "Setting network_cloak_key_1 to 10000");
+      ServerInfo.network_cloakkey1 = 10000;
+    }
+  }
+};
+
+network_cloak_key_2:  CLOAK_KEY_2 '=' NUMBER ';'
+{
+  if (ypass == 2)
+  {
+    if ($3 >= 10000)
+    {
+      ServerInfo.network_cloakkey2 = $3;
+    }
+    else
+    {
+      ilog(L_ERROR, "Setting network_cloak_key_2 to 10001");
+      ServerInfo.network_cloakkey2 = 10001;
+    }
+  }
+};
+
+network_cloak_key_3:  CLOAK_KEY_3 '=' NUMBER ';'
+{
+  if (ypass == 2)
+  {
+    if ($3 >= 10000)
+    {
+      ServerInfo.network_cloakkey3 = $3;
+    }
+    else
+    {
+      ilog(L_ERROR, "Setting network_cloak_key_1 to 10002");
+      ServerInfo.network_cloakkey1 = 10002;
+    }
+  }
+};
+
+/***************************************************************************
  *  section serverinfo
  ***************************************************************************/
 serverinfo_entry: SERVERINFO
@@ -466,7 +586,6 @@ serverinfo_items:       serverinfo_items serverinfo_item |
                         serverinfo_item ;
 serverinfo_item:        serverinfo_name | serverinfo_vhost |
                         serverinfo_hub | serverinfo_description |
-                        serverinfo_network_name | serverinfo_network_desc |
                         serverinfo_max_clients | 
                         serverinfo_rsa_private_key_file | serverinfo_vhost6 |
                         serverinfo_sid | error;
