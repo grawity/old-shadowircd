@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_message.c,v 1.6 2003/12/05 22:02:12 nenolod Exp $
+ *  $Id: m_message.c,v 1.7 2003/12/06 20:25:09 eko Exp $
  */
 
 #include "stdinc.h"
@@ -118,7 +118,7 @@ _moddeinit(void)
   mod_del_cmd(&notice_msgtab);
 }
 
-const char *_version = "$Revision: 1.6 $";
+const char *_version = "$Revision: 1.7 $";
 #endif
 
 /*
@@ -591,8 +591,19 @@ msg_client(int p_or_n, const char *command, struct Client *source_p,
 
   if (MyClient(target_p))
   {
-    if (!IsServer(source_p) && IsSetCallerId(target_p))
+    if (!IsServer(source_p) && 
+       ( IsSetCallerId(target_p) || ( 
+              IsPMFiltered(target_p) && !IsIdentified(source_p) 
+                                    )
+       ))
+
     {
+        if (IsPMFiltered(target_p))
+        {
+          sendto_anywhere(source_p, target_p, "NOTICE %s :*** I'm in +E mode (Private Message Filter).",
+                          source_p->name);
+          return;
+        }
       /* Here is the anti-flood bot/spambot code -db */
       if (accept_message(source_p, target_p))
       {
@@ -601,16 +612,16 @@ msg_client(int p_or_n, const char *command, struct Client *source_p,
                    GET_CLIENT_HOST(source_p), command, target_p->name, text);
       }
       else
-      {
-        /* check for accept, flag recipient incoming message */
-        if (p_or_n != NOTICE)
-          sendto_anywhere(source_p, target_p,
+      {  
+          /* check for accept, flag recipient incoming message */
+          if (p_or_n != NOTICE)
+            sendto_anywhere(source_p, target_p,
                           "NOTICE %s :*** I'm in +g mode (server side ignore).",
                           source_p->name);
 
-        if ((target_p->localClient->last_caller_id_time +
+          if ((target_p->localClient->last_caller_id_time +
              ConfigFileEntry.caller_id_wait) < CurrentTime)
-        {
+          {
           if (p_or_n != NOTICE)
             sendto_anywhere(source_p, target_p,
                             "NOTICE %s :*** I've been informed you messaged me.",
