@@ -45,6 +45,7 @@
 # endif
 #endif
 
+#include <stdio.h>
 #include <unistd.h>
 
 #ifdef HAVE_STRING_H
@@ -1317,6 +1318,7 @@ static void libopm_do_openproxy(OPM_T *scanner, OPM_SCAN_T *scan, OPM_CONNECTION
    conn->state = OPM_STATE_CLOSED;
 
    /* Call client's open proxy callback */
+   printf("open proxy found. calling libopm_do_callback..\n");
    libopm_do_callback(scanner, libopm_setup_remote(scan->remote, conn), OPM_CALLBACK_OPENPROXY, 0);
 }
 
@@ -1401,8 +1403,10 @@ static void libopm_do_callback(OPM_T *scanner, OPM_REMOTE_T *remote, int type, i
    if(type < 0 || type >= (CBLEN + 1))
       return;
 
-   if(scanner->callbacks[type].func)
+   if(scanner->callbacks[type].func) {
+      printf("acquired callback.. calling callback\n");
       (scanner->callbacks[type].func) (scanner, remote, var, scanner->callbacks[type].data);
+   }
 }
 
 

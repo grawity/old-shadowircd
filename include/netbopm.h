@@ -4,7 +4,7 @@
  *
  * <licensing info here>
  *
- * $Id: netbopm.h,v 1.2 2004/05/25 01:35:56 nenolod Exp $
+ * $Id: netbopm.h,v 1.3 2004/05/25 01:45:36 nenolod Exp $
  */
 
 #ifndef INCLUDED_NETBOPM_H
@@ -192,6 +192,7 @@ OPM_ERR_T *err;
 
 void cb_open_proxy (OPM_T *, OPM_REMOTE_T *, int, void *);
 void cb_end (OPM_T *, OPM_REMOTE_T *, int, void *);
+void cb_err (OPM_T *, OPM_REMOTE_T *, int, void *);
 
 OPM_T *opm_initialize(void);
 
