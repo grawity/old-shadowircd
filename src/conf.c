@@ -2,7 +2,7 @@
  * NetworkBOPM: The ShadowIRCd Anti-Proxy Solution
  * conf.c: Configuration Parser
  *
- * $Id: conf.c,v 1.1.1.1 2004/05/24 23:22:41 nenolod Exp $
+ * $Id: conf.c,v 1.2 2004/05/25 01:35:56 nenolod Exp $
  */
 
 #include "netbopm.h"
@@ -21,6 +21,7 @@ static int c_si_uplink(CONFIGENTRY *);
 static int c_si_port(CONFIGENTRY *);
 static int c_si_pass(CONFIGENTRY *);
 static int c_si_sid(CONFIGENTRY *);
+static int c_si_targetip(CONFIGENTRY *);
 
 struct ConfTable
 {
@@ -43,6 +44,7 @@ static struct ConfTable conf_si_table[] = {
   { "PORT",        0, c_si_port        },
   { "PASSWORD",    1, c_si_pass        },
   { "SID",         0, c_si_sid         },
+  { "TARGETIP",    0, c_si_targetip    },
   { NULL, 0, NULL }
 };
 
@@ -193,6 +195,16 @@ static int c_si_sid(CONFIGENTRY *ce)
   return 0;
 }
 
+static int c_si_targetip(CONFIGENTRY *ce)
+{
+  if (ce->ce_vardata == NULL)
+    PARAM_ERROR(ce);
+
+  me.targetip = sstrdup(ce->ce_vardata);
+
+  return 0;
+}
+
 static void copy_me(me_t *src, me_t *dst)
 {
   dst->password = sstrdup(src->password);
@@ -263,6 +275,12 @@ int conf_check(void)
   if (!me.sid)
   {
     printf("conf_check(): no `sid' set in %s\n", config_file);
+    return 0;
+  }
+
+  if (!me.targetip)
+  {
+    printf("conf_check(): no `targetip' set in %s\n", config_file);
     return 0;
   }
 

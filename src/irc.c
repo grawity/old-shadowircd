@@ -4,10 +4,12 @@
  *
  * Major portions of this area of the code borrowed from shrike.
  *
- * $Id: irc.c,v 1.1.1.1 2004/05/24 23:22:41 nenolod Exp $
+ * $Id: irc.c,v 1.2 2004/05/25 01:35:56 nenolod Exp $
  */
 
 #include "netbopm.h"
+
+int is_complete = 0;
 
 /* this splits apart a message with origin and command picked off already */
 static int tokenize(char *message, char **parv)
@@ -221,12 +223,31 @@ static void m_eob(char *origin, uint8_t parc, char *parv[])
 
 static void m_uid(char *origin, uint8_t parc, char *parv[])
 {
+  OPM_REMOTE_T *remote;
+  OPM_T *scanner;
+  if (me.bursting == 1)
+    return; /* We never ever scan in a netburst. */
+ 
   sendto_server(":%s NOTICE %s :Scanning your IP (%s) for open proxies.",
 	bopmuid, parv[7], parv[6]);
 
+
+  scanner = opm_initialize();
+  
+  remote = opm_remote_create(parv[6]);
+
+  opm_scan(scanner, remote);
+
+  while (is_complete != 1) {
+    opm_cycle(scanner);
+  }
+
+  printf("\n");
+
+  is_complete = 0;
+
   return;
 }
-
 
 /* message table */
 struct message_ messages[] = {

@@ -4,7 +4,7 @@
  *
  * <licensing info here>
  *
- * $Id: netbopm.h,v 1.1.1.1 2004/05/24 23:22:47 nenolod Exp $
+ * $Id: netbopm.h,v 1.2 2004/05/25 01:35:56 nenolod Exp $
  */
 
 #ifndef INCLUDED_NETBOPM_H
@@ -28,6 +28,9 @@
 #endif
 
 #include "sysconf.h"
+#include "opm.h"
+#include "opm_error.h"
+#include "opm_types.h"
 
 #include <netdb.h>
 #include <netinet/in.h>
@@ -49,6 +52,7 @@ struct me_ {
    char *svname;   /* Server Name */
    int port;       /* Connection Port */
    int bursting;   /* Are we bursting? */
+   char *targetip; /* Target IP for proxy scanner connect */
 };
 
 typedef struct me_ me_t;
@@ -183,4 +187,14 @@ void conf_init(void);
 int conf_rehash(void);
 int conf_check(void);
 CONFIGENTRY *config_find(CONFIGENTRY *, char *);
+
+OPM_ERR_T *err;
+
+void cb_open_proxy (OPM_T *, OPM_REMOTE_T *, int, void *);
+void cb_end (OPM_T *, OPM_REMOTE_T *, int, void *);
+
+OPM_T *opm_initialize(void);
+
+extern int is_complete;
+
 #endif

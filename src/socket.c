@@ -2,7 +2,7 @@
  * NetworkBOPM: The ShadowIRCd Anti-Proxy System.
  * socket.c: Socket handling functions.
  *
- * $Id: socket.c,v 1.1.1.1 2004/05/24 23:22:41 nenolod Exp $
+ * $Id: socket.c,v 1.2 2004/05/25 01:35:56 nenolod Exp $
  */
 
 #include "netbopm.h"
@@ -24,6 +24,7 @@ conn(char *host, unsigned int port)
 {
 	struct hostent *he;
 	struct sockaddr_in their_addr;	// connector's address information
+	unsigned long flags;
 
 	if ((he = gethostbyname(host)) == NULL) {	// get the host info
 		perror("gethostbyname");
@@ -40,12 +41,10 @@ conn(char *host, unsigned int port)
 	their_addr.sin_addr = *((struct in_addr *)he->h_addr);
 	memset(&(their_addr.sin_zero), '\0', 8);	// zero the rest of the struct
 
-	if (connect(sockfd, (struct sockaddr *)&their_addr,
-		sizeof(struct sockaddr)) == -1) {
-		perror("connect");
-		exit(1);
-	}
+	connect(sockfd, (struct sockaddr *)&their_addr,
+		sizeof(their_addr));
 
+	
 }
 
 int
@@ -54,8 +53,8 @@ irc_read()
 	int len;
 	char ch;
 
-        if (sockfd < 0)
-          printf("Lost connection.\n");
+	if (sockfd < 0)
+          return;
 
 	while ((len = read(sockfd, &ch, 1))) {
 		if (len < 0) {
@@ -147,37 +146,3 @@ init_psuedoclient(char *nick, char *user, char *gecos, char *host)
 	return uid;
 }
 
-int
-main()
-{
-	config_file = sstrdup("./networkbopm.conf");
-	conf_parse();
-	
-	conn(me.uplink, me.port);
-
-	if (sockfd != -1) {
-		printf("connected.\n");
-	}
-
-
-   
-	/*
-	 * Log into the server. 
-	 */
-	sendto_server("PASS %s TS 6 %s", me.password, me.sid);
-	sendto_server("CAPAB TS6 EOB QS EX UVH IE QU CLUSTER PARA ENCAP HUB");
-	sendto_server("SERVER %s 1 :%s", me.svname, me.gecos);
-
-        /* start our burst timer */
-        s_time(&burstime);
-	me.bursting = 1;
-
-	bopmuid = init_psuedoclient("NetworkBOPM", "service", "NetworkBOPM", "shadowircd.net");
-
-	while (1) {
-		/*
-		 * Read a line and parse it. 
-		 */
-		irc_read();
-	}
-}

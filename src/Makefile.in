@@ -13,7 +13,7 @@ MKDEP		= @MKDEP@
 # Developer CFLAGS
 CFLAGS		= -g -O2 -Wunused -Wall -ggdb -pedantic -Wshadow -Wmissing-declarations -Wno-long-long
 
-CFLAGS		+= -I../include/
+CFLAGS		+= -I../include/ -I../libopm/
 
 VERSION		= 1.0
 
@@ -23,7 +23,8 @@ CPPFLAGS	= @CPPFLAGS@
 
 default: all
 
-BASE_SRCS = function.c irc.c memory.c list.c socket.c utility.c conf.c confp.c
+BASE_SRCS = function.c irc.c memory.c list.c \
+	socket.c utility.c conf.c confp.c main.c callbacks.c
 SRCS = ${BASE_SRCS}
 
 OBJS = ${SRCS:.c=.o}
