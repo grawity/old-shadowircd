@@ -1,9 +1,25 @@
-$Id: TODO,v 1.3 2003/12/04 04:00:34 nenolod Exp $
+$Id: TODO,v 1.4 2003/12/04 04:31:32 nenolod Exp $
 
 - colorblock, colorstrip (done)
 - identified umode (done)
 - cloaking (done)
 - invite block, knock deny (50% done)
-- channel mode +z: Disable throttling
+- channel mode +z: Disable throttling (nenolod)
 - channel mode +a: Auditorium (Eko)
+- /modehelp command (or /ircdhelp modes documentation) (also from Eko)
+- usermode +B: Marked for bots. (+B would lower flood restrictions) (NhJm/Eko/Bagheera)
+- usermode +S: Antispam (admin-defined pattern) (nenolod)
+- channel mode +q: Quiet (nenolod)
+- channel mode +u: Owner (Eko)
+- usermode +C: Block CTCP (nenolod)
+- usermode +R: Registered users only (Eko)
+- channel mode +T: Channel owner sets topic. (Eko)
+- channel mode +O: Oper only channel. (nenolod)
+- channel mode +C: Block CTCP (nenolod)
+- SSL Support (Eko/Bagheera)
+- channel mode +Z: SSL only (nenolod)
+- channel mode +N: Stickynicks (Bagheera)
+- channel mode +L: Channel linking. (Eko)
+                   (Eko, you should write a spec on how this will work.)
+- channel mode +F: Free Invite (nenolod)
 
