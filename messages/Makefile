@@ -1,8 +1,8 @@
-# $Id: Makefile,v 1.5 2004/08/25 00:41:19 nenolod Exp $
+# $Id: Makefile,v 1.6 2004/08/26 05:42:19 nenolod Exp $
 #
 RM            = /bin/rm
 MV            = /bin/mv
-INSTALL       = /bin/install -c
+INSTALL       = /usr/bin/install -c
 INSTALL_DATA  = ${INSTALL} -m 644
 prefix        = /usr/local/ircd
 messagedir    = /usr/local/ircd/messages

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd.c,v 1.8 2004/08/24 06:17:13 nenolod Exp $
+ *  $Id: ircd.c,v 1.9 2004/08/26 05:42:19 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -636,7 +636,7 @@ main (int argc, char *argv[])
   init_reject ();               /* Set up the reject code. */
   init_umodes ();               /* Set up the usermode system. */
 
-  hook_add_event("make_virthost");
+  initialize_foundation_signals(); /* register things that modules need */
 
 #ifdef HAVE_LIBCRYPTO
   bio_spare_fd = save_spare_fd ("SSL private key validation");

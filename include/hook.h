@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: hook.h,v 1.1 2004/04/30 18:14:22 nenolod Exp $
+ *  $Id: hook.h,v 1.2 2004/08/26 05:42:19 nenolod Exp $
  */
 
 #ifndef __HOOK_H_INCLUDED
@@ -99,4 +99,5 @@ extern int hook_call_event(const char *, void *);
 extern int hook_del_event(const char *);
 extern int hook_del_hook(const char *event, hookfn *fn);
 extern void init_hooks(void);
+extern void initialize_foundation_signals(void);
 #endif

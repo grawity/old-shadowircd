@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  hook.c: Provides a generic event hooking interface.
  *
  *  Copyright (C) 2000-2002 Edward Brocklesby, Hybrid Development Team
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: hook.c,v 1.2 2004/08/24 06:17:13 nenolod Exp $
+ *  $Id: hook.c,v 1.3 2004/08/26 05:42:19 nenolod Exp $
  */
 
 /* hooks are used by modules to hook into events called by other parts of
@@ -155,15 +155,9 @@ hook_call_event(const char *event, void *data)
   if ((h = find_hook(event)) == NULL)
     return(-1);
 
-  sendto_realops_flags(UMODE_DEBUG, L_ALL, "looking for %s (%d registered hooks)",
-                       event, h->hooks.length);
-
   DLINK_FOREACH(node, h->hooks.head)
   {
     fn = (hookfn)(uintptr_t)node->data;
-
-    sendto_realops_flags(UMODE_DEBUG, L_ALL, "%s: executing event code..",
-			event);
 
     if (fn(data) != 0)
       return(0);
@@ -172,3 +166,13 @@ hook_call_event(const char *event, void *data)
   return(0);
 }
 
+void
+initialize_foundation_signals()
+{
+  /* XXX: These need to be documented, for module coders. */
+  hook_add_event("make_virthost");
+  hook_add_event("new_client_local");
+  hook_add_event("new_client_remote");
+  hook_add_event("client_exit_local");
+  hook_add_event("client_exit_remote");
+}
