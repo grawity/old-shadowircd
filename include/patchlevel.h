@@ -19,9 +19,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: patchlevel.h,v 1.3 2003/12/12 17:58:42 nenolod Exp $
+ *  $Id: patchlevel.h,v 1.4 2003/12/16 22:25:30 nenolod Exp $
  */
 
 #ifndef PATCHLEVEL
-#define PATCHLEVEL   "shadowircd-2.0-(Pandora)-rc3b"
+#define PATCHLEVEL   "shadowircd-2.0-(Pandora)-rc5"
 #endif

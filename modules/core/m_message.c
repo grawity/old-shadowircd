@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_message.c,v 1.8 2003/12/16 18:08:25 nenolod Exp $
+ *  $Id: m_message.c,v 1.9 2003/12/16 22:25:30 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -118,7 +118,7 @@ _moddeinit(void)
   mod_del_cmd(&notice_msgtab);
 }
 
-const char *_version = "$Revision: 1.8 $";
+const char *_version = "$Revision: 1.9 $";
 #endif
 
 /*
@@ -305,9 +305,9 @@ build_target_list(int p_or_n, const char *command, struct Client *client_p,
           }
           else
           {
-            if ((chptr2 = hash_find_channel(chptr->mode.forwardtarget)) != NULL)
+            if ((chptr2 = hash_find_channel(chptr->mode.linktarget)) != NULL)
             {
-              if (chptr2->mode.forwardtarget == nick)
+              if (chptr2->mode.linktarget == nick)
               {
                 targets[ntargets].ptr = (void *)chptr2;
                 targets[ntargets++].type = ENTITY_CHANNEL;
