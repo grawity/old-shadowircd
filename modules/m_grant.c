@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_grant.c,v 1.10 2004/02/14 02:01:16 nenolod Exp $
+ *  $Id: m_grant.c,v 1.11 2004/02/26 22:49:39 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -66,7 +66,7 @@ _moddeinit (void)
   mod_del_cmd (&grant_msgtab);
 }
 
-const char *_version = "$Revision: 1.10 $";
+const char *_version = "$Revision: 1.11 $";
 #endif
 
 /* this is a struct, associating operator permissions with letters. */
@@ -159,7 +159,7 @@ mo_grant (struct Client *client_p, struct Client *source_p,
 	  int parc, char *parv[])
 {
   struct Client *target_p;
-  unsigned int old;
+  unsigned int old = 0;
   dlink_node *dm;
 
   if (!strcasecmp (parv[1], "GIVE"))
@@ -177,6 +177,13 @@ mo_grant (struct Client *client_p, struct Client *source_p,
 		      source_p->name, parv[2]);
 	  return;
 	}
+
+      if (!MyClient(target_p))
+        {
+	  sendto_one (source_p, ":%s NOTICE %s :You may only use GRANT on local users.",
+		      me.name, source_p->name);
+	  return;
+        }
 
       if (!parv[3])
 	{
@@ -250,6 +257,13 @@ mo_grant (struct Client *client_p, struct Client *source_p,
 	  return;
 	}
 
+      if (!MyClient(target_p))
+        {
+	  sendto_one (source_p, ":%s NOTICE %s :You may only use GRANT on local users.",
+		      me.name, source_p->name);
+	  return;
+        }
+
       if (!parv[3])
 	{
 	  sendto_one (source_p, ":%s NOTICE %s :Not enough parameters",
@@ -303,6 +317,13 @@ mo_grant (struct Client *client_p, struct Client *source_p,
 		      me.name, source_p->name);
 	  return;
 	}
+
+      if (!MyClient(target_p))
+        {
+	  sendto_one (source_p, ":%s NOTICE %s :You may only use GRANT on local users.",
+		      me.name, source_p->name);
+	  return;
+        }
 
       if (!(target_p = find_client (parv[2])))
 	{

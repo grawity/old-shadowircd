@@ -1,7 +1,7 @@
 /*
  * shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  * 
- * $Id: m_services.c,v 1.3 2004/02/14 03:07:09 nenolod Exp $
+ * $Id: m_services.c,v 1.4 2004/02/26 22:49:39 nenolod Exp $
  */
 
 /* List of ircd includes from ../include/ */
@@ -179,7 +179,7 @@ _moddeinit(void)
   mod_del_cmd(&ss_msgtab);
 }
 
-char *_version = "$Revision: 1.3 $";
+char *_version = "$Revision: 1.4 $";
 #endif
 
 /*
@@ -316,7 +316,7 @@ static void deliver_services_msg(char *service, char *command, struct
  */
 #define SERV_FUNC(a,b,c) static void a (struct Client *client_p, struct \
     Client *source_p, int parc, char *parv[]) \
-{ return deliver_services_msg (b, c, client_p, source_p, parc, parv); }
+{ deliver_services_msg (b, c, client_p, source_p, parc, parv); }
 
 /* let's generate :-)
  *

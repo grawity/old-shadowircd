@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: modules.h,v 1.2 2004/02/12 22:27:12 nenolod Exp $
+ *  $Id: modules.h,v 1.3 2004/02/26 22:49:38 nenolod Exp $
  */
 
 #ifndef INCLUDED_modules_h
@@ -90,18 +90,28 @@ extern struct Message cryptlink_msgtab;
 #endif
 extern struct Message cjoin_msgtab;
 extern struct Message close_msgtab;
+extern struct Message classlist_msgtab;
+extern struct Message clearchan_msgtab;
 extern struct Message connect_msgtab;
+extern struct Message ctrace_msgtab;
 extern struct Message die_msgtab;
 extern struct Message dmem_msgtab;
 extern struct Message drop_msgtab;
+extern struct Message encap_msgtab;
 extern struct Message eob_msgtab;
+extern struct Message etrace_msgtab;
 extern struct Message error_msgtab;
+extern struct Message forcejoin_msgtab;
+extern struct Message forcepart_msgtab;
+extern struct Message grant_msgtab;
 extern struct Message info_msgtab;
 extern struct Message invite_msgtab;
 extern struct Message ison_msgtab;
 extern struct Message join_msgtab;
+extern struct Message jupe_msgtab;
 extern struct Message kick_msgtab;
 extern struct Message kill_msgtab;
+extern struct Message killhost_msgtab;
 extern struct Message kline_msgtab;
 extern struct Message unkline_msgtab;
 extern struct Message dline_msgtab;
@@ -113,7 +123,10 @@ extern struct Message list_msgtab;
 extern struct Message lljoin_msgtab;
 extern struct Message llnick_msgtab;
 extern struct Message locops_msgtab;
+extern struct Message ltrace_msgtab;
 extern struct Message lusers_msgtab;
+extern struct Message map_msgtab;
+extern struct Message mkpasswd_msgtab;
 extern struct Message privmsg_msgtab;
 extern struct Message notice_msgtab;
 extern struct Message mode_msgtab;
@@ -121,8 +134,12 @@ extern struct Message motd_msgtab;
 extern struct Message names_msgtab;
 extern struct Message nburst_msgtab;
 extern struct Message nick_msgtab;
+extern struct Message ojoin_msgtab;
+extern struct Message omotd_msgtab;
 extern struct Message oper_msgtab;
+extern struct Message operspy_msgtab;
 extern struct Message operwall_msgtab;
+extern struct Message opme_msgtab;
 extern struct Message part_msgtab;
 extern struct Message pass_msgtab;
 extern struct Message ping_msgtab;
