@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.c,v 1.8 2004/03/16 05:15:00 nenolod Exp $
+ *  $Id: channel.c,v 1.9 2004/03/16 05:36:08 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -59,7 +59,7 @@ static BlockHeap *member_heap;
 
 static void destroy_channel(struct Channel *);
 static void send_mode_list(struct Client *, struct Channel *, dlink_list *, char);
-static int check_banned(struct Channel *, const char *, const char *);
+static int check_banned(struct Channel *, const char *, const char *, const char *);
 static int check_quieted(struct Channel *, const char *, const char *);
 static int check_restricted(struct Channel *, const char *, const char *);
 static const char *channel_pub_or_secret(struct Channel *);
