@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  client.c: Controls clients.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.c,v 1.1.1.1 2003/12/02 20:47:11 nenolod Exp $
+ *  $Id: client.c,v 1.2 2003/12/05 22:09:00 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -866,7 +866,7 @@ exit_one_client(struct Client *client_p, struct Client *source_p,
     */
     sendto_common_channels_local(source_p, 0, ":%s!%s@%s QUIT :%s",
                                  source_p->name, source_p->username,
-                                 source_p->host, comment);
+                                 GET_CLIENT_HOST(source_p), comment);
     DLINK_FOREACH_SAFE(lp, next_lp, source_p->user->channel.head)
       remove_user_from_channel(lp->data);
 
@@ -1329,8 +1329,12 @@ exit_client(
     {
       /* set netsplit message to "*.net *.split" to still show 
        * that its a split, but hide the servers splitting
+       *
+       * Nah, just replace *.net with the server splitting
+       * and replace *.split with my name. =)
        */
-      strcpy(comment1, "*.net *.split");
+      snprintf(comment1, sizeof(comment1), "%s %s",
+		source_p->serv->up, me.name);
     }
     else
     {
@@ -1511,15 +1515,8 @@ set_initial_nick(struct Client *client_p, struct Client *source_p,
    * may reject the client and call exit_client for it
    * --must test this and exit m_nick too!!!
    */
-#ifdef USE_IAUTH
-  /*
-   * Send the client to the iauth module for verification
-   */
-  BeginAuthorization(source_p);
-#else
   if (register_local_user(client_p, source_p, nick, buf) == CLIENT_EXITED)
    return CLIENT_EXITED;
-#endif
  }
  return(0);
 }
