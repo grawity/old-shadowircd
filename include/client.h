@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.13 2004/02/26 23:20:01 nenolod Exp $
+ *  $Id: client.h,v 1.14 2004/02/27 00:04:06 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -187,6 +187,9 @@ struct Client
   dlink_list	allow_list;	/* clients I'll allow to talk to me */
   dlink_list	on_allow_list;	/* clients that have =me= on their allow list*/
 
+  /* This is for lag computation... --nenolod */
+  struct timeval ping_time, ping_send_time;
+
   struct LocalUser *localClient;
 };
 
@@ -289,6 +292,7 @@ struct LocalUser
   int sent_parsed;      /* how many messages we've parsed in this second */
   time_t last_knock;    /* time of last knock */
   unsigned long random_ping;
+
 };
 
 /*

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_map.c,v 1.5 2004/02/26 18:23:27 nenolod Exp $
+ *  $Id: m_map.c,v 1.6 2004/02/27 00:04:06 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -51,7 +51,7 @@ void _moddeinit(void)
   mod_del_cmd(&map_msgtab);
 }
 
-const char *_version = "$Revision: 1.5 $";
+const char *_version = "$Revision: 1.6 $";
 #endif
 
 static char buf[BUFSIZE];
@@ -95,8 +95,9 @@ dump_map(struct Client *client_p,struct Client *root_p, char *pbuf)
 	
   users = dlink_list_length(&root_p->serv->users);
 
-  snprintf(buf + len, BUFSIZE - len, " [Users: %d (%1.1f%%)]", users,
-           100 * (float)users / (float)Count.total);
+  snprintf(buf + len, BUFSIZE - len, " [Users: %d (%1.1f%%); Ping: %lums]", 
+	   users, 100 * (float)users / (float)Count.total, 
+           (root_p->ping_time.tv_usec / 1000));
 
   sendto_one(client_p, form_str(RPL_MAP), me.name, client_p->name, buf);
         
