@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.7 2003/12/12 20:48:41 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.8 2004/01/12 20:01:26 nenolod Exp $
  */
 
 %{
@@ -282,7 +282,6 @@ unhook_hub_leaf_confs(void)
 %token  SERVERINFO
 %token  SERVLINK_PATH
 %token  SID
-%token  SSLPORT
 %token  T_SHARED
 %token  T_CLUSTER
 %token  TYPE
@@ -294,7 +293,6 @@ unhook_hub_leaf_confs(void)
 %token  STATS_K_OPER_ONLY
 %token  STATS_O_OPER_ONLY
 %token  STATS_P_OPER_ONLY
-%token  SSL_CERTIFICATE_FILE
 %token  TBOOL
 %token  TMASKED
 %token  T_REJECT
@@ -471,8 +469,7 @@ serverinfo_item:        serverinfo_name | serverinfo_vhost |
                         serverinfo_network_name | serverinfo_network_desc |
                         serverinfo_max_clients | 
                         serverinfo_rsa_private_key_file | serverinfo_vhost6 |
-                        serverinfo_sid | serverinfo_ssl_certificate_file |
-			error;
+                        serverinfo_sid | error;
 
 serverinfo_rsa_private_key_file: RSA_PRIVATE_KEY_FILE '=' QSTRING ';'
 {
@@ -526,50 +523,6 @@ serverinfo_rsa_private_key_file: RSA_PRIVATE_KEY_FILE '=' QSTRING ';'
     BIO_set_close(file, BIO_CLOSE);
     BIO_free(file);
   }
-#endif
-};
-
-serverinfo_ssl_certificate_file: SSL_CERTIFICATE_FILE '=' QSTRING ';'
-{
-#ifdef HAVE_LIBCRYPTO
-        if (ServerInfo.ctx) {
-
-                if (ServerInfo.ssl_certificate_file)
-                {
-                MyFree(ServerInfo.ssl_certificate_file);
-                ServerInfo.ssl_certificate_file = NULL;
-                }
-
-                DupString(ServerInfo.ssl_certificate_file, yylval.string);
-
-                if (!ServerInfo.rsa_private_key_file) {
-                        sendto_realops_flags(UMODE_DEBUG, L_ALL,
-                                "Ignoring config file entry ssl_certificate -- no rsa_private_key");
-                        break;
-                }
-
-                if (SSL_CTX_use_certificate_file(ServerInfo.ctx,
-                        ServerInfo.ssl_certificate_file, SSL_FILETYPE_PEM) <= 0) {
-                        sendto_realops_flags(UMODE_DEBUG, L_ALL,
-                                "Error using config file entry ssl_certificate -- %s",
-                                ERR_error_string(ERR_get_error(), NULL));
-                        break;
-                }
-
-                if (SSL_CTX_use_PrivateKey_file(ServerInfo.ctx,
-                        ServerInfo.rsa_private_key_file, SSL_FILETYPE_PEM) <= 0) {
-                        sendto_realops_flags(UMODE_DEBUG, L_ALL,
-                                "Error using config file entry rsa_private_key -- %s",
-                                ERR_error_string(ERR_get_error(), NULL));
-                        break;
-                }
-
-                if (!SSL_CTX_check_private_key(ServerInfo.ctx)) {
-                        sendto_realops_flags(UMODE_DEBUG, L_ALL,
-                                "RSA private key doesn't match the SSL certificate public key!");
-                        break;
-                }
-        }
 #endif
 };
 
@@ -1393,7 +1346,7 @@ listen_entry: LISTEN
 };
 
 listen_items:   listen_items listen_item | listen_item;
-listen_item:    listen_port | listen_address | listen_host | listen_sslport | 
+listen_item:    listen_port | listen_address | listen_host | 
                 error;
 
 listen_port: PORT '=' port_items ';' ;
@@ -1415,22 +1368,6 @@ port_item: NUMBER
       add_listener(i, listener_address, 0);
     }
   }
-};
-
-listen_sslport: SSLPORT '=' sslport_items ';' ;
-
-sslport_items: sslport_items ',' sslport_item | sslport_item;
-
-sslport_item: NUMBER
-{
-  add_listener($1, listener_address, 1);
-} | NUMBER TWODOTS NUMBER
-{
-  int i;
-  for (i = $1; i <= $3; i++)
-        {
-          add_listener(i, listener_address, 1);
-        }
 };
 
 listen_address: IP '=' QSTRING ';'
