@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_join.c,v 1.9 2004/02/14 01:35:05 nenolod Exp $
+ *  $Id: m_join.c,v 1.10 2004/02/14 02:09:07 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -88,7 +88,7 @@ _moddeinit(void)
   mod_del_cmd(&join_msgtab);
 }
 
-const char *_version = "$Revision: 1.9 $";
+const char *_version = "$Revision: 1.10 $";
 #endif
 
 /* m_join()
@@ -443,7 +443,7 @@ build_target_list(struct Client *client_p, struct Client *source_p,
 {
   int error_reported, flags = 0;
   char *p, *p2, *chan, *key = keys;
-  struct Channel *chptr, *chptr2 = NULL;
+  struct Channel *chptr = NULL;
 
   ntargets = error_reported = 0;
   join_0 = -1;
@@ -562,6 +562,8 @@ build_target_list(struct Client *client_p, struct Client *source_p,
     targets[ntargets].chptr = chptr;
     targets[ntargets].key = key;
     targets[ntargets++].flags = flags;
+
+    flags = 0; /* We don't get OP on ALL channels we join. */
   }
 
   return ((ntargets) ? 1 : 0);
