@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.10 2004/02/12 22:27:12 nenolod Exp $
+ *  $Id: client.h,v 1.11 2004/02/13 18:23:25 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -63,6 +63,12 @@ struct User
   char*          auth_oper; /* Operator to become if they supply the response.*/
 };
 
+struct Service {
+  int            sflags;    /* service-related flags */
+  int            enable;    /* service can be used */
+  struct Client  *server;   /* pointer to uplink */
+};
+
 struct Server
 {
   char up[HOSTLEN + 1];   /* name of uplink                    */
@@ -70,6 +76,7 @@ struct Server
   struct ConfItem *sconf; /* ConfItem connect{} pointer for this server */
   dlink_list servers;     /* Servers on this server            */
   dlink_list users;       /* Users on this server              */
+  dlink_list services;    /* Services connected to the server  */
 };
 
 struct SlinkRpl
@@ -113,6 +120,10 @@ struct Client
   struct Server*    serv;       /* ...defined, if this is a server */
   struct Client*    servptr;    /* Points to server this Client is on */
   struct Client*    from;       /* == self, if Local Client, *NEVER* NULL! */
+
+  struct Service*   service;    /* pointer to service info, if client is a
+                                 * service.
+                                 */
 
   struct Whowas*    whowas;     /* Pointers to whowas structs */
   time_t            lasttime;   /* ...should be only LOCAL clients? --msa */
@@ -289,6 +300,7 @@ struct LocalUser
 #define STAT_UNKNOWN            0x08
 #define STAT_SERVER             0x10
 #define STAT_CLIENT             0x20
+#define STAT_SERVICE		0x40
 
 #define HasID(x)		((x)->id[0] != '\0')
 #define ID(x)			(HasID(x) ? (x)->id : (x)->name)
@@ -302,6 +314,7 @@ struct LocalUser
 #define IsUnknown(x)            ((x)->status == STAT_UNKNOWN)
 #define IsServer(x)             ((x)->status == STAT_SERVER)
 #define IsClient(x)             ((x)->status == STAT_CLIENT)
+#define IsService(x)		((x)->status == STAT_SERVICE)
 
 #define IsOper(x)		((x)->umodes & UMODE_OPER)
 #define IsAdmin(x)		((x)->umodes & UMODE_ADMIN)
