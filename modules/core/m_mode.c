@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_mode.c,v 1.1 2004/09/08 01:52:37 nenolod Exp $
+ *  $Id: m_mode.c,v 1.2 2004/09/08 03:44:29 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -76,7 +76,8 @@ _moddeinit(void)
   mod_del_cmd(&bmask_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
+const char *_desc = "Implements /mode command -- alters user/channel settings and channel acl's";
 #endif
 
 /*
