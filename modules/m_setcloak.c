@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_setcloak.c,v 1.1 2004/04/30 18:14:15 nenolod Exp $
+ *  $Id: m_setcloak.c,v 1.2 2004/05/12 20:41:49 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,7 +63,7 @@ _moddeinit (void)
   mod_del_cmd (&setcloak_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 
 
 /* m_svscloak
@@ -110,7 +110,7 @@ m_setcloak (struct Client *client_p, struct Client *source_p, int parc,
 		     ":%s SVSCLOAK %s :%s", parv[0], parv[1], parv[2]);
       strncpy (target_p->virthost, hostname, HOSTLEN);
       old = target_p->umodes;
-      target_p->umodes |= UMODE_CLOAK;	/* +v so we enable the cloak. */
+      SetUmode(target_p, UMODE_CLOAK);
       send_umode_out (target_p, target_p, old);
       target_p->flags |= FLAGS_USERCLOAK;	/* set the usercloak flag so that in the
 						 * future, the server will burst the new vhost

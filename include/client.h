@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.2 2004/05/12 16:57:59 nenolod Exp $
+ *  $Id: client.h,v 1.3 2004/05/12 20:41:49 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -31,6 +31,7 @@
 #include "dbuf.h"
 #include "channel.h"
 #include "irc_res.h"
+#include "umodes.h"
 
 #define HOSTIPLEN	53 /* sizeof("ffff:ffff:ffff:ffff:ffff:ffff:255.255.255.255.ipv6") */
 #define PASSWDLEN       20
@@ -51,13 +52,6 @@ struct LocalUser;
 /*
  * Client structures
  */
-struct Umode
-{
-  int            ModeID;
-  int            Enabled;
-  const char     *letter;
-};
-
 struct User
 {
   dlink_list     channel;   /* chain of channel pointer blocks */
@@ -137,7 +131,7 @@ struct Client
   time_t            firsttime;  /* time client was created */
   time_t            since;      /* last time we parsed something */
   time_t            tsinfo;     /* TS on the nick, SVINFO on server */
-  unsigned int      umodes;     /* opers, normal users subset */
+  user_modes        umodes;     /* opers, normal users subset */
   unsigned int      flags;      /* client flags */
 
   unsigned short    hopcount;   /* number of servers to this 0 = local */
@@ -333,9 +327,6 @@ struct LocalUser
 #define IsClient(x)             ((x)->status == STAT_CLIENT)
 #define IsService(x)		((x)->status == STAT_SERVICE)
 
-#define IsOper(x)		((x)->umodes & UMODE_OPER)
-#define IsAdmin(x)		((x)->umodes & UMODE_ADMIN)
-
 #define SetConnecting(x)        {(x)->status = STAT_CONNECTING; \
 				 (x)->handler = UNREGISTERED_HANDLER; }
 
@@ -411,58 +402,7 @@ struct LocalUser
 /*                        0x40000000  */
 /*                        0x80000000  */
 
-
-/* umodes, settable flags
- * currently: +abcdeghiklnorsvwxyzAEIRSZ
- */
-#define UMODE_SERVNOTICE   0x000001 /* server notices such as kill */
-#define UMODE_CCONN        0x000002 /* Client Connections */
-#define UMODE_REJ          0x000004 /* Bot Rejections */
-#define UMODE_SKILL        0x000008 /* Server Killed */
-#define UMODE_FULL         0x000010 /* Full messages */
-#define UMODE_SPY          0x000020 /* see STATS / LINKS */
-#define UMODE_DEBUG        0x000040 /* 'debugging' info */
-#define UMODE_NCHANGE      0x000080 /* Nick change notice */
-#define UMODE_WALLOP       0x000100 /* send wallops to them */
-#define UMODE_OPERWALL     0x000200 /* Operwalls */
-#define UMODE_INVISIBLE    0x000400 /* makes user invisible */
-#define UMODE_BOTS         0x000800 /* shows bots */
-#define UMODE_EXTERNAL     0x001000 /* show servers introduced and splitting */
-#define UMODE_CALLERID     0x002000 /* block unless caller id's */
-#define UMODE_UNAUTH       0x004000 /* show unauth connects here */
-#define UMODE_LOCOPS       0x008000 /* show locops */
-
-#define UMODE_OPER         0x010000 /* Operator */
-#define UMODE_ADMIN        0x020000 /* Admin on server */
-#define UMODE_IDENTIFY     0x040000 /* Identified. */
-#define UMODE_HIDEOPER     0x080000 /* Hide operator status. */
-#define UMODE_CLOAK	   0x100000 /* Usercloak. */
-#define UMODE_BLOCKINVITE  0x200000 /* Block Invites. */
-#define UMODE_PMFILTER     0x400000 /* Allow only registered users to PM */
-#define UMODE_HELPOP       0x800000 /* Help operator. */
-#define UMODE_SVSOPER      0x1000000 /* Services operator. */
-#define UMODE_SVSADMIN     0x2000000 /* Services admin. */
-#define UMODE_SVSROOT      0x4000000 /* Services root. */
-#define UMODE_SERVICE      0x8000000 /* Network service. */
-#define UMODE_SECURE       0x10000000 /* client is using SSL */
-#define UMODE_DEAF         0x20000000 /* User is deaf. */
-#define UMODE_NOCOLOR      0x40000000 /* strip control codes from messages to user */
-
 #define UMODE_ALL	   UMODE_SERVNOTICE /* what is that? */
-
-#define SEND_UMODES  (UMODE_INVISIBLE | UMODE_OPER | UMODE_WALLOP | \
-                      UMODE_ADMIN | UMODE_CLOAK | UMODE_IDENTIFY | UMODE_HIDEOPER | \
-                      UMODE_HELPOP | UMODE_SVSOPER | UMODE_SVSADMIN | UMODE_SVSROOT | \
-                      UMODE_SERVICE | UMODE_SECURE | UMODE_DEAF)
-#define ALL_UMODES   (SEND_UMODES | UMODE_SERVNOTICE | UMODE_CCONN | \
-                      UMODE_REJ | UMODE_SKILL | UMODE_FULL | UMODE_SPY | \
-                      UMODE_NCHANGE | UMODE_OPERWALL | UMODE_DEBUG | \
-                      UMODE_BOTS | UMODE_EXTERNAL | UMODE_LOCOPS | \
-                      UMODE_ADMIN | UMODE_UNAUTH | UMODE_CALLERID | \
-		      UMODE_IDENTIFY | UMODE_HIDEOPER | UMODE_CLOAK | \
-		      UMODE_BLOCKINVITE | UMODE_PMFILTER | UMODE_HELPOP | \
-                      UMODE_SVSADMIN | UMODE_SVSROOT | UMODE_SVSOPER | \
-                      UMODE_SERVICE | UMODE_SECURE | UMODE_DEAF | UMODE_NOCOLOR)
 
 /* oper priv flags */
 #define OPER_FLAG_GLOBAL_KILL  0x00000001 /* oper can global kill        */

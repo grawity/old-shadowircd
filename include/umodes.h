@@ -2,7 +2,7 @@
  * shadowircd: an advanced IRC daemon.
  * umodes.h: part of new usermodes system
  *
- * $Id: umodes.h,v 1.1 2004/05/12 19:21:25 nenolod Exp $
+ * $Id: umodes.h,v 1.2 2004/05/12 20:41:49 nenolod Exp $
  */
 
 /* nice flashy bitfield math, care of asuffield and dancer-ircd.
@@ -34,14 +34,16 @@ extern char umode_list[];
 /* the BITFIELD_SIZE define is used to create the bitfield. */
 #define BITFIELD_SIZE 64
 
+/* do not change this. ever. not without changing the macros -- they are
+ * hardcoded for two 32-bit bitfields.
+ */
+typedef u_int32_t user_modes[2];
+
 #define SetBit(f,b)   (((f)[bitfield_lookup[b].field]) |=  bitfield_lookup[b].bit)
 #define ClearBit(f,b) (((f)[bitfield_lookup[b].field]) &= ~bitfield_lookup[b].bit)
 #define TestBit(f,b)  (((f)[bitfield_lookup[b].field]) &  bitfield_lookup[b].bit)
 
-/* Written out in full for speed.
- * I never thought I would actually use the , operator. You live and learn.
- *  -- asuffield
- */
+/* borrowed from asuffield's dancer-ircd. --nenolod */
 #define CopyUmodes(d,s) (((d)[0] = (s)[0]), ((d)[1] = (s)[1]))
 #define AndUmodes(d,a,b) (((d)[0] = (a)[0] & (b)[0]), ((d)[1] = (a)[1] & (b)[1]))
 #define OrUmodes(d,a,b) (((d)[0] = (a)[0] | (b)[0]), ((d)[1] = (a)[1] | (b)[1]))
@@ -99,6 +101,8 @@ extern char umode_list[];
 
 #define UMODE_ROUTING     35 /* user is on routing team */                /* +L */
 
+#define UMODE_WANTSWHOIS  36 /* Whois notifications */                    /* +W */
+
 /* macros for tests... cleaner code */
 
 #define IsInvisible(x)          (HasUmode(x, UMODE_INVISIBLE))
@@ -137,6 +141,7 @@ extern char umode_list[];
 #define SendExternalNotices(x)  (HasUmode(x, UMODE_EXTERNAL))
 #define SendLocops(x)           (HasUmode(x, UMODE_LOCOPS))
 #define SendUnauthorized(x)     (HasUmode(x, UMODE_UNAUTH))
+
 
 extern void  init_umodes(void);
 extern user_modes user_umodes, null_umodes;

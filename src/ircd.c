@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd.c,v 1.2 2004/04/30 19:46:58 nenolod Exp $
+ *  $Id: ircd.c,v 1.3 2004/05/12 20:41:49 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -615,6 +615,7 @@ main (int argc, char *argv[])
   init_auth ();			/* Initialise the auth code */
   init_resolver ();		/* Needs to be setup before the io loop */
   init_reject ();               /* Set up the reject code. */
+  init_umodes ();               /* Set up the usermode system. */
 
 #ifdef HAVE_LIBCRYPTO
   bio_spare_fd = save_spare_fd ("SSL private key validation");

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.4 2004/05/12 19:41:47 nenolod Exp $
+ *  $Id: s_user.c,v 1.5 2004/05/12 20:41:49 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -51,6 +51,7 @@
 #include "packet.h"
 #include "userhost.h"
 #include "reject.h"
+#include "umodes.h"
 
 int MaxClientCount     = 1;
 int MaxConnectionCount = 1;
@@ -64,46 +65,8 @@ static void report_and_set_user_flags(struct Client *, struct AccessItem *);
 static int check_x_line(struct Client *, struct Client *);
 static int introduce_client(struct Client *, struct Client *);
 
-/* table of ascii char letters
- * to corresponding bitmask
- */
-static const struct flag_item
-{
-  const unsigned int mode;
-  const unsigned char letter;
-} user_modes[] = {
-  { UMODE_ADMIN,      'a' },
-  { UMODE_BOTS,       'b' },
-  { UMODE_CCONN,      'c' },
-  { UMODE_NOCOLOR,    'C' },
-  { UMODE_DEBUG,      'd' },
-  { UMODE_IDENTIFY,   'e' },
-  { UMODE_FULL,       'f' },
-  { UMODE_CALLERID,   'g' },
-  { UMODE_HIDEOPER,   'h' },
-  { UMODE_INVISIBLE,  'i' },
-  { UMODE_SKILL,      'k' },
-  { UMODE_LOCOPS,     'l' },
-  { UMODE_NCHANGE,    'n' },
-  { UMODE_OPER,       'o' },
-  { UMODE_REJ,        'r' },
-  { UMODE_SERVNOTICE, 's' },
-  { UMODE_UNAUTH,     'u' },
-  { UMODE_CLOAK,      'v' },
-  { UMODE_WALLOP,     'w' },
-  { UMODE_EXTERNAL,   'x' },
-  { UMODE_SPY,        'y' },
-  { UMODE_OPERWALL,   'z' },
-  { UMODE_SVSADMIN,   'A' },
-  { UMODE_PMFILTER,   'E' },
-  { UMODE_HELPOP,     'H' },
-  { UMODE_BLOCKINVITE, 'I' },
-  { UMODE_SVSOPER,    'O' },
-  { UMODE_SVSROOT,    'R' },
-  { UMODE_SECURE,     'Z' },
-  { UMODE_DEAF,       'D' },
-  { 0, '\0' }
-};
+FLAG_ITEM user_mode_table[256];
+char user_modes[256];
 
 /* memory is cheap. map 0-255 to equivalent mode */
 const unsigned int user_modes_from_c_to_bitmask[] =
@@ -119,23 +82,23 @@ const unsigned int user_modes_from_c_to_bitmask[] =
   UMODE_DEAF,       /* D */
   UMODE_PMFILTER,   /* E */
   0,                /* F */
-  0,                /* G */
+  UMODE_SENSITIVE,  /* G */
   UMODE_HELPOP,     /* H */
   UMODE_BLOCKINVITE, /* I */
   0,                /* J */
   0,                /* K */
-  0,                /* L */
+  UMODE_ROUTING,    /* L */
   0,                /* M */
-  0,                /* N */
+  UMODE_NETADMIN,   /* N */
   UMODE_SVSOPER,    /* O */
   0,                /* P */
   0,                /* Q */
   UMODE_SVSROOT,    /* R */
   0,                /* S */
-  0,                /* T */
+  UMODE_TECHADMIN,  /* T */
   0,                /* U */
   0,                /* V */
-  0,                /* W */
+  UMODE_WANTSWHOIS, /* W */
   0,                /* X */
   0,                /* Y */
   UMODE_SECURE,     /* Z 0x5A */
@@ -1064,7 +1027,7 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
             if (IsServer(client_p) && !IsOper(target_p))
             {
               ++Count.oper;
-              SetBit(target_p, UMODE_OPER);
+              SetUmode(target_p, UMODE_OPER);
             }
           }
           else
@@ -1113,9 +1076,9 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
             else
             {
               if (what == MODE_ADD)
-                SetBit(target_p, flag);
+                SetUmode(target_p, flag);
               else
-                ClearBit(target_p, flag);  
+                ClearUmode(target_p, flag);  
             }
           }
           else
@@ -1249,7 +1212,7 @@ user_welcome(struct Client *source_p)
   sendto_one(source_p, form_str(RPL_CREATED),
              me.name,source_p->name, creation);
   sendto_one(source_p, form_str(RPL_MYINFO),
-             me.name, source_p->name, me.name, ircd_version);
+             me.name, source_p->name, me.name, ircd_version, user_modes);
 
   show_isupport(source_p);
   show_lusers(source_p);
