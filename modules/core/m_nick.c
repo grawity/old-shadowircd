@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_nick.c,v 1.1 2004/04/30 18:19:27 nenolod Exp $
+ *  $Id: m_nick.c,v 1.2 2004/05/01 08:30:29 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -99,7 +99,7 @@ _moddeinit (void)
   mod_del_cmd (&uid_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /* mr_nick()
@@ -518,7 +518,7 @@ ms_uid (struct Client *client_p, struct Client *source_p,
     return;
 
   /* check length of clients gecos */
-  if (strlen(parc > 10 ? parv[10] : parv[9]) > REALLEN)
+  if (strlen(IsCapable(source_p, CAP_UVH) ? ID_GECOS : ID_VHOST) > REALLEN)
     {
       sendto_realops_flags (UMODE_ALL, L_ALL,
 			    "Long realname from server %s for %s", parv[0],

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 1.1 2004/04/30 18:13:40 nenolod Exp $
+ *  $Id: channel_mode.c,v 1.2 2004/05/01 08:30:29 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1715,7 +1715,7 @@ chm_voice(struct Client *client_p, struct Client *source_p,
     return;
   }
 
-  if (alev < (chptr->mode.mode & MODE_FREEVOICE) ? CHACCESS_VOICE : CHACCESS_HALFOP)
+  if ((alev < CHACCESS_HALFOP) && !(chptr->mode.mode & MODE_FREEVOICE))
   {
     if (!(*errors & SM_ERR_NOOPS))
       sendto_one(source_p, form_str(alev == CHACCESS_NOTONCHAN ?
@@ -1723,7 +1723,7 @@ chm_voice(struct Client *client_p, struct Client *source_p,
                  me.name, source_p->name, chname);
     *errors |= SM_ERR_NOOPS;
     return;
-  }
+  }    
 
   if ((dir == MODE_QUERY) || parc <= *parn)
     return;

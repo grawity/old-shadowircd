@@ -1,5 +1,10 @@
 (n) = nenolod; (z) = Zippoboy7
 
+ShadowIRCd 2.4.4-1
+
+* Fixed desync bug caused by silly typo. Sorry! (n)
+* Readded declaration for colourfilter umode +C. Sorry again. (n)
+
 ShadowIRCd 2.4.4
 
 * Fixed compatibility with older ShadowIRCd protocol. (n)

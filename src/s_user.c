@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.2 2004/04/30 19:46:58 nenolod Exp $
+ *  $Id: s_user.c,v 1.3 2004/05/01 08:30:29 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -75,6 +75,7 @@ static const struct flag_item
   { UMODE_ADMIN,      'a' },
   { UMODE_BOTS,       'b' },
   { UMODE_CCONN,      'c' },
+  { UMODE_NOCOLOR,    'C' },
   { UMODE_DEBUG,      'd' },
   { UMODE_IDENTIFY,   'e' },
   { UMODE_FULL,       'f' },
@@ -114,7 +115,7 @@ const unsigned int user_modes_from_c_to_bitmask[] =
   0,                /* @ */
   UMODE_SVSADMIN,   /* A */
   0,                /* B */
-  0,                /* C */
+  UMODE_NOCOLOR,    /* C */
   UMODE_DEAF,       /* D */
   UMODE_PMFILTER,   /* E */
   0,                /* F */
@@ -769,8 +770,8 @@ introduce_client(struct Client *client_p, struct Client *source_p)
                    source_p->name, source_p->hopcount+1,
                    (unsigned long)source_p->tsinfo,
                    ubuf, source_p->username, source_p->host,
-                   source_p->ipaddr, (source_p->flags & FLAGS_USERCLOAK) ? source_p->virthost : "*",
-                   source_p->id, source_p->info);
+                   source_p->ipaddr, source_p->id,
+                   (source_p->flags & FLAGS_USERCLOAK) ? source_p->virthost : "*", source_p->info);
         }
         else
         {
