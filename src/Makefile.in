@@ -1,7 +1,7 @@
 #
 # Makefile.in for ircd/src
 #
-# $Id: Makefile.in,v 1.1 2004/04/30 18:13:28 nenolod Exp $
+# $Id: Makefile.in,v 1.2 2004/04/30 19:46:58 nenolod Exp $
 #
 @SET_MAKE@
 
@@ -89,6 +89,7 @@ BASE_SRCS =	\
  numeric.c \
  packet.c \
  parse.c \
+ reject.c \
  restart.c \
  resv.c	\
  s_auth.c \

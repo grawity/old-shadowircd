@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_debug.c,v 1.1 2004/04/30 18:13:23 nenolod Exp $
+ *  $Id: s_debug.c,v 1.2 2004/04/30 19:46:58 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -41,7 +41,7 @@
 #include "send.h"
 #include "whowas.h"
 #include "memory.h"
-
+#include "reject.h"
 
 /*
  * This is part of the STATS replies. There is no offical numeric for this
@@ -313,6 +313,9 @@ count_memory(struct Client *source_p)
   sendto_one(source_p, ":%s %d %s z :Invex %u(%lu)",
              me.name, RPL_STATSDEBUG, source_p->name,
 	     channel_invex, channel_invex_memory);
+
+  sendto_one(source_p, ":%s %d %s z :rejected from cache %lu",
+             me.name, RPL_STATSDEBUG, source_p->name, reject_count);
 
   sendto_one(source_p, ":%s %d %s z :Channel members %u(%lu) invite %u(%lu)",
              me.name, RPL_STATSDEBUG, source_p->name, channel_users,

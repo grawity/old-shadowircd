@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.c,v 1.1 2004/04/30 18:13:35 nenolod Exp $
+ *  $Id: s_conf.c,v 1.2 2004/04/30 19:46:58 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -53,6 +53,7 @@
 #include "memory.h"
 #include "irc_res.h"
 #include "userhost.h"
+#include "reject.h"
 
 /* general conf items link list root, other than k lines etc. */
 dlink_list server_items  = { NULL, NULL, 0 };
@@ -795,11 +796,16 @@ check_client(struct Client *client_p, struct Client *source_p, const char *usern
 	  source_p->localClient->listener->port);
       exit_client(client_p, source_p, &me,
 		  "You are not authorized to use this server");
+      add_reject(source_p);
       break;
     }
  
    case BANNED_CLIENT:
-      /* They are banned! Don't waste the bandwidth. */
+      /* They are banned! Don't waste the bandwidth.
+       *
+       * Actually, if they are banned, lets silently drop them!
+       */
+      add_reject(source_p);
       close_connection(source_p);
       ServerStats->is_ref++;
       break;
@@ -1947,6 +1953,10 @@ set_default_conf(void)
   ConfigFileEntry.oper_umodes = UMODE_LOCOPS | UMODE_SERVNOTICE |
     UMODE_OPERWALL | UMODE_WALLOP;        /* XXX */
   ConfigFileEntry.crypt_oper_password = YES;
+  ConfigFileEntry.reject_after_count = 5;
+  ConfigFileEntry.reject_ban_time = 300;
+  ConfigFileEntry.reject_duration = 120;
+
   DupString(ConfigFileEntry.servlink_path, SLPATH);
 #ifdef HAVE_LIBCRYPTO
   /* jdc -- This is our default value for a cipher.  According to the

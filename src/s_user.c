@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.1 2004/04/30 18:13:48 nenolod Exp $
+ *  $Id: s_user.c,v 1.2 2004/04/30 19:46:58 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -50,7 +50,7 @@
 #include "memory.h"
 #include "packet.h"
 #include "userhost.h"
-
+#include "reject.h"
 
 int MaxClientCount     = 1;
 int MaxConnectionCount = 1;
@@ -1343,7 +1343,8 @@ check_x_line(struct Client *client_p, struct Client *source_p)
                              source_p->localClient->sockhost);
       }
 
-      ServerStats->is_ref++;      
+      ServerStats->is_ref++;
+      add_reject(source_p);      
       exit_client(client_p, source_p, &me, "Bad user info");
       return(CLIENT_EXITED);
     }

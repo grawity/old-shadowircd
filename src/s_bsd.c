@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_bsd.c,v 1.1 2004/04/30 18:13:19 nenolod Exp $
+ *  $Id: s_bsd.c,v 1.2 2004/04/30 19:46:58 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -39,6 +39,7 @@
 #include "listener.h"
 #include "numeric.h"
 #include "packet.h"
+#include "reject.h"
 #include "irc_res.h"
 #include "inet_misc.h"
 #include "restart.h"
@@ -431,13 +432,12 @@ add_connection(struct Listener* listener, int fd)
   } else
 #endif
     strlcat(new_client->host, new_client->localClient->sockhost,HOSTLEN+1);
+    strlcat(new_client->ipaddr, new_client->localClient->sockhost, 256);
 
   new_client->localClient->fd        = fd;
   
   new_client->localClient->listener  = listener;
   ++listener->ref_count;
-
-  printf("debug: accept called...\n");
 
 #ifdef HAVE_LIBCRYPTO
   if ((listener->is_ssl == 1) && !(new_client->ssl))
@@ -465,6 +465,11 @@ add_connection(struct Listener* listener, int fd)
     report_error(L_ALL, NONB_ERROR_MSG, get_client_name(new_client, SHOW_IP), errno);
   if (!disable_sock_options(new_client->localClient->fd))
     report_error(L_ALL, OPT_ERROR_MSG, get_client_name(new_client, SHOW_IP), errno);
+
+  if (check_reject(new_client)) {
+    exit_client(new_client, new_client, &me, "*** Banned (cached)");
+    return;
+  }
 
 #ifdef HAVE_LIBCRYPTO
   if (IsSSL(new_client) && new_ssl)

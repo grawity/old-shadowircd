@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd.c,v 1.1 2004/04/30 18:13:30 nenolod Exp $
+ *  $Id: ircd.c,v 1.2 2004/04/30 19:46:58 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -62,7 +62,7 @@
 #include "ircd_getopt.h"
 #include "balloc.h"
 #include "dh.h"
-
+#include "reject.h"
 
 /* Try and find the correct name to use with getrlimit() for setting the max.
  * number of files allowed to be open by this process.
@@ -614,6 +614,7 @@ main (int argc, char *argv[])
   init_uid ();
   init_auth ();			/* Initialise the auth code */
   init_resolver ();		/* Needs to be setup before the io loop */
+  init_reject ();               /* Set up the reject code. */
 
 #ifdef HAVE_LIBCRYPTO
   bio_spare_fd = save_spare_fd ("SSL private key validation");
