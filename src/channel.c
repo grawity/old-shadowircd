@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.c,v 1.9 2004/03/16 05:36:08 nenolod Exp $
+ *  $Id: channel.c,v 1.10 2004/03/16 05:46:30 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -792,15 +792,18 @@ can_join(struct Client *source_p, struct Channel *chptr, const char *key)
   struct Ban *invex = NULL;
   char src_host[NICKLEN + USERLEN + HOSTLEN + 6];
   char src_iphost[NICKLEN + USERLEN + HOSTLEN + 6];
+  char src_vhost[NICKLEN + USERLEN + HOSTLEN + 6];
 
   assert(source_p->localClient != NULL);
 
   ircsprintf(src_host, "%s!%s@%s", source_p->name, source_p->username,
              source_p->host);
+  ircsprintf(src_vhost, "%s!%s@%s", source_p->name, source_p->username,
+             source_p->virthost);
   ircsprintf(src_iphost, "%s!%s@%s", source_p->name, source_p->username,
 	     source_p->localClient->sockhost);
 
-  if ((check_banned(chptr, src_host, src_iphost)) == CHFL_BAN)
+  if ((check_banned(chptr, src_host, src_vhost, src_iphost)) == CHFL_BAN)
     return(ERR_BANNEDFROMCHAN);
 
   /* Immune opers can walk through bans. --nenolod */
