@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: fdlist.c,v 1.3 2004/01/12 20:16:36 nenolod Exp $
+ *  $Id: fdlist.c,v 1.4 2004/01/12 20:20:13 nenolod Exp $
  */
 #include "stdinc.h"
 #include "fdlist.h"
@@ -139,17 +139,6 @@ fd_close(int fd)
   number_fd--;
   memset(F, '\0', sizeof(fde_t));
   F->timeout = 0;
-
-#ifdef HAVE_LIBCRYPTO
-  F->flags.accept_read = 0;
-  F->flags.accept_write = 0;
-  F->accept_failures = 0;
-  if (F->ssl) {
-        SSL_shutdown(F->ssl);
-        SSL_free(F->ssl);
-        F->ssl = NULL;
-  }
-#endif
 
   /* Unlike squid, we're actually closing the FD here! -- adrian */
   close(fd);

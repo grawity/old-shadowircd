@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_bsd.c,v 1.6 2004/01/12 20:16:36 nenolod Exp $
+ *  $Id: s_bsd.c,v 1.7 2004/01/12 20:20:13 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -795,7 +795,7 @@ comm_open(int family, int sock_type, int proto, const char *note)
     }
 
   /* Next, update things in our fd tracking */
-  fd_open(fd, FD_SOCKET, note, NULL);
+  fd_open(fd, FD_SOCKET, note);
   return fd;
 }
 

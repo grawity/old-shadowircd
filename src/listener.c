@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: listener.c,v 1.4 2003/12/06 02:17:23 nenolod Exp $
+ *  $Id: listener.c,v 1.5 2004/01/12 20:20:13 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -39,9 +39,6 @@
 #include "send.h"
 #include "memory.h"
 #include "tools.h"
-#ifdef HAVE_LIBCRYPTO
-#include <openssl/bio.h>
-#endif
 
 
 static PF accept_connection;
@@ -245,7 +242,7 @@ find_listener(int port, struct irc_ssaddr *addr)
  * the format "255.255.255.255"
  */
 void 
-add_listener(int port, const char* vhost_ip, int is_ssl)
+add_listener(int port, const char* vhost_ip)
 {
   struct Listener *listener;
   struct irc_ssaddr vaddr;
@@ -327,8 +324,6 @@ add_listener(int port, const char* vhost_ip, int is_ssl)
   {
     listener = make_listener(port, &vaddr);
     dlinkAdd(listener, &listener->listener_node, &ListenerPollList);
-
-    listener->is_ssl = is_ssl;
   }
 
   listener->fd = -1;
@@ -416,7 +411,7 @@ accept_connection(int pfd, void *data)
    * be accepted until some old is closed first.
    */
 
-  fd = comm_accept(listener->fd, &sai, listener->is_ssl);
+  fd = comm_accept(listener->fd, &sai);
 
   if (fd < 0)
   {

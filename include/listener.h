@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: listener.h,v 1.2 2003/12/05 20:31:44 nenolod Exp $
+ *  $Id: listener.h,v 1.3 2004/01/12 20:20:13 nenolod Exp $
  */
 
 #ifndef INCLUDED_listener_h
@@ -46,10 +46,9 @@ struct Listener
   struct irc_ssaddr addr;              /* virtual address or INADDR_ANY */
   struct DNSQuery   *dns_query;
   char             vhost[HOSTLEN + 1]; /* virtual name of listener */
-  int              is_ssl;             /* use SSL functionality. */
 };
 
-extern void add_listener(int port, const char *vaddr_ip, int is_ssl);
+extern void add_listener(int port, const char *vaddr_ip);
 extern void close_listeners(void);
 extern const char *get_listener_name(const struct Listener *listener);
 extern void show_ports(struct Client *source_p);
