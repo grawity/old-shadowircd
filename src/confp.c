@@ -2,7 +2,7 @@
  * NetworkBOPM: The ShadowIRCd Anti-Proxy System.
  * confp.c: Configuration Parser, care of Sentinel.
  *
- * $Id: confp.c,v 1.1 2004/05/24 23:22:42 nenolod Exp $
+ * $Id: confp.c,v 1.1.1.1 2004/05/24 23:22:42 nenolod Exp $
  */
 
 #include "netbopm.h"

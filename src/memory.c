@@ -2,7 +2,7 @@
  * NetworkBOPM: The ShadowIRCd Anti-Proxy Solution.
  * memory.c: Memory safe functions.
  *
- * $Id: memory.c,v 1.1 2004/05/24 23:22:41 nenolod Exp $
+ * $Id: memory.c,v 1.1.1.1 2004/05/24 23:22:41 nenolod Exp $
  */
 
 #include "netbopm.h"

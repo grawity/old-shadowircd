@@ -3,7 +3,7 @@
 #
 # This file contains build instructions.
 #
-# $Id: Makefile.in,v 1.1 2004/05/24 23:22:35 nenolod Exp $
+# $Id: Makefile.in,v 1.1.1.1 2004/05/24 23:22:35 nenolod Exp $
 #
 
 CC		= @CC@

@@ -4,7 +4,7 @@
  *
  * Major portions of this area of the code borrowed from shrike.
  *
- * $Id: irc.c,v 1.1 2004/05/24 23:22:41 nenolod Exp $
+ * $Id: irc.c,v 1.1.1.1 2004/05/24 23:22:41 nenolod Exp $
  */
 
 #include "netbopm.h"

@@ -4,7 +4,7 @@
  *
  * <licensing info here>
  *
- * $Id: netbopm.h,v 1.1 2004/05/24 23:22:47 nenolod Exp $
+ * $Id: netbopm.h,v 1.1.1.1 2004/05/24 23:22:47 nenolod Exp $
  */
 
 #ifndef INCLUDED_NETBOPM_H

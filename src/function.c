@@ -2,7 +2,7 @@
  * NetworkBOPM: The ShadowIRCd Anti-Proxy System.
  * function.c: Various functions.
  *
- * $Id: function.c,v 1.1 2004/05/24 23:22:41 nenolod Exp $
+ * $Id: function.c,v 1.1.1.1 2004/05/24 23:22:41 nenolod Exp $
  */
 
 #include "netbopm.h"
