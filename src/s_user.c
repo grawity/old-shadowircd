@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.22 2004/01/16 00:45:22 nenolod Exp $
+ *  $Id: s_user.c,v 1.23 2004/01/16 03:29:28 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1029,9 +1029,6 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
         case '-':
           what = MODE_DEL;
           break;
-        case 'H':
-          if (!IsOper(target_p))
-             break;
         case 'o':
           if (what == MODE_ADD)
           {
@@ -1084,6 +1081,10 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
         case 'R':
 	case 'e':
           if (!IsServer(source_p))
+             break;
+
+        case 'H':
+          if (!IsOper(target_p))
              break;
 
         default:
@@ -1358,7 +1359,7 @@ oper_up(struct Client *source_p)
 
   /* set the network staff virtual host. */
   MyFree(source_p->virthost);
-  DupString(source_p->virthost, ServerInfo.network_operhost);
+  strncpy(source_p->virthost, ServerInfo.network_operhost, sizeof(ServerInfo.network_operhost));
 
   sendto_realops_flags(UMODE_ALL, L_ALL, "%s (%s@%s) is now an operator",
                        source_p->name, source_p->username, source_p->host);
