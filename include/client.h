@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.11 2004/02/13 18:23:25 nenolod Exp $
+ *  $Id: client.h,v 1.12 2004/02/18 18:06:17 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -428,13 +428,14 @@ struct LocalUser
 #define UMODE_SVSROOT      0x4000000 /* Services root. */
 #define UMODE_SERVICE      0x8000000 /* Network service. */
 #define UMODE_SECURE       0x10000000 /* client is using SSL */
+#define UMODE_DEAF         0x20000000 /* User is deaf. */
 
 #define UMODE_ALL	   UMODE_SERVNOTICE /* what is that? */
 
 #define SEND_UMODES  (UMODE_INVISIBLE | UMODE_OPER | UMODE_WALLOP | \
                       UMODE_ADMIN | UMODE_CLOAK | UMODE_IDENTIFY | UMODE_HIDEOPER | \
                       UMODE_HELPOP | UMODE_SVSOPER | UMODE_SVSADMIN | UMODE_SVSROOT | \
-                      UMODE_SERVICE | UMODE_SECURE)
+                      UMODE_SERVICE | UMODE_SECURE | UMODE_DEAF)
 #define ALL_UMODES   (SEND_UMODES | UMODE_SERVNOTICE | UMODE_CCONN | \
                       UMODE_REJ | UMODE_SKILL | UMODE_FULL | UMODE_SPY | \
                       UMODE_NCHANGE | UMODE_OPERWALL | UMODE_DEBUG | \
@@ -443,8 +444,7 @@ struct LocalUser
 		      UMODE_IDENTIFY | UMODE_HIDEOPER | UMODE_CLOAK | \
 		      UMODE_BLOCKINVITE | UMODE_PMFILTER | UMODE_HELPOP | \
                       UMODE_SVSADMIN | UMODE_SVSROOT | UMODE_SVSOPER | \
-                      UMODE_SERVICE | UMODE_SECURE)
-
+                      UMODE_SERVICE | UMODE_SECURE | UMODE_DEAF)
 
 /* oper priv flags */
 #define OPER_FLAG_GLOBAL_KILL  0x00000001 /* oper can global kill        */
@@ -465,7 +465,6 @@ struct LocalUser
 #define OPER_FLAG_OVERRIDE     0x00008000 /* oper can override channels  */
 
 #define SetOFlag(x, y) ((x)->localClient->operflags |= (y))
-
 
 /* flags macros. */
 #define IsPerson(x)             (IsClient(x) && (x)->user)
@@ -495,7 +494,7 @@ struct LocalUser
 					       FLAGS_KILLED))
 
 #define SetSSL(x)		((x)->flags |= FLAGS_SSL)
-#define IsSSL(x)		(((x)->flags & FLAGS_SSL) && (x)->ssl)
+#define IsSSL(x)		((x)->flags & FLAGS_SSL)
 
 /* oper flags */
 #define MyOper(x)               (MyConnect(x) && IsOper(x))

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.c,v 1.7 2004/02/12 22:27:12 nenolod Exp $
+ *  $Id: s_conf.c,v 1.8 2004/02/18 18:06:17 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -799,7 +799,8 @@ check_client(struct Client *client_p, struct Client *source_p, const char *usern
     }
  
    case BANNED_CLIENT:
-      exit_client(client_p, source_p, &me, "*** Banned ");
+      /* They are banned! Don't waste the bandwidth. */
+      close_connection(source_p);
       ServerStats->is_ref++;
       break;
 
@@ -879,7 +880,7 @@ verify_access(struct Client *client_p, const char *username)
     else if (IsConfKill(aconf))
     {
       if (ConfigFileEntry.kline_with_reason)
-        sendto_one(client_p, ":%s NOTICE %s :*** Banned %s", 
+        sendto_one(client_p, form_str(ERR_YOUREBANNEDCREEP), 
                   me.name, client_p->name, aconf->reason);
       return(BANNED_CLIENT);
     }

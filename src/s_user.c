@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.30 2004/02/13 20:21:28 nenolod Exp $
+ *  $Id: s_user.c,v 1.31 2004/02/18 18:06:17 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -100,6 +100,7 @@ static const struct flag_item
   { UMODE_SVSOPER,    'O' },
   { UMODE_SVSROOT,    'R' },
   { UMODE_SECURE,     'Z' },
+  { UMODE_DEAF,       'D' },
   { 0, '\0' }
 };
 
@@ -114,7 +115,7 @@ const unsigned int user_modes_from_c_to_bitmask[] =
   UMODE_SVSADMIN,   /* A */
   0,                /* B */
   0,                /* C */
-  0,                /* D */
+  UMODE_DEAF,       /* D */
   UMODE_PMFILTER,   /* E */
   0,                /* F */
   0,                /* G */

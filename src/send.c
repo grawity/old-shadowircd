@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: send.c,v 1.9 2004/02/12 03:31:05 nenolod Exp $
+ *  $Id: send.c,v 1.10 2004/02/18 18:06:17 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -122,6 +122,9 @@ send_message(struct Client *to, char *buf, int len)
     return;
   }
 #endif
+
+  if (to->umodes & UMODE_DEAF)
+    return;
 
   if (dbuf_length(&to->localClient->buf_sendq) + len > get_sendq(to))
   {

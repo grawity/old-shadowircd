@@ -19,9 +19,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: patchlevel.h,v 1.12 2004/02/14 03:07:36 nenolod Exp $
+ *  $Id: patchlevel.h,v 1.13 2004/02/18 18:06:17 nenolod Exp $
  */
 
 #ifndef PATCHLEVEL
-#define PATCHLEVEL   "shadowircd-2.2-(Ayume)"
+#define PATCHLEVEL   "shadowircd-2.3-(Akasha)"
 #endif
