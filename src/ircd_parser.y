@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.11 2004/08/21 08:11:53 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.12 2004/08/21 08:15:38 nenolod Exp $
  */
 
 %{
@@ -601,7 +601,7 @@ network_cloak_on_oper: CLOAK_ON_OPER '=' TBOOL ';'
 network_disable_hostmasking: DISABLE_HOSTMASKING '=' TBOOL ';'
 {
   if (ypass == 2)
-    ServerInfo.disable_hostmasking = yylval.number;
+    ConfigFileEntry.disable_hostmasking = yylval.number;
 };
 
 network_cloak_on_connect: CLOAK_ON_CONNECT '=' TBOOL ';'
