@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_nick.c,v 1.6 2004/05/22 05:31:13 nenolod Exp $
+ *  $Id: m_nick.c,v 1.7 2004/06/02 07:47:05 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -80,7 +80,7 @@ struct Message nick_msgtab = {
 };
 
 struct Message uid_msgtab = {
-  "UID", 0, 0, 1, 0, MFLG_SLOW, 0,
+  "UID", 0, 0, 10, 0, MFLG_SLOW, 0,
   {m_ignore, m_ignore, ms_uid, m_ignore, m_ignore}
 };
 
@@ -99,7 +99,7 @@ _moddeinit(void)
   mod_del_cmd(&uid_msgtab);
 }
 
-const char *_version = "$Revision: 1.6 $";
+const char *_version = "$Revision: 1.7 $";
 #endif
 
 /* mr_nick()

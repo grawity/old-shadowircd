@@ -1,3 +1,8 @@
+ShadowIRCd 3.1-beta1:
+
+* UID is more paranoid now. (this stops the UID parc == 8 issue before
+                             it is harmful)
+
 ShadowIRCd 3.0 (Cortana)
 
 * Several bugfixes.
