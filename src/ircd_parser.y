@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 3.8 2004/09/25 17:20:07 nenolod Exp $
+ *  $Id: ircd_parser.y,v 3.9 2004/09/25 17:30:21 nenolod Exp $
  */
 
 %{
@@ -1129,7 +1129,8 @@ oper_umodes: USER_MODES '=' QSTRING ';'
 {
   if (ypass == 2)
   {
-    umodes_from_string(&yy_aconf->usermodes, yylval.string);
+    MyFree(yy_conf->usermodes);
+    DupString(yy_conf->usermodes, yylval.string);
   }
 };
 

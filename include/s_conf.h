@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.h,v 3.6 2004/09/25 17:12:14 nenolod Exp $
+ *  $Id: s_conf.h,v 3.7 2004/09/25 17:30:21 nenolod Exp $
  */
 
 #ifndef INCLUDED_s_conf_h
@@ -114,7 +114,7 @@ struct AccessItem
   struct DNSQuery* dns_query;
   int              encrypted;
   int              aftype;
-  user_modes       usermodes; /* Usermodes to assign upon successful oper */
+  char *           usermodes; /* Usermodes to assign upon successful oper */
 #ifdef HAVE_LIBCRYPTO
   char *           rsa_public_key_file;
   RSA *            rsa_public_key;

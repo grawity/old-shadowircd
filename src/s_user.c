@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 3.7 2004/09/25 17:12:14 nenolod Exp $
+ *  $Id: s_user.c,v 3.8 2004/09/25 17:30:21 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1341,7 +1341,7 @@ oper_up(struct Client *source_p)
    *
    * We may want to add more to clarify what umodes have been added, etc.
    */
-  CopyUmodes(source_p->umodes, oconf->usermodes);
+  umodes_from_string(&source_p->umodes, oconf->usermodes);
 
   if (source_p->localClient->operflags & OPER_FLAG_TECHADMIN)
     SetUmode(source_p, UMODE_TECHADMIN);
