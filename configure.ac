@@ -1,6 +1,8 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
+# $Id: configure.ac,v 1.2 2004/05/24 23:51:11 nenolod Exp $
+
 AC_PREREQ(2.59)
 AC_INIT("NetworkBOPM", "1.0-alpha1", "nenolod@nenolod.net")
 AC_CONFIG_SRCDIR([src/socket.c])
@@ -31,5 +33,5 @@ AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([gethostbyname gettimeofday memset socket strcasecmp strchr strdup])
 
-AC_CONFIG_FILES([Makefile src/Makefile])
+AC_CONFIG_FILES([Makefile libopm/Makefile src/Makefile])
 AC_OUTPUT

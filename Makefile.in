@@ -7,7 +7,7 @@ PREFIX		= @PREFIX@
 BIN		= networkbopm@EXEEXT@
 
 SHELL=/bin/sh
-SUBDIRS=src
+SUBDIRS=libopm src
 CLEANDIRS = ${SUBDIRS}
 
 MAKE = make ${MFLAGS}
