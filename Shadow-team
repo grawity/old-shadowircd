@@ -1,4 +1,4 @@
-$Id: Shadow-team,v 1.5 2004/05/21 21:49:06 nenolod Exp $
+$Id: Shadow-team,v 1.6 2004/07/06 02:46:50 nenolod Exp $
  
 The people on this list are people who have helped with the
 development of ShadowIRCd. These people are known as the
@@ -6,59 +6,32 @@ ShadowIRCd project.
  
 Active members in the ShadowIRCd project:
  
- - nenolod (nenolod@nenolod.net)
+ - nenolod (nenolod@gmail.com)
    Main developer.
  
- - Ashen (l43x@mindspring.com)
-   Additional development.
+ - NhJm (nhjm449@hotmail.com)
+   Additional development, web-related work, maintainance of
+   modules.shadowircd.net.
  
-Others who have contributed to this release of ShadowIRCd:
+The ShadowIRCd project is looking for coders to help with the
+effort. See below for instructions.
  
- - deadman (devinbrown@mindless.com)
-   Bug reporting on 2.x branch, causing fixes with the
-   forcejoin system in 3.x
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
  
-The ShadowIRCd project would like to denote gratitude for
-the work of the following people:
+The ShadowIRCd project would like to denote gratitude for the
+following networks which have either donated time or provided
+mirroring for ShadowIRCd 3.x.
  
- - Sarisa/Hwy
-   Mirroring ShadowIRCd's releases and making them
-   more available to the public.
+ - Lucifer7 (irc.pwnix.net)
+   Archival of ShadowIRCd releases and documentation.
  
- - Lucifer7
-   Mirroring ShadowIRCd releases and maintaining
-   an archive of ShadowIRCd releases, especially when
-   berlios.de temporarily went offline.
+ - Ashen (irc.pwnix.net)
+   Crash reporting on Redhat/Mandrake systems.
+  
+ - in3crypt/tom/pepsi (irc.retardos.net)
+   Mirroring of current ShadowIRCd releases.
  
- - Zippoboy7
-   2.x branch maintainer, attempting to provide CVS hosting
-   after berlios.de went offline.
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
  
- - Pufu
-   Bugtesting and patchwriting, adding new features to
-   the ircd.
- 
- - rakaur
-   Starting the Shrike project, leading to string manipulation
-   routines which were added to the ircd.
- 
- - asuffield
-   Creating a working method for the allocation of more
-   than 32 usermodes.
- 
- - Eko
-   Initial work on the ShadowIRCd 2.x branch.
- 
- - NhJm
-   Bugtesting.
- 
- - anfl
-   For inventing ETRACE for hybrid and ratbox, so that it could
-   be added to the IRCd.
- 
- - ksh/iso9660
-   For working on OpenIRCd, what this ircd is majorly derived from.
- 
-Additional thanks has to go to the Hybrid development team for creating a
-good ircd to work from.
- 
+If you would like to help out with development, connect to
+irc.shadowircd.net and join #shadowircd.

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 1.4 2004/06/09 21:07:27 nenolod Exp $
+ *  $Id: channel_mode.c,v 1.5 2004/07/06 02:46:50 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -779,7 +779,7 @@ chm_filter (struct Client *client_p, struct Client *source_p,
     }
 
 
-  if ((alev < CHACCESS_CHANOP))
+  if ((alev < CHACCESS_CHANOP) && !IsServer(source_p))
     {
       if (!(*errors & SM_ERR_NOOPS))
 	sendto_one (source_p, form_str (alev == CHACCESS_NOTONCHAN ?
@@ -816,8 +816,8 @@ chm_filter (struct Client *client_p, struct Client *source_p,
       mode_changes[mode_count].dir = MODE_ADD;
       mode_changes[mode_count].caps = CAP_FILTER;
       mode_changes[mode_count].nocaps = 0;
-      mode_changes[mode_count].mems =
-	(IsServer (source_p)) ? ONLY_SERVERS : ONLY_CHANOPS;
+      mode_changes[mode_count].mems = ALL_MEMBERS;
+      mode_changes[mode_count].id = NULL;
       mode_changes[mode_count++].arg = word;
     }
   else if (dir == MODE_DEL)
@@ -834,8 +834,8 @@ chm_filter (struct Client *client_p, struct Client *source_p,
       mode_changes[mode_count].dir = MODE_DEL;
       mode_changes[mode_count].caps = CAP_FILTER;
       mode_changes[mode_count].nocaps = 0;
-      mode_changes[mode_count].mems =
-	(IsServer (source_p)) ? ONLY_SERVERS : ONLY_CHANOPS;
+      mode_changes[mode_count].id = NULL;
+      mode_changes[mode_count].mems = ALL_MEMBERS;
       mode_changes[mode_count++].arg = word;
     }
 }

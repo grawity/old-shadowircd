@@ -1,8 +1,21 @@
 #!/bin/sh
-DPATH="@PREFIX@/etc"
+
+# SSL instructions.
+# 1) Do not compile with rtsigio.
+# 2) Edit the appropriate points of this script.
+# 3) Run this script with bourne shell or bash.
+# 4) Restart your ircd after editing the appropriate parts of your ircd.conf.
+#
+# SSL configuration is recommended for advanced users only, and has many flaws in it's
+# implementation.
+
+# DPATH is where you have installed the ircd to.
+DPATH="/usr/local/ircd/etc"
+
 CERT_DAYS=365
 AUTO_CONFIG="0"
 REBUILD_CRT="1"
+
 c=""
 
 	echo " ";

@@ -1,3 +1,17 @@
+ShadowIRCd 3.1:
+
+* Fix socket dequeing bug in old hybrid basecode.
+* Finish language file implementation. (See messages/fantasy.lang for details on what nenolod 
+                                        means here)
+* Finish tools/sslsetup script.
+* Fix channel filterlist desync issues, hopefully.
+* Fix check_text() issue causing ircd to use patterns for filtering.
+
+ShadowIRCd 3.1-rc1:
+
+* Fix for Channel filtering II.
+* Allow static module compiling.
+
 ShadowIRCd 3.1-beta3 (still the Moonlight series):
 
 * Fix for Channel filtering.
