@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.h,v 1.11 2004/02/13 20:02:57 nenolod Exp $
+ *  $Id: s_conf.h,v 1.12 2004/02/26 23:20:01 nenolod Exp $
  */
 
 #ifndef INCLUDED_s_conf_h
@@ -372,6 +372,9 @@ struct server_info
   int wingate_enable;
   char *wingate_website;
   char *monitorbot;
+  char *whois_hiding;
+  char *whois_description;
+  char *roundrobin;
 };
 
 struct admin_info

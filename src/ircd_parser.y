@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.20 2004/02/13 20:21:28 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.21 2004/02/26 23:20:01 nenolod Exp $
  */
 
 %{
@@ -153,6 +153,7 @@ unhook_hub_leaf_confs(void)
 %token  CLOAKSTRING
 %token  CONFIGURATION
 %token  AUSPEX
+%token  GRANT
 %token  OVERRIDE
 %token  SET_OWNCLOAK
 %token  SET_ANYCLOAK
@@ -286,6 +287,10 @@ unhook_hub_leaf_confs(void)
 %token  TYPE
 %token  SHORT_MOTD
 %token  SILENT
+%token  HIDING
+%token  WHOIS_HIDING
+%token  WHOIS_DESCRIPTION
+%token  ROUNDROBIN
 %token  SPOOF
 %token  SPOOF_NOTICE
 %token  STATS_I_OPER_ONLY
@@ -383,6 +388,7 @@ conf_item:        admin_entry
                 | gecos_entry
                 | modules_entry
 		| wingate_entry
+		| hiding_entry
                 | error ';'
                 | error '}'
         ;
@@ -1064,7 +1070,8 @@ oper_item:      oper_name  | oper_user | oper_password | oper_hidden_admin |
                 oper_die | oper_rehash | oper_admin |
 		oper_rsa_public_key_file | oper_auspex |
                 oper_set_owncloak | oper_set_anycloak |
-                oper_immune | oper_override | error;
+                oper_immune | oper_override | oper_grant |
+                error;
 
 oper_name: NAME '=' QSTRING ';'
 {
@@ -1260,6 +1267,17 @@ oper_override: OVERRIDE '=' TBOOL ';'
       yy_aconf->port |= OPER_FLAG_OVERRIDE;
     else
       yy_aconf->port &= ~OPER_FLAG_OVERRIDE;
+  }
+};
+
+oper_grant: GRANT '=' TBOOL ';'
+{
+  if (ypass == 2)
+  {
+    if (yylval.number)
+      yy_aconf->port |= OPER_FLAG_GRANT;
+    else
+      yy_aconf->port &= ~OPER_FLAG_GRANT;
   }
 };
 
@@ -3229,7 +3247,8 @@ wingate_entry: WINGATE
 
 wingate_items: wingate_items wingate_item | wingate_item;
 
-wingate_item: wingate_enable | wingate_monitorbot | wingate_website;
+wingate_item: wingate_enable | wingate_monitorbot | wingate_website | 
+              error;
 
 wingate_enable: WINGATE_ENABLE '=' TBOOL ';'
 {
@@ -3252,6 +3271,45 @@ wingate_website: WINGATE_WEBPAGE '=' QSTRING ';'
   {
     MyFree(ServerInfo.wingate_website);
     DupString(ServerInfo.wingate_website, yylval.string);
+  }
+};
+
+/***************************************************************************
+ *  section hiding
+ ***************************************************************************/
+
+hiding_entry: HIDING
+  '{' hiding_items '}' ';';
+
+hiding_items: hiding_items hiding_item | hiding_item;
+
+hiding_item: hiding_whois_hiding | hiding_whois_description | 
+             hiding_roundrobin | error;
+
+hiding_whois_hiding: WHOIS_HIDING '=' QSTRING ';'
+{
+  if (ypass == 2)
+  {
+    MyFree(ServerInfo.whois_hiding);
+    DupString(ServerInfo.whois_hiding, yylval.string);
+  }
+};
+
+hiding_whois_description: WHOIS_DESCRIPTION '=' QSTRING ';'
+{
+  if (ypass == 2)
+  {
+    MyFree(ServerInfo.whois_description);
+    DupString(ServerInfo.whois_description, yylval.string);
+  }
+};
+
+hiding_roundrobin: ROUNDROBIN '=' QSTRING ';'
+{
+  if (ypass == 2)
+  {
+    MyFree(ServerInfo.roundrobin);
+    DupString(ServerInfo.roundrobin, yylval.string);
   }
 };
 

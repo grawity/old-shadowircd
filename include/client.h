@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.12 2004/02/18 18:06:17 nenolod Exp $
+ *  $Id: client.h,v 1.13 2004/02/26 23:20:01 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -463,6 +463,7 @@ struct LocalUser
 #define OPER_FLAG_SETCLOAK     0x00002000 /* oper can set anyone's host  */
 #define OPER_FLAG_IMMUNE       0x00004000 /* oper is immune to all       */
 #define OPER_FLAG_OVERRIDE     0x00008000 /* oper can override channels  */
+#define OPER_FLAG_GRANT        0x00010000 /* oper can grant privileges   */
 
 #define SetOFlag(x, y) ((x)->localClient->operflags |= (y))
 
@@ -580,6 +581,7 @@ struct LocalUser
 #define IsOperSetAnyCloak(x)    (MyConnect(x) ? (x)->localClient->operflags & OPER_FLAG_SETCLOAK : 0)
 #define IsOperImmune(x)         (MyConnect(x) ? (x)->localClient->operflags & OPER_FLAG_IMMUNE : 0)
 #define IsOperOverride(x)       (MyConnect(x) ? (x)->localClient->operflags & OPER_FLAG_OVERRIDE : 0)
+#define IsOperGrant(x)          (MyConnect(x) ? (x)->localClient->operflags & OPER_FLAG_GRANT : 0)
 
 /*
  * definitions for get_client_name

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_lexer.l,v 1.13 2004/02/13 20:02:57 nenolod Exp $
+ *  $Id: ircd_lexer.l,v 1.14 2004/02/26 23:20:01 nenolod Exp $
  */
 
 %option case-insensitive
@@ -175,11 +175,13 @@ fuserlog   	{ return FUSERLOG; }
 gecos		{ return GECOS; }
 general		{ return GENERAL; }
 global_kill	{ return GLOBAL_KILL; }
+grant		{ return GRANT; }
 have_ident	{ return HAVE_IDENT; }
 havent_read_conf { return HAVENT_READ_CONF; }
 hidden		{ return HIDDEN; }
 hidden_admin	{ return HIDDEN_ADMIN; }
 hide_spoof_ips	{ return HIDE_SPOOF_IPS; }
+hiding		{ return HIDING; }
 host		{ return HOST; }
 hub		{ return HUB; }
 hub_mask	{ return HUB_MASK; }
@@ -233,6 +235,9 @@ no_create_on_split { return NO_CREATE_ON_SPLIT; }
 no_join_on_split   { return NO_JOIN_ON_SPLIT; }
 no_oper_flood   { return NO_OPER_FLOOD; }
 no_tilde	{ return NO_TILDE; }
+roundrobin	{ return ROUNDROBIN; }
+whois_hiding	{ return WHOIS_HIDING; }
+whois_description { return WHOIS_DESCRIPTION; }
 number_per_ip	{ return NUMBER_PER_IP; }
 oper		{ return OPERATOR; }
 oper_log        { return OPER_LOG; }
