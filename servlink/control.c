@@ -15,7 +15,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *   $Id: control.c,v 1.1 2003/12/02 20:47:51 nenolod Exp $
+ *   $Id: control.c,v 1.1.1.1 2003/12/02 20:47:51 nenolod Exp $
  */
 
 #include "stdinc.h"

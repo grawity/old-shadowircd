@@ -1,4 +1,4 @@
-# $Id: ungline,v 1.1 2003/12/02 20:47:19 nenolod Exp $
+# $Id: ungline,v 1.1.1.1 2003/12/02 20:47:19 nenolod Exp $
 UNGLINE <user@host>
 
 -- if glines are enabled --

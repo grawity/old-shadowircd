@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_kline.c,v 1.1 2003/12/02 20:47:48 nenolod Exp $
+ *  $Id: m_kline.c,v 1.1.1.1 2003/12/02 20:47:48 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -106,7 +106,7 @@ _moddeinit(void)
   delete_capability("KLN");
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.1.1.1 $";
 #endif
 
 #define TK_SECONDS 0

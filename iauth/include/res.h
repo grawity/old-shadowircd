@@ -1,7 +1,7 @@
 /*
  * iauth/res.h (C)opyright 1992 Darren Reed.
  *
- * $Id: res.h,v 1.1 2003/12/02 20:47:27 nenolod Exp $
+ * $Id: res.h,v 1.1.1.1 2003/12/02 20:47:27 nenolod Exp $
  */
 
 #ifndef INCLUDED_res_h

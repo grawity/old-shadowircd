@@ -1,6 +1,6 @@
 The hostmask/netmask system.
 Copyright(C) 2001 by Andrew Miller(A1kmm)<a1kmm@mware.virtualave.net>
-$Id: hostmask.txt,v 1.1 2003/12/02 20:46:33 nenolod Exp $
+$Id: hostmask.txt,v 1.1.1.1 2003/12/02 20:46:33 nenolod Exp $
 
 Contents
 ========

@@ -68,4 +68,4 @@ ircd features
   well as 'blocked' from being propogated through the local server onto another
   server. Failures can also be logged for rejected and/or blocked glines.
 
-$Id: whats-new.txt,v 1.1 2003/12/02 20:46:20 nenolod Exp $
+$Id: whats-new.txt,v 1.1.1.1 2003/12/02 20:46:20 nenolod Exp $

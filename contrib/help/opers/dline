@@ -1,4 +1,4 @@
-# $Id: dline,v 1.1 2003/12/02 20:47:18 nenolod Exp $
+# $Id: dline,v 1.1.1.1 2003/12/02 20:47:18 nenolod Exp $
 DLINE <nick|ip> :[reason]
 
 Adds a DLINE to the ircd.conf or dline.conf file

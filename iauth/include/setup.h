@@ -1,4 +1,4 @@
-/* $Id: setup.h,v 1.1 2003/12/02 20:47:27 nenolod Exp $ */
+/* $Id: setup.h,v 1.1.1.1 2003/12/02 20:47:27 nenolod Exp $ */
 #ifndef INCLUDED_setup_h
 #define INCLUDED_setup_h
 

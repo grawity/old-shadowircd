@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: hostmask.c,v 1.1 2003/12/02 20:47:00 nenolod Exp $
+ *  $Id: hostmask.c,v 1.1.1.1 2003/12/02 20:47:00 nenolod Exp $
  */
 
 #include "stdinc.h"

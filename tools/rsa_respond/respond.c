@@ -17,7 +17,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *  $Id: respond.c,v 1.1 2003/12/02 20:47:33 nenolod Exp $
+ *  $Id: respond.c,v 1.1.1.1 2003/12/02 20:47:33 nenolod Exp $
  */
 #include <stdio.h>
 #include <string.h>

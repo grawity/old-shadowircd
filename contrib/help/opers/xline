@@ -1,4 +1,4 @@
-# $Id: xline,v 1.1 2003/12/02 20:47:18 nenolod Exp $
+# $Id: xline,v 1.1.1.1 2003/12/02 20:47:18 nenolod Exp $
 XLINE <gecos> <type> :[reason]
 
 The types allowed are:

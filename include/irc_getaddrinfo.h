@@ -26,7 +26,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *  $Id: irc_getaddrinfo.h,v 1.1 2003/12/02 20:47:57 nenolod Exp $
+ *  $Id: irc_getaddrinfo.h,v 1.1.1.1 2003/12/02 20:47:57 nenolod Exp $
  */
 
 extern int irc_getaddrinfo(const char *hostname, const char *servname,

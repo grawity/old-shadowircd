@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_killhost.c,v 1.1 2003/12/02 20:47:36 nenolod Exp $
+ *  $Id: m_killhost.c,v 1.1.1.1 2003/12/02 20:47:36 nenolod Exp $
  *
  */
 
@@ -65,7 +65,7 @@ _moddeinit(void)
   mod_del_cmd(&killhost_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.1.1.1 $";
 #endif
 
 /*

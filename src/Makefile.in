@@ -1,7 +1,7 @@
 #
 # Makefile.in for ircd/src
 #
-# $Id: Makefile.in,v 1.1 2003/12/02 20:46:46 nenolod Exp $
+# $Id: Makefile.in,v 1.1.1.1 2003/12/02 20:46:46 nenolod Exp $
 #
 @SET_MAKE@
 

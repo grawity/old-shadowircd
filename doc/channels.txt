@@ -1,6 +1,6 @@
                          General Channel Information
 
-   $Id: channels.txt,v 1.1 2003/12/02 20:46:20 nenolod Exp $
+   $Id: channels.txt,v 1.1.1.1 2003/12/02 20:46:20 nenolod Exp $
 
    Copyright (c) 2003 by metalrock
 

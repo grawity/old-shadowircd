@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: spy_links_notice.c,v 1.1 2003/12/02 20:47:11 nenolod Exp $
+ *  $Id: spy_links_notice.c,v 1.1.1.1 2003/12/02 20:47:11 nenolod Exp $
  */
 #include "stdinc.h"
 #include "tools.h"
@@ -44,7 +44,7 @@ _moddeinit(void)
   hook_del_hook("doing_links", (hookfn *)show_links);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.1.1.1 $";
 
 int
 show_links(struct hook_links_data *data)

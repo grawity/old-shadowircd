@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_log.h,v 1.1 2003/12/02 20:47:52 nenolod Exp $
+ *  $Id: s_log.h,v 1.1.1.1 2003/12/02 20:47:52 nenolod Exp $
  */
 
 #ifndef INCLUDED_s_log_h

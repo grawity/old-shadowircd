@@ -1,5 +1,5 @@
 /* inet_misc.c - inet_pton and inet_ntop for those who don't have it.
- * $Id: inet_misc.c,v 1.1 2003/12/02 20:46:58 nenolod Exp $
+ * $Id: inet_misc.c,v 1.1.1.1 2003/12/02 20:46:58 nenolod Exp $
  *
  * Copyright (c) 1983, 1990, 1993
  *		The Regents of the University of California.  All rights reserved.

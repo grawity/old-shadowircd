@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_defs.h,v 1.1 2003/12/02 20:47:58 nenolod Exp $
+ *  $Id: ircd_defs.h,v 1.1.1.1 2003/12/02 20:47:58 nenolod Exp $
  */
 
 /*

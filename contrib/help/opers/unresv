@@ -1,4 +1,4 @@
-# $Id: unresv,v 1.1 2003/12/02 20:47:19 nenolod Exp $
+# $Id: unresv,v 1.1.1.1 2003/12/02 20:47:19 nenolod Exp $
 UNRESV <channel|nick>
 
 -- Remove a RESV on a channel or nick

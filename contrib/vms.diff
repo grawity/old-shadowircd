@@ -2,7 +2,7 @@ diff -urN ircd-hybrid/clean.com ircd-hybrid-CURRENT/clean.com
 --- ircd-hybrid/clean.com	1969-12-31 16:00:00.000000000 -0800
 +++ ircd-hybrid-CURRENT/clean.com	2003-06-21 17:46:53.000000000 -0700
 @@ -0,0 +1,10 @@
-+$! $Id: vms.diff,v 1.1 2003/12/02 20:47:16 nenolod Exp $
++$! $Id: vms.diff,v 1.1.1.1 2003/12/02 20:47:16 nenolod Exp $
 +$! yes, its a hack. this needs to be merged into make.com.
 +$! (well, really, into a top-level descrip.mms.. one day).
 +$
@@ -115,7 +115,7 @@ diff -urN ircd-hybrid/include/setup_vms.h ircd-hybrid-CURRENT/include/setup_vms.
 --- ircd-hybrid/include/setup_vms.h	1969-12-31 16:00:00.000000000 -0800
 +++ ircd-hybrid-CURRENT/include/setup_vms.h	2003-06-21 17:46:53.000000000 -0700
 @@ -0,0 +1,240 @@
-+/* $Id: vms.diff,v 1.1 2003/12/02 20:47:16 nenolod Exp $
++/* $Id: vms.diff,v 1.1.1.1 2003/12/02 20:47:16 nenolod Exp $
 + * Static setup.h for VMS
 + */
 +
@@ -407,7 +407,7 @@ diff -urN ircd-hybrid/make.com ircd-hybrid-CURRENT/make.com
 +$ WRITE SYS$OUTPUT "Commencing build of ircd-hybrid-7 for VMS..."
 +$ WRITE SYS$OUTPUT "Examining source directory..."
 +$
-+$! $Id: vms.diff,v 1.1 2003/12/02 20:47:16 nenolod Exp $
++$! $Id: vms.diff,v 1.1.1.1 2003/12/02 20:47:16 nenolod Exp $
 +$! Don't have to do this any more - we now depend on
 +$! bison/flex to build.
 +$! FILE_SIZE = "NOSUCHFILE"
@@ -462,7 +462,7 @@ diff -urN ircd-hybrid/modules/core/descrip.mms ircd-hybrid-CURRENT/modules/core/
 @@ -0,0 +1,18 @@
 +# MMS/MMK Makefile for OpenVMS
 +# Copyright (c) 2001 Edward Brocklesby
-+# $Id: vms.diff,v 1.1 2003/12/02 20:47:16 nenolod Exp $
++# $Id: vms.diff,v 1.1.1.1 2003/12/02 20:47:16 nenolod Exp $
 +
 +CC=	CC
 +CFLAGS=	/INCLUDE_DIRECTORY=([-.-.INCLUDE])/STANDARD=ISOC94/DEBUG
@@ -484,7 +484,7 @@ diff -urN ircd-hybrid/modules/descrip.mms ircd-hybrid-CURRENT/modules/descrip.mm
 @@ -0,0 +1,30 @@
 +# MMS/MMK Makefile for OpenVMS
 +# Copyright (c) 2001 Edward Brocklesby
-+# $Id: vms.diff,v 1.1 2003/12/02 20:47:16 nenolod Exp $
++# $Id: vms.diff,v 1.1.1.1 2003/12/02 20:47:16 nenolod Exp $
 +
 +CC=	CC
 +CFLAGS=	/INCLUDE_DIRECTORY=([-.INCLUDE])/STANDARD=ISOC94/DEBUG
@@ -559,7 +559,7 @@ diff -urN ircd-hybrid/README.VMS ircd-hybrid-CURRENT/README.VMS
 +binary distributions are available on the FTP site.
 +(actually, they aren't yet, but at some time in the future they should be)
 +
-+$Id: vms.diff,v 1.1 2003/12/02 20:47:16 nenolod Exp $
++$Id: vms.diff,v 1.1.1.1 2003/12/02 20:47:16 nenolod Exp $
 diff -urN ircd-hybrid/servlink/descrip.mms ircd-hybrid-CURRENT/servlink/descrip.mms
 --- ircd-hybrid/servlink/descrip.mms	1969-12-31 16:00:00.000000000 -0800
 +++ ircd-hybrid-CURRENT/servlink/descrip.mms	2003-06-21 17:46:53.000000000 -0700
@@ -585,7 +585,7 @@ diff -urN ircd-hybrid/src/descrip.mms ircd-hybrid-CURRENT/src/descrip.mms
 @@ -0,0 +1,45 @@
 +# MMS/MMK Makefile for OpenVMS
 +# Copyright (c) 2001 Edward Brocklesby
-+# $Id: vms.diff,v 1.1 2003/12/02 20:47:16 nenolod Exp $
++# $Id: vms.diff,v 1.1.1.1 2003/12/02 20:47:16 nenolod Exp $
 +
 +CC=	CC
 +CFLAGS=/INCLUDE_DIRECTORY=([-.INCLUDE])/STANDARD=ISOC94/NOWARN/DEBUG -
@@ -869,7 +869,7 @@ diff -urN ircd-hybrid/src/s_bsd_qio.c ircd-hybrid-CURRENT/src/s_bsd_qio.c
 + *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
 + *  USA
 + *
-+ *  $Id: vms.diff,v 1.1 2003/12/02 20:47:16 nenolod Exp $
++ *  $Id: vms.diff,v 1.1.1.1 2003/12/02 20:47:16 nenolod Exp $
 + */
 +
 +#include "stdinc.h"
@@ -1235,7 +1235,7 @@ diff -urN ircd-hybrid/tools/descrip.mms ircd-hybrid-CURRENT/tools/descrip.mms
 @@ -0,0 +1,25 @@
 +# MMS/MMK Makefile for OpenVMS
 +# Copyright (c) 2001 Edward Brocklesby
-+# $Id: vms.diff,v 1.1 2003/12/02 20:47:16 nenolod Exp $
++# $Id: vms.diff,v 1.1.1.1 2003/12/02 20:47:16 nenolod Exp $
 +
 +CC=	CC
 +CFLAGS=	/STANDARD=ISOC94

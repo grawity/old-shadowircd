@@ -1,7 +1,7 @@
 /*
  * include/irc_res.h for referencing functions in src/irc_res.c
  *
- * $Id: irc_res.h,v 1.1 2003/12/02 20:47:57 nenolod Exp $
+ * $Id: irc_res.h,v 1.1.1.1 2003/12/02 20:47:57 nenolod Exp $
  */
 
 #ifndef INCLUDED_irc_res_h

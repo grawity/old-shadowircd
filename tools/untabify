@@ -2,7 +2,7 @@
 #
 # untabify - convert tabs to spaces
 #
-# $Id: untabify,v 1.1 2003/12/02 20:47:28 nenolod Exp $
+# $Id: untabify,v 1.1.1.1 2003/12/02 20:47:28 nenolod Exp $
 use Text::Tabs;
 $tabstop = 8;
 while (<>) { print expand($_) }

@@ -15,7 +15,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *   $Id: m_ojoin.c,v 1.1 2003/12/02 20:47:44 nenolod Exp $
+ *   $Id: m_ojoin.c,v 1.1.1.1 2003/12/02 20:47:44 nenolod Exp $
  */
 
 /* Remove this if you do not wish /OJOIN to support multiple channels
@@ -61,7 +61,7 @@ _moddeinit(void)
   mod_del_cmd(&ojoin_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.1.1.1 $";
 
 #endif
 

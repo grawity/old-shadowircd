@@ -9,7 +9,7 @@
  *  this stuff is worth it, you can buy me a beer in return.  Poul-Henning Kamp
  *  ----------------------------------------------------------------------------
  *  
- *  $Id: crypt.c,v 1.1 2003/12/02 20:46:37 nenolod Exp $
+ *  $Id: crypt.c,v 1.1.1.1 2003/12/02 20:46:37 nenolod Exp $
  */
 
 #include "stdinc.h"

@@ -32,4 +32,4 @@ SET <option> <value>
   SPLITNUM    - Sets the minimum amount of servers needed to
                 deactivate automatic splitmode.
 
-# $Id: set,v 1.1 2003/12/02 20:47:18 nenolod Exp $
+# $Id: set,v 1.1.1.1 2003/12/02 20:47:18 nenolod Exp $

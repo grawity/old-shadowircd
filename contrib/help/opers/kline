@@ -1,4 +1,4 @@
-# $Id: kline,v 1.1 2003/12/02 20:47:18 nenolod Exp $
+# $Id: kline,v 1.1.1.1 2003/12/02 20:47:18 nenolod Exp $
 KLINE <nick|user@host> :[reason] [| oper reason]
 
 Adds a KLINE to the ircd.conf or kline.conf file which

@@ -1,7 +1,7 @@
 /*
  * viconf.c
  *
- * $Id: viconf.c,v 1.1 2003/12/02 20:47:30 nenolod Exp $
+ * $Id: viconf.c,v 1.1.1.1 2003/12/02 20:47:30 nenolod Exp $
  */
 
 #include "stdinc.h"

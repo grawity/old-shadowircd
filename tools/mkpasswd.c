@@ -12,7 +12,7 @@
 ** VMS support by Edward Brocklesby, crypt.c implementation
 ** phk@login.dknet.dk
 **
-** $Id: mkpasswd.c,v 1.1 2003/12/02 20:47:28 nenolod Exp $
+** $Id: mkpasswd.c,v 1.1.1.1 2003/12/02 20:47:28 nenolod Exp $
 */
 #include <stdio.h>
 #include <string.h>

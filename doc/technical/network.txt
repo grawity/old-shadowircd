@@ -1,7 +1,7 @@
 Overview of the network subsystem
 Adrian Chadd <adrian@creative.net.au>
 
-$Id: network.txt,v 1.1 2003/12/02 20:46:25 nenolod Exp $
+$Id: network.txt,v 1.1.1.1 2003/12/02 20:46:25 nenolod Exp $
 
 This document is an overview of the new and hopefully improved network
 subsystem.

@@ -7,7 +7,7 @@
  * The authors takes no responsibility for any damage or loss
  * of property which results from the use of this software.
  *
- * $Id: irc_res.c,v 1.1 2003/12/02 20:47:00 nenolod Exp $
+ * $Id: irc_res.c,v 1.1.1.1 2003/12/02 20:47:00 nenolod Exp $
  *
  * July 1999 - Rewrote a bunch of stuff here. Change hostent builder code,
  *     added callbacks and reference counting of returned hostents.

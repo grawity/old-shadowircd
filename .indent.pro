@@ -1,4 +1,4 @@
-/* $Id: .indent.pro,v 1.1 2003/12/02 20:46:19 nenolod Exp $ */
+/* $Id: .indent.pro,v 1.1.1.1 2003/12/02 20:46:19 nenolod Exp $ */
 /* copy this file to the source dir then run indent file.c */
 
 --gnu-style

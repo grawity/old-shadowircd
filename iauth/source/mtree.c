@@ -15,7 +15,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *   $Id: mtree.c,v 1.1 2003/12/02 20:47:26 nenolod Exp $
+ *   $Id: mtree.c,v 1.1.1.1 2003/12/02 20:47:26 nenolod Exp $
  */
 
 /*

@@ -1,6 +1,6 @@
 ; dutch language
 ; No idea who did this. (db)
-; $Id: ircd-dutch.lang,v 1.1 2003/12/02 20:47:21 nenolod Exp $
+; $Id: ircd-dutch.lang,v 1.1.1.1 2003/12/02 20:47:21 nenolod Exp $
 
 RPL_WELCOME:             :%s 001 %s :Welkom op het %s Internet Relay Netwerk %s
 RPL_YOURHOST:            :%s 002 %s :Je host is %s, werkend met versie %s

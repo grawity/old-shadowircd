@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_lusers.c,v 1.1 2003/12/02 20:47:47 nenolod Exp $
+ *  $Id: m_lusers.c,v 1.1.1.1 2003/12/02 20:47:47 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -58,7 +58,7 @@ _moddeinit(void)
   mod_del_cmd(&lusers_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.1.1.1 $";
 #endif
 /* m_lusers - LUSERS message handler
  * parv[0] = sender

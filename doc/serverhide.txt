@@ -1,6 +1,6 @@
                              Server Hide Reference
 
-   $Id: serverhide.txt,v 1.1 2003/12/02 20:46:20 nenolod Exp $
+   $Id: serverhide.txt,v 1.1.1.1 2003/12/02 20:46:20 nenolod Exp $
 
    Copyright (c) 2001 by ircd-hybrid team
 

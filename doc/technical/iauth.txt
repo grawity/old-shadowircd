@@ -1,4 +1,4 @@
-$Id: iauth.txt,v 1.1 2003/12/02 20:46:26 nenolod Exp $
+$Id: iauth.txt,v 1.1.1.1 2003/12/02 20:46:26 nenolod Exp $
 
 Patrick Alken <wnder@underworld.net>
 01/09/2000

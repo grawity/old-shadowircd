@@ -1,7 +1,7 @@
 #
 # Makefile.in for ircd/iauth
 #
-# $Id: Makefile.in,v 1.1 2003/12/02 20:47:25 nenolod Exp $
+# $Id: Makefile.in,v 1.1.1.1 2003/12/02 20:47:25 nenolod Exp $
 #
 CC	= @CC@
 RM	= @RM@

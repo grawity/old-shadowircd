@@ -1,4 +1,4 @@
-$Id: TODO,v 1.1 2003/12/02 20:46:07 nenolod Exp $
+$Id: TODO,v 1.1.1.1 2003/12/02 20:46:07 nenolod Exp $
 
 - add more stderr debugging (ircd -s)... one for every place we syslog()
 - ircd -s doesn't work through a restart

@@ -1,4 +1,4 @@
-# $Id: unxline,v 1.1 2003/12/02 20:47:19 nenolod Exp $
+# $Id: unxline,v 1.1.1.1 2003/12/02 20:47:19 nenolod Exp $
 UNXLINE <gecos>
 
 Removes an XLINE 

@@ -1,4 +1,4 @@
-$Id: debug_api.txt,v 1.1 2003/12/02 20:46:28 nenolod Exp $
+$Id: debug_api.txt,v 1.1.1.1 2003/12/02 20:46:28 nenolod Exp $
 
 This describes the debug (src/debug.c) debugging system in hybrid.
 

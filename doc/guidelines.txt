@@ -33,4 +33,4 @@ pushed back and pile up.
 
 8.  Don't forget to include a CVS Id.
 
-# $Id: guidelines.txt,v 1.1 2003/12/02 20:46:21 nenolod Exp $
+# $Id: guidelines.txt,v 1.1.1.1 2003/12/02 20:46:21 nenolod Exp $
