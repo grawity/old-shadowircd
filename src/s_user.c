@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.7 2003/12/05 17:48:04 nenolod Exp $
+ *  $Id: s_user.c,v 1.8 2003/12/06 05:33:47 eko Exp $
  */
 
 #include "stdinc.h"
@@ -95,6 +95,7 @@ static const struct flag_item
   { UMODE_EXTERNAL,   'x' },
   { UMODE_SPY,        'y' },
   { UMODE_OPERWALL,   'z' },
+  { UMODE_PMFILTER,   'E' },
   { 0, '\0' }
 };
 
@@ -110,7 +111,7 @@ const unsigned int user_modes_from_c_to_bitmask[] =
   0,                /* B */
   0,                /* C */
   0,                /* D */
-  0,                /* E */
+  UMODE_PMFILTER,   /* E */
   0,                /* F */
   0,                /* G */
   0,                /* H */
