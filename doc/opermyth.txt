@@ -1,4 +1,4 @@
-$Id: opermyth.txt,v 1.1 2004/09/07 04:50:26 nenolod Exp $
+$Id: opermyth.txt,v 1.1.1.1 2004/09/07 04:50:26 nenolod Exp $
 
 Date: Thu, 30 Jul 1998 16:21:40-0700 (MST)
 To: operlist@the-project.org

@@ -4,7 +4,7 @@
  *
  * Copyright (C) 2001 Hybrid Development Team
  *
- * $Id: resv.txt,v 1.1 2004/09/07 04:50:26 nenolod Exp $
+ * $Id: resv.txt,v 1.1.1.1 2004/09/07 04:50:26 nenolod Exp $
  */
 
 				RESV

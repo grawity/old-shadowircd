@@ -46,4 +46,4 @@ ircd features
   server. Failures can also be logged for rejected and/or blocked glines.
 - Many new channel modes.
 
-$Id: whats-new.txt,v 1.1 2004/09/07 04:50:26 nenolod Exp $
+$Id: whats-new.txt,v 1.1.1.1 2004/09/07 04:50:26 nenolod Exp $

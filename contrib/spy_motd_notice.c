@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: spy_motd_notice.c,v 1.1 2004/09/07 04:50:36 nenolod Exp $
+ *  $Id: spy_motd_notice.c,v 1.1.1.1 2004/09/07 04:50:36 nenolod Exp $
  */
 #include "stdinc.h"
 #include "tools.h"
@@ -43,7 +43,7 @@ _moddeinit(void)
   hook_del_hook("doing_motd", (hookfn *)show_motd);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.1.1.1 $";
 
 int
 show_motd(struct hook_spy_data *data)

@@ -1,4 +1,4 @@
-# $Id: stats,v 1.1 2004/09/07 04:50:36 nenolod Exp $
+# $Id: stats,v 1.1.1.1 2004/09/07 04:50:36 nenolod Exp $
 STATS <letter> [server|nick]
 
 Queries server [server] (or your own server if no

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 # Configure frontend for Shadow.
-# $Id: config.pl,v 1.1 2004/09/07 04:50:23 nenolod Exp $
+# $Id: config.pl,v 1.1.1.1 2004/09/07 04:50:23 nenolod Exp $
 
 print "Welcome to the configuration wizard for ShadowIRCd.\n";
 

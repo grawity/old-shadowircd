@@ -58,4 +58,4 @@ _moddeinit(void)
   hook_del_hook("make_virthost", (hookfn *)makevirthost);
 }
 
-char *_version = "$Revision: 1.1 $";
+char *_version = "$Revision: 1.1.1.1 $";

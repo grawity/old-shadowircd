@@ -32,7 +32,7 @@
 #include <stdarg.h>
 #include "irc_getaddrinfo.h"
 
-/*  $Id: irc_getaddrinfo.c,v 1.1 2004/09/07 04:50:34 nenolod Exp $ */
+/*  $Id: irc_getaddrinfo.c,v 1.1.1.1 2004/09/07 04:50:34 nenolod Exp $ */
 
 static const char in_addrany[]  = { 0, 0, 0, 0 };
 static const char in_loopback[] = { 127, 0, 0, 1 };

@@ -15,7 +15,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *   $Id: m_opme.c,v 1.1 2004/09/07 04:50:38 nenolod Exp $
+ *   $Id: m_opme.c,v 1.1.1.1 2004/09/07 04:50:38 nenolod Exp $
  */
 #include "stdinc.h"
 #include "tools.h"
@@ -57,7 +57,7 @@ _moddeinit(void)
   mod_del_cmd(&opme_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.1.1.1 $";
 
 #endif
 

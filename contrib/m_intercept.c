@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_intercept.c,v 1.1 2004/09/07 04:50:36 nenolod Exp $
+ *  $Id: m_intercept.c,v 1.1.1.1 2004/09/07 04:50:36 nenolod Exp $
  *
  *  Updated to use the built in privmsg hook for ShadowIRCd 2.4.2! --neno
  */
@@ -69,7 +69,7 @@ _moddeinit(void)
   hook_del_hook("send_privmsg", (hookfn *)show_privmsg);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.1.1.1 $";
 
 int
 show_privmsg(struct hook_privmsg_data *data)

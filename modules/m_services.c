@@ -1,7 +1,7 @@
 /*
  * shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  * 
- * $Id: m_services.c,v 1.1 2004/09/07 04:50:37 nenolod Exp $
+ * $Id: m_services.c,v 1.1.1.1 2004/09/07 04:50:37 nenolod Exp $
  */
 
 /* List of ircd includes from ../include/ */
@@ -179,7 +179,7 @@ _moddeinit(void)
   mod_del_cmd(&ss_msgtab);
 }
 
-char *_version = "$Revision: 1.1 $";
+char *_version = "$Revision: 1.1.1.1 $";
 #endif
 
 /*

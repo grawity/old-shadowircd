@@ -3,7 +3,7 @@
 # New Channelmode +L
 #  LINK
 #
-# $Id: l_spec.txt,v 1.1 2004/09/07 04:50:28 nenolod Exp $
+# $Id: l_spec.txt,v 1.1.1.1 2004/09/07 04:50:28 nenolod Exp $
 #
 ####
 +L Specifications

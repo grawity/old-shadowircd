@@ -2,7 +2,7 @@
  * shadowircd: an advanced IRC daemon.
  * umodes.h: part of new usermodes system
  *
- * $Id: umodes.h,v 1.1 2004/09/07 04:50:40 nenolod Exp $
+ * $Id: umodes.h,v 1.1.1.1 2004/09/07 04:50:40 nenolod Exp $
  */
 
 /* nice flashy bitfield math, care of asuffield and dancer-ircd.

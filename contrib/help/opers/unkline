@@ -1,4 +1,4 @@
-# $Id: unkline,v 1.1 2004/09/07 04:50:36 nenolod Exp $
+# $Id: unkline,v 1.1.1.1 2004/09/07 04:50:36 nenolod Exp $
 UNKLINE <user@host>
 
 Will attempt to unkline the given <user@host>

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# $Id: version.c.SH,v 1.1 2004/09/07 04:50:29 nenolod Exp $
+# $Id: version.c.SH,v 1.1.1.1 2004/09/07 04:50:29 nenolod Exp $
 
 spitshell=cat
 package=IRC

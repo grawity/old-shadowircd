@@ -2,7 +2,7 @@
  *  shadowircd: An advanced IRC daemon (ircd).
  *  reject.c: nenolod's reject engine. (inspired from the ratbox one.)
  *
- *  $Id: reject.c,v 1.1 2004/09/07 04:50:29 nenolod Exp $
+ *  $Id: reject.c,v 1.1.1.1 2004/09/07 04:50:29 nenolod Exp $
  */
 
 #include "stdinc.h"

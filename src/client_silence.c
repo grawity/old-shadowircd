@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client_silence.c,v 1.1 2004/09/07 04:50:30 nenolod Exp $
+ *  $Id: client_silence.c,v 1.1.1.1 2004/09/07 04:50:30 nenolod Exp $
  */
 
 #include "stdinc.h"

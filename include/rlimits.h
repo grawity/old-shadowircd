@@ -4,7 +4,7 @@
  *
  *  This code is in the public domain.
  *
- *  $Id: rlimits.h,v 1.1 2004/09/07 04:50:40 nenolod Exp $
+ *  $Id: rlimits.h,v 1.1.1.1 2004/09/07 04:50:40 nenolod Exp $
  */
 
 #ifndef INCLUDED_rlimits_h
