@@ -21,7 +21,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_gline.c,v 1.1 2004/07/29 15:27:46 nenolod Exp $
+ *  $Id: m_gline.c,v 1.2 2004/07/29 18:34:30 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -106,7 +106,7 @@ _moddeinit(void)
 	mod_del_cmd(&gline_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 /*
  * mo_gline()
@@ -748,87 +748,9 @@ majority_gline(struct Client *source_p,
 	       const char *oper_host,
 	       const char *oper_server, const char *user, const char *host, const char *reason)
 {
-	dlink_node *pending_node;
-	struct gline_pending *gline_pending_ptr;
-
-	/* if its already glined, why bother? :) -- fl_ */
 	if(find_is_glined(host, user))
 		return NO;
 
-	/* special case condition where there are no pending glines */
-
-	if(dlink_list_length(&pending_glines) == 0)	/* first gline request placed */
-	{
-		add_new_majority_gline(oper_nick, oper_user, oper_host, oper_server,
-				       user, host, reason);
-		return NO;
-	}
-
-	DLINK_FOREACH(pending_node, pending_glines.head)
-	{
-		gline_pending_ptr = pending_node->data;
-
-		if((irccmp(gline_pending_ptr->user, user) == 0) &&
-		   (irccmp(gline_pending_ptr->host, host) == 0))
-		{
-			/* check oper or server hasnt already voted */
-			if(((irccmp(gline_pending_ptr->oper_user1, oper_user) == 0) ||
-			    (irccmp(gline_pending_ptr->oper_host1, oper_host) == 0)))
-			{
-				sendto_realops_flags(UMODE_ALL, L_ALL, "oper has already voted");
-				return NO;
-			}
-			else if(irccmp(gline_pending_ptr->oper_server1, oper_server) == 0)
-			{
-				sendto_realops_flags(UMODE_ALL, L_ALL, "server has already voted");
-				return NO;
-			}
-
-			if(gline_pending_ptr->oper_user2[0] != '\0')
-			{
-				/* if two other opers on two different servers have voted yes */
-				if(((irccmp(gline_pending_ptr->oper_user2, oper_user) == 0) ||
-				    (irccmp(gline_pending_ptr->oper_host2, oper_host) == 0)))
-				{
-					sendto_realops_flags(UMODE_ALL, L_ALL,
-							     "oper has already voted");
-					return NO;
-				}
-				else if(irccmp(gline_pending_ptr->oper_server2, oper_server) == 0)
-				{
-					sendto_realops_flags(UMODE_ALL, L_ALL,
-							     "server has already voted");
-					return NO;
-				}
-
-				log_gline(source_p, gline_pending_ptr,
-					  oper_nick, oper_user, oper_host, oper_server,
-					  user, host, reason);
-
-				/* trigger the gline using the original reason --fl */
-				set_local_gline(oper_nick, oper_user, oper_host, oper_server,
-						user, host, gline_pending_ptr->reason1);
-				return YES;
-			}
-			else
-			{
-				strlcpy(gline_pending_ptr->oper_nick2, oper_nick,
-					sizeof(gline_pending_ptr->oper_nick2));
-				strlcpy(gline_pending_ptr->oper_user2, oper_user,
-					sizeof(gline_pending_ptr->oper_user2));
-				strlcpy(gline_pending_ptr->oper_host2, oper_host,
-					sizeof(gline_pending_ptr->oper_host2));
-				DupString(gline_pending_ptr->reason2, reason);
-				gline_pending_ptr->oper_server2 = find_or_add(oper_server);
-				gline_pending_ptr->last_gline_time = CurrentTime;
-				gline_pending_ptr->time_request2 = CurrentTime;
-				return NO;
-			}
-		}
-	}
-	/* Didn't find this user@host gline in pending gline list
-	 * so add it.
-	 */
 	add_new_majority_gline(oper_nick, oper_user, oper_host, oper_server, user, host, reason);
 	return NO;
 }
