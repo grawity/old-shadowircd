@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 1.15 2003/12/19 02:59:59 nenolod Exp $
+ *  $Id: channel_mode.c,v 1.16 2004/01/15 22:37:06 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -359,6 +359,7 @@ static const struct mode_letter
   { MODE_STICKYNICK, 'N' },
   { MODE_REGONLY,    'E' },
   { MODE_OPERONLY,   'O' },
+  { MODE_REGISTERED, 'r' },
   { 0, '\0' }
 };
 
@@ -2069,7 +2070,7 @@ static struct ChannelMode ModeTable[255] =
   {chm_nosuch, NULL},                             /* B */
   {chm_nosuch, NULL},                             /* C */
   {chm_nosuch, NULL},                             /* D */
-  {chm_simple, (void *) MODE_REGONLY},           /* E */
+  {chm_simple, (void *) MODE_REGONLY},            /* E */
   {chm_owneronly, (void *) MODE_FREEINVITE},      /* F */
   {chm_nosuch, NULL},                             /* G */
   {chm_nosuch, NULL},                             /* H */
@@ -2079,7 +2080,7 @@ static struct ChannelMode ModeTable[255] =
   {chm_linktarget, NULL},                         /* L */
   {chm_nosuch, NULL},                             /* M */
   {chm_simple, (void *) MODE_STICKYNICK},         /* N */
-  {chm_operonly, NULL},                            /* O */
+  {chm_operonly, NULL},                           /* O */
   {chm_owneronly, (void *) MODE_PEACE},           /* P */
   {chm_nosuch, NULL},                             /* Q */
   {chm_nosuch, NULL},                             /* R */
@@ -2114,7 +2115,7 @@ static struct ChannelMode ModeTable[255] =
   {chm_op, NULL},                                 /* o */
   {chm_simple, (void *) MODE_PRIVATE},            /* p */
   {chm_quiet, NULL},                              /* q */
-  {chm_nosuch, NULL},                             /* r */
+  {chm_simple, (void *) MODE_REGISTERED},         /* r */
   {chm_simple, (void *) MODE_SECRET},             /* s */
   {chm_simple, (void *) MODE_TOPICLIMIT},         /* t */
   {chm_owner, NULL},                              /* u */

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_hidehost.c,v 1.3 2004/01/12 20:28:48 nenolod Exp $
+ *  $Id: s_hidehost.c,v 1.4 2004/01/15 22:37:06 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -221,7 +221,7 @@ char *hidehost(char *rhost)
 	if (!(*p))
 	{	
 		/* Do IPv4 cloaking here */
-		strlcpy(h1, host, sizeof h1);
+		strncpy(h1, host, sizeof (h1));
 		i = 0;
 		for (i = 0, p = strtok(h1, "."); p && (i <= 3); p = strtok(NULL, "."), i++)
 		{

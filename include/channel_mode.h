@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.h,v 1.11 2003/12/18 18:12:06 nenolod Exp $
+ *  $Id: channel_mode.h,v 1.12 2004/01/15 22:37:06 nenolod Exp $
  */
 
 
@@ -81,6 +81,7 @@ extern void unset_chcap_usage_counts(struct Client *serv_p);
 #define MODE_REGONLY    0x00004000
 #define MODE_OPERONLY   0x00008000
 #define MODE_OPMODERATE 0x00010000
+#define MODE_REGISTERED 0x00020000
 
 #define MODE_QUERY  0
 #define MODE_ADD    1
