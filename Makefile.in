@@ -16,15 +16,17 @@
 #*   along with this program; if not, write to the Free Software
 #*   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #*
-#*   $Id: Makefile.in,v 1.3 2004/09/06 21:53:13 nenolod Exp $
+#*   $Id: Makefile.in,v 1.4 2004/09/06 22:02:37 nenolod Exp $
 #*/
 
 RM          = @RM@
 
 # Default make flags - you may want to uncomment this on a multicpu machine
 #MFLAGS   = -j 4
-DEPEND_DIRS  = c-ares modules src servlink
-BUILD_DIRS   = ${DEPEND_DIRS} tools
+DEPEND_DIRS  = modules src servlink
+
+# c-ares has to be compiled first, and has no dependency mechanism.
+BUILD_DIRS   = c-ares ${DEPEND_DIRS} tools
 INSTALL_DIRS = ${BUILD_DIRS} etc doc include messages
 CLEAN_DIRS   = ${BUILD_DIRS} contrib
 # Anywhere that we can make install, we obviously can rm -f Makefile
