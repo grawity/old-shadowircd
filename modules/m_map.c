@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_map.c,v 1.4 2004/02/18 20:38:36 nenolod Exp $
+ *  $Id: m_map.c,v 1.5 2004/02/26 18:23:27 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -51,7 +51,7 @@ void _moddeinit(void)
   mod_del_cmd(&map_msgtab);
 }
 
-const char *_version = "$Revision: 1.4 $";
+const char *_version = "$Revision: 1.5 $";
 #endif
 
 static char buf[BUFSIZE];
@@ -63,7 +63,7 @@ static void
 m_map(struct Client *client_p, struct Client *source_p,
       int parc, char *parv[])
 {
-  if (IsOperAuspex(source_p)
+  if (IsOperAuspex(source_p))
   {
     dump_map(client_p, &me, buf);
     sendto_one(client_p, form_str(RPL_MAPEND), me.name, client_p->name);
