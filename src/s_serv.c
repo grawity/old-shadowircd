@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_serv.c,v 1.6 2004/06/10 21:48:50 nenolod Exp $
+ *  $Id: s_serv.c,v 1.7 2004/07/12 14:06:53 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1134,7 +1134,7 @@ server_estab(struct Client *client_p)
 
   Count.myserver++;
 
-  dlinkAdd(client_p, make_dlink_node(), &global_serv_list);
+  dlinkAddTail(client_p, make_dlink_node(), &global_serv_list);
   hash_add_client(client_p);
 
   /* doesnt duplicate client_p->serv if allocated this struct already */

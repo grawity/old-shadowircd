@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_map.c,v 1.2 2004/05/26 14:30:58 nenolod Exp $
+ *  $Id: m_map.c,v 1.3 2004/07/12 14:06:53 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -51,7 +51,7 @@ void _moddeinit(void)
   mod_del_cmd(&map_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 static char buf[BUFSIZE];
@@ -90,13 +90,30 @@ dump_map(struct Client *client_p,struct Client *root_p, char *pbuf)
   *pbuf= '\0';
        
   strncat(pbuf, root_p->name, BUFSIZE - ((size_t)pbuf - (size_t)buf));
+
+  if (HasID(root_p))
+  {
+    strncat(pbuf, "[", BUFSIZE);
+    strncat(pbuf, root_p->id, BUFSIZE);
+    strncat(pbuf, "]", BUFSIZE);
+  }
+
   len = strlen(buf);
   buf[len] = ' ';
 	
   users = dlink_list_length(&root_p->serv->users);
 
-  snprintf(buf + len, BUFSIZE - len, " [Users: %d (%1.1f%%)]", 
-	   users, 100 * (float)users / (float)Count.total);
+  if(len < 50)
+  {
+    for (i = len + 1; i < 50; i++)
+    {
+      buf[i] = '-';
+    }
+  }
+
+  snprintf(buf + 50, BUFSIZE,
+           " | Users: %5lu (%4.1f%%)", dlink_list_length(&root_p->serv->users),
+           100 * (float) dlink_list_length(&root_p->serv->users) / (float) Count.total);
 
   sendto_one(client_p, form_str(RPL_MAP), me.name, client_p->name, buf);
         

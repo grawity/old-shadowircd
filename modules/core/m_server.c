@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_server.c,v 1.1 2004/04/30 18:19:27 nenolod Exp $
+ *  $Id: m_server.c,v 1.2 2004/07/12 14:06:53 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -77,7 +77,7 @@ _moddeinit(void)
   mod_del_cmd(&sid_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 
@@ -465,7 +465,7 @@ ms_server(struct Client *client_p, struct Client *source_p,
   SetServer(target_p);
 
   dlinkAdd(target_p, &target_p->node, &global_client_list);
-  dlinkAdd(target_p, make_dlink_node(), &global_serv_list);
+  dlinkAddTail(target_p, make_dlink_node(), &global_serv_list);
 
   hash_add_client(target_p);
   dlinkAdd(target_p, &target_p->lnode, &target_p->servptr->serv->servers);
@@ -695,7 +695,7 @@ ms_sid(struct Client *client_p, struct Client *source_p,
   SetServer(target_p);
 
   dlinkAdd(target_p, &target_p->node, &global_client_list);
-  dlinkAdd(target_p, make_dlink_node(), &global_serv_list);
+  dlinkAddTail(target_p, make_dlink_node(), &global_serv_list);
 
   hash_add_client(target_p);
   dlinkAdd(target_p, &target_p->lnode, &target_p->servptr->serv->servers);
