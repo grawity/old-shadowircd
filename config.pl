@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 # Configure frontend for Shadow.
-# $Id: config.pl,v 1.2 2004/06/10 23:03:16 nenolod Exp $
+# $Id: config.pl,v 1.3 2004/08/25 02:33:14 nenolod Exp $
 
 print "Welcome to the configuration wizard for ShadowIRCd.\n";
 
@@ -71,8 +71,9 @@ if ($editval eq "yes") {
   chomp $topiclen;
   $topiclen = 450 if (!$topiclen);
 
-  print "\n";
 }
+
+print "\n";
 
 print "Do you have a network under 2,000 users and therefore want to enable\n";
 print "optimizations for small networks?\n";
@@ -81,6 +82,15 @@ print "[$smallnet] ";
 $smallnet = <STDIN>;
 chomp $smallnet;
 $smallnet = "no" if (!$smallnet);
+
+print "\n";
+
+print "Would you like to disable chanowner (+u, ! prefix)?\n";
+$nochown = "no";
+print "[$nochown] ";
+$nochown = <STDIN>;
+chomp $nochown;
+$nochown = "no" if (!$nochown);
 
 print "\n";
 
@@ -104,6 +114,7 @@ $configure .= " --enable-small-net" if ($smallnet eq "yes");
 $configure .= " --enable-assert" if ($assert eq "yes");
 $configure .= " --disable-assert" if ($assert eq "no");
 $configure .= " --disable-shared-modules" if ($dismod eq "yes");
+$configure .= " --enable-no-chan-owner" if ($nochown eq "yes");
 
 print "done.\n";
 
