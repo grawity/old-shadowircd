@@ -16,7 +16,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *   $Id: messages.tab,v 1.16 2004/02/12 23:01:49 nenolod Exp $
+ *   $Id: messages.tab,v 1.17 2004/02/14 01:07:59 nenolod Exp $
  */
 
 static struct NumericInfo replies[] = {
@@ -384,7 +384,7 @@ static struct NumericInfo replies[] = {
 /* 361 */  {NULL, NULL, NULL},
 /* 362 */  {"RPL_CLOSING", ":%s 362 %s %s :Closed. Status = %d", NULL},
 /* 363 */  {"RPL_CLOSEEND", ":%s 363 %s %d: Connections Closed", NULL},
-/* 364 */  {"RPL_LINKS", ":%s 364 %s %s %s :%d %s", NULL},
+/* 364 */  {"RPL_LINKS", ":%s 364 %s %s %s :%d [%s %s] %s", NULL},
 /* 365 */  {"RPL_ENDOFLINKS", ":%s 365 %s %s :End of /LINKS list.", NULL},
 /* 366 */  {"RPL_ENDOFNAMES", ":%s 366 %s %s :End of /NAMES list.", NULL},
 /* 367 */  {"RPL_BANLIST", ":%s 367 %s %s %s %s %lu", NULL},
