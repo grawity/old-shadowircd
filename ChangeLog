@@ -1,7 +1,19 @@
-ShadowIRCd 3.1-beta1:
+ShadowIRCd 3.1-beta3 (still the Moonlight series):
+
+* Fix for Channel filtering.
+* Start working in PROTOCTL system as CAPAB is getting quickly obsolescent.
+
+ShadowIRCd 3.1-beta2 (still the Moonlight series):
+
+* Channel filtering.
+* Support for non-IRC protocols
+
+ShadowIRCd 3.1-beta1 (the Moonlight series):
 
 * UID is more paranoid now. (this stops the UID parc == 8 issue before
                              it is harmful)
+* Silence support.
+* Ability to disable connection headers.
 
 ShadowIRCd 3.0 (Cortana)
 

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_serv.c,v 1.4 2004/05/22 23:26:12 nenolod Exp $
+ *  $Id: s_serv.c,v 1.5 2004/06/09 23:51:16 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -78,7 +78,6 @@ static void add_lazylinkchannel(struct Client *, struct Channel *);
 
 static SlinkRplHnd slink_error;
 static SlinkRplHnd slink_zipstats;
-
 
 #ifdef HAVE_LIBCRYPTO
 struct EncCapability CipherTable[] =
@@ -827,6 +826,8 @@ send_capabilities(struct Client *client_p, struct AccessItem *aconf,
   t--;
   *t = '\0';
   sendto_one(client_p, "CAPAB :%s", msgbuf);
+  sendto_one(client_p, "PROTOCTL %s %lu %d", ServerInfo.network_name,
+             (CLOAK_KEY_1 ^ CLOAK_KEY_2 / CLOAK_KEY_3), SHADOWPROTOCOL);
 }
 
 /* sendnick_TS()

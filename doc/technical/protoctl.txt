@@ -1,0 +1,32 @@
+ShadowIRCd Protocol Negotiation
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+PROTOCTL <network_name> <cloak_key_crc> <protocol_version>
+
+Upon recieving PROTOCTL we assume that it is a Shadow server trying to link.
+Servers with invalid cloak keys or older protocol versions will be 
+disconnected.
+
+Error notices:
+
+Invalid cloak keys.
+Invalid protocol version.
+
+Examples:
+
+Proper handshake:
+
+server 1: PROTOCTL Shadownet ACBDFA38 3100
+server 2: PROTOCTL Shadownet ACBDFA38 3100
+
+Invalid handshake (invalid protocol version):
+
+server 1: PROTOCTL Shadownet ACBDFA38 3100
+server 2: PROTOCTL Shadownet ACBDFA38 3102
+server 2: ERROR Closing Link: 127.0.0.1 (Invalid protocol version.)
+
+Invalid handshake (invalid cloak keys):
+
+server 1: PROTOCTL Shadownet ACBDFA38 3100
+server 2: PROTOCTL Shadownet AE38ADCA 3100
+server 2: ERROR Closing Link: 127.0.0.1 (Invalid cloak-keys.)
