@@ -21,7 +21,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 1.1 2004/07/29 15:27:27 nenolod Exp $
+ *  $Id: channel_mode.c,v 1.2 2004/07/29 15:34:39 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1053,9 +1053,6 @@ chm_owner(struct Client *client_p, struct Client *source_p,
 
         if(dir == MODE_ADD)
         {
-                if(targ_p == source_p)
-                        return;
-
                 mode_changes[mode_count].letter = c;
                 mode_changes[mode_count].dir = MODE_ADD;
                 mode_changes[mode_count].caps = 0;
@@ -1131,9 +1128,6 @@ chm_protect(struct Client *client_p, struct Client *source_p,
 
         if(dir == MODE_ADD)
         {
-                if(targ_p == source_p)
-                        return;
-
                 mode_changes[mode_count].letter = c;
                 mode_changes[mode_count].dir = MODE_ADD;
                 mode_changes[mode_count].caps = 0;
@@ -1220,9 +1214,6 @@ chm_op(struct Client *client_p, struct Client *source_p,
 
 	if(dir == MODE_ADD)
 	{
-		if(targ_p == source_p)
-			return;
-
 		mode_changes[mode_count].letter = c;
 		mode_changes[mode_count].dir = MODE_ADD;
 		mode_changes[mode_count].caps = 0;
@@ -1309,9 +1300,6 @@ chm_halfop(struct Client *client_p, struct Client *source_p,
 
 	if(dir == MODE_ADD)
 	{
-		if(targ_p == source_p)
-			return;
-
 		mode_changes[mode_count].letter = c;
 		mode_changes[mode_count].dir = MODE_ADD;
 		mode_changes[mode_count].caps = 0;
