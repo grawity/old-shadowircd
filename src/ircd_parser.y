@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.6 2004/06/09 05:45:02 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.7 2004/07/18 12:16:47 nenolod Exp $
  */
 
 %{
@@ -544,7 +544,8 @@ network_cloak_key_1:  CLOAK_KEY_1 '=' NUMBER ';'
 {
   if (ypass == 2)
   {
-    ServerInfo.network_cloakkey1 = $3;
+    DupString(ServerInfo.network_cloakkey1, yylval.string);
+    check_for_randomness(yylval.string);
   }
 };
 
@@ -552,7 +553,8 @@ network_cloak_key_2:  CLOAK_KEY_2 '=' NUMBER ';'
 {
   if (ypass == 2)
   {
-    ServerInfo.network_cloakkey2 = $3;
+    DupString(ServerInfo.network_cloakkey2, yylval.string);
+    check_for_randomness(yylval.string);
   }
 };
 
@@ -560,7 +562,8 @@ network_cloak_key_3:  CLOAK_KEY_3 '=' NUMBER ';'
 {
   if (ypass == 2)
   {
-    ServerInfo.network_cloakkey3 = $3;
+    DupString(ServerInfo.network_cloakkey3, yylval.string);
+    check_for_randomness(yylval.string);
   }
 };
 

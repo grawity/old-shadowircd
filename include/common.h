@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: common.h,v 1.2 2004/07/18 04:07:58 nenolod Exp $
+ *  $Id: common.h,v 1.3 2004/07/18 12:16:47 nenolod Exp $
  */
 
 #ifndef INCLUDED_common_h
@@ -57,4 +57,7 @@
 
 /* Right out of the RFC */
 #define IRCD_BUFSIZE 512
+
+extern int check_for_randomness(char *);
+
 #endif /* INCLUDED_common_h */
