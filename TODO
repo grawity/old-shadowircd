@@ -1,28 +1,39 @@
-$Id: TODO,v 1.8 2003/12/05 17:48:04 nenolod Exp $
+$Id: TODO,v 1.9 2003/12/06 02:17:23 nenolod Exp $
+
+done (rc1):
 
 - colorblock, colorstrip (done)
 - identified umode (done)
 - cloaking (done)
-- invite block, knock deny (50% done)
+- invite block, knock deny (done)
 - channel mode +z: Disable throttling (nenolod) - done
-- channel mode +a: Auditorium (Eko)
-- /modehelp command (or /ircdhelp modes documentation) (also from Eko)
-- usermode +B: Marked for bots. (+B would lower flood restrictions) (NhJm/Eko/Bagheera)
-- usermode +S: Antispam (admin-defined pattern) (nenolod)
-- channel mode +q: Quiet (nenolod)
 - channel mode +u: Owner (Eko) -- done (nenolod)
+- channel mode +T: Channel owner sets topic. (Eko) -- DONE.
+- channel mode +F: Free Invite (nenolod) -- DONE.
+- channel mode +P: Peace (Eko) -- DONE.
+- channel mode +q: Quiet (nenolod) -- DONE.
+- channel mode +O: Oper only channel. (nenolod) -- DONE.
+
+rc2:
+
+- usermode +S: Antispam (admin-defined pattern) (nenolod)
 - usermode +C: Block CTCP (nenolod)
-- usermode +R: Registered users only (Eko)
-- channel mode +T: Channel owner sets topic. (Eko)
-- channel mode +O: Oper only channel. (nenolod)
+- usermode +R: Registered users only (Eko) (this should be +E --nenolod)
 - channel mode +C: Block CTCP (nenolod)
-- SSL Support (Eko/Bagheera)
-- channel mode +Z: SSL only (nenolod)
 - channel mode +N: Stickynicks (Bagheera)
-- channel mode +L: Channel linking. (Eko)
-                   Spec: l_spec.txt (Eko - Done)
-- channel mode +F: Free Invite (nenolod)
+
+rc3:
+
+- channel mode +a: Auditorium (Eko)
+- usermode +B: Marked for bots. (+B would lower flood restrictions) (NhJm/Eko/Bagheera)
+
+rc4 and beyond:
+
 - usermode +Z: No private messages (Eko/Bagheera/Lunis)
                (see detailed spec on this)
 - Automatically set +Z on client floods. (nenolod)
+- SSL Support (Eko/Bagheera) (Partially done as of rc1 -- nenolod)
+- channel mode +Z: SSL only (nenolod)
+- channel mode +L: Channel linking. (Eko)
+                   Spec: l_spec.txt (Eko - Done)
 
