@@ -2,7 +2,7 @@
  * NetworkBOPM: The ShadowIRCd Anti-Proxy Solution
  * conf.c: Configuration Parser
  *
- * $Id: conf.c,v 1.3 2004/05/26 15:13:39 nenolod Exp $
+ * $Id: conf.c,v 1.4 2004/08/29 06:02:11 nenolod Exp $
  */
 
 #include "netbopm.h"
@@ -22,6 +22,7 @@ static int      c_si_port(CONFIGENTRY *);
 static int      c_si_pass(CONFIGENTRY *);
 static int      c_si_sid(CONFIGENTRY *);
 static int      c_si_targetip(CONFIGENTRY *);
+static int	c_si_snoop(CONFIGENTRY *);
 
 struct ConfTable {
     char           *name;
@@ -44,6 +45,7 @@ static struct ConfTable conf_si_table[] = {
   { "PASSWORD",    1, c_si_pass        },
   { "SID",         0, c_si_sid         },
   { "TARGETIP",    0, c_si_targetip    },
+  { "SNOOPCHAN",   0, c_si_snoop       },
   { NULL, 0, NULL }
 };
 
@@ -204,6 +206,17 @@ c_si_targetip(CONFIGENTRY * ce)
 	PARAM_ERROR(ce);
 
     me.targetip = sstrdup(ce->ce_vardata);
+
+    return 0;
+}
+
+static int
+c_si_snoop(CONFIGENTRY * ce)
+{
+    if (ce->ce_vardata == NULL)
+        PARAM_ERROR(ce);
+
+    me.snoopchan = sstrdup(ce->ce_vardata);
 
     return 0;
 }
