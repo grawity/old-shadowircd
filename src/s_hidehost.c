@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_hidehost.c,v 1.4 2004/07/18 12:16:47 nenolod Exp $
+ *  $Id: s_hidehost.c,v 1.5 2004/07/18 12:24:34 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -36,7 +36,7 @@
 #include <fcntl.h>
 #include <utmp.h>
 
-#define KEY ServerInfo.network_cloakkey1
+#define KEY1 ServerInfo.network_cloakkey1
 #define KEY2 ServerInfo.network_cloakkey2
 #define KEY3 ServerInfo.network_cloakkey3
 
@@ -184,8 +184,6 @@ hidehost_normalhost (char *host, char *out)
 void
 make_virthost (struct Client *client_p)
 {
-  char *p;
-
   if (strchr (client_p->host, ':'))
     hidehost_ipv6 (client_p->host, client_p->virthost);
 
