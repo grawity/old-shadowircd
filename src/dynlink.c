@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- * $Id: dynlink.c,v 3.3 2004/09/08 01:18:08 nenolod Exp $
+ * $Id: dynlink.c,v 3.4 2004/09/23 18:07:10 nenolod Exp $
  *
  */
 #include "stdinc.h"
@@ -246,6 +246,8 @@ load_a_module(char *path, int warn, int core)
   void (*initfunc)(void) = NULL;
   void (*mod_deinit)(void) = NULL;
   char **verp;
+  char **desc;
+  char *des;
   char *ver;
 
   mod_basename = basename(path);
@@ -308,6 +310,16 @@ load_a_module(char *path, int warn, int core)
   }
   else
     ver = *verp;
+
+  if (shl_findsym(&tmpptr, "_desc", TYPE_UNDEFINED, &desc) == -1)
+  {
+    if (shl_findsym(&tmpptr, "__desc", TYPE_UNDEFINED, &desc) == -1)
+      des = unknown_ver;
+    else
+      des = *desc;
+  }
+  else
+    des = *desc;
 #else
   initfunc = (void(*)(void))dlfunc(tmpptr, "_modinit");
 
@@ -337,6 +349,13 @@ load_a_module(char *path, int warn, int core)
     ver = unknown_ver;
   else
     ver = *verp;
+
+  desc = (char **)dlsym(tmpptr, "_desc");
+
+  if (desc == NULL && (desc = (char **)dlsym(tmpptr, "__desc")) == NULL)
+    des = unknown_ver;
+  else
+    des = *desc;
 #endif
 
   increase_modlist();
@@ -344,6 +363,7 @@ load_a_module(char *path, int warn, int core)
   modlist[num_mods] = MyMalloc(sizeof(struct module));
   modlist[num_mods]->address = tmpptr;
   modlist[num_mods]->version = ver;
+  modlist[num_mods]->desc    = des;
   modlist[num_mods]->core    = core;
   modlist[num_mods]->modremove = mod_deinit;
   DupString(modlist[num_mods]->name, mod_basename);
