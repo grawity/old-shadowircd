@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_whois.c,v 1.1 2004/04/30 18:14:15 nenolod Exp $
+ *  $Id: m_whois.c,v 1.2 2004/05/12 21:22:13 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -84,7 +84,7 @@ _moddeinit (void)
   mod_del_cmd (&whois_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /* m_whois
@@ -413,45 +413,45 @@ whois_person (struct Client *source_p, struct Client *target_p, int glob)
     sendto_one (source_p, form_str (RPL_AWAY), me.name,
 		source_p->name, target_p->name, target_p->user->away);
 
-  if (target_p->umodes & UMODE_IDENTIFY)
+  if (IsIdentified(target_p))
     sendto_one (source_p, form_str (RPL_HASIDENTIFIED),
 		me.name, source_p->name, target_p->name);
 
   if (IsOper (target_p))
     {
-      if (!(target_p->umodes & UMODE_HIDEOPER))
+      if (!(HasUmode(target_p, UMODE_HIDEOPER)))
 	{
-	  if (target_p->umodes & UMODE_SERVICE)
+	  if (HasUmode(target_p, UMODE_SERVICE))
 	    {
 	      sendto_one (source_p, form_str (RPL_WHOISOPERATOR),
 			  me.name, source_p->name, target_p->name,
 			  "a Network Service");
 	    }
-	  else if (target_p->umodes & UMODE_SVSROOT)
+	  else if (HasUmode(target_p, UMODE_SVSROOT))
 	    {
 	      sendto_one (source_p, form_str (RPL_WHOISOPERATOR),
 			  me.name, source_p->name, target_p->name,
 			  "an IRC Operator - Services Root Administrator");
 	    }
-	  else if (target_p->umodes & UMODE_SVSADMIN)
+	  else if (HasUmode(target_p, UMODE_SVSADMIN))
 	    {
 	      sendto_one (source_p, form_str (RPL_WHOISOPERATOR),
 			  me.name, source_p->name, target_p->name,
 			  "an IRC Operator - Services Administrator");
 	    }
-	  else if (target_p->umodes & UMODE_ADMIN)
+	  else if (HasUmode(target_p, UMODE_ADMIN))
 	    {
 	      sendto_one (source_p, form_str (RPL_WHOISOPERATOR),
 			  me.name, source_p->name, target_p->name,
 			  "an IRC Operator - Server Administrator");
 	    }
-	  else if (target_p->umodes & UMODE_SVSOPER)
+	  else if (HasUmode(target_p, UMODE_SVSOPER))
 	    {
 	      sendto_one (source_p, form_str (RPL_WHOISOPERATOR),
 			  me.name, source_p->name, target_p->name,
 			  "an IRC Operator - Services Operator");
 	    }
-	  else if (target_p->umodes & UMODE_OPER)
+	  else if (HasUmode(target_p, UMODE_OPER))
 	    {
 	      sendto_one (source_p, form_str (RPL_WHOISOPERATOR),
 			  me.name, source_p->name, target_p->name,
@@ -460,11 +460,11 @@ whois_person (struct Client *source_p, struct Client *target_p, int glob)
 	}
     }
 
-  if (target_p->umodes & UMODE_HELPOP)
+  if (HasUmode(target_p, UMODE_HELPOP))
     sendto_one (source_p, form_str (RPL_WHOISHELPOP),
 		me.name, source_p->name, target_p->name);
 
-  if (target_p->umodes & UMODE_SECURE)
+  if (HasUmode(target_p, UMODE_SECURE))
     sendto_one (source_p, form_str (RPL_WHOISSECURE),
 		me.name, source_p->name, target_p->name);
 

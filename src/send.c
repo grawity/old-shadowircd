@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: send.c,v 1.2 2004/05/12 19:41:47 nenolod Exp $
+ *  $Id: send.c,v 1.3 2004/05/12 21:22:13 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -123,10 +123,10 @@ send_message(struct Client *to, char *buf, int len)
   }
 #endif
 
-  if (to->umodes & UMODE_DEAF)
+  if (HasUmode(to, UMODE_DEAF))
     return;
 
-  if (to->umodes & UMODE_NOCOLOR)
+  if (HasUmode(to, UMODE_NOCOLOUR))
     strip_colour(buf);
 
   if (dbuf_length(&to->localClient->buf_sendq) + len > get_sendq(to))
@@ -1084,7 +1084,7 @@ sendto_realops_flags(unsigned int flags, int level, const char *pattern, ...)
   DLINK_FOREACH(ptr, oper_list.head)
   {
     client_p = ptr->data;
-    assert(client_p->umodes & UMODE_OPER);
+    assert(HasUmode(client_p, UMODE_OPER));
 
     /* If we're sending it to opers and theyre an admin, skip.
      * If we're sending it to admins, and theyre not, skip.
@@ -1093,7 +1093,7 @@ sendto_realops_flags(unsigned int flags, int level, const char *pattern, ...)
 	((level == L_OPER) && IsAdmin(client_p)))
       continue;
 
-    if (client_p->umodes & flags)
+    if (HasUmode(client_p, flags))
       sendto_one(client_p, ":%s NOTICE %s :*** Notice -- %s",
                  me.name, client_p->name, nbuf);
   }
@@ -1131,7 +1131,7 @@ sendto_wallops_flags(unsigned int flags, struct Client *source_p,
   {
     client_p = ptr->data;
 
-    if ((client_p->umodes & flags) && !IsDefunct(client_p))
+    if ((HasUmode(client_p, flags)) && !IsDefunct(client_p))
       send_message(client_p, buffer, len);
   }
 }

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_grant.c,v 1.1 2004/04/30 18:14:11 nenolod Exp $
+ *  $Id: m_grant.c,v 1.2 2004/05/12 21:22:13 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -49,7 +49,7 @@ static void remove_from_bitmask (char *, struct Client *);
 static void mo_grant (struct Client *, struct Client *, int, char **);
 
 struct Message grant_msgtab = {
-  "GRANT", 0, 0, 3, 0, MFLG_SLOW, 0,
+  "GRANT", 0, 0, 1, 0, MFLG_SLOW, 0,
   {m_unregistered, m_ignore, m_ignore, mo_grant, m_ignore}
 };
 
@@ -66,7 +66,7 @@ _moddeinit (void)
   mod_del_cmd (&grant_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /* this is a struct, associating operator permissions with letters. */
@@ -159,7 +159,7 @@ mo_grant (struct Client *client_p, struct Client *source_p,
 	  int parc, char *parv[])
 {
   struct Client *target_p;
-  unsigned int old = 0;
+  oper_flags old;
   dlink_node *dm;
 
   if (!strcasecmp (parv[1], "GIVE"))
@@ -193,22 +193,21 @@ mo_grant (struct Client *client_p, struct Client *source_p,
 	}
 
       /* Since we're granting privs, lets make sure the user has umode +o. */
-      if (!(target_p->umodes & UMODE_OPER))
+      if (!(HasUmode(target_p, UMODE_OPER))
 	{
 	  old = target_p->umodes;
-	  SetOper (target_p);
-	  target_p->umodes |= UMODE_HELPOP;
+          SetUmode(target_p, UMODE_OPER);
+	  SetUmode(target_p, UMODE_HELPOP);
 
 	  Count.oper++;
 
 	  assert (dlinkFind (&oper_list, target_p) == NULL);
 	  dlinkAdd (target_p, make_dlink_node (), &oper_list);
 
-	  if (ConfigFileEntry.oper_umodes)
-	    target_p->umodes |= ConfigFileEntry.oper_umodes & ALL_UMODES;
-	  else
-	    target_p->umodes |= (UMODE_SERVNOTICE | UMODE_OPERWALL |
-				 UMODE_WALLOP | UMODE_LOCOPS) & ALL_UMODES;
+	  SetUmode(target_p, UMODE_SERVNOTICE);
+	  SetUmode(target_p, UMODE_OPERWALL);
+	  SetUmode(target_p, UMODE_WALLOP);
+	  SetUmode(target_p, UMODE_LOCOPS);
 
 	  sendto_realops_flags (UMODE_ALL, L_ALL,
 				"%s (%s@%s) is now an operator",
@@ -230,7 +229,7 @@ mo_grant (struct Client *client_p, struct Client *source_p,
       string_to_bitmask (parv[3], target_p);
 
       if (target_p->localClient->operflags & OPER_FLAG_ADMIN)
-	target_p->umodes |= UMODE_ADMIN;
+	SetUmode(target_p, UMODE_ADMIN);
 
       send_umode_out (target_p, target_p, old);
 
@@ -278,19 +277,18 @@ mo_grant (struct Client *client_p, struct Client *source_p,
       if (target_p->localClient->operflags == 0)
 	{
 	  old = target_p->umodes;
-	  ClearOper (target_p);
-	  target_p->umodes &= ~UMODE_HELPOP;
+	  ClearUmode (target_p, UMODE_OPER);
+	  ClearUmode (target_p, UMODE_HELPOP);
 
 	  Count.oper--;
 
 	  if ((dm = dlinkFindDelete (&oper_list, target_p)) != NULL)
 	    free_dlink_node (dm);
 
-	  if (ConfigFileEntry.oper_umodes)
-	    target_p->umodes &= ~(ConfigFileEntry.oper_umodes & ALL_UMODES);
-	  else
-	    target_p->umodes &= ~((UMODE_SERVNOTICE | UMODE_OPERWALL |
-				   UMODE_WALLOP | UMODE_LOCOPS) & ALL_UMODES);
+	  ClearUmode (target_p, UMODE_SERVNOTICE);
+	  ClearUmode (target_p, UMODE_WALLOP);
+	  ClearUmode (target_p, UMODE_OPERWALL);
+	  ClearUmode (target_p, UMODE_LOCOPS);
 
 	  /* Restore their spoof. */
 	  make_virthost (target_p->host, target_p->virthost);
@@ -309,64 +307,8 @@ mo_grant (struct Client *client_p, struct Client *source_p,
       return;
     }
 
-  if (!strcasecmp (parv[1], "CLEAR"))
-    {
-      if (!parv[2])
-	{
-	  sendto_one (source_p, ":%s NOTICE %s :Not enough parameters",
-		      me.name, source_p->name);
-	  return;
-	}
-
-      if (!MyClient(target_p))
-        {
-	  sendto_one (source_p, ":%s NOTICE %s :You may only use GRANT on local users.",
-		      me.name, source_p->name);
-	  return;
-        }
-
-      if (!(target_p = find_client (parv[2])))
-	{
-	  sendto_one (source_p, form_str (ERR_NOSUCHNICK), me.name,
-		      source_p->name, parv[2]);
-	  return;
-	}
-
-      ClearOperFlags (target_p);
-
-      Count.oper--;
-
-      old = target_p->umodes;
-      ClearOper (target_p);
-      target_p->umodes &= ~UMODE_HELPOP;
-
-      if ((dm = dlinkFindDelete (&oper_list, target_p)) != NULL)
-	free_dlink_node (dm);
-
-      if (ConfigFileEntry.oper_umodes)
-	target_p->umodes &= ~(ConfigFileEntry.oper_umodes & ALL_UMODES);
-      else
-	target_p->umodes &= ~((UMODE_SERVNOTICE | UMODE_OPERWALL |
-			       UMODE_WALLOP | UMODE_LOCOPS) & ALL_UMODES);
-
-      /* Restore their spoof. */
-      make_virthost (target_p->host, target_p->virthost);
-
-      sendto_server (NULL, target_p, NULL, NOCAPS, NOCAPS, NOFLAGS,
-		     ":%s SVSCLOAK %s :%s", me.name, target_p->name,
-		     target_p->virthost);
-
-      send_umode_out (target_p, target_p, old);
-
-      sendto_one (target_p,
-		  ":%s NOTICE %s :*** Notice -- %s used GRANT to TAKE operator permissions: %s",
-		  me.name, target_p->name, source_p->name, parv[3]);
-
-      return;
-    }
-
   sendto_one (source_p,
-	      ":%s NOTICE %s :*** Syntax: /GRANT [GIVE|TAKE|CLEAR] <nick> <flags>",
+	      ":%s NOTICE %s :*** Syntax: /GRANT [GIVE|TAKE] <nick> <flags>",
 	      me.name, source_p->name);
 
 }

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.5 2004/05/12 20:41:49 nenolod Exp $
+ *  $Id: s_user.c,v 1.6 2004/05/12 21:22:13 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -484,11 +484,11 @@ register_local_user(struct Client *client_p, struct Client *source_p,
   if (IsDead(source_p))
     return(CLIENT_EXITED);
 
-  source_p->umodes |= UMODE_INVISIBLE;
+  SetUmode(source_p, UMODE_INVISIBLE);
   Count.invisi++;
 
   if (IsSSL(source_p))
-    source_p->umodes |= UMODE_SECURE;
+    SetUmode(source_p, UMODE_SECURE);
 
   if ((++Count.local) > Count.max_loc)
   {
@@ -534,7 +534,7 @@ register_local_user(struct Client *client_p, struct Client *source_p,
   make_virthost(source_p->host, source_p->virthost);
 
   if (ServerInfo.network_cloak_on_connect)
-    source_p->umodes |= UMODE_CLOAK;
+    SetUmode(source_p, UMODE_CLOAK);
 
   return(introduce_client(client_p, source_p));
 }
@@ -964,7 +964,7 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
 {
   unsigned int i;
   unsigned int flag;
-  unsigned int setflags;
+  user_modes setflags;
   char **p;
   char *m;
   struct Client *target_p;
@@ -995,9 +995,9 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
     m = buf;
     *m++ = '+';
 
-    for (i = 0; user_modes[i].letter && (m - buf < BUFSIZE - 4); i++)
-      if (target_p->umodes & user_modes[i].mode)
-        *m++ = user_modes[i].letter;
+    for (i = 0; user_mode_table[i].letter && (m - buf < BUFSIZE - 4); i++)
+      if (HasUmode(target_p, user_mode_table[i].mode))
+        *m++ = user_mode_table[i].letter;
     *m = '\0';
 
     sendto_one(target_p, form_str(RPL_UMODEIS),
@@ -1096,9 +1096,9 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
     sendto_one(target_p, form_str(ERR_UMODEUNKNOWNFLAG),
                me.name, target_p->name);
 
-  if (!(setflags & UMODE_INVISIBLE) && IsInvisible(target_p))
+  if (!(TestBit(setflags, UMODE_INVISIBLE)) && IsInvisible(target_p))
     ++Count.invisi;
-  if ((setflags & UMODE_INVISIBLE) && !IsInvisible(target_p))
+  if ((TestBit(setflags, UMODE_INVISIBLE)) && !IsInvisible(target_p))
     --Count.invisi;
 
   /* compare new flags with old flags and send string which
@@ -1113,7 +1113,7 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
  */
 void
 send_umode(struct Client *client_p, struct Client *source_p,
-           unsigned int old, unsigned int sendmask, char *umode_buf)
+           user_modes old, unsigned int sendmask, char *umode_buf)
 {
   int what = 0;
   unsigned int i;
@@ -1123,11 +1123,11 @@ send_umode(struct Client *client_p, struct Client *source_p,
   /* build a string in umode_buf to represent the change in the user's
    * mode between the new (source_p->umodes) and 'old'.
    */
-  for (i = 0; user_modes[i].letter; i++)
+  for (i = 0; user_mode_table[i].letter; i++)
   {
-    flag = user_modes[i].mode;
+    flag = user_mode_table[i].mode;
 
-    if ((flag & old) && !(TestBit(source_p, flag)))
+    if ((TestBit(old, flag)) && !(HasUmode(source_p, flag)))
     {
       if (what == MODE_DEL)
         *m++ = user_mode_table[i].letter;
@@ -1138,7 +1138,7 @@ send_umode(struct Client *client_p, struct Client *source_p,
         *m++ = user_mode_table[i].letter;
       }
     }
-    else if (!(flag & old) && (source_p->umodes & flag))
+    else if (!(TestBit(old, flag)) && (HasUmode(source_p, flag)))
     {
       if (what == MODE_ADD)
         *m++ = user_mode_table[i].letter;
@@ -1158,8 +1158,6 @@ send_umode(struct Client *client_p, struct Client *source_p,
                source_p->name, source_p->name, umode_buf);
 }
 
-/* TODO: Work on this part of the code. */
-
 /* send_umode_out()
  *
  * inputs	-
@@ -1168,7 +1166,7 @@ send_umode(struct Client *client_p, struct Client *source_p,
  */
 void
 send_umode_out(struct Client *client_p, struct Client *source_p,
-               unsigned int old)
+               user_modes old)
 {
   struct Client *target_p;
   char buf[BUFSIZE];
@@ -1303,16 +1301,10 @@ check_x_line(struct Client *client_p, struct Client *source_p)
 void
 oper_up(struct Client *source_p)
 {
-  unsigned int old = (source_p->umodes & ALL_UMODES);
+  oper_flags old = source_p->umodes;
   struct AccessItem *oconf;
 
-  SetOper(source_p);
-
-  if (ConfigFileEntry.oper_umodes)
-    source_p->umodes |= ConfigFileEntry.oper_umodes & ALL_UMODES;
-  else
-    source_p->umodes |= (UMODE_SERVNOTICE|UMODE_OPERWALL|
-			 UMODE_WALLOP|UMODE_LOCOPS) & ALL_UMODES;
+  SetUmode(source_p, UMODE_OPER);
 
   Count.oper++;
 
@@ -1325,11 +1317,11 @@ oper_up(struct Client *source_p)
   SetOFlag(source_p, oconf->port);
 
   if (IsOperAdmin(source_p) || IsOperHiddenAdmin(source_p))
-    source_p->umodes |= UMODE_ADMIN;
+    SetUmode(source_p, UMODE_ADMIN);
   if (!IsOperN(source_p))
-    source_p->umodes &= ~UMODE_NCHANGE;
+    ClearUmode(source_p, UMODE_NCHANGE);
 
-  source_p->umodes |= UMODE_HELPOP;
+  SetUmode(source_p, UMODE_HELPOP);
 
   /* set the network staff virtual host. */
   /* again! we've done less crack than plexus's coding team, and got
@@ -1342,6 +1334,9 @@ oper_up(struct Client *source_p)
     sendto_server (NULL, source_p, NULL, NOCAPS, NOCAPS, NOFLAGS,
                    ":%s SVSCLOAK %s :%s", me.name, source_p->name,
                    source_p->virthost);
+
+    if (!(HasUmode(source_p, UMODE_CLOAK))
+      SetUmode(source_p, UMODE_CLOAK);
 
     source_p->flags |= FLAGS_USERCLOAK;
   }

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.3 2004/05/12 20:41:49 nenolod Exp $
+ *  $Id: client.h,v 1.4 2004/05/12 21:22:13 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -458,22 +458,7 @@ struct LocalUser
 /* oper flags */
 #define MyOper(x)               (MyConnect(x) && IsOper(x))
 
-#define SetOper(x)              {(x)->umodes |= UMODE_OPER; \
-				 if (!IsServer((x))) (x)->handler = OPER_HANDLER;}
-
-#define ClearOper(x)            {(x)->umodes &= ~(UMODE_OPER|UMODE_ADMIN); \
-				 if (!IsOper((x)) && !IsServer((x))) \
-				  (x)->handler = CLIENT_HANDLER; }
-
 #define IsPrivileged(x)         (IsOper(x) || IsServer(x))
-
-/* umode flags */
-#define IsInvisible(x)          ((x)->umodes & UMODE_INVISIBLE)
-#define SendWallops(x)          ((x)->umodes & UMODE_WALLOP)
-#define IsSetCallerId(x)	((x)->umodes & UMODE_CALLERID)
-#define IsPMFiltered(x)         ((x)->umodes & UMODE_PMFILTER)
-#define IsIdentified(x)         ((x)->umodes & UMODE_IDENTIFY)
-#define IsBlockInvite(x)	((x)->umodes & UMODE_BLOCKINVITE)
 
 #define SetSendQExceeded(x)	((x)->flags |= FLAGS_SENDQEX)
 #define IsSendQExceeded(x)	((x)->flags &  FLAGS_SENDQEX)
@@ -570,6 +555,6 @@ extern void dead_link_on_read(struct Client *client_p, int error);
 extern void exit_aborted_clients(void);
 extern void free_exited_clients(void);
 
-#define GET_CLIENT_HOST(x)	((x->umodes & UMODE_CLOAK) ? x->virthost : x->host)
+#define GET_CLIENT_HOST(x)	(HasUmode(x, UMODE_CLOAK) ? x->virthost : x->host)
 
 #endif /* INCLUDED_client_h */

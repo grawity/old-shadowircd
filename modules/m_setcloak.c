@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_setcloak.c,v 1.2 2004/05/12 20:41:49 nenolod Exp $
+ *  $Id: m_setcloak.c,v 1.3 2004/05/12 21:22:13 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,7 +63,7 @@ _moddeinit (void)
   mod_del_cmd (&setcloak_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 
 
 /* m_svscloak
@@ -77,7 +77,7 @@ m_setcloak (struct Client *client_p, struct Client *source_p, int parc,
 {
   struct Client *target_p;
   char *hostname, *target;
-  unsigned int old;
+  oper_flags old;
 
   if (parc < 3 || EmptyString (parv[2]))
     {
