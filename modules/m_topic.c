@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  m_topic.c: Sets a channel topic.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_topic.c,v 1.2 2003/12/03 18:17:28 nenolod Exp $
+ *  $Id: m_topic.c,v 1.3 2003/12/05 19:42:09 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -62,7 +62,7 @@ _moddeinit(void)
   mod_del_cmd(&topic_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 /* m_topic()
@@ -134,7 +134,31 @@ m_topic(struct Client *client_p, struct Client *source_p,
                    to, parv[1]);
         return;
       }
-      if ((chptr->mode.mode & MODE_TOPICLIMIT) == 0 ||
+      if ((chptr->mode.mode & MODE_TOPICLOCK) == 0 ||
+          has_member_flags(ms, CHFL_CHANOWNER))
+      {
+        char topic_info[USERHOST_REPLYLEN];
+        ircsprintf(topic_info, "%s!%s@%s",
+                   source_p->name, source_p->username, GET_CLIENT_HOST(source_p));
+        set_channel_topic(chptr, parv[2], topic_info, CurrentTime);
+
+        sendto_server(client_p, NULL, chptr, CAP_TS6, NOCAPS, NOFLAGS,
+                      ":%s TOPIC %s :%s",
+                      ID(source_p), chptr->chname,
+                      chptr->topic == NULL ? "" : chptr->topic);
+        sendto_server(client_p, NULL, chptr, NOCAPS, CAP_TS6, NOFLAGS,
+                      ":%s TOPIC %s :%s",
+                      source_p->name, chptr->chname,
+                      chptr->topic == NULL ? "" : chptr->topic);
+        sendto_channel_local(ALL_MEMBERS,
+                             chptr, ":%s!%s@%s TOPIC %s :%s",
+                             source_p->name,
+                             source_p->username,
+                             GET_CLIENT_HOST(source_p),
+                             chptr->chname, chptr->topic == NULL ?
+                             "" : chptr->topic);
+      }
+      else if ((chptr->mode.mode & MODE_TOPICLIMIT) == 0 ||
           has_member_flags(ms, CHFL_CHANOP|CHFL_HALFOP))
       {
         char topic_info[USERHOST_REPLYLEN]; 
