@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: motd.h,v 1.3 2004/01/15 20:16:20 nenolod Exp $
+ *  $Id: motd.h,v 1.4 2004/01/15 20:34:41 nenolod Exp $
  */
 
 #ifndef INCLUDED_motd_h
@@ -33,7 +33,7 @@
 typedef enum {
   USER_MOTD,
   OPER_MOTD,
-  SHORT_MOTD
+  SHRT_MOTD
 } MotdType;
 
 struct MessageFileLine

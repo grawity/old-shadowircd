@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: motd.c,v 1.3 2004/01/15 20:16:20 nenolod Exp $
+ *  $Id: motd.c,v 1.4 2004/01/15 20:34:41 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -105,7 +105,7 @@ send_message_file(struct Client *source_p, MessageFile *motdToPrint)
       /* NOT REACHED */
       break;
 
-    case SHORT_MOTD:
+    case SHRT_MOTD:
       if (motdToPrint->contentsOfFile == NULL)
       {
         sendto_one(source_p, form_str(ERR_NOMOTD),
