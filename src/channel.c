@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.c,v 1.5 2003/12/12 20:22:57 nenolod Exp $
+ *  $Id: channel.c,v 1.6 2003/12/18 18:12:06 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -802,6 +802,11 @@ can_join(struct Client *source_p, struct Channel *chptr, const char *key)
   /* Immune opers can walk through bans. --nenolod */
   if (IsOperImmune(source_p))
     return(0);
+
+  if ((chptr->mode.mode & MODE_REGONLY) && (source_p->umode & UMODE_IDENTIFY))
+  {
+    return(ERR_REGONLYCHAN);
+  }
 
   if (chptr->mode.mode & MODE_INVITEONLY)
   {

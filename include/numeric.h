@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: numeric.h,v 1.6 2003/12/13 02:44:11 nenolod Exp $
+ *  $Id: numeric.h,v 1.7 2003/12/18 18:12:06 nenolod Exp $
  */
 
 #ifndef INCLUDED_numeric_h
@@ -386,6 +386,7 @@ extern const char *get_locale(void);
 #define ERR_INVITEONLYCHAN   473
 #define ERR_BANNEDFROMCHAN   474
 #define ERR_BADCHANNELKEY    475
+#define ERR_REGONLYCHAN      476
 /*      ERR_MODELESS         477           ircu numeric -db */
 #define ERR_BANLISTFULL      478        /* I stole the numeric from ircu -db */
 #define ERR_BADCHANNAME      479

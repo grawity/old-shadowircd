@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 1.12 2003/12/16 17:58:32 nenolod Exp $
+ *  $Id: channel_mode.c,v 1.13 2003/12/18 18:12:06 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -400,12 +400,20 @@ channel_modes(struct Channel *chptr, struct Client *client_p,
       ircsprintf(pbuf, "%s ", chptr->mode.key);
   }
 
-  if (chptr->mode.key[0])
+  if (chptr->mode.linktarget[0])
   {
     *mbuf++ = 'L';
 
     if (len || IsMember(client_p, chptr) || IsServer(client_p))
       ircsprintf(pbuf, "%s ", chptr->mode.linktarget);
+  }
+
+  if (chptr->mode.forwardtarget[0])
+  {
+    *mbuf++ = 'f';
+
+    if (len || IsMember(client_p, chptr) || IsServer(client_p))
+      ircsprintf(pbuf, "%s ", chptr->mode.forwardtarget);
   }
 
   *mbuf = '\0';
