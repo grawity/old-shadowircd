@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_grant.c,v 1.5 2004/07/18 04:07:58 nenolod Exp $
+ *  $Id: m_grant.c,v 1.6 2004/08/25 00:41:19 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -67,7 +67,7 @@ _moddeinit (void)
   mod_del_cmd (&grant_msgtab);
 }
 
-const char *_version = "$Revision: 1.5 $";
+const char *_version = "$Revision: 1.6 $";
 #endif
 
 /* this is a struct, associating operator permissions with letters. */
@@ -292,7 +292,7 @@ mo_grant (struct Client *client_p, struct Client *source_p,
 	  ClearUmode (target_p, UMODE_LOCOPS);
 
 	  /* Restore their spoof. */
-	  make_virthost (target_p);
+	  hook_call_event("make_virthost", source_p);
 
 	  sendto_server (NULL, target_p, NULL, NOCAPS, NOCAPS, NOFLAGS,
 			 ":%s SVSCLOAK %s :%s", me.name, target_p->name,
