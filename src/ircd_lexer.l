@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_lexer.l,v 1.15 2004/03/11 03:24:34 nenolod Exp $
+ *  $Id: ircd_lexer.l,v 1.16 2004/03/11 05:27:32 nenolod Exp $
  */
 
 %option case-insensitive
@@ -226,6 +226,7 @@ cloak_key_2     { return CLOAK_KEY_2; }
 cloak_key_3     { return CLOAK_KEY_3; }
 on_oper_host    { return ON_OPER_HOST; }
 cloak_on_oper   { return CLOAK_ON_OPER; }
+cloak_on_connect { return CLOAK_ON_CONNECT; }
 gline_address   { return GLINE_ADDRESS; }
 network_desc    { return NETWORK_DESC; }
 network_name    { return NETWORK_NAME; }
