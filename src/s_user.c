@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 3.5 2004/09/22 19:27:01 nenolod Exp $
+ *  $Id: s_user.c,v 3.6 2004/09/25 06:00:28 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1335,6 +1335,13 @@ oper_up(struct Client *source_p)
   SetUmode(source_p, UMODE_OPERWALL);
   SetUmode(source_p, UMODE_SERVNOTICE);
   SetUmode(source_p, UMODE_LOCOPS);
+
+  /* Basically, this allows new umodes in the o:line to be assigned upon
+   * opering. This way is pretty efficient, I must say. 
+   *
+   * We may want to add more to clarify what umodes have been added, etc.
+   */
+  CopyUmodes(source_p->umodes, oconf->usermodes);
 
   if (source_p->localClient->operflags & OPER_FLAG_TECHADMIN)
     SetUmode(source_p, UMODE_TECHADMIN);
