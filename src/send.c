@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: send.c,v 1.1 2004/04/30 18:13:32 nenolod Exp $
+ *  $Id: send.c,v 1.2 2004/05/12 19:41:47 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1130,7 +1130,6 @@ sendto_wallops_flags(unsigned int flags, struct Client *source_p,
   DLINK_FOREACH(ptr, oper_list.head)
   {
     client_p = ptr->data;
-    assert(client_p->umodes & UMODE_OPER);
 
     if ((client_p->umodes & flags) && !IsDefunct(client_p))
       send_message(client_p, buffer, len);

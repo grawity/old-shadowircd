@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.3 2004/05/01 08:30:29 nenolod Exp $
+ *  $Id: s_user.c,v 1.4 2004/05/12 19:41:47 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1064,7 +1064,7 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
             if (IsServer(client_p) && !IsOper(target_p))
             {
               ++Count.oper;
-              SetOper(target_p);
+              SetBit(target_p, UMODE_OPER);
             }
           }
           else
@@ -1076,7 +1076,7 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
               break;
 
             ClearOper(target_p);
-            target_p->umodes &= ~ConfigFileEntry.oper_only_umodes;
+            /* TODO: Remove all oper modes here from the user. */
             Count.oper--;
 
             if (MyConnect(source_p))
@@ -1102,35 +1102,20 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
         case '\t':
           break;
 
-        case 'H':
-          if (!IsOper(target_p))
-             break;
-
-
-	/*
-	 * just some quick checks on services modes
-	 */
-        case 'A':
-        case 'O':
-        case 'R':
-	case 'e':
-          if (!IsServer(source_p))
-             break;
-
         default:
           if ((flag = user_modes_from_c_to_bitmask[(unsigned char)*m]))
           {
             if (MyConnect(target_p) && !IsOper(target_p) &&
-                (ConfigFileEntry.oper_only_umodes & flag))
+              (user_mode_table[flag - 1].operonly == 1))
             {
               badflag = 1;
             }
             else
             {
               if (what == MODE_ADD)
-                target_p->umodes |= flag;
+                SetBit(target_p, flag);
               else
-                target_p->umodes &= ~flag;  
+                ClearBit(target_p, flag);  
             }
           }
           else
@@ -1147,21 +1132,6 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
   if (badflag && !IsServer(source_p))
     sendto_one(target_p, form_str(ERR_UMODEUNKNOWNFLAG),
                me.name, target_p->name);
-
-  if ((target_p->umodes & UMODE_NCHANGE) && !IsOperN(target_p))
-  {
-    sendto_one(target_p, ":%s NOTICE %s :*** You need nick_changes = yes;",
-               me.name, target_p->name);
-    target_p->umodes &= ~UMODE_NCHANGE; /* only tcm's really need this */
-  }
-
-  if (MyConnect(source_p) && (source_p->umodes & UMODE_ADMIN) &&
-      !IsOperAdmin(source_p) && !IsOperHiddenAdmin(source_p))
-  {
-    sendto_one(target_p, ":%s NOTICE %s :*** You need admin = yes;",
-               me.name, target_p->name);
-    target_p->umodes &= ~UMODE_ADMIN;
-  }
 
   if (!(setflags & UMODE_INVISIBLE) && IsInvisible(target_p))
     ++Count.invisi;
@@ -1194,29 +1164,26 @@ send_umode(struct Client *client_p, struct Client *source_p,
   {
     flag = user_modes[i].mode;
 
-    if (MyClient(source_p) && !(flag & sendmask))
-      continue;
-
-    if ((flag & old) && !(source_p->umodes & flag))
+    if ((flag & old) && !(TestBit(source_p, flag)))
     {
       if (what == MODE_DEL)
-        *m++ = user_modes[i].letter;
+        *m++ = user_mode_table[i].letter;
       else
       {
         what = MODE_DEL;
         *m++ = '-';
-        *m++ = user_modes[i].letter;
+        *m++ = user_mode_table[i].letter;
       }
     }
     else if (!(flag & old) && (source_p->umodes & flag))
     {
       if (what == MODE_ADD)
-        *m++ = user_modes[i].letter;
+        *m++ = user_mode_table[i].letter;
       else
       {
         what = MODE_ADD;
         *m++ = '+';
-        *m++ = user_modes[i].letter;
+        *m++ = user_mode_table[i].letter;
       }
     }
   }
@@ -1227,6 +1194,8 @@ send_umode(struct Client *client_p, struct Client *source_p,
     sendto_one(client_p, ":%s MODE %s :%s",
                source_p->name, source_p->name, umode_buf);
 }
+
+/* TODO: Work on this part of the code. */
 
 /* send_umode_out()
  *
@@ -1242,7 +1211,7 @@ send_umode_out(struct Client *client_p, struct Client *source_p,
   char buf[BUFSIZE];
   dlink_node *ptr;
 
-  send_umode(NULL, source_p, old, SEND_UMODES, buf);
+  send_umode(NULL, source_p, old, 0, buf);
 
   DLINK_FOREACH(ptr, serv_list.head)
   {
@@ -1259,7 +1228,7 @@ send_umode_out(struct Client *client_p, struct Client *source_p,
   }
 
   if (client_p && MyClient(client_p))
-    send_umode(client_p, source_p, old, ALL_UMODES, buf);
+    send_umode(client_p, source_p, old, 0, buf);
 }
 
 /* user_welcome()

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.1 2004/04/30 18:13:51 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.2 2004/05/12 19:41:47 nenolod Exp $
  */
 
 %{
@@ -254,9 +254,7 @@ unhook_hub_leaf_confs(void)
 %token  NUMBER_PER_IP_GLOBAL
 %token  OPERATOR
 %token  OPER_LOG
-%token  OPER_ONLY_UMODES
 %token  OPER_PASS_RESV
-%token  OPER_UMODES
 %token  CRYPT_OPER_PASSWORD
 %token  PACE_WAIT
 %token  PACE_WAIT_SIMPLE
@@ -2838,9 +2836,9 @@ general_item:       general_hide_spoof_ips | general_ignore_bogus_ts |
                     general_iauth_server | general_iauth_port |
                     general_idletime | general_maximum_links |
                     general_message_locale |
-                    general_oper_only_umodes | general_max_targets |
+                    general_max_targets |
                     general_use_egd | general_egdpool_path |
-                    general_oper_umodes | general_crypt_oper_password |
+                    general_crypt_oper_password |
                     general_caller_id_wait | general_default_floodcount |
                     general_min_nonwildcard | general_min_nonwildcard_simple |
                     general_servlink_path | general_disable_remote_commands |
@@ -3170,136 +3168,6 @@ general_throttle_time: THROTTLE_TIME '=' timespec ';'
 {
   if (ypass == 2)
     ConfigFileEntry.throttle_time = yylval.number;
-};
-
-general_oper_umodes: OPER_UMODES
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_umodes = 0;
-} '='  umode_oitems ';' ;
-
-umode_oitems:    umode_oitems ',' umode_oitem | umode_oitem;
-umode_oitem:     T_BOTS
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_umodes |= UMODE_BOTS;
-} | T_CCONN
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_umodes |= UMODE_CCONN;
-} | T_DEBUG
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_umodes |= UMODE_DEBUG;
-} | T_FULL
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_umodes |= UMODE_FULL;
-} | T_NCHANGE
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_umodes |= UMODE_NCHANGE;
-} | T_UNAUTH
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_umodes |= UMODE_UNAUTH;
-} | T_SPY
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_umodes |= UMODE_SPY;
-} | T_EXTERNAL
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_umodes |= UMODE_EXTERNAL;
-} | T_OPERWALL
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_umodes |= UMODE_OPERWALL;
-} | T_SERVNOTICE
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_umodes |= UMODE_SERVNOTICE;
-} | T_INVISIBLE
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_umodes |= UMODE_INVISIBLE;
-} | T_WALLOP
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_umodes |= UMODE_WALLOP;
-} | T_CALLERID
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_umodes |= UMODE_CALLERID;
-} | T_LOCOPS
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_umodes |= UMODE_LOCOPS;
-};
-
-general_oper_only_umodes: OPER_ONLY_UMODES 
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_only_umodes = 0;
-} '='  umode_items ';' ;
-
-umode_items:	umode_items ',' umode_item | umode_item;
-umode_item:	T_BOTS 
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_only_umodes |= UMODE_BOTS;
-} | T_CCONN
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_only_umodes |= UMODE_CCONN;
-} | T_DEBUG
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_only_umodes |= UMODE_DEBUG;
-} | T_FULL
-{ 
-  if (ypass == 2)
-    ConfigFileEntry.oper_only_umodes |= UMODE_FULL;
-} | T_NCHANGE
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_only_umodes |= UMODE_NCHANGE;
-} | T_UNAUTH
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_only_umodes |= UMODE_UNAUTH;
-} | T_SPY
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_only_umodes |= UMODE_SPY;
-} | T_EXTERNAL
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_only_umodes |= UMODE_EXTERNAL;
-} | T_OPERWALL
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_only_umodes |= UMODE_OPERWALL;
-} | T_SERVNOTICE
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_only_umodes |= UMODE_SERVNOTICE;
-} | T_INVISIBLE
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_only_umodes |= UMODE_INVISIBLE;
-} | T_WALLOP
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_only_umodes |= UMODE_WALLOP;
-} | T_CALLERID
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_only_umodes |= UMODE_CALLERID;
-} | T_LOCOPS
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_only_umodes |= UMODE_LOCOPS;
 };
 
 general_crypt_oper_password: CRYPT_OPER_PASSWORD '=' TBOOL ';'
