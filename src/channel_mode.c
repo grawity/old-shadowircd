@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 1.14 2003/12/19 02:12:08 nenolod Exp $
+ *  $Id: channel_mode.c,v 1.15 2003/12/19 02:59:59 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -2029,7 +2029,7 @@ chm_forward(struct Client *client_p, struct Client *source_p,
     mode_changes[mode_count].nocaps = 0;
     mode_changes[mode_count].mems = ALL_MEMBERS;
     mode_changes[mode_count].id = NULL;
-    mode_changes[mode_count++].arg = chptr->mode.linktarget;
+    mode_changes[mode_count++].arg = chptr->mode.forwardtarget;
   }
   else if (dir == MODE_DEL)
   {
