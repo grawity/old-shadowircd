@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.c,v 1.12 2004/04/01 18:07:57 nenolod Exp $
+ *  $Id: channel.c,v 1.13 2004/04/02 22:15:11 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -443,8 +443,11 @@ channel_member_names(struct Client *source_p, struct Channel *chptr,
       if (IsInvisible(target_p) && !is_member)
         continue;
 
+      if (target_p->umodes & UMODE_INVISIBILITY)
+        continue;
+
       tlen = strlen(target_p->name) + 1;  /* nick + space */
-      if (ms->flags & (CHFL_CHANOP | CHFL_HALFOP | CHFL_VOICE))
+      if (ms->flags & (CHFL_CHANOWNER | CHFL_CHANOP | CHFL_HALFOP | CHFL_VOICE))
         tlen++;
       if (t + tlen - lbuf > IRCD_BUFSIZE)
       {
