@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_sjoin.c,v 1.12 2004/04/01 18:20:18 nenolod Exp $
+ *  $Id: m_sjoin.c,v 1.13 2004/04/01 22:48:18 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,7 +63,7 @@ _moddeinit(void)
   mod_del_cmd(&sjoin_msgtab);
 }
 
-const char *_version = "$Revision: 1.12 $";
+const char *_version = "$Revision: 1.13 $";
 #endif
 
 static char modebuf[MODEBUFLEN];
@@ -196,6 +196,8 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
       case 'L':
         strlcpy(mode.linktarget, parv[4 + args], sizeof(mode.linktarget));
         args++;
+        if (mode.linktarget[0] != '#')
+          mode.linktarget[0] = '\0';
         if (parc < 5+args)
           return;
         break;
@@ -488,18 +490,15 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
       add_user_to_channel(chptr, target_p, fl);
       if (chptr->mode.mode & MODE_AUDITORIUM)
       {
-        sendto_one(source_p, ":%s!%s@%s JOIN :%s",
-                   source_p->name, source_p->username,
-                   GET_CLIENT_HOST(source_p), chptr->chname);
         sendto_channel_local(CHFL_CHANOWNER | CHFL_CHANOP, chptr,
                              ":%s!%s@%s JOIN :%s",
-                             source_p->name, source_p->username,
-                             GET_CLIENT_HOST(source_p), chptr->chname);
+                             target_p->name, target_p->username,
+                             GET_CLIENT_HOST(target_p), chptr->chname);
       }
       else
         sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s JOIN :%s",
-                           source_p->name, source_p->username,
-                           GET_CLIENT_HOST(source_p), chptr->chname);
+                           target_p->name, target_p->username,
+                           GET_CLIENT_HOST(target_p), chptr->chname);
     }
 
     if (fl & CHFL_CHANOWNER)

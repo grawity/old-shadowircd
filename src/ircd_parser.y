@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.27 2004/04/01 20:28:19 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.28 2004/04/01 22:48:18 nenolod Exp $
  */
 
 %{
@@ -2006,7 +2006,7 @@ auth_flag_haveident: HAVE_IDENT ';'
 {
   if (ypass == 2)
   {
-    yy_aconf->flags |= CONF_FLAGS_HAVE_IDENT;
+    yy_aconf->flags |= CONF_FLAGS_NEED_IDENTD;
   }
 };
 
@@ -2022,7 +2022,7 @@ auth_flag_klineexempt: KLINE_EXEMPT ';'
 {
   if (ypass == 2)
   {
-    yy_aconf->flags |= CONF_FLAGS_KLINE_EXEMPT;
+    yy_aconf->flags |= CONF_FLAGS_EXEMPTKLINE;
   }
 };
 
@@ -2030,7 +2030,7 @@ auth_flag_exceedlimit: EXCEED_LIMIT ';'
 {
   if (ypass == 2)
   {
-    yy_aconf->flags |= CONF_FLAGS_EXCEED_LIMIT;
+    yy_aconf->flags |= CONF_FLAGS_NOLIMIT;
   }
 };
 
