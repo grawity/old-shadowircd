@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_knock.c,v 1.2 2003/12/03 18:17:28 nenolod Exp $
+ *  $Id: m_knock.c,v 1.3 2003/12/03 20:21:06 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -83,7 +83,7 @@ _moddeinit(void)
   delete_capability("KNOCK");
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 /* m_knock
@@ -240,6 +240,14 @@ parse_knock_local(struct Client *client_p, struct Client *source_p,
   {
     sendto_one(source_p, form_str(ERR_CANNOTSENDTOCHAN),
                me.name, source_p->name, name);
+    return;
+  }
+
+  /* don't allow a knock if the channel has knock blocking on. */
+  if (chptr->mode.mode & MODE_NOKNOCK)
+  {
+    sendto_one(source_p, form_str(ERR_CANNOTSENDTOCHAN),
+	       me.name, source_p->name, name);
     return;
   }
 

@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  channel_mode.h: The ircd channel mode header.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.h,v 1.3 2003/12/02 23:22:25 nenolod Exp $
+ *  $Id: channel_mode.h,v 1.4 2003/12/03 20:21:06 nenolod Exp $
  */
 
 
@@ -70,6 +70,7 @@ extern void unset_chcap_usage_counts(struct Client *serv_p);
 #define MODE_NOCOLOR	0x00000040
 #define MODE_REGISTERED 0x00000080
 #define MODE_STRIPCOLOR 0x00000100
+#define MODE_NOKNOCK    0x00000200
 
 #define MODE_QUERY  0
 #define MODE_ADD    1

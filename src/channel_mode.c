@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  channel_mode.c: Controls modes on channels.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 1.3 2003/12/02 23:22:25 nenolod Exp $
+ *  $Id: channel_mode.c,v 1.4 2003/12/03 20:21:06 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -311,6 +311,7 @@ static const struct mode_letter
   { MODE_NOCOLOR,    'c' },
   { MODE_REGISTERED, 'r' },
   { MODE_STRIPCOLOR, 'S' },
+  { MODE_NOKNOCK,    'K' },
   { 0, '\0' }
 };
 
@@ -1408,7 +1409,7 @@ static struct ChannelMode ModeTable[255] =
   {chm_nosuch, NULL},                             /* H */
   {chm_invex, NULL},                              /* I */
   {chm_nosuch, NULL},                             /* J */
-  {chm_nosuch, NULL},                             /* K */
+  {chm_simple, (void *) MODE_NOKNOCK},            /* K */
   {chm_nosuch, NULL},                             /* L */
   {chm_nosuch, NULL},                             /* M */
   {chm_nosuch, NULL},                             /* N */
