@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: send.c,v 1.8 2004/02/12 02:04:40 nenolod Exp $
+ *  $Id: send.c,v 1.9 2004/02/12 03:31:05 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -513,7 +513,7 @@ sendto_channel_butone(struct Client *one, struct Client *from,
                            from->name, command, chptr->chname);
   else
     local_len = ircsprintf(local_buf, ":%s!%s@%s %s %s ",
-                           from->name, from->username, from->host,
+                           from->name, from->username, GET_CLIENT_HOST(from),
                            command, chptr->chname);
   remote_len = ircsprintf(remote_buf, ":%s %s %s ",
                           from->name, command, chptr->chname);
@@ -902,7 +902,7 @@ sendto_match_butone(struct Client *one, struct Client *from, char *mask,
   dlink_node *ptr, *ptr_next;
   char local_buf[IRCD_BUFSIZE], remote_buf[IRCD_BUFSIZE];
   int local_len = ircsprintf(local_buf, ":%s!%s@%s ", from->name,
-                             from->username, from->host);
+                             from->username, GET_CLIENT_HOST(from));
   int remote_len = ircsprintf(remote_buf, ":%s ", from->name);
 
   va_start(args, pattern);
@@ -1113,7 +1113,7 @@ sendto_wallops_flags(unsigned int flags, struct Client *source_p,
 
   if (IsPerson(source_p))
     len = ircsprintf(buffer, ":%s!%s@%s WALLOPS :",
-                     source_p->name, source_p->username, source_p->host);
+                     source_p->name, source_p->username, GET_CLIENT_HOST(source_p));
   else
     len = ircsprintf(buffer, ":%s WALLOPS :", source_p->name);
 
