@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: patchlevel.h,v 1.7 2004/05/23 00:08:39 nenolod Exp $
+ *  $Id: patchlevel.h,v 1.8 2004/05/26 14:30:58 nenolod Exp $
  */
 
 #ifndef PATCHLEVEL
@@ -28,13 +28,13 @@
 #define ALPHA 3
 #define CURRENT 4
 
-#define BRANCHSTATUS ALPHA
+#define BRANCHSTATUS RELEASE
 
 #define BASENAME "ShadowIRCd"
 #define MAJOR 3
 #define MINOR 0
 
-#define PATCH1 "-rc2"
+#define PATCH1 ""
 #define PATCH2 ""
 #define PATCH3 ""
 #define PATCH4 ""

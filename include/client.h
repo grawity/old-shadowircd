@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.7 2004/05/22 18:14:50 nenolod Exp $
+ *  $Id: client.h,v 1.8 2004/05/26 14:30:58 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -193,9 +193,6 @@ struct Client
    */
   dlink_list	allow_list;	/* clients I'll allow to talk to me */
   dlink_list	on_allow_list;	/* clients that have =me= on their allow list*/
-
-  /* This is for lag computation... --nenolod */
-  struct timeval ping_time, ping_send_time;
 
   struct LocalUser *localClient;
 };
@@ -423,6 +420,7 @@ struct LocalUser
 #define OPER_FLAG_GRANT        0x00010000 /* oper can grant privileges   */
 #define OPER_FLAG_TECHADMIN    0x00020000 /* technical administrator     */
 #define OPER_FLAG_NETADMIN     0x00040000 /* network administrator       */
+#define OPER_FLAG_WANTS_WHOIS  0x00080000 /* user wants whois            */
 	
 #define SetOFlag(x, y) ((x)->localClient->operflags |= (y))
 

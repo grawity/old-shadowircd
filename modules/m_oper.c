@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_oper.c,v 1.1 2004/04/30 18:14:06 nenolod Exp $
+ *  $Id: m_oper.c,v 1.2 2004/05/26 14:30:58 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -70,7 +70,7 @@ _moddeinit(void)
   mod_del_cmd(&oper_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /*
@@ -194,7 +194,7 @@ match_oper_password(const char *password, struct AccessItem *aconf)
   if (!IsConfOperator(aconf))
     return(NO);
 
-  if (ConfigFileEntry.crypt_oper_password)
+  if (aconf->flags & CONF_FLAGS_ENCRYPTED)
   {
     /* use first two chars of the password they send in as salt */
     /* If the password in the conf is MD5, and ircd is linked   

@@ -1,6 +1,22 @@
-ShadowIRCd 3.0
+ShadowIRCd 3.0 (Cortana)
+
+* Several bugfixes.
+* Whois notices are global.
+* No more forcejoin system.
+* Opers with override can now kick.
+* Opers with override can now set topics.
+
+ShadowIRCd 3.0-rc2:
+
+* CGI:IRC scripted client detection and optional banning.
+* Bugfixes concerning usermode desyncs. Thanks to several testers for 
+  noticing this bug.
+
+ShadowIRCd 3.0-rc1 and earlier:
 
 * More efficient protocol.
-* New usermode system.
-* New channelmode system.
-
+* New usermode system, up to 64 modes can be supported at one time now.
+* Network Administrators
+* Technical Administrators
+* Routing Administrators
+* Oh so much more.

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: spy_notices.c,v 1.1 2004/04/30 18:14:12 nenolod Exp $
+ *  $Id: spy_notices.c,v 1.2 2004/05/26 14:30:58 nenolod Exp $
  */
 #include "stdinc.h"
 #include "tools.h"
@@ -51,7 +51,6 @@ _modinit(void)
   hook_add_hook("doing_stats_p", (hookfn *)show_stats_p);
   hook_add_hook("doing_trace", (hookfn *)show_trace);
   hook_add_hook("doing_ltrace", (hookfn *)show_ltrace);
-  hook_add_hook("doing_whois", (hookfn *)show_notice);
 }
 
 void
@@ -65,10 +64,9 @@ _moddeinit(void)
   hook_del_hook("doing_stats_p", (hookfn *)show_stats_p);
   hook_del_hook("doing_trace", (hookfn *)show_trace);
   hook_del_hook("doing_ltrace", (hookfn *)show_ltrace);
-  hook_del_hook("doing_whois", (hookfn *)show_notice);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 
 int
 show_admin(struct hook_spy_data *data)
@@ -180,20 +178,3 @@ show_ltrace(struct hook_spy_data *data)
 
   return 0;
 }
-
-int
-show_notice(struct hook_mfunc_data *data)
-{
-  if (MyConnect(data->client_p) &&
-      IsOper(data->client_p) && (data->client_p != data->source_p))
-    {
-      sendto_one(data->client_p,
-         ":%s NOTICE %s :*** Notice -- %s (%s@%s) is doing a whois on you",
-                 me.name, data->client_p->name,
-                 data->source_p->name, data->source_p->username,
-                 GET_CLIENT_HOST(data->source_p));
-    }
-
-  return 0;
-}
-

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_pong.c,v 1.1 2004/04/30 18:14:06 nenolod Exp $
+ *  $Id: m_pong.c,v 1.2 2004/05/26 14:30:58 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -57,7 +57,7 @@ _moddeinit(void)
   mod_del_cmd(&pong_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 static void
@@ -66,24 +66,12 @@ ms_pong(struct Client *client_p, struct Client *source_p,
 {
   struct Client *target_p;
   const char *origin, *destination;
-  struct timeval tv;
 
   if (parc < 2 || *parv[1] == '\0')
   {
     sendto_one(source_p, form_str(ERR_NOORIGIN),
                me.name, parv[0]);
     return;
-  }
-
-  gettimeofday(&tv, NULL);
-  source_p->ping_time.tv_sec = tv.tv_sec - source_p->ping_send_time.tv_sec;
-  source_p->ping_time.tv_usec = tv.tv_usec - source_p->ping_send_time.tv_usec;
-
-  if (MyConnect(source_p))
-  {
-    sendto_server(NULL, NULL, NULL, NOCAPS, NOCAPS, NOFLAGS,
-        ":%s SPINGTIME %s %.1ld", me.name, source_p->name,
-        (source_p->ping_time.tv_sec * 1000000) + source_p->ping_time.tv_usec);
   }
 
   origin = parv[1];

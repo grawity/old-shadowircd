@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_topic.c,v 1.1 2004/04/30 18:14:09 nenolod Exp $
+ *  $Id: m_topic.c,v 1.2 2004/05/26 14:30:58 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -62,7 +62,7 @@ _moddeinit(void)
   mod_del_cmd(&topic_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /* m_topic()
@@ -138,12 +138,13 @@ m_topic(struct Client *client_p, struct Client *source_p,
           return;
 	}
       }
+
       if (((chptr->mode.mode & MODE_TOPICLOCK) &&
           has_member_flags(ms, CHFL_CHANOWNER)) || !MyClient(source_p))
       {
         char topic_info[USERHOST_REPLYLEN];
-        ircsprintf(topic_info, "%s!%s@%s",
-                   source_p->name, source_p->username, GET_CLIENT_HOST(source_p));
+        ircsprintf(topic_info, "%s",
+                   source_p->name);
         set_channel_topic(chptr, parv[2], topic_info, CurrentTime);
 
         sendto_server(client_p, NULL, chptr, CAP_TS6, NOCAPS, NOFLAGS,
@@ -165,6 +166,28 @@ m_topic(struct Client *client_p, struct Client *source_p,
       else if (((chptr->mode.mode & MODE_TOPICLIMIT) &&
           has_member_flags(ms, CHFL_CHANOP|CHFL_HALFOP|CHFL_CHANOWNER)) 
           || !MyClient(source_p))
+      {
+        char topic_info[USERHOST_REPLYLEN]; 
+        ircsprintf(topic_info, "%s", source_p->name);
+        set_channel_topic(chptr, parv[2], topic_info, CurrentTime);
+
+        sendto_server(client_p, NULL, chptr, CAP_TS6, NOCAPS, NOFLAGS,
+                      ":%s TOPIC %s :%s",
+                      ID(source_p), chptr->chname,
+                      chptr->topic == NULL ? "" : chptr->topic);
+        sendto_server(client_p, NULL, chptr, NOCAPS, CAP_TS6, NOFLAGS,
+                      ":%s TOPIC %s :%s",
+                      source_p->name, chptr->chname,
+                      chptr->topic == NULL ? "" : chptr->topic);
+        sendto_channel_local(ALL_MEMBERS,
+                             chptr, ":%s!%s@%s TOPIC %s :%s",
+                             source_p->name,
+                             source_p->username,
+                             GET_CLIENT_HOST(source_p),
+                             chptr->chname, chptr->topic == NULL ?
+                             "" : chptr->topic);
+      }
+      else if (!(chptr->mode.mode & MODE_TOPICLIMIT))
       {
         char topic_info[USERHOST_REPLYLEN]; 
         ircsprintf(topic_info, "%s", source_p->name);

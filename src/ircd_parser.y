@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.4 2004/05/23 00:08:39 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.5 2004/05/26 14:30:58 nenolod Exp $
  */
 
 %{
@@ -355,6 +355,7 @@ unhook_hub_leaf_confs(void)
 %token  NETADMIN
 %token  TECHADMIN
 %token  ROUTING
+%token  WANTS_WHOIS
 
 %token  WINGATE
 %token  MONITORBOT
@@ -1078,12 +1079,12 @@ oper_items:     oper_items oper_item | oper_item;
 oper_item:      oper_name  | oper_user | oper_password | oper_hidden_admin |
                 oper_class | oper_global_kill | oper_remote |
                 oper_kline | oper_xline | oper_unkline |
-		oper_nick_changes |
+		oper_nick_changes | oper_encrypted |
                 oper_die | oper_rehash | oper_admin |
 		oper_rsa_public_key_file | oper_auspex |
                 oper_set_owncloak | oper_set_anycloak |
                 oper_immune | oper_override | oper_grant | 
-                oper_netadmin | oper_techadmin | 
+                oper_netadmin | oper_techadmin | oper_wantswhois |
                 oper_routing | oper_flags_entry |
                 error;
 
@@ -1142,6 +1143,17 @@ oper_hidden_admin: HIDDEN_ADMIN '=' TBOOL ';'
       yy_aconf->port |= OPER_FLAG_HIDDEN_ADMIN;
     else
       yy_aconf->port &= ~OPER_FLAG_HIDDEN_ADMIN;
+  }
+};
+
+oper_encrypted: ENCRYPTED '=' TBOOL ';'
+{
+  if (ypass == 2)
+  {
+    if (yylval.number)
+      yy_aconf->flags |= CONF_FLAGS_ENCRYPTED;
+    else
+      yy_aconf->flags &= ~CONF_FLAGS_ENCRYPTED;
   }
 };
 
@@ -1372,6 +1384,17 @@ oper_netadmin: NETADMIN '=' TBOOL ';'
   }
 };
 
+oper_wantswhois: WANTS_WHOIS '=' TBOOL ';'
+{
+  if (ypass == 2)
+  {
+    if (yylval.number)
+      yy_aconf->port |= OPER_FLAG_WANTS_WHOIS;
+    else
+      yy_aconf->port &= ~OPER_FLAG_WANTS_WHOIS;
+  }
+};
+
 oper_techadmin: TECHADMIN '=' TBOOL ';'
 {
   if (ypass == 2)
@@ -1403,7 +1426,7 @@ oper_flag: oper_flag_auspex | oper_flag_admin | oper_flag_die |
            oper_flag_xline | oper_flag_grant | oper_flag_immune |
            oper_flag_remote | oper_flag_globalkill |
            oper_flag_setowncloak | oper_flag_setanycloak |
-           oper_flag_hiddenadmin | oper_flag_netadmin | 
+           oper_flag_hiddenadmin | oper_flag_netadmin | oper_flag_wantswhois | 
            oper_flag_techadmin | oper_flag_routing | error;
 
 oper_flag_auspex: AUSPEX ';'
@@ -1519,6 +1542,13 @@ oper_flag_routing: ROUTING ';'
   if (ypass == 2)
     yy_aconf->port |= OPER_FLAG_ROUTING;
 };
+
+oper_flag_wantswhois: WANTS_WHOIS ';'
+{
+  if (ypass == 2)
+    yy_aconf->port |= OPER_FLAG_WANTS_WHOIS;
+};
+
 
 /***************************************************************************
  *  section class

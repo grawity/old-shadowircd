@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_svskill.c,v 1.1 2004/04/30 18:14:03 nenolod Exp $
+ *  $Id: m_svskill.c,v 1.2 2004/05/26 14:30:58 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -56,8 +56,9 @@ _moddeinit (void)
   mod_del_cmd (&svskill_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
+
 /*
 ** m_svskill
 **      parv[0] = sender prefix
@@ -69,6 +70,7 @@ m_svskill (struct Client *client_p, struct Client *source_p,
 	   int parc, char *parv[])
 {
   struct Client *target_p;
+  dlink_node *server_node;
   char reason[TOPICLEN + 1];
 
   if (!IsServer (source_p))
@@ -79,5 +81,24 @@ m_svskill (struct Client *client_p, struct Client *source_p,
 
   ircsprintf (reason, "%s", parv[2]);
 
+  SetKilled(target_p);
+
   exit_client (client_p, target_p, target_p, reason);
+
+  /* Propigate kill attempts. */
+  if (!ServerInfo.hub && uplink && source_p != uplink)
+  {
+    sendto_one(uplink, ":%s SVSKILL %s :%s", parv[0], parv[1], 
+                  parv[2]);
+  }
+  else if (ServerInfo.hub)
+  {
+    DLINK_FOREACH(server_node, serv_list.head)
+    {
+      struct Client *server = server_node->data;
+
+      sendto_one(server, ":%s SVSKILL %s :%s", parv[0], parv[1],
+                    parv[2]);
+    }
+  }  
 }

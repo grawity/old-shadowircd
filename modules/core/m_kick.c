@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_kick.c,v 1.1 2004/04/30 18:19:27 nenolod Exp $
+ *  $Id: m_kick.c,v 1.2 2004/05/26 14:30:58 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -60,7 +60,7 @@ _moddeinit(void)
   mod_del_cmd(&kick_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /* m_kick()
@@ -136,6 +136,17 @@ m_kick(struct Client *client_p, struct Client *source_p,
       }
     }
 
+    if (MyConnect(source_p))
+    {
+      if (source_p->localClient->operflags & OPER_FLAG_OVERRIDE)
+      {
+        goto opercheat;
+      }
+    }
+
+    if (!MyConnect(source_p))
+      goto opercheat;
+
     if (!has_member_flags(ms, CHFL_CHANOWNER) && (chptr->mode.mode & MODE_PEACE))
     {
       /* don't kick in +P mode. */
@@ -161,6 +172,8 @@ m_kick(struct Client *client_p, struct Client *source_p,
                    from, to, name);
         return;
       }
+
+      opercheat:
 
       /* Its a user doing a kick, but is not showing as chanop locally
        * its also not a user ON -my- server, and the channel has a TS.

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.15 2004/05/26 01:44:36 nenolod Exp $
+ *  $Id: s_user.c,v 1.16 2004/05/26 14:30:58 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1256,6 +1256,9 @@ oper_up(struct Client *source_p)
 
   if (source_p->localClient->operflags & OPER_FLAG_TECHADMIN)
     SetUmode(source_p, UMODE_TECHADMIN);
+
+  if (source_p->localClient->operflags & OPER_FLAG_WANTS_WHOIS)
+    SetUmode(source_p, UMODE_WANTSWHOIS);
 
   if (source_p->localClient->operflags & OPER_FLAG_NETADMIN)
     SetUmode(source_p, UMODE_NETADMIN);
