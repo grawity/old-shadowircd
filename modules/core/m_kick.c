@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_kick.c,v 1.4 2004/07/18 18:27:54 nenolod Exp $
+ *  $Id: m_kick.c,v 1.5 2004/07/18 18:44:55 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -59,7 +59,7 @@ _moddeinit(void)
   mod_del_cmd(&kick_msgtab);
 }
 
-const char *_version = "$Revision: 1.4 $";
+const char *_version = "$Revision: 1.5 $";
 #endif
 
 /* m_kick()
@@ -74,7 +74,7 @@ m_kick(struct Client *client_p, struct Client *source_p,
 {
   struct Client *who;
   struct Channel *chptr;
-  int chasing = 0, skip_permissions_check = 0;
+  int chasing = 0;
   char *comment;
   char *name;
   char *p = NULL;
@@ -123,16 +123,9 @@ m_kick(struct Client *client_p, struct Client *source_p,
     return;
   }
 
-  if (!MyConnect(source_p))
-    skip_permissions_check = 1;
 
-  if (MyConnect(source_p) && source_p->localClient->operflags & OPER_FLAG_OVERRIDE)
-    skip_permissions_check = 1;
-
-  if (IsServer(source_p))
-    skip_permissions_check = 1;
-
-  if (skip_permissions_check != 1) 
+  if (!IsServer(source_p) || (!MyConnect(source_p) ||
+       (MyConnect(source_p) && !(source_p->localClient->operflags & OPER_FLAG_OVERRIDE))))
   {
     if ((ms = find_channel_link(source_p, chptr)) == NULL)
     {
