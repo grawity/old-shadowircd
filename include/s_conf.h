@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.h,v 1.1 2004/04/30 18:14:24 nenolod Exp $
+ *  $Id: s_conf.h,v 1.2 2004/04/30 21:48:00 nenolod Exp $
  */
 
 #ifndef INCLUDED_s_conf_h
@@ -143,7 +143,6 @@ struct ClassItem
 #define CurrUserCount(x) ((x)->curr_user_count)
 
 #define ClassPtr(x)      ((x)->class_ptr)
-
 
 #define CONF_ILLEGAL            0x80000000
 #define CONF_RESERVED           0x00000001

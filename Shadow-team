@@ -1,10 +1,19 @@
-$Id: Shadow-team,v 1.1 2004/04/30 18:13:02 nenolod Exp $
+$Id: Shadow-team,v 1.2 2004/04/30 21:48:00 nenolod Exp $
 
 ShadowIRCd is the collaboration of many people's ideas.
 The following people currently maintain the ShadowIRCd codebase:
  
 nenolod                  nenolod@kpanic.org
+
+Some help has been provided by the following (testing etc.)
+
 Zippoboy7                zippoboy7@criten.net
- 
+Lucifer7                 schultz200ca@hotmail.com
+Ashen                    l43x@mindspring.com
+NhJm                     nhjm449@hotmail.com
+
+As of 2.4.4, new methods of CIDR computation have been added.
+This was written by AndroSyn, and the rest of the ratbox team.
+
 For information concerning previous coders, see the Shadow-team file in 
 the doc/ subdirectory of the source tree.
