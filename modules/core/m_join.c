@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_join.c,v 1.8 2004/01/20 19:56:34 nenolod Exp $
+ *  $Id: m_join.c,v 1.9 2004/02/14 01:35:05 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -88,7 +88,7 @@ _moddeinit(void)
   mod_del_cmd(&join_msgtab);
 }
 
-const char *_version = "$Revision: 1.8 $";
+const char *_version = "$Revision: 1.9 $";
 #endif
 
 /* m_join()
@@ -524,10 +524,6 @@ build_target_list(struct Client *client_p, struct Client *source_p,
                    me.name, source_p->name, chan);
         continue;
       }
-
-      /* XXX - When does this happen? */
-      if (dlink_list_length(&chptr->members) == 0)
-        flags = CHFL_CHANOP;
     }
     else
     {
@@ -558,16 +554,6 @@ build_target_list(struct Client *client_p, struct Client *source_p,
         continue;
       }
     }
-
-    if (chptr->mode.forwardtarget[0] != '\0'
-        && (chptr2 = hash_find_channel(chptr->mode.forwardtarget)) != NULL)
-    {
-      targets[ntargets].chptr = chptr2;
-      targets[ntargets].key = key;
-      targets[ntargets++].flags = flags;
-      continue;
-    }
-
 
     if (is_target(chptr))
       continue;
