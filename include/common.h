@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: common.h,v 1.1.1.1 2003/12/02 20:47:53 nenolod Exp $
+ *  $Id: common.h,v 1.2 2004/01/12 19:55:39 nenolod Exp $
  */
 
 #ifndef INCLUDED_common_h
@@ -57,5 +57,7 @@
 
 /* Right out of the RFC */
 #define IRCD_BUFSIZE 512
+
+void make_virthost(char *, char *);
 
 #endif /* INCLUDED_common_h */

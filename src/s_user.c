@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.13 2003/12/19 02:55:56 nenolod Exp $
+ *  $Id: s_user.c,v 1.14 2004/01/12 19:55:39 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -570,7 +570,9 @@ register_local_user(struct Client *client_p, struct Client *source_p,
   add_user_host(source_p->username, source_p->host, 0);
   SetUserHost(source_p);
 
-  strncpy(source_p->virthost, source_p->host, HOSTLEN);
+  make_virthost(source_p->host, source_p->virthost);
+
+  source_p->umodes |= UMODE_CLOAK;
 
   return(introduce_client(client_p, source_p));
 }
