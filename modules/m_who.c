@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  m_who.c: Shows who is on a channel.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_who.c,v 1.1.1.1 2003/12/02 20:47:42 nenolod Exp $
+ *  $Id: m_who.c,v 1.2 2003/12/05 17:48:04 nenolod Exp $
  */
 #include "stdinc.h"
 #include "tools.h"
@@ -62,7 +62,7 @@ _moddeinit(void)
   mod_del_cmd(&who_msgtab);
 }
 
-const char *_version = "$Revision: 1.1.1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 static void who_global(struct Client *source_p, char *mask, int server_oper);
@@ -384,7 +384,7 @@ do_who(struct Client *source_p, struct Client *target_p,
     sendto_one(source_p, form_str(RPL_WHOREPLY), from, to,
 	       (chname) ? (chname) : "*",
 	       target_p->username,
-	       target_p->host, IsOper(source_p) ? target_p->user->server->name : "*",
+	       GET_CLIENT_HOST(target_p), IsOper(source_p) ? target_p->user->server->name : "*",
 	       target_p->name,
 	       status, 0, target_p->info);
   }
@@ -393,7 +393,7 @@ do_who(struct Client *source_p, struct Client *target_p,
     sendto_one(source_p, form_str(RPL_WHOREPLY), from, to,
 	       (chname) ? (chname) : "*",
 	       target_p->username,
-	       target_p->host,  target_p->user->server->name, target_p->name,
+	       GET_CLIENT_HOST(target_p),  target_p->user->server->name, target_p->name,
 	       status, target_p->hopcount, target_p->info);
   }
 }

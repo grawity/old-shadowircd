@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  ircd.c: Starts up and runs the ircd.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd.c,v 1.1.1.1 2003/12/02 20:46:47 nenolod Exp $
+ *  $Id: ircd.c,v 1.2 2003/12/05 17:48:04 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -620,18 +620,6 @@ main(int argc, char *argv[])
     exit(EXIT_FAILURE);
   }
   strlcpy(me.info, ServerInfo.description, sizeof(me.info));
-
-#ifdef USE_IAUTH
-  iAuth.flags = 0;
-
-  ConnectToIAuth();
-
-  if (iAuth.socket == NOSOCK)
-  {
-    fprintf(stderr, "Unable to connect to IAuth server\n");
-    exit(EXIT_FAILURE);
-  }
-#endif
 
   me.from    = &me;
   me.servptr = &me;

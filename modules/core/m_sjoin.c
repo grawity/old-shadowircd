@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_sjoin.c,v 1.3 2003/12/04 06:38:42 nenolod Exp $
+ *  $Id: m_sjoin.c,v 1.4 2003/12/05 17:48:04 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,7 +63,7 @@ _moddeinit(void)
   mod_del_cmd(&sjoin_msgtab);
 }
 
-const char *_version = "$Revision: 1.3 $";
+const char *_version = "$Revision: 1.4 $";
 #endif
 
 static char modebuf[MODEBUFLEN];
@@ -350,6 +350,11 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
         fl |= CHFL_CHANOP;
         s++;
       }
+      else if (*s == '!')
+      {
+        fl |= CHFL_CHANOWNER;
+        s++;
+      }
       else if (*s == '+')
       {
         fl |= CHFL_VOICE;
@@ -399,6 +404,11 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
         *nick_ptr++ = '+';
         *uid_ptr++  = '+';
       }
+      if (fl & CHFL_CHANOWNER)
+      {
+        *nick_ptr++ = '!';
+        *uid_ptr++  = '!';
+      }
     }
 
     /* copy the nick to the two buffers */
@@ -407,7 +417,7 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
 
     if (!keep_new_modes)
     {
-      if (fl & (CHFL_CHANOP|CHFL_HALFOP))
+      if (fl & (CHFL_CHANOP|CHFL_HALFOP|CHFL_CHANOWNER))
         fl = CHFL_DEOPPED;
       else
         fl = 0;
@@ -454,6 +464,24 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
                            target_p->host, parv[2]);
     }
 
+    if (fl & CHFL_CHANOWNER)
+    {
+      *mbuf++ = 'u';
+      para[pargs++] = target_p->name;
+
+      if (pargs >= MAXMODEPARAMS)
+      {
+        *mbuf = '\0';
+        sendto_channel_local(ALL_MEMBERS, chptr, ":%s MODE %s %s %s %s %s %s",
+                             servername, chptr->chname, modebuf, para[0],
+                             para[1], para[2], para[3]);
+        mbuf = modebuf;
+        *mbuf++ = '+';
+
+        para[0] = para[1] = para[2] = para[3] = "";
+        pargs = 0;
+      }
+    }
     if (fl & CHFL_CHANOP)
     {
       *mbuf++ = 'o';

@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  numeric.h: A header for the numeric functions.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: numeric.h,v 1.3 2003/12/02 23:22:25 nenolod Exp $
+ *  $Id: numeric.h,v 1.4 2003/12/05 17:48:04 nenolod Exp $
  */
 
 #ifndef INCLUDED_numeric_h
@@ -409,6 +409,8 @@ extern const char *get_locale(void);
 /* #define ERR_LAST_ERR_MSG 505 
  * moved to 999
  */
+
+#define ERR_CHANPEACE        509
 
 /*      ERR_NOTIFYFULL       512           aircd */
 /*	ERR_TOOMANYWATCH     512           Numeric List: Dalnet */

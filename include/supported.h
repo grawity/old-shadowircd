@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: supported.h,v 1.1.1.1 2003/12/02 20:47:52 nenolod Exp $
+ *  $Id: supported.h,v 1.2 2003/12/05 17:48:04 nenolod Exp $
  */
 
 #ifndef INCLUDED_supported_h
@@ -56,7 +56,7 @@
 		  " CALLERID%s"
 
 #define FEATURES2VALUES ConfigChannel.disable_local_channels ? "#" : "#&", \
-                        "(ohv)@%+", \
+                        "(uohv)!@%+", \
                         ConfigChannel.use_except ? "e" : "", \
                         ConfigChannel.use_invex ? "I" : "", \
                         "b,k,l,imnpst", \

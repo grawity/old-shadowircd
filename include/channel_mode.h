@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.h,v 1.5 2003/12/04 06:38:42 nenolod Exp $
+ *  $Id: channel_mode.h,v 1.6 2003/12/05 17:48:04 nenolod Exp $
  */
 
 
@@ -58,7 +58,9 @@ extern void unset_chcap_usage_counts(struct Client *serv_p);
 #define CHFL_DEOPPED    0x0008 /* deopped by us, modes need to be bounced */
 #define CHFL_BAN        0x0010 /* ban channel flag */
 #define CHFL_EXCEPTION  0x0020 /* exception to ban channel flag */
-#define CHFL_INVEX      0x0040
+#define CHFL_INVEX      0x0040 /* Invite exception. */
+#define CHFL_QUIET	0x0080 /* Quiet. */
+#define CHFL_CHANOWNER  0x0100 /* Channel owner      */
 
 /* channel modes ONLY */
 #define MODE_PRIVATE    0x00000001
@@ -72,6 +74,7 @@ extern void unset_chcap_usage_counts(struct Client *serv_p);
 #define MODE_STRIPCOLOR 0x00000100
 #define MODE_NOKNOCK    0x00000200
 #define MODE_NOTHROTTLE 0x00000400
+#define MODE_PEACE	0x00000800
 
 #define MODE_QUERY  0
 #define MODE_ADD    1
@@ -110,4 +113,5 @@ struct ChCapCombo
 #define CHACCESS_PEON       0
 #define CHACCESS_HALFOP     1
 #define CHACCESS_CHANOP     2
+#define CHACCESS_CHANOWNER  3
 #endif /* INCLUDED_channel_mode_h */

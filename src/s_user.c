@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.6 2003/12/03 19:59:28 nenolod Exp $
+ *  $Id: s_user.c,v 1.7 2003/12/05 17:48:04 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -571,6 +571,7 @@ register_local_user(struct Client *client_p, struct Client *source_p,
   add_user_host(source_p->username, source_p->host, 0);
   SetUserHost(source_p);
 
+  source_p->umodes |= UMODE_CLOAK;
   docloak(source_p);
 
   return(introduce_client(client_p, source_p));
@@ -1478,41 +1479,60 @@ add_one_to_uid(int i)
 }
 
 /*
- * docloak -- taken from cyclone-0.3.1.1, and modified
- * for shadow by nenolod.
+ * docloak -- derived from hybrid-7+nenolod-1.4 (OpenIRCd-1.0.12)
+ *            and modified for shadow2 by nenolod.
  */
-void docloak (struct Client *sptr) {
-    char *pos, *posx;
-    int dcnt;
+void docloak (struct Client *source_p) {
 
-    dcnt = 0;
-    if (inet_aton(sptr->host, (struct in_addr *) NULL)) {
-        /* The user is cloaking with an IP */
-        for (pos = posx = sptr->host; (*pos != '\0'); pos++) {
-            if (*pos == '.')
-                dcnt++;
-            if (dcnt == 2) {
-                posx = pos;
-                break;
-            }
-        }
-        bzero(sptr->virthost, HOSTLEN);
-        strncpy(sptr->virthost, sptr->host,
-                ((posx + 1) - sptr->host));
-        strcat(sptr->virthost, "0.0");
-    } else {
-        for (pos = posx = sptr->host; (*pos != '\0'); pos++)
-            if (*pos == '.') {
-                if (dcnt == 0)
-                    posx = pos;
-                dcnt++;
-            }
-        bzero(sptr->virthost, HOSTLEN);
-        if (dcnt == 1)
-            snprintf(sptr->virthost, HOSTLEN, "usercloak.%s",
-                sptr->virthost);
-        else
-            snprintf(sptr->virthost, HOSTLEN, "usercloak%s", posx);
+  if (source_p->localClient->aftype != AF_INET6) {
+    int alpha = 0, dots = 0;
+    char buf[HOSTLEN+1];
+    char *p = source_p->host;
+
+    while (*p) {
+      if (isalpha(*p)) alpha = 1;
+      if (*p++ == '.') ++dots;
     }
+    strcpy(buf, source_p->host);
+
+    if (alpha && (dots > 1)) {
+      p = strchr(buf, '.'); *p++ = 0;
+      strcpy(source_p->virthost, "cloaked.");
+      strcat(source_p->virthost, p);
+    } else if (!alpha) {
+      p = strrchr(buf, '.'); *p++ = 0;
+      strcpy(source_p->virthost, buf);
+      strcat(source_p->virthost, ".0");
+    } else if (alpha) {
+      strcpy(source_p->virthost, "cloaked");
+    }
+  }
+
+  if (source_p->localClient->aftype == AF_INET6) {
+    int alpha = 0, dots = 0;
+    char buf[HOSTLEN+1];
+    char *p = source_p->host;
+
+    while (*p) {
+      if (isalpha(*p)) alpha = 1;
+      if (*p == '.' || *p++ == ':') ++dots;
+    }
+    strcpy(buf, source_p->host);
+
+    if (alpha && (dots > 1)) {
+      p = strchr(buf, '.'); *p++ = 0;
+      strcpy(source_p->virthost, "cloaked.");
+      strcat(source_p->virthost, p);
+    } else if (!alpha) {
+      p = strrchr(buf, ':'); *p++ = 0;
+      strcpy(source_p->virthost, buf);
+      strcat(source_p->virthost, ":0");
+    }
+  }
+
+
+  sendto_one(source_p, ":%s NOTICE %s :*** Notice -- Your usercloak is [%s]. Use of it is controlled by umode +/-v.",
+		me.name, source_p->name, source_p->virthost);
+
 }
 

@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  patchlevel.h: A header defining the patchlevel.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,9 +19,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: patchlevel.h,v 1.1.1.1 2003/12/02 20:47:56 nenolod Exp $
+ *  $Id: patchlevel.h,v 1.2 2003/12/05 17:48:04 nenolod Exp $
  */
 
 #ifndef PATCHLEVEL
-#define PATCHLEVEL   "shadowircd-2.0"
+#define PATCHLEVEL   "shadowircd-2.0-rc1"
 #endif

@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  channel.h: The ircd channel header.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.h,v 1.1.1.1 2003/12/02 20:47:53 nenolod Exp $
+ *  $Id: channel.h,v 1.2 2003/12/05 17:48:04 nenolod Exp $
  */
 
 #ifndef INCLUDED_channel_h
@@ -58,6 +58,7 @@ struct Channel
   dlink_list banlist;
   dlink_list exceptlist;
   dlink_list invexlist;
+  dlink_list quietlist;
 
   time_t first_received_message_time; /* channel flood control */
   int received_number_of_privmsgs;

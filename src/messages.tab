@@ -16,7 +16,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *   $Id: messages.tab,v 1.4 2003/12/02 23:49:16 nenolod Exp $
+ *   $Id: messages.tab,v 1.5 2003/12/05 17:48:04 nenolod Exp $
  */
 
 static struct NumericInfo replies[] = {
@@ -441,7 +441,7 @@ static struct NumericInfo replies[] = {
 /* 418 */  {NULL, NULL, NULL},
 /* 419 */  {NULL, NULL, NULL},
 /* 420 */  {NULL, NULL, NULL},
-/* 421 */  {"ERR_UNKNOWNCOMMAND", ":%s 421 %s %s :Unknown command", NULL},
+/* 421 */  {"ERR_UNKNOWNCOMMAND", ":%s 421 %s %s :unrecognized command, see /IRCDHELP for available commands", NULL},
 /* 422 */  {"ERR_NOMOTD", ":%s 422 %s :MOTD File is missing", NULL},
 /* 423 */  {"ERR_NOADMININFO", ":%s 423 %s %s :No administrative info available", NULL},
 /* 424 */  {NULL, NULL, NULL},
@@ -492,7 +492,7 @@ static struct NumericInfo replies[] = {
 /* 469 */  {NULL, NULL, NULL},
 /* 470 */  {NULL, NULL, NULL},
 /* 471 */  {"ERR_CHANNELISFULL", ":%s 471 %s %s :Cannot join channel (+l)", NULL},
-/* 472 */  {"ERR_UNKNOWNMODE", ":%s 472 %s %c :is unknown mode char to me", NULL},
+/* 472 */  {"ERR_UNKNOWNMODE", ":%s 472 %s %c :unknown mode character, use /IRCDHELP CHANMODES for available modes", NULL},
 /* 473 */  {"ERR_INVITEONLYCHAN", ":%s 473 %s %s :Cannot join channel (+i)", NULL},
 /* 474 */  {"ERR_BANNEDFROMCHAN", ":%s 474 %s %s :Cannot join channel (+b)", NULL},
 /* 475 */  {"ERR_BADCHANNELKEY", ":%s 475 %s %s :Cannot join channel (+k)", NULL},
@@ -521,7 +521,7 @@ static struct NumericInfo replies[] = {
 /* 498 */  {NULL, NULL, NULL},
 /* 499 */  {NULL, NULL, NULL},
 /* 500 */  {NULL, NULL, NULL},
-/* 501 */  {"ERR_UMODEUNKNOWNFLAG", ":%s 501 %s :Unknown MODE flag", NULL},
+/* 501 */  {"ERR_UMODEUNKNOWNFLAG", ":%s 501 %s %c :unknown mode character, use /IRCDHELP USERMODES for available modes", NULL},
 /* 502 */  {"ERR_USERSDONTMATCH", ":%s 502 %s :Can't change mode for other users", NULL},
 /* 503 */  {"ERR_GHOSTEDCLIENT", ":%s 503 %s :Message could not be delivered to %s", NULL},
 /* 504 */  {"ERR_USERNOTONSERV", ":%s 504 %s %s :User is not on this server", NULL},
@@ -529,7 +529,7 @@ static struct NumericInfo replies[] = {
 /* 506 */  {NULL, NULL, NULL},
 /* 507 */  {NULL, NULL, NULL},
 /* 508 */  {NULL, NULL, NULL},
-/* 509 */  {NULL, NULL, NULL},
+/* 509 */  {"ERR_CHANPEACE", ":%s 509 %s %s :Channel is currently in PEACE mode. Access denied.", NULL},
 /* 510 */  {NULL, NULL, NULL},
 /* 511 */  {NULL, NULL, NULL},
 /* 512 */  {NULL, NULL, NULL},

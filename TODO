@@ -1,4 +1,4 @@
-$Id: TODO,v 1.7 2003/12/04 06:38:42 nenolod Exp $
+$Id: TODO,v 1.8 2003/12/05 17:48:04 nenolod Exp $
 
 - colorblock, colorstrip (done)
 - identified umode (done)
@@ -10,7 +10,7 @@ $Id: TODO,v 1.7 2003/12/04 06:38:42 nenolod Exp $
 - usermode +B: Marked for bots. (+B would lower flood restrictions) (NhJm/Eko/Bagheera)
 - usermode +S: Antispam (admin-defined pattern) (nenolod)
 - channel mode +q: Quiet (nenolod)
-- channel mode +u: Owner (Eko)
+- channel mode +u: Owner (Eko) -- done (nenolod)
 - usermode +C: Block CTCP (nenolod)
 - usermode +R: Registered users only (Eko)
 - channel mode +T: Channel owner sets topic. (Eko)

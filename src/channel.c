@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  channel.c: Controls channels.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.c,v 1.1.1.1 2003/12/02 20:46:41 nenolod Exp $
+ *  $Id: channel.c,v 1.2 2003/12/05 17:48:04 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -542,8 +542,8 @@ del_invite(struct Channel *chptr, struct Client *who)
  *
  * inputs       - pointer to struct Membership
  *              - YES if we can combine different flags
- * output       - string either @, +, % or "" depending on whether
- *                chanop, voiced or user
+ * output       - string either !, @, +, % or "" depending on whether
+ *                chanowner, chanop, voiced or user
  * side effects -
  *
  * NOTE: Returned string is usually a static buffer
@@ -558,6 +558,13 @@ get_member_status(struct Membership *ms, int combine)
   if (ms == NULL)
     return("");
   p = buffer;
+
+  if (ms->flags & CHFL_CHANOWNER)
+  {
+    if (!combine)
+      return "!";
+    *p++ = '!';
+  }
 
   if (ms->flags & CHFL_CHANOP)
   {

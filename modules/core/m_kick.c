@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  m_kick.c: Kicks a user from a channel.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_kick.c,v 1.2 2003/12/03 18:17:28 nenolod Exp $
+ *  $Id: m_kick.c,v 1.3 2003/12/05 17:48:04 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -60,7 +60,7 @@ _moddeinit(void)
   mod_del_cmd(&kick_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 /* m_kick()
@@ -135,6 +135,14 @@ m_kick(struct Client *client_p, struct Client *source_p,
         return;
       }
     }
+
+    if (!has_member_flags(ms, CHFL_CHANOWNER) && (chptr->mode.mode & MODE_PEACE))
+    {
+      /* don't kick in +P mode. */
+      sendto_one(source_p, form_str(ERR_CHANPEACE), me.name, source_p->name, name);
+      return;
+    }
+
     if (!has_member_flags(ms, CHFL_CHANOP|CHFL_HALFOP))
     {
       /* was a user, not a server, and user isn't seen as a chanop here */
