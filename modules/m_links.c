@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_links.c,v 1.6 2004/01/20 19:56:34 nenolod Exp $
+ *  $Id: m_links.c,v 1.7 2004/02/18 20:35:55 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -62,7 +62,7 @@ _moddeinit(void)
   mod_del_cmd(&links_msgtab);
 }
 
-const char *_version = "$Revision: 1.6 $";
+const char *_version = "$Revision: 1.7 $";
 #endif
 
 /*
@@ -136,14 +136,25 @@ mo_links(struct Client *client_p, struct Client *source_p,
       else
         p = "(Unknown Location)";
 
-     /* We just send the reply, as if theyre here theres either no SHIDE,
-      * or theyre an oper..  
-      */
-      sendto_one(source_p, form_str(RPL_LINKS),
-                 MyConnect(source_p) ? me.name : me.id, 
-                 MyConnect(source_p) ? parv[0] : ID(source_p),
-		 target_p->name, target_p->serv->up,
-                 target_p->hopcount, p);
+      /* Only operators with the AUSPEX flag can see
+       * routing information. 
+       */
+      if (IsOperAuspex(source_p))
+      {
+        sendto_one(source_p, form_str(RPL_LINKS),
+                   MyConnect(source_p) ? me.name : me.id, 
+                   MyConnect(source_p) ? parv[0] : ID(source_p),
+	  	   target_p->name, target_p->serv->up,
+                   target_p->hopcount, p);
+      }
+      else
+      {
+        sendto_one(source_p, form_str(RPL_LINKS),
+                   MyConnect(source_p) ? me.name : me.id, 
+                   MyConnect(source_p) ? parv[0] : ID(source_p),
+	  	   target_p->name, me.name,
+                   1, p);
+      }
     }
   
   sendto_one(source_p, form_str(RPL_ENDOFLINKS),
