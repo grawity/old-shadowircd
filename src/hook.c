@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: hook.c,v 1.3 2004/08/26 05:42:19 nenolod Exp $
+ *  $Id: hook.c,v 1.4 2004/08/26 21:35:07 nenolod Exp $
  */
 
 /* hooks are used by modules to hook into events called by other parts of
@@ -158,9 +158,10 @@ hook_call_event(const char *event, void *data)
   DLINK_FOREACH(node, h->hooks.head)
   {
     fn = (hookfn)(uintptr_t)node->data;
+    assert (fn != NULL);
 
     if (fn(data) != 0)
-      return(0);
+      return (1);
   }
 
   return(0);

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.26 2004/08/24 06:17:13 nenolod Exp $
+ *  $Id: s_user.c,v 1.27 2004/08/26 21:35:07 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -407,6 +407,8 @@ register_local_user(struct Client *client_p, struct Client *source_p,
 
   strncpy(source_p->ipaddr, ipaddr, 256);
 
+  hook_call_event("new_client_local", source_p);
+
   /* If they have died in send_* don't do anything. */
   if (IsDead(source_p))
     return(CLIENT_EXITED);
@@ -564,6 +566,8 @@ register_remote_user(struct Client *client_p, struct Client *source_p,
   add_user_host(source_p->username, source_p->host, 1);
   SetUserHost(source_p);
 
+  hook_call_event("new_client_remote", source_p);
+
   if (source_p->virthost[0] == '*')
   {
     strcpy(source_p->virthost, source_p->host);
@@ -589,9 +593,7 @@ introduce_client(struct Client *client_p, struct Client *source_p)
   dlink_node *server_node;
   struct Client *nickservClient;
 
-  /* XXX THESE NEED A PREFIX!?!?!? */
-  if (!ServerInfo.hub && uplink && IsCapable(uplink, CAP_LL) &&
-      client_p != uplink)
+  if (!ServerInfo.hub && uplink && client_p != uplink)
   {
     if (IsCapable(uplink, CAP_TS6) && HasID(source_p))
     {
