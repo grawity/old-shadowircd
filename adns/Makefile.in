@@ -1,7 +1,7 @@
 #
 # Makefile.in for ircd/src
 #
-# $Id: Makefile.in,v 1.1 2004/09/06 22:21:07 nenolod Exp $
+# $Id: Makefile.in,v 1.2 2004/09/06 22:23:46 nenolod Exp $
 #
 CC		= @CC@
 INSTALL		= @INSTALL@
@@ -45,7 +45,7 @@ OBJS = ${SRCS:.c=.o}
 
 all: libadns.a
 
-build: all
+build: .depend all
 
 libadns.a: ${OBJS}
 		rm -f $@
@@ -56,11 +56,11 @@ libadns.a: ${OBJS}
 .c.o:
 	${CC} ${CPPFLAGS} ${CFLAGS} -c $<
 
-.PHONY: depend clean distclean
+.PHONY: .depend clean distclean
 
 install: 
 
-depend:
+.depend:
 	@${MKDEP} ${CPPFLAGS} ${BASE_SRCS} ${EXTRA_SRCS} > .depend.tmp
 	@sed -e '/^# DO NOT DELETE THIS LINE/,$$d' <Makefile >Makefile.depend
 	@echo '# DO NOT DELETE THIS LINE!!!' >>Makefile.depend
