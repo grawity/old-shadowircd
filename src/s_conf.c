@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.c,v 1.10 2004/09/07 02:38:05 nenolod Exp $
+ *  $Id: s_conf.c,v 1.11 2004/09/07 03:46:57 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -182,7 +182,7 @@ conf_dns_lookup(struct AccessItem *aconf)
   {
     aconf->dns_query = MyMalloc(sizeof(struct DNSQuery));
     aconf->dns_query->ptr = aconf;
-    aconf->dns_query->callback = conf_dns_callback;
+    aconf->dns_query->type = QUERY_TYPE_CONF;
     adns_gethost(aconf->host, AF_INET, aconf->dns_query);
   }
 }

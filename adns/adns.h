@@ -51,7 +51,7 @@
  *  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  *
- *  $Id: adns.h,v 1.3 2004/09/06 23:01:29 nenolod Exp $
+ *  $Id: adns.h,v 1.4 2004/09/07 03:46:57 nenolod Exp $
  */
 
 #ifndef ADNS_H_INCLUDED
@@ -61,6 +61,7 @@
 #include "ircd.h"
 #include "ircd_defs.h"
 #include "irc_string.h"
+#include "sprintf_irc.h"
 #define MAXFD_POLL 2
 struct adns_pollfd { int fd; short events; short revents; };
 #define ADNS_POLLIN  1
@@ -872,7 +873,4 @@ const char *adns_errtypeabbrev(adns_status st);
  */
 
 int adns__rereadconfig(adns_state st);
-
-#include "s_bsd.h"
-
 #endif

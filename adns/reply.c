@@ -24,11 +24,12 @@
  *  along with this program; if not, write to the Free Software Foundation,
  *  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
  *
- * $Id: reply.c,v 1.1 2004/09/06 22:21:07 nenolod Exp $
+ * $Id: reply.c,v 1.2 2004/09/07 03:46:57 nenolod Exp $
  */
 
 #include "stdinc.h"
 #include "memory.h"
+#include "fileio.h"
 #include "internal.h"
 
 void adns__procdgram(adns_state ads, const byte *dgram, int dglen,
@@ -220,7 +221,7 @@ void adns__procdgram(adns_state ads, const byte *dgram, int dglen,
 	 * it contains the relevant info.
 	 */
       }
-    } else if (rrtype == (int)(qu->typei->type & adns__rrt_typemask)) {
+    } else if (rrtype == (qu->typei->type & adns__rrt_typemask)) {
       wantedrrs++;
     } else {
       adns__debug(ads,serv,qu,"ignoring answer RR with irrelevant type %d",rrtype);
@@ -320,7 +321,7 @@ void adns__procdgram(adns_state ads, const byte *dgram, int dglen,
 		     &ownermatched);
     assert(!st); assert(rrtype != -1);
     if (rrclass != DNS_CLASS_IN ||
-	rrtype != (int)(qu->typei->type & adns__rrt_typemask) ||
+	rrtype != (qu->typei->type & adns__rrt_typemask) ||
 	!ownermatched)
       continue;
     adns__update_expires(qu,ttl,now);

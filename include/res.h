@@ -21,7 +21,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: res.h,v 1.2 2004/09/06 23:01:29 nenolod Exp $
+ *  $Id: res.h,v 1.3 2004/09/07 03:46:57 nenolod Exp $
  */
 
 #ifndef _RES_H_INCLUDED
@@ -39,8 +39,12 @@ struct DNSQuery
 	void *ptr;
 	adns_query query;
 	adns_answer answer;
-	void (*callback) (void *vptr, adns_answer * reply);
+	int type;
 };
+
+#define QUERY_TYPE_AUTH 1
+#define QUERY_TYPE_COMM 2
+#define QUERY_TYPE_CONF 3
 
 void init_resolver(void);
 void restart_resolver(void);

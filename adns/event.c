@@ -26,11 +26,12 @@
  *  along with this program; if not, write to the Free Software Foundation,
  *  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
  *
- * $Id: event.c,v 1.2 2004/09/06 22:28:29 nenolod Exp $
+ * $Id: event.c,v 1.3 2004/09/07 03:46:57 nenolod Exp $
  */
 
 #include "stdinc.h"
 
+#include "fileio.h"
 #include "s_bsd.h"
 #include "internal.h"
 #include "memory.h"
@@ -83,14 +84,14 @@ static void tcp_connected(adns_state ads, struct timeval now) {
 
 static void tcp_broken_events(adns_state ads) {
   adns_query qu, nqu;
-  
+
   assert(ads->tcpstate == server_broken);
   for (qu= ads->tcpw.head; qu; qu= nqu) {
     nqu= qu->next;
     assert(qu->state == query_tcpw);
     if (qu->retries > ads->nservers) {
-      LIST_UNLINK(ads->tcpw,qu);
-      adns__query_fail(qu,adns_s_allservfail);
+      LIST_UNLINK(ads->tcpw, qu);
+      adns__query_fail(qu, adns_s_allservfail);
     }
   }
   ads->tcpstate= server_disconnected;
@@ -111,7 +112,7 @@ void adns__tcp_tryconnect(adns_state ads, struct timeval now) {
     default:
       abort();
     }
-    
+
     assert(!ads->tcpsend.used);
     assert(!ads->tcprecv.used);
     assert(!ads->tcprecv_skip);
@@ -389,7 +390,7 @@ int adns_processreadable(adns_state ads, int fd, const struct timeval *now) {
     for (;;) {
       udpaddrlen= sizeof(udpaddr);
       r= recvfrom(ads->udpsocket,udpbuf,sizeof(udpbuf),0,
-		  (struct sockaddr*)&udpaddr,(unsigned int*)&udpaddrlen);
+		  (struct sockaddr*)&udpaddr,&udpaddrlen);
       if (r<0) {
 	if (errno == EAGAIN || errno == EWOULDBLOCK) { r= 0; goto xit; }
 	if (errno == EINTR) continue;

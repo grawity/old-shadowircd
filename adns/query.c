@@ -26,13 +26,14 @@
  *  along with this program; if not, write to the Free Software Foundation,
  *  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
  *
- * $Id: query.c,v 1.1 2004/09/06 22:21:07 nenolod Exp $
+ * $Id: query.c,v 1.2 2004/09/07 03:46:57 nenolod Exp $
  */
 
 #include "stdinc.h"
 #include "memory.h"
+#include "fileio.h"
 #include "internal.h"
-#include "sprintf_irc.h"
+
 static adns_query query_alloc(adns_state ads, const typeinfo *typei,
 			      adns_queryflags flags, struct timeval now) {
   /* Allocate a virgin query and return it. */
@@ -278,7 +279,7 @@ int adns_submit_reverse_ip6(adns_state ads,
   if(addr->sa_family != AF_INET6) return ENOSYS;
   cp = (const unsigned char *)&(((const struct sockaddr_in6*)addr) -> sin6_addr.s6_addr);
 	lreq = 71 + strlen(zone) + 1;
-  if ((size_t)lreq > sizeof(shortbuf)) {
+  if (lreq > sizeof(shortbuf)) {
     buf= MyMalloc(strlen(zone) + 4*16 + 1);
 #if 0
     if (!buf) return errno;
@@ -310,8 +311,7 @@ int adns_submit_reverse_any(adns_state ads,
   const unsigned char *iaddr;
   char *buf, *buf_free;
   char shortbuf[100];
-  int r;
-  size_t lreq;
+  int r, lreq;
 
   flags &= ~adns_qf_search;
 

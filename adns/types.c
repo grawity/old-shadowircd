@@ -24,12 +24,12 @@
  *  along with this program; if not, write to the Free Software Foundation,
  *  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
  *
- * $Id: types.c,v 1.2 2004/09/07 02:38:05 nenolod Exp $
+ * $Id: types.c,v 1.3 2004/09/07 03:46:57 nenolod Exp $
  */
 
 #include "stdinc.h"
+#include "fileio.h"
 #include "irc_string.h"
-#include "sprintf_irc.h"
 #include "internal.h"
 
 #define R_NOMEM           return adns_s_nomemory
@@ -279,13 +279,9 @@ static int di_inaddr(adns_state ads, const void *datap_a, const void *datap_b) {
 
 #ifdef IPV6
 static adns_status cs_in6addr(vbuf *vb, const void *datap) {
-#ifndef NDEBUG
-  const struct in6_addr *rrp= datap;
-  const struct in6_addr rr= *rrp;
-#endif
   char ia[IP6STRLEN];
 
-  assert(inetntop(AF_INET6, &rr, ia, IP6STRLEN) != NULL);
+  assert(inet_ntop(AF_INET6, (struct in6_addr *)datap, ia, IP6STRLEN) != NULL);
   CSP_ADDSTR(ia);
   return adns_s_ok;
 }
@@ -810,7 +806,7 @@ static adns_status pa_ptr6(const parseinfo *pai, int dmstart, int max, void *dat
 		x++;
 	}	
     }    
-    for (i=0; (size_t)i<sizeof(expectdomain)/sizeof(*expectdomain); i++) {
+    for (i=0; i<sizeof(expectdomain)/sizeof(*expectdomain); i++) {
         st= adns__findlabel_next(&fls,&lablen,&labstart); assert(!st);
         l= strlen(expectdomain[i]);
         if (lablen != l || memcmp(pai->qu->query_dgram + labstart, expectdomain[i], l))
@@ -889,7 +885,7 @@ static adns_status pa_ptr6_old(const parseinfo *pai, int dmstart, int max, void 
 		x++;
 	}	
     }    
-    for (i=0; (size_t)i<sizeof(expectdomain)/sizeof(*expectdomain); i++) {
+    for (i=0; i<sizeof(expectdomain)/sizeof(*expectdomain); i++) {
         st= adns__findlabel_next(&fls,&lablen,&labstart); assert(!st);
         l= strlen(expectdomain[i]);
         if (lablen != l || memcmp(pai->qu->query_dgram + labstart, expectdomain[i], l))
@@ -955,7 +951,7 @@ static adns_status pa_ptr(const parseinfo *pai, int dmstart, int max, void *data
       if (lablen>1 && pai->qu->query_dgram[labstart]=='0')
 	return adns_s_querydomainwrong;
     }
-    for (i=0; (size_t)i<sizeof(expectdomain)/sizeof(*expectdomain); i++) {
+    for (i=0; i<sizeof(expectdomain)/sizeof(*expectdomain); i++) {
       st= adns__findlabel_next(&fls,&lablen,&labstart); assert(!st);
       l= strlen(expectdomain[i]);
       if (lablen != l || memcmp(pai->qu->query_dgram + labstart, expectdomain[i], l))

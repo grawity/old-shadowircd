@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_auth.c,v 1.5 2004/09/07 02:38:05 nenolod Exp $
+ *  $Id: s_auth.c,v 1.6 2004/09/07 03:46:57 nenolod Exp $
  */
 
 /*
@@ -173,6 +173,7 @@ auth_dns_callback(void *vptr, adns_answer * reply)
         struct AuthRequest *auth = (struct AuthRequest *) vptr;
         ClearDNSPending(auth);
 	auth->client->flags &= ~FLAGS_DOINGAUTH;
+	printf("auth_dns_callback reached\n");
         if(reply && (reply->status == adns_s_ok))
         {
                 if(strlen(*reply->rrs.str) <= HOSTLEN)
@@ -391,7 +392,7 @@ start_auth(struct Client *client)
 
   client->localClient->dns_query = MyMalloc(sizeof(struct DNSQuery));
   client->localClient->dns_query->ptr = auth;
-  client->localClient->dns_query->callback = auth_dns_callback;
+  client->localClient->dns_query->type = QUERY_TYPE_AUTH;
 
   sendheader(client, REPORT_DO_DNS);
 
@@ -421,8 +422,6 @@ timeout_auth_queries_event(void *notused)
   DLINK_FOREACH_SAFE(ptr, next_ptr, auth_doing_ident_list.head)
   {
     auth = ptr->data;
-
-    printf("checking for %X", auth->client);
 
     if (auth->timeout < CurrentTime)
     {
@@ -460,8 +459,6 @@ timeout_auth_queries_event(void *notused)
   DLINK_FOREACH_SAFE(ptr, next_ptr, auth_doing_dns_list.head)
   {
     auth = ptr->data;
-
-    printf("checking for %X", auth->client);
 
     if (auth->timeout < CurrentTime)
     {

@@ -25,15 +25,15 @@
  *  along with this program; if not, write to the Free Software Foundation,
  *  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
  *
- * $Id: setup.c,v 1.6 2004/09/07 02:38:04 nenolod Exp $
+ * $Id: setup.c,v 1.7 2004/09/07 03:46:57 nenolod Exp $
  */
 
 #include "stdinc.h"
 #include "memory.h"
+#include "fileio.h"
 #include "s_bsd.h"
 #include "internal.h"
 #include "s_log.h"
-#include "inet_misc.h"
 
 /* For some reason BSD/OS doesn't define INADDR_LOOPBACK */
 #ifndef INADDR_LOOPBACK
@@ -375,7 +375,7 @@ static int gl_text(adns_state ads, getline_ctx *src_io, const char *filename,
 }
 
 static void readconfiggeneric(adns_state ads, const char *filename,
-			      int (*xgetline)(adns_state ads, getline_ctx*,
+			      int (*getline)(adns_state ads, getline_ctx*,
 					     const char *filename, int lno,
 					     char *buf, int buflen),
 			      /* Returns >=0 for success, -1 for EOF or error
@@ -389,7 +389,7 @@ static void readconfiggeneric(adns_state ads, const char *filename,
   const struct configcommandinfo *ccip;
 
   for (lno=1;
-       (l= xgetline(ads,&gl_ctx, filename,lno, linebuf,sizeof(linebuf))) != -1;
+       (l= getline(ads,&gl_ctx, filename,lno, linebuf,sizeof(linebuf))) != -1;
        lno++) {
     if (l == -2) continue;
     while (l>0 && ctype_whitespace(linebuf[l-1])) l--;
@@ -401,7 +401,7 @@ static void readconfiggeneric(adns_state ads, const char *filename,
     while (*q && !ctype_whitespace(*q)) q++;
     dirl= q-p;
     for (ccip=configcommandinfos;
-	 ccip->name && !(strlen(ccip->name)==(size_t)dirl && !memcmp(ccip->name,p,q-p));
+	 ccip->name && !(strlen(ccip->name)==dirl && !memcmp(ccip->name,p,q-p));
 	 ccip++);
     if (!ccip->name) {
       adns__diag(ads,-1,0,"%s:%d: unknown configuration directive `%.*s'",
@@ -529,10 +529,10 @@ static int init_finish(adns_state ads) {
   }
 
   ads->udpsocket = comm_open(AF_INET, SOCK_DGRAM, 0, "UDP Resolver socket");
-  if (ads->udpsocket<0) { ilog(L_DEBUG, "Failed to open socket"); r= errno; goto x_free; }
+  if (ads->udpsocket<0) { ilog(L_CRIT, "Failed to open socket"); r= errno; goto x_free; }
 
   r= adns__setnonblock(ads,ads->udpsocket);
-  if (r) { ilog(L_DEBUG, "Failed to make socket non-blocking"); r= errno; goto x_closeudp; }
+  if (r) { ilog(L_CRIT, "Failed to make socket non-blocking"); r= errno; goto x_closeudp; }
   
   return 0;
 
@@ -540,7 +540,7 @@ static int init_finish(adns_state ads) {
   fd_close(ads->udpsocket);
  x_free:
   MyFree(ads);
-  ilog(L_DEBUG, "Returning from init_finish: r = %d", r);
+  ilog(L_CRIT, "Returning from init_finish: r = %d", r);
   return r;
 }
 
@@ -565,11 +565,11 @@ int adns_init(adns_state *ads_r, adns_initflags flags, FBFILE *diagfile) {
   ccf_options(ads,"RES_OPTIONS",-1,res_options);
   ccf_options(ads,"ADNS_RES_OPTIONS",-1,adns_res_options);
 
-#ifndef __VMS
+#ifndef VMS
   readconfig(ads,"/etc/resolv.conf",0);
   readconfig(ads,"/etc/resolv-adns.conf",0);
 #else
-  ilog(L_MAIN, "Opening IRCD$CONFDIR:RESOLV.CONF (VMS)");
+  ilog(L_CRIT, "Opening IRCD$CONFDIR:RESOLV.CONF (VMS)");
   readconfig(ads,"IRCD$CONFDIR:RESOLV.CONF",0);
 #endif
   readconfigenv(ads,"RES_CONF");
@@ -585,7 +585,7 @@ int adns_init(adns_state *ads_r, adns_initflags flags, FBFILE *diagfile) {
   ccf_search(ads,"ADNS_LOCALDOMAIN",-1,instrum_getenv(ads,"ADNS_LOCALDOMAIN"));
 
   if (ads->configerrno && ads->configerrno != EINVAL) {
-    ilog(L_DEBUG, "Failed at 1");
+    ilog(L_CRIT, "Failed at 1");
     r= ads->configerrno;
     init_abort(ads);
     return r;
@@ -682,7 +682,7 @@ int adns__rereadconfig(adns_state ads)
   struct in_addr ia;
   adns__consistency(ads,0,cc_entex);
   ads->nservers = 0;	
-#ifndef __VMS
+#ifndef VMS
   readconfig(ads,"/etc/resolv.conf",0);
 #else
   readconfig(ads,"[]resolv.conf",0);

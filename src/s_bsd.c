@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_bsd.c,v 1.6 2004/09/07 02:38:05 nenolod Exp $
+ *  $Id: s_bsd.c,v 1.7 2004/09/07 03:46:57 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -667,7 +667,7 @@ comm_connect_tcp(int fd, const char *host, unsigned short port,
                 /* Send the DNS request, for the next level */
                 F->dns_query = MyMalloc(sizeof(struct DNSQuery));
                 F->dns_query->ptr = F;
-                F->dns_query->callback = comm_connect_dns_callback;
+		F->dns_query->type = QUERY_TYPE_COMM;
                 adns_gethost(host, aftype, F->dns_query);
         }
         else

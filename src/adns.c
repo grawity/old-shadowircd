@@ -21,7 +21,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: adns.c,v 1.6 2004/09/07 02:38:05 nenolod Exp $
+ *  $Id: adns.c,v 1.7 2004/09/07 03:46:57 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -148,22 +148,22 @@ dns_do_callbacks(void)
 	adns_answer *answer;
 	void *xr = &r;
 	struct DNSQuery *query;
-	void *xq = &query;
 	int failure = 0;
 	adns_forallqueries_begin(dns_state);
 
+	printf("dns_do_callbacks called\n");
+
 	while ((q = adns_forallqueries_next(dns_state, xr)) != NULL)
 	{
-		switch (adns_check(dns_state, &q, &answer, xq))
+		switch (adns_check(dns_state, &q, &answer, (void **)query))
 		{
 		case 0:
-			/* Looks like we got a winner */
-			assert(query->callback != NULL);
-			if(query->callback != NULL)
-			{
-				query->query = NULL;
-				query->callback(query->ptr, answer);
-			}
+			if (query->type == QUERY_TYPE_AUTH)
+				auth_dns_callback(query->ptr, answer);
+			if (query->type == QUERY_TYPE_COMM)
+				auth_dns_callback(query->ptr, answer);
+			if (query->type == QUERY_TYPE_CONF)
+				auth_dns_callback(query->ptr, answer);
 			break;
 
 		case EAGAIN:
@@ -218,6 +218,7 @@ dns_select(void)
 	int npollfds, i, fd;
 	adns__consistency(dns_state, 0, cc_entex);
 	npollfds = adns__pollfds(dns_state, pollfds);
+	printf("dns_select called\n");
 	for (i = 0; i < npollfds; i++)
 	{
 		fd = pollfds[i].fd;
