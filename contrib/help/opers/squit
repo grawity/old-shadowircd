@@ -1,5 +1,0 @@
-# $Id: squit,v 1.1.1.1 2003/12/02 20:47:18 nenolod Exp $
-SQUIT <server> :[reason]
-
-Splits <server> away from your side of the net with [reason].
-- Requires Oper Priv: R for servers not connected to you

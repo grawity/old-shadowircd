@@ -1,6 +1,0 @@
-# $Id: motd,v 1.1.1.1 2003/12/02 20:47:18 nenolod Exp $
-MOTD [servername]
-
-MOTD will display the message of the day for the
-server name specified, or the local server if there
-was no parameter.
