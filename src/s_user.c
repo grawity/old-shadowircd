@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.29 2004/02/12 22:27:12 nenolod Exp $
+ *  $Id: s_user.c,v 1.30 2004/02/13 20:21:28 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1248,6 +1248,17 @@ user_welcome(struct Client *source_p)
   else  
     send_message_file(source_p, &ConfigFileEntry.motd);
 
+  if (ServerInfo.wingate_enable)
+  {
+    sendto_one(source_p, "NOTICE %s :*** Notice -- This server conducts a security scan to prevent abuse.",
+               source_p->name);
+    sendto_one(source_p, "NOTICE %s :*** Notice -- If you receive connections on various ports from %s",
+               source_p->name, ServerInfo.monitorbot);
+    sendto_one(source_p, "NOTICE %s :*** Notice -- please disregard them as they are the monitor in action.",
+               source_p->name);
+    sendto_one(source_p, "NOTICE %s :*** Notice -- For more information visit %s",
+               source_p->name, ServerInfo.wingate_website);
+  }
 }
 
 /* check_x_line()

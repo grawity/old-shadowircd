@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.19 2004/02/13 20:02:57 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.20 2004/02/13 20:21:28 nenolod Exp $
  */
 
 %{
@@ -348,7 +348,7 @@ unhook_hub_leaf_confs(void)
 %token  WINGATE
 %token  MONITORBOT
 %token  WINGATE_ENABLE
-%token  WINGATE_WEBSITE
+%token  WINGATE_WEBPAGE
 
 %type <string> QSTRING
 %type <number> NUMBER
@@ -3246,7 +3246,7 @@ wingate_monitorbot: MONITORBOT '=' QSTRING ';'
   }
 };
 
-wingate_website: WINGATE_WEBSITE '=' QSTRING ';'
+wingate_website: WINGATE_WEBPAGE '=' QSTRING ';'
 {
   if (ypass == 2)
   {
