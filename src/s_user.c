@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.4 2003/12/03 18:17:28 nenolod Exp $
+ *  $Id: s_user.c,v 1.5 2003/12/03 19:51:04 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1236,7 +1236,7 @@ user_welcome(struct Client *source_p)
              ServerInfo.network_name, source_p->name);
   /* This is a duplicate of the NOTICE but see below...*/
   sendto_one(source_p, form_str(RPL_YOURHOST), me.name, source_p->name,
-	     get_listener_name(source_p->localClient->listener), ircd_version);
+	     me.name, ircd_version);
   
 #if 0
   /*
@@ -1249,7 +1249,7 @@ user_welcome(struct Client *source_p)
    */
   sendto_one(source_p,
 	     "NOTICE %s :*** Your host is %s, running version %s",
-	     source_p->name, get_listener_name(source_p->localClient->listener),
+	     source_p->name, me.name,
 	     ircd_version);
 #endif
 
