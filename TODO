@@ -1,4 +1,4 @@
-$Id: TODO,v 1.9 2003/12/06 02:17:23 nenolod Exp $
+$Id: TODO,v 1.10 2003/12/06 20:29:36 eko Exp $
 
 done (rc1):
 
@@ -18,7 +18,7 @@ rc2:
 
 - usermode +S: Antispam (admin-defined pattern) (nenolod)
 - usermode +C: Block CTCP (nenolod)
-- usermode +R: Registered users only (Eko) (this should be +E --nenolod)
+- usermode +E: Registered users only (Eko) (done)
 - channel mode +C: Block CTCP (nenolod)
 - channel mode +N: Stickynicks (Bagheera)
 
