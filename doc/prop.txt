@@ -1,0 +1,40 @@
+$Id: prop.txt,v 1.1 2004/04/07 19:33:46 nenolod Exp $
+PROP, a system allowing for more customization.
+
+The syntax of the PROP command will be:
+
+PROP <#channel> [SET|INFO|BADWORDS] <params>
+
+-- PROP SET will SET channel properties.
+-- PROP INFO will display extended properties.
+-- PROP BADWORDS will edit the channel filter list.
+
+PROP <#channel> BADWORDS [ADD|DEL|LIST]
+
+-- BADWORDS ADD <badword>
+
+Adds a word to the filter list for the channel.
+
+-- BADWORDS DEL <badword>
+
+Deletes a word from the filter list for the channel.
+
+-- BADWORDS LIST
+
+Shows the list of badwords for the channel.
+
+PROP <#channel> SET <param> <args>
+
+-- SET ENTRYMSG <MSG|->
+
+Sets the entrymsg for a channel. A single dash will delete the channel entrymsg.
+
+-- SET URL <URL|->
+
+Sets the URL for a channel. A single dash will delete the channel URL.
+
+PROP <#channel> INFO
+
+This command will show information concerning a channel's settings.
+
+
