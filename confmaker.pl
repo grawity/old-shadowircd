@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-
+# $Id: confmaker.pl,v 3.4 2004/09/22 17:54:30 nenolod Exp $
 # ShadowIRCd ircd.conf maker - (c) 2004 NhJm
 
 my $cfile;
@@ -73,9 +73,9 @@ print "\n\nNetwork Information\n\n";
 &b("on_oper_host","Virtual host opers will recieve when the oper up.","staff.moonet.com");
 &b("cloak_on_oper","Apply staff cloak on oper? (yes/no)","yes");
 &b("cloak_on_connect","Apply the standard usercloak upon connect.","yes");
-&b("cloak_key_1","Cloak key #1. (sets the cloak keys for the +v usercloaking feature). Five digit number.","98734");
-&b("cloak_key_2","Cloak key #2.","97321");
-&b("cloak_key_3","Cloak key #3.","99101");
+&b("cloak_key_1","Cloak key #1. (sets the cloak keys for the +v usercloaking feature). Alphanumeric string.","aeftueqakvhx127");
+&b("cloak_key_2","Cloak key #2.","ackckfriewiaz781");
+&b("cloak_key_3","Cloak key #3.","eieir585481217f2");
 &b("gline_address","Address to get support if user finds himself G:Lined","some.website.or.email.here");
 
 &a("  };\n\n  admin {");
