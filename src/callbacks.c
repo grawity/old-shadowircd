@@ -2,7 +2,7 @@
  * NetworkBOPM: The ShadowIRCd Anti-Proxy Solution.
  * callbacks.c: Callbacks from the OPM context.
  *
- * $Id: callbacks.c,v 1.3 2004/08/29 06:02:11 nenolod Exp $
+ * $Id: callbacks.c,v 1.4 2004/08/29 06:03:06 nenolod Exp $
  */
 
 #include "netbopm.h"
@@ -13,7 +13,7 @@ cb_open_proxy(OPM_T * s, OPM_REMOTE_T * r, int notused, void *data)
     sendto_server
 	(":%s KLINE * 86400 * %s :Open Proxy found on your host. Please visit www.blitzed.org/proxy?ip=%s for more information.",
 	 bopmuid, r->ip, r->ip);
-    snoop("[AUTOSCAN] Found open proxy for %s. Banning.", r-ip);
+    snoop("[AUTOSCAN] Found open proxy for %s. Banning.", r->ip);
     opm_end(s, r);
     opm_free(s);
     is_complete = 1;
