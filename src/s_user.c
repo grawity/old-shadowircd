@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.17 2004/07/12 14:27:30 nenolod Exp $
+ *  $Id: s_user.c,v 1.18 2004/07/18 04:07:58 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -457,7 +457,11 @@ register_local_user(struct Client *client_p, struct Client *source_p,
   add_user_host(source_p->username, source_p->host, 0);
   SetUserHost(source_p);
 
-  make_virthost(source_p->host, source_p->virthost);
+  make_virthost(source_p);
+
+#ifdef DEBUG
+  printf("source_p(%s)->virthost = %s\n", source_p->name, source_p->virthost);
+#endif
 
   if (ServerInfo.network_cloak_on_connect)
     SetUmode(source_p, UMODE_CLOAK);
@@ -558,9 +562,13 @@ register_remote_user(struct Client *client_p, struct Client *source_p,
   SetUserHost(source_p);
 
   if (source_p->virthost[0] == '*')
-    make_virthost(source_p->host, source_p->virthost);
+    make_virthost(source_p);
   else
     source_p->flags |= FLAGS_USERCLOAK;
+
+#ifdef DEBUG
+  printf("source_p(%s)->virthost = %s\n", source_p->name, source_p->virthost);
+#endif
 
   return(introduce_client(client_p, source_p));
 }

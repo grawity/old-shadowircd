@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_list.c,v 1.1 2004/04/30 18:14:05 nenolod Exp $
+ *  $Id: m_list.c,v 1.2 2004/07/18 04:07:58 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -61,7 +61,7 @@ _moddeinit(void)
 {
   mod_del_cmd(&list_msgtab);
 }
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 
@@ -85,6 +85,7 @@ do_list(struct Client *source_p, int parc, char *parv[])
   lt->users_max = UINT_MAX;
   lt->created_max = UINT_MAX;
   lt->topicts_max = UINT_MAX;
+  lt->flags = 0;
   if (MyConnect(source_p))
     source_p->localClient->list_task = lt;
   no_masked_channels = 1;
@@ -146,6 +147,10 @@ do_list(struct Client *source_p, int parc, char *parv[])
 		    default: errors = 1;
 		  }
 		  break;
+	case 'a':
+	case 'A':
+		lt->flags = FLAGS_USE_CAIU;
+		break;
         default: if (*opt == '!')
 	         {
 		   list = &lt->hide_mask;

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: send.c,v 1.4 2004/05/13 19:23:58 nenolod Exp $
+ *  $Id: send.c,v 1.5 2004/07/18 04:07:58 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -511,6 +511,8 @@ sendto_channel_butone(struct Client *one, struct Client *from,
   dlink_node *ptr_next;
   struct Client *target_p;
 
+  chptr->last_privmsg = time(NULL);
+
   if (IsServer(from))
     local_len = ircsprintf(local_buf, ":%s %s %s ",
                            from->name, command, chptr->chname);
@@ -738,6 +740,8 @@ sendto_channel_local(int type, struct Channel *chptr, const char *pattern, ...)
   struct Membership *ms;
   struct Client *target_p;
 
+  chptr->last_privmsg = time(NULL);
+
   va_start(args, pattern);
   len = send_format(buffer, IRCD_BUFSIZE, pattern, args);
   va_end(args);
@@ -785,6 +789,8 @@ sendto_channel_local_butone(struct Client *one, int type,
   struct Client *target_p;
   struct Membership *ms;
   dlink_node *ptr;
+
+  chptr->last_privmsg = time(NULL);
 
   va_start(args, pattern); 
   len = send_format(buffer, IRCD_BUFSIZE, pattern, args);
@@ -834,6 +840,7 @@ sendto_channel_remote(struct Client *one, struct Client *from, int type, int cap
   struct Client *target_p;
   struct Membership *ms;
 
+  chptr->last_privmsg = time(NULL);
 
   va_start(args, pattern);
   len = send_format(buffer, IRCD_BUFSIZE, pattern, args);

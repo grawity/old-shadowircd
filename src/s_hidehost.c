@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_hidehost.c,v 1.2 2004/07/15 18:21:56 nenolod Exp $
+ *  $Id: s_hidehost.c,v 1.3 2004/07/18 04:07:58 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -36,28 +36,99 @@
 #include <fcntl.h>
 #include <utmp.h>
 
-char *calcmask(char *myip, char *yourip)
+unsigned int
+convert_md5_to_int(unsigned char *i)
 {
-    int cnt;
-    unsigned char arr[16];
-    char res[HOSTLEN], out[HOSTLEN];
+	char r[4];
 
-    md5_buffer(myip, HOSTLEN, arr);
+        r[0] = i[0] ^ i[1] ^ i[2] ^ i[3];
+        r[1] = i[4] ^ i[5] ^ i[6] ^ i[7];
+        r[2] = i[8] ^ i[9] ^ i[10] ^ i[11];
+        r[3] = i[12] ^ i[13] ^ i[14] ^ i[15];
 
-    sprintf(res, "%01x", arr[0]);
-
-    for (cnt = 1; cnt <= 15; ++cnt)
-    {
-        sprintf(out, "%01x", arr[cnt]);
-        strcat(res, out);
-    }
-
-    strcpy(yourip, res);
-    return yourip;
+        return ( ((unsigned int)r[0] << 24) +
+                 ((unsigned int)r[1] << 16) +
+                 ((unsigned int)r[2] << 8) +
+                 (unsigned int)r[3]);
 }
 
 void
-make_virthost (char *curr, char *new) {
-	calcmask(curr, new);
+hidehost_ipv4 (char *host, char *out)
+{
+	unsigned int a, b, c, d;
+	MD5_CTX hash;
+	static char buf[512];
+        static unsigned char res[512];
+	unsigned int alpha, beta, gamma;
+
+        sscanf(host, "%u.%u.%u.%u", &a, &b, &c, &d);
+
+        ircsprintf(buf, "%s", host);
+        MD5_Init(&hash);
+        MD5_Update(&hash, buf, strlen(buf));
+        MD5_Final(res, &hash);
+        alpha = convert_md5_to_int(res);
+
+        ircsprintf(buf, "%d.%d.%d", a, b, c);
+        MD5_Init(&hash);
+        MD5_Update(&hash, buf, strlen(buf));
+        MD5_Final(res, &hash);
+        beta = convert_md5_to_int(res);
+
+        ircsprintf(buf, "%d.%d", a, b);
+        MD5_Init(&hash);
+        MD5_Update(&hash, buf, strlen(buf));
+        MD5_Final(res, &hash);
+        gamma = convert_md5_to_int(res);
+
+        ircsprintf(out, "%X.%X.%X.IP", alpha, beta, gamma);
+}
+
+void
+hidehost_normalhost(char *host, char *out)
+{
+	char *p;
+	MD5_CTX hash;
+	static char buf[512];
+	static unsigned char res[512];
+	unsigned int alpha;
+
+	strcpy(buf, host);
+        MD5_Init(&hash);
+        MD5_Update(&hash, buf, strlen(buf));
+        MD5_Final(res, &hash);
+        alpha = convert_md5_to_int(res);
+
+        for (p = host; *p; p++)
+                if (*p == '.')
+                        if (isalpha(*(p + 1)))
+                                break;
+
+        if (*p)
+        {
+                unsigned int len;
+                p++;
+                ircsprintf(out, "%s-%X.", ServerInfo.network_name, alpha);
+                len = strlen(out) + strlen(p);
+                if (len <= HOSTLEN)
+                        strcat(out, p);
+                else
+                        strcat(out, p + (len - HOSTLEN));
+        } else
+                ircsprintf(out, "%s-%X", ServerInfo.network_name, alpha);
+
+}
+
+void
+make_virthost (struct Client *client_p)
+{
+	char *p;
+
+	if (!strcmp(client_p->host, client_p->ipaddr))
+                hidehost_ipv4(client_p->host, client_p->virthost);
+	else
+		hidehost_normalhost(client_p->host, client_p->virthost);
+
 	return;
 }
+

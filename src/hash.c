@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: hash.c,v 1.1 2004/04/30 18:13:27 nenolod Exp $
+ *  $Id: hash.c,v 1.2 2004/07/18 04:07:58 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1139,9 +1139,14 @@ list_one_channel(struct Client *source_p, struct Channel *chptr,
   *modebuf = *parabuf = '\0';
   channel_modes(chptr, source_p, modebuf, parabuf);
 
-  ircsprintf(modes_and_topic, "[%s %s] %s", modebuf,
-             IsOperAuspex(source_p) ? parabuf : "",
-             (chptr->topic != NULL) ? chptr->topic : "");
+  if (list_task->flags & FLAGS_USE_CAIU)
+    ircsprintf(modes_and_topic, "[channel activity index: %i.02] %s",
+               get_channel_activity(chptr), (chptr->topic != NULL) ?
+               chptr->topic : "");
+  else
+    ircsprintf(modes_and_topic, "[%s %s] %s", modebuf,
+               IsOperAuspex(source_p) ? parabuf : "",
+               (chptr->topic != NULL) ? chptr->topic : "");
 
   if ((remote_request && chptr->chname[0] == '&') ||
       (SecretChannel(chptr) && (!IsOperAuspex(source_p) || !IsMember(source_p, chptr))))

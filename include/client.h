@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.11 2004/07/12 12:31:30 nenolod Exp $
+ *  $Id: client.h,v 1.12 2004/07/18 04:07:58 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -99,6 +99,8 @@ struct ZipStats
   double out_ratio;
 };
 
+#define FLAGS_USE_CAIU        0x00000001
+
 struct ListTask
 {
   int hash_index;       /* the bucket we are currently in */
@@ -107,6 +109,7 @@ struct ListTask
   unsigned int users_min, users_max;
   unsigned int created_min, created_max;
   unsigned int topicts_min, topicts_max;
+  int flags;
 };
 
 struct Client
@@ -544,6 +547,7 @@ extern void check_xlines(void);
 extern const char *get_client_name(struct Client *client, int show_ip);
 extern void init_client(void);
 extern struct Client *make_client(struct Client *from);
+extern void make_virthost(struct Client *);
 extern void free_client(struct Client *client_p);
 extern int exit_client(struct Client *, struct Client *, struct Client *, const char *);
 extern struct Client *find_chasing(struct Client *, const char *, int *);

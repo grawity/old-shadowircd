@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.c,v 1.5 2004/07/16 16:04:02 nenolod Exp $
+ *  $Id: channel.c,v 1.6 2004/07/18 04:07:58 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -107,6 +107,8 @@ add_user_to_channel(struct Channel *chptr, struct Client *who,
   struct Membership *ms;
 
   assert(who->user != NULL);
+
+  chptr->last_privmsg = time(NULL);
 
   ms = BlockHeapAlloc(member_heap);
   memset(ms, 0, sizeof(struct Membership));
@@ -1126,6 +1128,6 @@ get_channel_activity (struct Channel *chptr)
 {
   time_t delta;
   delta = time(NULL) - chptr->last_privmsg;
-  return delta / chptr->members.length; /* delta (div) member count */
+  return delta / chptr->members.length; /* delta / member count */
 }
 
