@@ -4,12 +4,13 @@
  *
  * Major portions of this area of the code borrowed from shrike.
  *
- * $Id: irc.c,v 1.3 2004/05/26 15:13:39 nenolod Exp $
+ * $Id: irc.c,v 1.4 2004/08/29 06:48:12 nenolod Exp $
  */
 
 #include "netbopm.h"
 
 int             is_complete = 0;
+extern int	sockfd;
 
 /*
  * this splits apart a message with origin and command picked off already 
@@ -201,7 +202,7 @@ m_pass(char *origin, uint8_t parc, char *parv[])
 static void
 m_ping(char *origin, uint8_t parc, char *parv[])
 {
-    sendto_server(":%s PONG %s %s", me.svname, me.svname, parv[0]);
+    sendto_server(sockfd, ":%s PONG %s %s", me.svname, me.svname, parv[0]);
 }
 
 static void
@@ -213,10 +214,8 @@ m_eob(char *origin, uint8_t parc, char *parv[])
     if (me.bursting == 1) {
 	e_time(burstime, &burstime);
 
-	printf("e_time worked\n");
-
 	sendto_server
-	    (":%s WALLOPS :Finished synching to network in %d %s.",
+	    (sockfd, ":%s WALLOPS :Finished synching to network in %d %s.",
 	     me.svname,
 	     (tv2ms(&burstime) >
 	      1000) ? (tv2ms(&burstime) / 1000) : tv2ms(&burstime),
@@ -229,28 +228,15 @@ m_eob(char *origin, uint8_t parc, char *parv[])
 static void
 m_uid(char *origin, uint8_t parc, char *parv[])
 {
-    OPM_REMOTE_T   *remote;
-    OPM_T          *scanner;
     if (me.bursting == 1)
 	return;			/* We never ever scan in a netburst. */
 
-    sendto_server(":%s NOTICE %s :Scanning your IP (%s) for open proxies.",
+    sendto_server(sockfd, ":%s NOTICE %s :Scanning your IP (%s) for open proxies.",
 		  bopmuid, parv[7], parv[6]);
 
+    snoop("[AUTOSCAN] Scanning %s for proxies.", parv[6]);
 
-    scanner = opm_initialize();
-
-    remote = opm_remote_create(parv[6]);
-
-    opm_scan(scanner, remote);
-
-    while (is_complete != 1) {
-	opm_cycle(scanner);
-    }
-
-    printf("\n");
-
-    is_complete = 0;
+    do_scan(parv[6]);
 
     return;
 }

@@ -2,7 +2,7 @@
  * NetworkBOPM: The ShadowIRCd Anti-Proxy System.
  * socket.c: Socket handling functions.
  *
- * $Id: socket.c,v 1.5 2004/08/29 05:58:00 nenolod Exp $
+ * $Id: socket.c,v 1.6 2004/08/29 06:48:12 nenolod Exp $
  */
 
 #include "netbopm.h"
@@ -20,11 +20,10 @@ int             irc_raw_length = 0;
  */
 
 int
-conn(char *host, unsigned int port)
+conn(int sock, char *host, unsigned int port)
 {
     struct hostent *he;
     struct sockaddr_in their_addr;
-    unsigned long   flags;
 
     if ((he = gethostbyname(host)) == NULL) {
 	perror("gethostbyname");
@@ -41,7 +40,9 @@ conn(char *host, unsigned int port)
     their_addr.sin_addr = *((struct in_addr *) he->h_addr);
     memset(&(their_addr.sin_zero), '\0', 8);
 
-    connect(sockfd, (struct sockaddr *) &their_addr, sizeof(their_addr));
+    connect(sock, (struct sockaddr *) &their_addr, sizeof(their_addr));
+
+    return 0;
 }
 
 int
@@ -51,7 +52,7 @@ irc_read()
     char            ch;
 
     if (sockfd < 0)
-	return;
+	return -1;
 
     while ((len = read(sockfd, &ch, 1))) {
 	if (len < 0) {
@@ -90,7 +91,7 @@ irc_read()
 }
 
 int
-sendto_server(char *format, ...)
+sendto_server(int sock, char *format, ...)
 {
     va_list         ap;
     char            buf[512];
@@ -115,9 +116,9 @@ sendto_server(char *format, ...)
     /*
      * write it 
      */
-    if ((n = write(sockfd, buf, len)) == -1) {
+    if ((n = write(sock, buf, len)) == -1) {
 	if (errno != EAGAIN) {
-	    close(sockfd);
+	    close(sock);
 	    sockfd = -1;
 	    return 1;
 	}
@@ -138,11 +139,10 @@ snoop(char *format, ...)
 {
     va_list         ap;
     char            buf[512];
-    unsigned int    len,
-                    n;
+
     va_start(ap, format);
     vsnprintf(buf, 512, format, ap);
-    sendto_server(":%s PRIVMSG %s :%s", bopmuid, me.snoopchan, format);
+    sendto_server(sockfd, ":%s PRIVMSG %s :%s", bopmuid, me.snoopchan, buf);
     va_end(ap);
     return 0;
 }
@@ -153,7 +153,7 @@ init_psuedoclient(char *nick, char *user, char *gecos, char *host)
 {
     static char     uid[9];
     sprintf(uid, "%s", genUID());
-    sendto_server(":%s UID %s 1 %lu +ioS %s %s 0.0.0.0 %s %s :%s",
+    sendto_server(sockfd, ":%s UID %s 1 %lu +ioS %s %s 0.0.0.0 %s %s :%s",
 		  me.sid, nick, time(NULL), user, host, uid, host, gecos);
 
     return uid;
