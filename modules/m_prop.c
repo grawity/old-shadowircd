@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_prop.c,v 1.2 2004/04/08 20:21:09 nenolod Exp $
+ *  $Id: m_prop.c,v 1.3 2004/04/08 20:45:13 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -46,6 +46,7 @@
 #include "modules.h"
 #include "common.h"
 #include "packet.h"
+#include <string.h>
 
 struct Message prop_msgtab = {
   "PROP", 0, 0, 3, 0, MFLG_SLOW, 0,
@@ -54,18 +55,18 @@ struct Message prop_msgtab = {
 
 #ifndef STATIC_MODULES
 void
-_modinit (void)
+_modinit(void)
 {
-  mod_add_cmd (&prop_msgtab);
+  mod_add_cmd(&prop_msgtab);
 }
 
 void
-_moddeinit (void)
+_moddeinit(void)
 {
-  mod_del_cmd (&prop_msgtab);
+  mod_del_cmd(&prop_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 /*
@@ -79,30 +80,93 @@ const char *_version = "$Revision: 1.2 $";
 
 static void
 m_prop(struct Client *client_p, struct Client *source_p,
-        int parc, char *parv[])
+       int parc, char *parv[])
 {
   struct Channel *chptr = NULL;
   struct Membership *ms;
-  char   *command;
 
   if (IsChanPrefix(*parv[1]))
   {
     if ((chptr = hash_find_channel(parv[1])) != NULL)
     {
       sendto_one(source_p, form_str(ERR_NOSUCHCHANNEL),
-        me.name, source_p->name, parv[1]);
+                 me.name, source_p->name, parv[1]);
       return;
     }
-  
-  if ((ms = find_channel_link(source_p, chptr)) == NULL)
-    {
-      if (MyClient(source_p))
-        {
-          /* If it's local, stop it, otherwise let it go. */
-	  sendto_one(source_p, form_str(ERR_NOTONCHANNEL), from,
-            to, parv[1]);
-          return;
-	}
-    }
+  }
 
-     
+  if ((ms = find_channel_link(source_p, chptr)) == NULL)
+  {
+    if (MyClient(source_p))
+    {
+      /*
+       * If it's local, stop it, otherwise let it go. 
+       */
+      sendto_one(source_p,
+                 form_str(ERR_NOTONCHANNEL), me.name, source_p->name, parv[1]);
+      return;
+    }
+  }
+
+  if (!has_member_flags(ms, (CHFL_CHANOP | CHFL_CHANOWNER)))
+    return;
+  if (!strcasecmp(parv[2], "ONJOIN"))
+  {
+    strcpy(chptr->properties.onjoin, parv[3]);
+    if (MyClient(source_p))
+      sendto_one(source_p, form_str(RPL_PROPERTYSET),
+                 me.name, source_p->name, parv[1], parv[2], parv[3]);
+  }
+
+  if (!strcasecmp(parv[2], "DESCRIPTION"))
+  {
+    strcpy(chptr->properties.desc, parv[3]);
+    if (MyClient(source_p))
+      sendto_one(source_p, form_str(RPL_PROPERTYSET),
+                 me.name, source_p->name, parv[1], parv[2], parv[3]);
+  }
+
+  if (!strcasecmp(parv[2], "URL"))
+  {
+    strcpy(chptr->properties.url, parv[3]);
+    if (MyClient(source_p))
+      sendto_one(source_p, form_str(RPL_PROPERTYSET),
+                 me.name, source_p->name, parv[1], parv[2], parv[3]);
+  }
+
+  if (!strcasecmp(parv[2], "TOPIC"))
+  {
+    if (MyClient(source_p))
+      sendto_one(source_p, form_str(RPL_PROPERTYSET),
+                 me.name, source_p->name, parv[1], parv[2], parv[3]);
+    sendto_channel_topic(chptr, parv[3], me.name, CurrentTime);
+  }
+
+  if (!strcasecmp(parv[2], "PASSWORD"))
+  {
+    if (!chptr->properties.passwd)
+      strcpy(chptr->properties.passwd, parv[3]);
+    else if (strcmp(parv[3], chptr->properties.passwd))
+    {
+      sendto_one(source_p,
+                 form_str(ERR_PASSWORDINVALID),
+                 me.name, source_p->name, parv[1], parv[3]);
+      return;
+    }
+    else if (!strcmp(parv[3], chptr->properties.passwd))
+    {
+      strcpy(chptr->properties.passwd, parv[4]);
+      if (MyClient(source_p))
+        sendto_one(source_p, form_str(RPL_PROPERTYSET),
+                   me.name, source_p->name, parv[1], parv[2], parv[4]);
+    }
+  }
+
+  sendto_server(client_p, NULL, chptr, CAP_TS6,
+                NOCAPS, NOFLAGS, ":%s PROP %s %s :%s",
+                ID(source_p), chptr->chname, parv[2], parv[3]);
+  sendto_server(client_p, NULL, chptr,
+                NOCAPS, CAP_TS6, NOFLAGS,
+                ":%s PROP %s %s :%s", source_p->name,
+                chptr->chname, parv[2], parv[3]);
+}
