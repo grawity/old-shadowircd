@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_setname.c,v 1.2 2004/05/13 03:51:44 nenolod Exp $
+ *  $Id: m_setname.c,v 1.3 2004/06/10 21:48:50 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -51,6 +51,7 @@ struct Message setname_msgtab = {
   {m_unregistered, m_setname, m_setname, m_setname}
 };
 
+#ifndef STATIC_MODULES
 void
 _modinit (void)
 {
@@ -63,8 +64,8 @@ _moddeinit (void)
   mod_del_cmd (&setname_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
-
+const char *_version = "$Revision: 1.3 $";
+#endif
 
 /* m_svscloak
  * parv[1] - Nick to cloak

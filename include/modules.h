@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: modules.h,v 1.1 2004/04/30 18:14:23 nenolod Exp $
+ *  $Id: modules.h,v 1.2 2004/06/10 21:48:50 nenolod Exp $
  */
 
 #ifndef INCLUDED_modules_h
@@ -82,6 +82,8 @@ extern void modules_init(void);
 extern struct Message accept_msgtab;
 extern struct Message admin_msgtab;
 extern struct Message away_msgtab;
+extern struct Message bs_msgtab;
+extern struct Message botserv_msgtab;
 extern struct Message capab_msgtab;
 extern struct Message cburst_msgtab;
 #ifdef HAVE_LIBCRYPTO
@@ -93,6 +95,8 @@ extern struct Message close_msgtab;
 extern struct Message classlist_msgtab;
 extern struct Message clearchan_msgtab;
 extern struct Message connect_msgtab;
+extern struct Message cs_msgtab;
+extern struct Message chanserv_msgtab;
 extern struct Message ctrace_msgtab;
 extern struct Message die_msgtab;
 extern struct Message dmem_msgtab;
@@ -101,9 +105,14 @@ extern struct Message encap_msgtab;
 extern struct Message eob_msgtab;
 extern struct Message etrace_msgtab;
 extern struct Message error_msgtab;
-extern struct Message forcejoin_msgtab;
-extern struct Message forcepart_msgtab;
 extern struct Message grant_msgtab;
+extern struct Message global_msgtab;
+extern struct Message hs_msgtab;
+extern struct Message hash_msgtab;
+extern struct Message helpserv_msgtab;
+extern struct Message hostserv_msgtab;
+extern struct Message identify_msgtab;
+extern struct Message ircdhelp_msgtab;
 extern struct Message info_msgtab;
 extern struct Message invite_msgtab;
 extern struct Message ison_msgtab;
@@ -122,12 +131,19 @@ extern struct Message links_msgtab;
 extern struct Message list_msgtab;
 extern struct Message lljoin_msgtab;
 extern struct Message llnick_msgtab;
+extern struct Message uid_msgtab;
+extern struct Message sid_msgtab;
+extern struct Message bmask_msgtab;
 extern struct Message locops_msgtab;
 extern struct Message ltrace_msgtab;
 extern struct Message lusers_msgtab;
+extern struct Message ms_msgtab;
+extern struct Message memoserv_msgtab;
 extern struct Message map_msgtab;
 extern struct Message mkpasswd_msgtab;
 extern struct Message privmsg_msgtab;
+extern struct Message ns_msgtab;
+extern struct Message nickserv_msgtab;
 extern struct Message notice_msgtab;
 extern struct Message mode_msgtab;
 extern struct Message motd_msgtab;
@@ -138,6 +154,7 @@ extern struct Message ojoin_msgtab;
 extern struct Message omotd_msgtab;
 extern struct Message oper_msgtab;
 extern struct Message operspy_msgtab;
+extern struct Message operserv_msgtab;
 extern struct Message operwall_msgtab;
 extern struct Message opme_msgtab;
 extern struct Message part_msgtab;
@@ -149,16 +166,30 @@ extern struct Message quit_msgtab;
 extern struct Message rehash_msgtab;
 extern struct Message restart_msgtab;
 extern struct Message resv_msgtab;
+extern struct Message ss_msgtab;
+extern struct Message seenserv_msgtab;
 extern struct Message server_msgtab;
 extern struct Message set_msgtab;
+extern struct Message setcloak_msgtab;
+extern struct Message setname_msgtab;
+extern struct Message setident_msgtab;
+extern struct Message shun_msgtab;
+extern struct Message silence_msgtab;
 extern struct Message sjoin_msgtab;
 extern struct Message squit_msgtab;
 extern struct Message stats_msgtab;
+extern struct Message statserv_msgtab;
 extern struct Message svinfo_msgtab;
+extern struct Message svscloak_msgtab;
+extern struct Message svsident_msgtab;
+extern struct Message svsname_msgtab;
+extern struct Message svskill_msgtab;
+extern struct Message svsnick_msgtab;
 extern struct Message testline_msgtab;
 extern struct Message time_msgtab;
 extern struct Message topic_msgtab;
 extern struct Message trace_msgtab;
+extern struct Message trace_msgtab4;
 extern struct Message unresv_msgtab;
 extern struct Message unxline_msgtab;
 extern struct Message user_msgtab;
@@ -173,7 +204,6 @@ extern struct Message xline_msgtab;
 extern struct Message get_msgtab;
 extern struct Message put_msgtab;
 
-#ifdef BUILD_CONTRIB
 extern struct Message test_msgtab;
 extern struct Message classlist_msgtab;
 extern struct Message clearchan_msgtab;
@@ -191,7 +221,6 @@ extern struct Message operspy_msgtab;
 extern struct Message opme_msgtab;
 extern struct Message tburst_msgtab;
 extern struct Message grant_msgtab;
-#endif
 
 extern void load_all_modules(int check);
 

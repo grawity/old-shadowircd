@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_svscloak.c,v 1.4 2004/05/13 16:56:19 nenolod Exp $
+ *  $Id: m_svscloak.c,v 1.5 2004/06/10 21:48:50 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -50,6 +50,7 @@ struct Message svscloak_msgtab = {
         {m_unregistered, m_ignore, m_svscloak, m_ignore}
 };
 
+#ifndef STATIC_MODULES
 void _modinit(void)
 {
       mod_add_cmd(&svscloak_msgtab);
@@ -61,8 +62,8 @@ _moddeinit(void)
     mod_del_cmd(&svscloak_msgtab);
 }
 
-const char* _version = "$Revision: 1.4 $";
-
+const char* _version = "$Revision: 1.5 $";
+#endif
 
 /* m_svscloak
  * parv[1] - Nick to cloak

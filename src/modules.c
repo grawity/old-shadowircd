@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: modules.c,v 1.1 2004/04/30 18:13:31 nenolod Exp $
+ *  $Id: modules.c,v 1.2 2004/06/10 21:48:50 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -592,8 +592,15 @@ load_all_modules(int warn)
   mod_add_cmd(&accept_msgtab);
   mod_add_cmd(&admin_msgtab);
   mod_add_cmd(&away_msgtab);
+  mod_add_cmd(&bs_msgtab);
+  mod_add_cmd(&botserv_msgtab);
+  mod_add_cmd(&cs_msgtab);
+  mod_add_cmd(&chanserv_msgtab);
   mod_add_cmd(&capab_msgtab);
   mod_add_cmd(&cburst_msgtab);
+  mod_add_cmd(&ctrace_msgtab);
+  mod_add_cmd(&uid_msgtab);
+  mod_add_cmd(&sid_msgtab);
   mod_add_cmd(&close_msgtab);
   mod_add_cmd(&connect_msgtab);
 #ifdef HAVE_LIBCRYPTO
@@ -611,6 +618,37 @@ load_all_modules(int warn)
   mod_add_cmd(&kick_msgtab);
   mod_add_cmd(&kill_msgtab);
   mod_add_cmd(&kline_msgtab);
+  mod_add_cmd(&encap_msgtab);
+  add_capability("ENCAP", CAP_ENCAP, 1);
+  mod_add_cmd(&etrace_msgtab);
+  mod_add_cmd(&global_msgtab);
+  mod_add_cmd(&hs_msgtab);
+  mod_add_cmd(&hash_msgtab);
+  mod_add_cmd(&helpserv_msgtab);
+  mod_add_cmd(&hostserv_msgtab);
+  mod_add_cmd(&identify_msgtab);
+  mod_add_cmd(&ircdhelp_msgtab);
+  mod_add_cmd(&ltrace_msgtab);
+  mod_add_cmd(&ms_msgtab);
+  mod_add_cmd(&memoserv_msgtab);
+  mod_add_cmd(&mkpasswd_msgtab);
+  mod_add_cmd(&ns_msgtab);
+  mod_add_cmd(&nickserv_msgtab);
+  mod_add_cmd(&operserv_msgtab);
+  mod_add_cmd(&ss_msgtab);
+  mod_add_cmd(&seenserv_msgtab);
+  mod_add_cmd(&setcloak_msgtab);
+  mod_add_cmd(&setident_msgtab);
+  mod_add_cmd(&setname_msgtab);
+  mod_add_cmd(&shun_msgtab);
+  mod_add_cmd(&silence_msgtab);
+  mod_add_cmd(&statserv_msgtab);
+  mod_add_cmd(&svscloak_msgtab);
+  mod_add_cmd(&svsident_msgtab);
+  mod_add_cmd(&svsname_msgtab);
+  mod_add_cmd(&svskill_msgtab);
+  mod_add_cmd(&svsnick_msgtab);
+  mod_add_cmd(&trace_msgtab4);
   add_capability("KLN", CAP_KLN, 1);
   mod_add_cmd(&dline_msgtab);
   mod_add_cmd(&unkline_msgtab);
@@ -637,9 +675,6 @@ load_all_modules(int warn)
   mod_add_cmd(&pass_msgtab);
   mod_add_cmd(&ping_msgtab);
   mod_add_cmd(&pong_msgtab);
-  mod_add_cmd(&post_msgtab);
-  mod_add_cmd(&get_msgtab);
-  mod_add_cmd(&put_msgtab);
   mod_add_cmd(&quit_msgtab);
   mod_add_cmd(&rehash_msgtab);
   mod_add_cmd(&restart_msgtab);
@@ -666,23 +701,20 @@ load_all_modules(int warn)
   mod_add_cmd(&whois_msgtab);
   mod_add_cmd(&whowas_msgtab);
   mod_add_cmd(&xline_msgtab);
-#ifdef BUILD_CONTRIB
   mod_add_cmd(&classlist_msgtab);
   mod_add_cmd(&clearchan_msgtab);
-  mod_add_cmd(&forcejoin_msgtab);
-  mod_add_cmd(&forcepart_msgtab);
   mod_add_cmd(&help_msgtab);
   mod_add_cmd(&uhelp_msgtab);
   mod_add_cmd(&jupe_msgtab);
   mod_add_cmd(&killhost_msgtab);
   mod_add_cmd(&map_msgtab);
-  mod_add_cmd(&flags_msgtab);
   mod_add_cmd(&ojoin_msgtab);
   mod_add_cmd(&omotd_msgtab);
   mod_add_cmd(&operspy_msgtab);
   mod_add_cmd(&opme_msgtab);
   mod_add_cmd(&tburst_msgtab);
+  mod_add_cmd(&grant_msgtab);
+  mod_add_cmd(&bmask_msgtab);
   add_capability ("TBURST", CAP_TBURST, 1);
-#endif
 }
 #endif /* STATIC_MODULES */

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_silence.c,v 1.1 2004/06/09 01:38:26 nenolod Exp $
+ *  $Id: m_silence.c,v 1.2 2004/06/10 21:48:50 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -53,6 +53,7 @@ struct Message silence_msgtab = {
   {m_unregistered, m_silence, m_silence, m_silence, m_silence}
 };
 
+#ifndef STATIC_MODULES
 void
 _modinit(void)
 {
@@ -65,7 +66,8 @@ _moddeinit(void)
   mod_del_cmd(&silence_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
+#endif
 
 /* m_silence
  *      parv[0] = sender prefix
