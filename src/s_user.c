@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.24 2004/01/16 03:34:03 nenolod Exp $
+ *  $Id: s_user.c,v 1.25 2004/01/18 02:44:37 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1358,7 +1358,15 @@ oper_up(struct Client *source_p)
   source_p->umodes |= UMODE_HELPOP;
 
   /* set the network staff virtual host. */
-  strcpy(source_p->virthost, ServerInfo.network_operhost);
+  /* again! we've done less crack than plexus's coding team, and got
+   * hostmasking in the right PLACE.
+   *      --nenolod
+   */
+  strncpy(source_p->virthost, ServerInfo.network_operhost, HOSTLEN);
+
+  sendto_server (NULL, source_p, NULL, NOCAPS, NOCAPS, NOFLAGS,
+                 ":%s SVSCLOAK %s :%s", me.name, source_p->name,
+                 source_p->virthost);
 
   sendto_realops_flags(UMODE_ALL, L_ALL, "%s (%s@%s) is now an operator",
                        source_p->name, source_p->username, source_p->host);
