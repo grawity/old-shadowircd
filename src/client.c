@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.c,v 1.3 2004/09/07 00:03:46 nenolod Exp $
+ *  $Id: client.c,v 1.4 2004/09/07 01:00:02 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1171,7 +1171,7 @@ exit_client (struct Client *client_p,	/* The local client originating the
 
       if (source_p->localClient->dns_query != NULL)
 	{
-	  delete_resolver_queries (source_p->localClient->dns_query);
+	  delete_adns_queries (source_p->localClient->dns_query);
 	  source_p->localClient->dns_query = NULL;
 	}
 

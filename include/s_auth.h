@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_auth.h,v 1.2 2004/09/07 00:03:46 nenolod Exp $
+ *  $Id: s_auth.h,v 1.3 2004/09/07 01:00:02 nenolod Exp $
  */
 
 #ifndef INCLUDED_s_auth_h
@@ -45,6 +45,7 @@ struct AuthRequest
   int                 fd;        /* file descriptor for auth queries */
   time_t              timeout;   /* time when query expires */
   unsigned int	      ip6_int;
+  struct DNSQuery     dns_query;
 };
 
 /*

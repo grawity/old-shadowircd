@@ -21,7 +21,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: adns.c,v 1.4 2004/09/06 23:01:29 nenolod Exp $
+ *  $Id: adns.c,v 1.5 2004/09/07 01:00:02 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -54,8 +54,7 @@ report_adns_servers(struct Client *source_p)
 	for (x = 0; x < dns_state->nservers; x++)
 	{
 		inetntop(AF_INET, &dns_state->servers[x].addr.s_addr, buf, 16);
-		sendto_one_numeric(source_p, RPL_STATSALINE, 
-				   form_str(RPL_STATSALINE), buf);
+		sendto_one(source_p, form_str(RPL_STATSALINE), buf);
 	}
 }
 
@@ -101,7 +100,7 @@ init_resolver(void)
 
 	if(dns_state == NULL)
 	{
-		ilog(L_MAIN, "Error opening /etc/resolv.conf: %s; r = %d", strerror(errno), r);
+		ilog(L_INFO, "Error opening /etc/resolv.conf: %s; r = %d", strerror(errno), r);
 		exit(76);
 	}
 

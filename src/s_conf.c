@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.c,v 1.8 2004/09/07 00:03:46 nenolod Exp $
+ *  $Id: s_conf.c,v 1.9 2004/09/07 01:00:03 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -151,26 +151,23 @@ unmap_conf_item(void *aconf)
  * if successful save hp in the conf item it was called with
  */
 static void
-conf_dns_callback(void *vptr, struct DNSReply *reply)
+conf_dns_callback(void *vptr, adns_answer * reply)
 {
-  struct AccessItem *aconf = (struct AccessItem *)vptr;
-  struct ConfItem *conf;
+        struct AccessItem *server_p = (struct AccessItem *) vptr;
 
-  MyFree(aconf->dns_query);
-  aconf->dns_query = NULL;
-
-  if (reply != NULL)
-    memcpy(&aconf->ipnum, &reply->addr, sizeof(reply->addr));
-  else {
-    ilog(L_NOTICE, "Host not found: %s, ignoring connect{} block",
-         aconf->host);
-    conf = unmap_conf_item(aconf);
-    sendto_realops_flags(UMODE_ALL, L_ALL,
-                         "Ignoring connect{} block for %s - host not found",
-			 conf->name);
-    delete_conf_item(conf);
-  }
+        if(reply && reply->status == adns_s_ok)
+        {
+                struct irc_ssaddr *in = (struct irc_ssaddr *)&server_p->ipnum;
+                server_p->ipnum.ss_len = sizeof(struct sockaddr_in);
+		in->ss_port = 0;
+                in->ss.sin_addr.s_addr = reply->rrs.addr->addr.inet.sin_addr.s_addr;
+                MyFree(reply);
+        }
+                                                                                                                                               
+        MyFree(server_p->dns_query);
+        server_p->dns_query = NULL;
 }
+
 
 /* conf_dns_lookup()
  *

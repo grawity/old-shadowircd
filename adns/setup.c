@@ -25,7 +25,7 @@
  *  along with this program; if not, write to the Free Software Foundation,
  *  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
  *
- * $Id: setup.c,v 1.4 2004/09/07 00:03:46 nenolod Exp $
+ * $Id: setup.c,v 1.5 2004/09/07 01:00:02 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -121,7 +121,7 @@ static int nextword(const char **bufp_io, const char **word_r, int *l_r) {
 static void ccf_nameserver(adns_state ads, const char *fn, int lno, const char *buf) {
   struct in_addr ia;
   
-  if (inetpton(AF_INET, buf,&ia) <=0) {
+  if (inet_pton(AF_INET, buf,&ia) <=0) {
     configparseerr(ads,fn,lno,"invalid nameserver address `%s'",buf);
     return;
   }
@@ -194,14 +194,14 @@ static void ccf_sortlist(adns_state ads, const char *fn, int lno, const char *bu
     slash= strchr(tbuf,'/');
     if (slash) *slash++= 0;
     
-    if (inetpton(AF_INET, tbuf,&base) <= 0) {
+    if (inet_pton(AF_INET, tbuf,&base) <= 0) {
       configparseerr(ads,fn,lno,"invalid address `%s' in sortlist",tbuf);
       continue;
     }
 
     if (slash) {
       if (strchr(slash,'.')) {
-	if (inetpton(AF_INET, slash,&mask) <= 0) {
+	if (inet_pton(AF_INET, slash,&mask) <= 0) {
 	  configparseerr(ads,fn,lno,"invalid mask `%s' in sortlist",slash);
 	  continue;
 	}

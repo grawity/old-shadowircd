@@ -19,9 +19,10 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: fdlist.c,v 1.1 2004/04/30 18:13:31 nenolod Exp $
+ *  $Id: fdlist.c,v 1.2 2004/09/07 01:00:02 nenolod Exp $
  */
 #include "stdinc.h"
+#include "s_bsd.h"
 #include "fdlist.h"
 #include "client.h"  /* struct Client */
 #include "event.h"

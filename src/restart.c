@@ -19,10 +19,11 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: restart.c,v 1.1 2004/04/30 18:13:40 nenolod Exp $
+ *  $Id: restart.c,v 1.2 2004/09/07 01:00:02 nenolod Exp $
  */
 
 #include "stdinc.h"
+#include "s_bsd.h"
 #include "tools.h"
 #include "restart.h"
 #include "common.h"

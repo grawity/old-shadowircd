@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_auth.c,v 1.3 2004/09/07 00:03:46 nenolod Exp $
+ *  $Id: s_auth.c,v 1.4 2004/09/07 01:00:02 nenolod Exp $
  */
 
 /*
@@ -167,73 +167,29 @@ release_auth_client(struct Client *client)
   read_packet(client->localClient->fd, client);
 }
  
-/*
- * auth_dns_callback - called when resolver query finishes
- * if the query resulted in a successful search, hp will contain
- * a non-null pointer, otherwise hp will be null.
- * set the client on it's way to a connection completion, regardless
- * of success of failure
- */
 static void
-auth_dns_callback(void* vptr, struct DNSReply *reply)
-{
-  struct AuthRequest *auth = (struct AuthRequest *)vptr;
-
-  if (IsDNSPending(auth))
-    dlinkDelete(&auth->dns_node, &auth_doing_dns_list);
-  ClearDNSPending(auth);
-
-  if (reply != NULL)
-  {
-    struct sockaddr_in *v4, *v4dns;
-#ifdef IPV6
-    struct sockaddr_in6 *v6, *v6dns;
-#endif
-    int good = 1;
-
-#ifdef IPV6
-    if(auth->client->localClient->ip.ss.ss_family == AF_INET6)
-    {
-      v6 = (struct sockaddr_in6 *)&auth->client->localClient->ip;
-      v6dns = (struct sockaddr_in6 *)&reply->addr;
-      if(memcmp(&v6->sin6_addr, &v6dns->sin6_addr, sizeof(struct in6_addr)) != 0)
-      {
-        sendheader(auth->client, REPORT_IP_MISMATCH);
-        good = 0;
-      }
-    }
-    else
-#endif
-    {
-      v4 = (struct sockaddr_in *)&auth->client->localClient->ip;
-      v4dns = (struct sockaddr_in *)&reply->addr;
-      if(v4->sin_addr.s_addr != v4dns->sin_addr.s_addr)
-      {
-        sendheader(auth->client, REPORT_IP_MISMATCH);
-        good = 0;
-      }
-    }
-    if(good && strlen(reply->h_name) <= HOSTLEN)
-    {
-      strlcpy(auth->client->host, reply->h_name,
-	      sizeof(auth->client->host));
-      sendheader(auth->client, REPORT_FIN_DNS);
-    }
-    else if(strlen(reply->h_name) > HOSTLEN)
-      sendheader(auth->client, REPORT_HOST_TOOLONG);
-  }
-  else
-      sendheader(auth->client, REPORT_FAIL_DNS);
-
-  MyFree(auth->client->localClient->dns_query);
-  auth->client->localClient->dns_query = NULL;
-
-  if (!IsDoingAuth(auth))
-  {
-    struct Client *client_p = auth->client;
-    MyFree(auth);
-    release_auth_client(client_p);
-  }
+auth_dns_callback(void *vptr, adns_answer * reply)
+{                                                                                                                                               
+        struct AuthRequest *auth = (struct AuthRequest *) vptr;
+        ClearDNSPending(auth);
+        if(reply && (reply->status == adns_s_ok))
+        {
+                if(strlen(*reply->rrs.str) <= HOSTLEN)
+                {
+                        strlcpy(auth->client->host, *reply->rrs.str, sizeof(auth->client->host));
+                        sendheader(auth->client, REPORT_FIN_DNS);
+                }
+                else {
+                        sendheader(auth->client, REPORT_HOST_TOOLONG);
+                }
+        }
+        else
+        {
+                sendheader(auth->client, REPORT_FAIL_DNS);
+        }
+                                                                                                                                               
+        MyFree(reply);
+        release_auth_client(auth->client);
 }
 
 /*
@@ -439,7 +395,8 @@ start_auth(struct Client *client)
   sendheader(client, REPORT_DO_DNS);
 
   /* No DNS cache now, remember? -- adrian */
-  gethost_byaddr(&client->localClient->ip, client->localClient->dns_query);
+  adns_getaddr((struct sockaddr *)&client->localClient->ip.ss, AF_INET,
+                     &auth->dns_query, 0);
   SetDNSPending(auth);
   dlinkAdd(auth, &auth->dns_node, &auth_doing_dns_list);
 
@@ -480,7 +437,7 @@ timeout_auth_queries_event(void *notused)
 	dlinkDelete(&auth->dns_node, &auth_doing_dns_list);
 	if (client_p->localClient->dns_query != NULL)
     {
-	  delete_resolver_queries(client_p->localClient->dns_query);
+	  delete_adns_queries(client_p->localClient->dns_query);
       MyFree(client_p->localClient->dns_query);
     }
 	auth->client->localClient->dns_query = NULL;

@@ -19,13 +19,13 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_bsd.c,v 1.4 2004/09/07 00:03:46 nenolod Exp $
+ *  $Id: s_bsd.c,v 1.5 2004/09/07 01:00:03 nenolod Exp $
  */
 
 #include "stdinc.h"
 #include <netinet/tcp.h>
-#include "fdlist.h"
 #include "s_bsd.h"
+#include "fdlist.h"
 #include "client.h"
 #include "common.h"
 #include "dbuf.h"
@@ -66,7 +66,7 @@ static const char *comm_err_str[] = { "Comm OK", "Error during bind()",
 
 static void comm_connect_callback(int fd, int status);
 static PF comm_connect_timeout;
-static void comm_connect_dns_callback(void *vptr, struct DNSReply *reply);
+static void comm_connect_dns_callback(void *vptr, adns_answer * reply);
 static PF comm_connect_tryconnect;
 #ifdef HAVE_LIBCRYPTO
 static void comm_tryssl_callback(int fd, void *data);
@@ -629,62 +629,54 @@ comm_connect_tcp(int fd, const char *host, unsigned short port,
                  struct sockaddr *clocal, int socklen, CNCB *callback,
                  void *data, int aftype, int timeout)
 {
- struct addrinfo hints, *res;
- char portname[PORTNAMELEN+1];
- 
- fd_table[fd].flags.called_connect = 1;
- assert(callback);
- fd_table[fd].connect.callback = callback;
- fd_table[fd].connect.data = data;
-
- fd_table[fd].connect.hostaddr.ss.ss_family = aftype;
- fd_table[fd].connect.hostaddr.ss_port = htons(port);
- /* Note that we're using a passed sockaddr here. This is because
-  * generally you'll be bind()ing to a sockaddr grabbed from
-  * getsockname(), so this makes things easier.
-  * XXX If NULL is passed as local, we should later on bind() to the
-  * virtual host IP, for completeness.
-  *   -- adrian
-  */
- if ((clocal != NULL) && (bind(fd, clocal, socklen) < 0))
- { 
-  /* Failure, call the callback with COMM_ERR_BIND */
-  comm_connect_callback(fd, COMM_ERR_BIND);
-  /* ... and quit */
-  return;
- }
-  
- /* Next, if we have been given an IP, get the addr and skip the
-  * DNS check (and head direct to comm_connect_tryconnect().
-  */
-
- memset(&hints, 0, sizeof(hints));
- hints.ai_family = AF_UNSPEC;
- hints.ai_socktype = SOCK_STREAM;
- hints.ai_flags = AI_PASSIVE | AI_NUMERICHOST;
- 
- snprintf(portname, PORTNAMELEN, "%d", port);
- 
- if (irc_getaddrinfo(host, portname, &hints, &res))
- {
-  /* Send the DNS request, for the next level */
-  fd_table[fd].dns_query = MyMalloc(sizeof(struct DNSQuery));
-  fd_table[fd].dns_query->ptr = &fd_table[fd];
-  fd_table[fd].dns_query->callback = comm_connect_dns_callback;
-  gethost_byname(host, fd_table[fd].dns_query);
- }
- else
- {
-  /* We have a valid IP, so we just call tryconnect */
-  /* Make sure we actually set the timeout here .. */
-  assert(res != NULL);
-  memcpy(&fd_table[fd].connect.hostaddr, res->ai_addr, res->ai_addrlen);
-  fd_table[fd].connect.hostaddr.ss_len = res->ai_addrlen;
-  fd_table[fd].connect.hostaddr.ss.ss_family = res->ai_family;
-  irc_freeaddrinfo(res);
-  comm_settimeout(fd, timeout*1000, comm_connect_timeout, NULL);
-  comm_connect_tryconnect(fd, NULL);
- }
+        void *ipptr = NULL;
+        fde_t *F;
+        assert(fd >= 0);
+        F = &fd_table[fd];
+        F->flags.called_connect = 1;
+        assert(callback);
+        F->connect.callback = callback;
+        F->connect.data = data;
+                                                                                                                                               
+        memset(&F->connect.hostaddr, 0, sizeof(F->connect.hostaddr));
+        struct sockaddr_in *in = (struct sockaddr_in *)&F->connect.hostaddr;
+        in->sin_port = htons(port);
+        in->sin_family = AF_INET;
+        ipptr = &in->sin_addr;
+                                                                                                                                               
+        /* Note that we're using a passed sockaddr here. This is because
+         * generally you'll be bind()ing to a sockaddr grabbed from
+         * getsockname(), so this makes things easier.
+         * XXX If NULL is passed as local, we should later on bind() to the
+         * virtual host IP, for completeness.
+         *   -- adrian
+         */
+        if((clocal != NULL) && (bind(F->fd, clocal, socklen) < 0))
+        {
+                /* Failure, call the callback with COMM_ERR_BIND */
+                comm_connect_callback(F->fd, COMM_ERR_BIND);
+                /* ... and quit */
+                return;
+        }
+                                                                                                                                               
+        /* Next, if we have been given an IP, get the addr and skip the
+         * DNS check (and head direct to comm_connect_tryconnect().
+         */
+        if(inet_pton(aftype, host, ipptr) <= 0)
+        {
+                /* Send the DNS request, for the next level */
+                F->dns_query = MyMalloc(sizeof(struct DNSQuery));
+                F->dns_query->ptr = F;
+                F->dns_query->callback = comm_connect_dns_callback;
+                adns_gethost(host, aftype, F->dns_query);
+        }
+        else
+        {
+                /* We have a valid IP, so we just call tryconnect */
+                /* Make sure we actually set the timeout here .. */
+                comm_settimeout(F->fd, timeout * 1000, comm_connect_timeout, NULL);
+                comm_connect_tryconnect(F->fd, NULL);
+        }
 }
 
 /*
@@ -728,34 +720,41 @@ comm_connect_timeout(int fd, void *notused)
  * otherwise we initiate the connect()
  */
 static void
-comm_connect_dns_callback(void *vptr, struct DNSReply *reply)
+comm_connect_dns_callback(void *vptr, adns_answer * reply)
 {
-    fde_t *F = vptr;
-
-    if (reply == NULL)
-    {
-      MyFree(F->dns_query);
-      F->dns_query = NULL;
-      comm_connect_callback(F->fd, COMM_ERR_DNS);
-      return;
-    }
-    
-    /* No error, set a 10 second timeout */
-    comm_settimeout(F->fd, 30*1000, comm_connect_timeout, NULL);
-
-    /* Copy over the DNS reply info so we can use it in the connect() */
-    /*
-     * Note we don't fudge the refcount here, because we aren't keeping
-     * the DNS record around, and the DNS cache is gone anyway.. 
-     *     -- adrian
-     */
-    memcpy(&F->connect.hostaddr, &reply->addr, 
-          sizeof(struct irc_ssaddr));
-    /* Now, call the tryconnect() routine to try a connect() */
-    MyFree(F->dns_query);
-    F->dns_query = NULL;
-    comm_connect_tryconnect(F->fd, NULL);
+        fde_t *F = vptr;
+                                                                                                                                               
+        if(!reply)
+        {
+                comm_connect_callback(F->fd, COMM_ERR_DNS);
+                return;
+        }
+                                                                                                                                               
+        if(reply->status != adns_s_ok)
+        {
+                /* Yes, callback + return */
+                comm_connect_callback(F->fd, COMM_ERR_DNS);
+                MyFree(reply);
+                MyFree(F->dns_query);
+                F->dns_query = NULL;
+                return;
+        }
+                                                                                                                                               
+        /* No error, set a 10 second timeout */
+        comm_settimeout(F->fd, 30 * 1000, comm_connect_timeout, NULL);
+                                                                                                                                               
+        /* Copy over the DNS reply info so we can use it in the connect() */
+        /*
+         * Note we don't fudge the refcount here, because we aren't keeping
+         * the DNS record around, and the DNS cache is gone anyway..
+         *     -- adrian
+         */
+        /* Now, call the tryconnect() routine to try a connect() */
+        MyFree(reply);
+        comm_setselect(F->fd, FDLIST_SERVER, COMM_SELECT_WRITE,
+                       comm_connect_tryconnect, NULL, 0);
 }
+
 
 /* static void comm_connect_tryconnect(int fd, void *notused)
  * Input: The fd, the handler data(unused).
