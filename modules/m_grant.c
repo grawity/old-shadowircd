@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_grant.c,v 1.5 2004/02/12 20:19:30 nenolod Exp $
+ *  $Id: m_grant.c,v 1.6 2004/02/12 20:26:48 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -66,7 +66,7 @@ _moddeinit (void)
   mod_del_cmd (&grant_msgtab);
 }
 
-const char *_version = "$Revision: 1.5 $";
+const char *_version = "$Revision: 1.6 $";
 #endif
 
 /* this is a struct, associating operator permissions with letters. */
@@ -160,6 +160,7 @@ mo_grant (struct Client *client_p, struct Client *source_p,
 {
   struct Client *target_p;
   unsigned int old;
+  dlink_node *dm;
 
   if (!strcasecmp (parv[1], "GIVE"))
     {
@@ -190,6 +191,11 @@ mo_grant (struct Client *client_p, struct Client *source_p,
 	  old = target_p->umodes;
 	  SetOper (target_p);
 	  target_p->umodes |= UMODE_HELPOP;
+
+	  Count.oper++;
+
+	  assert (dlinkFind (&oper_list, target_p) == NULL);
+	  dlinkAdd (target_p, make_dlink_node (), &oper_list);
 
 	  if (ConfigFileEntry.oper_umodes)
 	    target_p->umodes |= ConfigFileEntry.oper_umodes & ALL_UMODES;
@@ -261,6 +267,11 @@ mo_grant (struct Client *client_p, struct Client *source_p,
 	  ClearOper (target_p);
 	  target_p->umodes &= ~UMODE_HELPOP;
 
+	  Count.oper--;
+
+	  if ((dm = dlinkFindDelete (&oper_list, target_p)) != NULL)
+	    free_dlink_node (dm);
+
 	  if (ConfigFileEntry.oper_umodes)
 	    target_p->umodes &= ~(ConfigFileEntry.oper_umodes & ALL_UMODES);
 	  else
@@ -302,9 +313,14 @@ mo_grant (struct Client *client_p, struct Client *source_p,
 
       ClearOperFlags (target_p);
 
+      Count.oper--;
+
       old = target_p->umodes;
       ClearOper (target_p);
       target_p->umodes &= ~UMODE_HELPOP;
+
+      if ((dm = dlinkFindDelete (&oper_list, target_p)) != NULL)
+	free_dlink_node (dm);
 
       if (ConfigFileEntry.oper_umodes)
 	target_p->umodes &= ~(ConfigFileEntry.oper_umodes & ALL_UMODES);
