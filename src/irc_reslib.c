@@ -92,7 +92,7 @@
 #define DNS_LABELTYPE_BITSTRING 0x41
 #define MAXLINE 128
 
-/* $Id: irc_reslib.c,v 1.1 2004/04/30 18:13:26 nenolod Exp $ */
+/* $Id: irc_reslib.c,v 1.2 2004/06/10 23:06:50 nenolod Exp $ */
 
 struct irc_ssaddr irc_nsaddr_list[IRCD_MAXNS];
 int irc_nscount = 0;
@@ -172,7 +172,11 @@ parse_resvconf(void)
   /* XXX "/etc/resolv.conf" should be from a define in setup.h perhaps
    * for cygwin support etc. this hardcodes it to unix for now -db
    */
+#ifndef WINDOWS_COMPILE
   if ((file = fbopen("/etc/resolv.conf", "r")) == NULL)
+#else
+  if ((file = fbopen("/cygdrive/c/ShadowIRCd/etc/nameservers.conf", "r")) == NULL)
+#endif
     return(-1);
 
   while (fbgets(input, MAXLINE, file) != NULL)
