@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.c,v 1.11 2004/04/01 18:07:57 nenolod Exp $
+ *  $Id: client.c,v 1.12 2004/04/02 22:39:21 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -797,8 +797,11 @@ exit_one_client (struct Client *client_p, struct Client *source_p,
     {
       dlink_node *lp, *next_lp;
 
+      if (source_p->flags & FLAGS_KILLED)
+        goto nextstep;
+
       /* If we are persistant, do not quit. */
-      if (source_p->persistpw[0] && (!(source_p->flags & FLAGS_KILLED)))
+      if (source_p->persistpw[0])
         {
           source_p->flags |= FLAGS_PERSIST;
 
@@ -819,6 +822,8 @@ exit_one_client (struct Client *client_p, struct Client *source_p,
 
           return;
         }
+
+      nextstep:
 
       /* If this exit is generated from "m_kill", then there
        * is no sense in sending the QUIT--KILL's have been
