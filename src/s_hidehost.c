@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_hidehost.c,v 1.4 2004/01/15 22:37:06 nenolod Exp $
+ *  $Id: s_hidehost.c,v 1.5 2004/01/16 00:21:05 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -35,9 +35,9 @@
 
 /* Hidden host code below */
 
-#define KEY 93821
-#define KEY2 73721
-#define KEY3 53811
+#define KEY ServerInfo.network_cloakkey1
+#define KEY2 ServerInfo.network_cloakkey2
+#define KEY3 ServerInfo.network_cloakkey3
 
 #define POW_8 256L
 #define POW_16 65536L
