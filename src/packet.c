@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: packet.c,v 1.1 2004/04/30 18:13:20 nenolod Exp $
+ *  $Id: packet.c,v 1.2 2004/07/12 12:31:30 nenolod Exp $
  */
 #include "stdinc.h"
 #include "tools.h"
@@ -468,7 +468,7 @@ read_packet(int fd, void *data)
   parse_client_queued(client_p);
 
   /* Check to make sure we're not flooding */
-  if (IsPerson(client_p) &&
+  if (!IsAnyServer(client_p) &&
       (dbuf_length(&client_p->localClient->buf_recvq) >
        (unsigned int)ConfigFileEntry.client_flood))
   {
