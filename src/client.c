@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.c,v 1.8 2004/02/12 22:27:12 nenolod Exp $
+ *  $Id: client.c,v 1.9 2004/03/22 20:42:26 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -147,6 +147,7 @@ make_client (struct Client *from)
 
   client_p->hnext = client_p;
   client_p->status = STAT_UNKNOWN;
+  client_p->persistpw[0] = '\0';
   strcpy (client_p->username, "unknown");
 
   return (client_p);
@@ -247,6 +248,8 @@ check_pings_list (dlink_list * list)
   DLINK_FOREACH_SAFE (ptr, next_ptr, list->head)
   {
     client_p = ptr->data;
+
+    if (client_p->flags & FLAGS_PERSIST) continue;
 
     /*
      ** Note: No need to notify opers here. It's
@@ -765,6 +768,25 @@ exit_one_client (struct Client *client_p, struct Client *source_p,
       /* The bulk of this is done in remove_dependents now, all
        ** we have left to do is send the SQUIT upstream.  -orabidoo
        */
+      if (MyClient (source_p))
+        {
+          if (source_p->peristpw[0] && (!(source_p->flags & FLAGS_KILLED)))
+            {
+              source_p->flags |= FLAGS_PERSIST;
+	      fd_close (source_p->localClient->ctrlfd);
+	      fd_close (source_p->localClient->fd);
+              source_p->localClient->ctrlfd = -1;
+              source_p->localClient->fd = -1;
+#ifndef HAVE_SOCKETPAIR
+              fd_close (source_p->localClient->ctrlfd_r);
+              fd_close (source_p->localClient->fd_r);
+              source_p->localClient->ctrlfd_r = -1;
+              source_p->localClient->fd_r = -1;
+#endif
+              return;
+            }
+        }
+
       if (MyConnect (source_p))
 	{
 	  if (source_p->localClient->ctrlfd > -1)
