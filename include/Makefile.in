@@ -1,0 +1,24 @@
+# $Id: Makefile.in,v 1.1 2003/12/02 20:47:53 nenolod Exp $
+# makefile for include/
+
+INSTALL		= @INSTALL@
+INSTALL_DATA	= @INSTALL_DATA@
+RM		= @RM@
+
+prefix		= $(DESTDIR)@prefix@
+includedir	= @includedir@
+
+all:
+
+install:
+	mkdir -p $(includedir)/ircd-hybrid-7
+	@echo Installing header files...
+
+	@for header in *.h; do \
+		${INSTALL_DATA} $$header $(includedir)/ircd-hybrid-7; \
+	done
+
+distclean:
+	${RM} -f Makefile
+
+.PHONY: install distclean
