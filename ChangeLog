@@ -1,3 +1,9 @@
+ShadowIRCd 3.2:
+
+* Changed hostmasking (+x) to MD5 (uncrackable).
+* Changed config parser.
+* Added a configuration creator by NhJm.
+
 ShadowIRCd 3.1-1:
 
 * Really fix socket dequeing bug.

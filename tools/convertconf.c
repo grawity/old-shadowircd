@@ -15,7 +15,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * $Id: convertconf.c,v 1.1 2004/04/30 18:13:57 nenolod Exp $
+ * $Id: convertconf.c,v 1.2 2004/08/03 06:26:22 eddie Exp $
  */
 
 #include <stdio.h>
@@ -105,7 +105,7 @@ int main(int argc,char *argv[])
   if(!basic && ((in = fopen(CONFPATH, "r")) == NULL))
   {
     fprintf(stderr, "Can't open %s for reading\n", CONFPATH);
-    puts("You must use the example.conf in the ircd-hybrid-7 source to get the\n"
+    puts("You must use the example.conf in the ShadowIRCd 3 source to get the\n"
 	 "general {}; logging {}; channel {}; serverhide {}; modules {}; blocks.\n");
   }
   else if(!basic)
