@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_links.c,v 1.1.1.1 2003/12/02 20:47:33 nenolod Exp $
+ *  $Id: m_links.c,v 1.2 2003/12/02 23:22:25 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -62,7 +62,7 @@ _moddeinit(void)
   mod_del_cmd(&links_msgtab);
 }
 
-const char *_version = "$Revision: 1.1.1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /*
@@ -146,14 +146,7 @@ mo_links(struct Client *client_p, struct Client *source_p,
       if (*mask && !match(mask, target_p->name))
         continue;
     
-      if(target_p->info[0])
-        {
-          if( (p = strchr(target_p->info,']')) )
-            p += 2; /* skip the nasty [IP] part */
-          else
-            p = target_p->info;
-        } 
-      else
+      if(!target_p->info[0])
         p = "(Unknown Location)";
 
      /* We just send the reply, as if theyre here theres either no SHIDE,
@@ -163,7 +156,7 @@ mo_links(struct Client *client_p, struct Client *source_p,
                  MyConnect(source_p) ? me.name : me.id, 
                  MyConnect(source_p) ? parv[0] : ID(source_p),
 		 target_p->name, target_p->serv->up,
-                 target_p->hopcount, p);
+                 target_p->hopcount, ID(target_p), p);
     }
   
   sendto_one(source_p, form_str(RPL_ENDOFLINKS),

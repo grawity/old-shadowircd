@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_whois.c,v 1.1.1.1 2003/12/02 20:47:45 nenolod Exp $
+ *  $Id: m_whois.c,v 1.2 2003/12/02 23:22:25 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -82,7 +82,7 @@ _moddeinit(void)
   mod_del_cmd(&whois_msgtab);
 }
 
-const char *_version = "$Revision: 1.1.1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /* m_whois
@@ -419,6 +419,10 @@ whois_person(struct Client *source_p,struct Client *target_p, int glob)
   if (target_p->user->away)
     sendto_one(source_p, form_str(RPL_AWAY), me.name,
 	       source_p->name, target_p->name, target_p->user->away);
+
+  if (target_p->umodes & UMODE_IDENTIFY)
+    sendto_one(source_p, form_str(RPL_HASIDENTIFIED),
+               me.name, source_p->name, target_p->name);
 
   if (IsOper(target_p))
     sendto_one(source_p, form_str(RPL_WHOISOPERATOR),

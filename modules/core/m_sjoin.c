@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_sjoin.c,v 1.1 2003/12/02 21:37:32 nenolod Exp $
+ *  $Id: m_sjoin.c,v 1.2 2003/12/02 23:22:25 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,7 +63,7 @@ _moddeinit(void)
   mod_del_cmd(&sjoin_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 static char modebuf[MODEBUFLEN];
@@ -144,6 +144,15 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
   {
     switch (*(s++))
     {
+      case 'c':
+	mode.mode |= MODE_NOCOLOR;
+	break;
+      case 'S':
+	mode.mode |= MODE_STRIPCOLOR;
+	break;
+      case 'r':
+	mode.mode |= MODE_REGISTERED;
+	break;
       case 't':
         mode.mode |= MODE_TOPICLIMIT;
         break;

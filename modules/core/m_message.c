@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_message.c,v 1.2 2003/12/02 22:49:54 nenolod Exp $
+ *  $Id: m_message.c,v 1.3 2003/12/02 23:22:25 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -117,7 +117,7 @@ _moddeinit(void)
   mod_del_cmd(&notice_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 /*
@@ -472,12 +472,15 @@ msg_channel(int p_or_n, const char *command, struct Client *client_p,
     if (result == CAN_SEND_OPV ||
         !flood_attack_channel(p_or_n, source_p, chptr, chptr->chname))
     {
-      if (msg_has_colors(text) && (chptr->mode.mode & MODE_NOCOLOR))
+      if (msg_has_colors(text) && (chptr->mode.mode & MODE_NOCOLOR)) {
 	sendto_one(source_p, form_str(ERR_NOCOLORSONCHAN),
 	           ID_or_name(&me, client_p),
 		   ID_or_name(source_p, client_p), chptr->chname);
-      else
-        sendto_channel_butone(client_p, source_p, chptr, command, ":%s", text);
+        return;
+      }
+      if (chptr->mode.mode & MODE_STRIPCOLOR)
+	strip_colour(text);
+      sendto_channel_butone(client_p, source_p, chptr, command, ":%s", text);
     }
   }
   else

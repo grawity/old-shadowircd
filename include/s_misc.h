@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_misc.h,v 1.1.1.1 2003/12/02 20:47:56 nenolod Exp $
+ *  $Id: s_misc.h,v 1.2 2003/12/02 23:22:25 nenolod Exp $
  */
 
 #ifndef INCLUDED_s_misc_h
@@ -36,4 +36,7 @@ extern const char *smalldate(time_t);
                   ((x > _1MEG) ? "Megabytes" : "Kilobytes")))
 #define _GMKv(x)  ((x > _1TER) ? (float)(x/_1TER) : ((x > _1GIG) ? \
                    (float)(x/_1GIG) : ((x > _1MEG) ? (float)(x/_1MEG) : (float)x)))
+
+extern int msg_has_colors(char *);
+
 #endif

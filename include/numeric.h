@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: numeric.h,v 1.2 2003/12/02 22:49:54 nenolod Exp $
+ *  $Id: numeric.h,v 1.3 2003/12/02 23:22:25 nenolod Exp $
  */
 
 #ifndef INCLUDED_numeric_h
@@ -201,6 +201,7 @@ extern const char *get_locale(void);
 #define RPL_UNAWAY           305
 #define RPL_NOWAWAY          306
 #define	RPL_USERIP	     307	/* Undernet extension */
+#define RPL_HASIDENTIFIED    307	/* User has identified. */
 /*	RPL_WHOISREGNICK     307 	Numeric List: Dalnet */
 /*	RPL_SUSERHOST	     307	austnet */
 /*      RPL_NOTIFYACTION     308         aircd */

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.1.1.1 2003/12/02 20:47:06 nenolod Exp $
+ *  $Id: s_user.c,v 1.2 2003/12/02 23:22:25 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -135,10 +135,10 @@ const unsigned int user_modes_from_c_to_bitmask[] =
   UMODE_BOTS,       /* b */
   UMODE_CCONN,      /* c */
   UMODE_DEBUG,      /* d */
-  0,                /* e */
+  UMODE_IDENTIFY,   /* e */
   UMODE_FULL,       /* f */
   UMODE_CALLERID,   /* g */
-  0,                /* h */
+  UMODE_HIDEOPER,   /* h */
   UMODE_INVISIBLE,  /* i */
   0,                /* j */
   UMODE_SKILL,      /* k */
@@ -1024,6 +1024,11 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
         case '-':
           what = MODE_DEL;
           break;
+        case 'e':
+	  /* They can't +/-e. That's for services. Stop it.
+	   * Services uses SVSMODE, so do not worry about it.
+           */
+	  break;
         case 'o':
           if (what == MODE_ADD)
           {
