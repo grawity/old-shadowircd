@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  m_set.c: Sets a server parameter.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_set.c,v 1.1.1.1 2003/12/02 20:47:41 nenolod Exp $
+ *  $Id: m_set.c,v 1.2 2004/01/15 19:48:08 nenolod Exp $
  */
 
 /* rewritten by jdc */
@@ -64,7 +64,7 @@ _moddeinit(void)
   mod_del_cmd(&set_msgtab);
 }
 
-const char *_version = "$Revision: 1.1.1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /* Structure used for the SET table itself */
@@ -113,7 +113,6 @@ static struct SetStruct set_cmd_table[] =
   { "IDLETIME",		quote_idletime,		0,	1 },
   { "LOG",		quote_log,		0,	1 },
   { "MAX",		quote_max,		0,	1 },
-  { "MSGLOCALE",	quote_msglocale,	1,	0 },
   { "SPAMNUM",		quote_spamnum,		0,	1 },
   { "SPAMTIME",		quote_spamtime,		0,	1 },
   { "SPLITMODE",	quote_splitmode,	1,	0 },
@@ -323,23 +322,6 @@ quote_max( struct Client *source_p, int newval )
   {
     sendto_one(source_p, ":%s NOTICE %s :Current Maxclients = %d (%d)",
                me.name, source_p->name, GlobalSetOptions.maxclients, Count.local);
-  }
-}
-
-/* SET MSGLOCALE */
-static void
-quote_msglocale( struct Client *source_p, char *locale )
-{
-  if (locale != NULL)
-  {
-    set_locale(locale);
-    sendto_one(source_p, ":%s NOTICE %s :Set MSGLOCALE to '%s'",
-	       me.name, source_p->name, get_locale());
-  }
-  else
-  {
-    sendto_one(source_p, ":%s NOTICE %s :MSGLOCALE is currently '%s'",
-	       me.name, source_p->name, get_locale());
   }
 }
 

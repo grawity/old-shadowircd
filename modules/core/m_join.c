@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_join.c,v 1.5 2003/12/19 02:55:56 nenolod Exp $
+ *  $Id: m_join.c,v 1.6 2004/01/15 19:48:08 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -87,7 +87,7 @@ _moddeinit(void)
   mod_del_cmd(&join_msgtab);
 }
 
-const char *_version = "$Revision: 1.5 $";
+const char *_version = "$Revision: 1.6 $";
 #endif
 
 /* m_join()
@@ -145,26 +145,20 @@ m_join(struct Client *client_p, struct Client *source_p,
     /*
     **  Set timestamp if appropriate, and propagate
     */
-    if (flags & CHFL_CHANOWNER)
+    if (flags & CHFL_CHANOP)
     {
       chptr->channelts = CurrentTime;
       chptr->mode.mode |= MODE_TOPICLIMIT;
       chptr->mode.mode |= MODE_NOPRIVMSGS;
 
       sendto_server(client_p, source_p, chptr, CAP_TS6, NOCAPS, LL_ICLIENT,
-                    ":%s SJOIN %lu %s +nt :!%s",
+                    ":%s SJOIN %lu %s +nt :@%s",
                     me.id, (unsigned long)chptr->channelts,
                     chptr->chname, source_p->id);
       sendto_server(client_p, source_p, chptr, NOCAPS, CAP_TS6, LL_ICLIENT,
-                    ":%s SJOIN %lu %s +nt :!%s",
+                    ":%s SJOIN %lu %s +nt :@%s",
                     me.name, (unsigned long)chptr->channelts,
                     chptr->chname, parv[0]);
-      /*
-       * notify all other users on the new channel
-       */
-      /* XXX just exactly who is going to be =on= this new channel
-       * other than just the creator at this time? ? ?
-       */
       sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s JOIN :%s",
                            source_p->name, source_p->username,
                            GET_CLIENT_HOST(source_p), chptr->chname);
@@ -528,7 +522,7 @@ build_target_list(struct Client *client_p, struct Client *source_p,
 
       /* XXX - When does this happen? */
       if (dlink_list_length(&chptr->members) == 0)
-        flags = CHFL_CHANOWNER;
+        flags = CHFL_CHANOP;
     }
     else
     {
@@ -540,7 +534,7 @@ build_target_list(struct Client *client_p, struct Client *source_p,
         continue;
       }
 
-      flags = CHFL_CHANOWNER;
+      flags = CHFL_CHANOP;
       if (!ServerInfo.hub)
       {
         if ((*chan != '&') && uplink && IsCapable(uplink, CAP_LL))
