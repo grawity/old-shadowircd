@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_nick.c,v 1.5 2004/09/22 21:40:43 nenolod Exp $
+ *  $Id: m_nick.c,v 1.6 2004/09/23 18:08:46 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -99,7 +99,7 @@ _moddeinit(void)
   mod_del_cmd(&uid_msgtab);
 }
 
-const char *_version = "$Revision: 1.5 $";
+const char *_version = "$Revision: 1.6 $";
 const char *_desc = "Implements /nick command -- declares a client's nickname.";
 #endif
 
@@ -877,18 +877,6 @@ perform_nick_collides(struct Client *source_p,
       sameuser = (target_p->user)
         && !irccmp(target_p->username, parv[5])
         && !irccmp(target_p->host, parv[6]);
-      /* if the users are the same (loaded a client on a different server)
-       * and the new users ts is older, or the users are different and the
-       * new users ts is newer, ignore the new client and let it do the kill
-       */
-      if ((sameuser && newts < target_p->tsinfo) ||
-          (!sameuser && newts > target_p->tsinfo))
-      {
-        client_burst_if_needed(client_p, target_p);
-        return;
-      }
-      else
-      {
         if (sameuser)
           sendto_realops_flags(UMODE_ALL, L_ALL,
                                "Nick collision on %s(%s <- %s)(older killed)",
@@ -914,7 +902,6 @@ perform_nick_collides(struct Client *source_p,
         else if (parc > 9) /* set the new user object up */
           client_from_server(client_p, source_p, parc, parv, newts, nick);
         return;
-      }
     }
   }
 

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_who.c,v 3.4 2004/09/22 19:27:01 nenolod Exp $
+ *  $Id: m_who.c,v 3.5 2004/09/23 18:08:46 nenolod Exp $
  */
 #include "stdinc.h"
 #include "tools.h"
@@ -62,7 +62,7 @@ _moddeinit(void)
   mod_del_cmd(&who_msgtab);
 }
 
-const char *_version = "$Revision: 3.4 $";
+const char *_version = "$Revision: 3.5 $";
 #endif
 
 static void who_global(struct Client *source_p, char *mask, int server_oper);
@@ -165,9 +165,6 @@ m_who(struct Client *client_p, struct Client *source_p,
   {
     int isinvis = 0;
  
-    if (IsServer(client_p))
-      client_burst_if_needed(client_p,target_p);
-
     isinvis = IsInvisible(target_p);
     DLINK_FOREACH_SAFE(lp, lp_next, target_p->user->channel.head)
     {

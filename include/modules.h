@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: modules.h,v 3.3 2004/09/08 01:18:07 nenolod Exp $
+ *  $Id: modules.h,v 3.4 2004/09/23 18:08:46 nenolod Exp $
  */
 
 #ifndef INCLUDED_modules_h
@@ -45,6 +45,7 @@ struct module
   char *name;
   const char *version;
   void *address;
+  const char *desc;
   int core;
   void (*modremove)(void);
 };
