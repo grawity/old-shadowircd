@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 1.1.1.1 2003/12/02 20:46:57 nenolod Exp $
+ *  $Id: channel_mode.c,v 1.2 2003/12/02 22:49:54 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -308,6 +308,8 @@ static const struct mode_letter
   { MODE_PRIVATE,    'p' },
   { MODE_SECRET,     's' },
   { MODE_TOPICLIMIT, 't' },
+  { MODE_NOCOLOR,    'c' },
+  { MODE_REGISTERED, 'r' },
   { 0, '\0' }
 };
 
@@ -1429,7 +1431,7 @@ static struct ChannelMode ModeTable[255] =
   {chm_nosuch, NULL},
   {chm_nosuch, NULL},				  /* a */
   {chm_ban, NULL},                                /* b */
-  {chm_nosuch, NULL},                             /* c */
+  {chm_simple, (void *) MODE_NOCOLOR},            /* c */
   {chm_nosuch, NULL},                             /* d */
   {chm_except, NULL},                             /* e */
   {chm_nosuch, NULL},                             /* f */
@@ -1444,7 +1446,7 @@ static struct ChannelMode ModeTable[255] =
   {chm_op, NULL},                                 /* o */
   {chm_simple, (void *) MODE_PRIVATE},            /* p */
   {chm_nosuch, NULL},                             /* q */
-  {chm_nosuch, NULL},                             /* r */
+  {chm_simple, (void *) MODE_REGISTERED},         /* r */
   {chm_simple, (void *) MODE_SECRET},             /* s */
   {chm_simple, (void *) MODE_TOPICLIMIT},         /* t */
   {chm_nosuch, NULL},                             /* u */

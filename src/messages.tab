@@ -16,7 +16,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *   $Id: messages.tab,v 1.1.1.1 2003/12/02 20:47:04 nenolod Exp $
+ *   $Id: messages.tab,v 1.2 2003/12/02 22:49:54 nenolod Exp $
  */
 
 static struct NumericInfo replies[] = {
@@ -24,7 +24,7 @@ static struct NumericInfo replies[] = {
 /* 001 */  {"RPL_WELCOME", ":%s 001 %s :Welcome to the %s Internet Relay Chat Network %s", NULL},
 /* 002 */  {"RPL_YOURHOST", ":%s 002 %s :Your host is %s, running version %s", NULL},
 /* 003 */  {"RPL_CREATED", ":%s 003 %s :This server was created %s", NULL},
-/* 004 */  {"RPL_MYINFO", ":%s 004 %s %s %s oiwszcerkfydnxbaugl biklmnopstveIha bkloveIh", NULL},
+/* 004 */  {"RPL_MYINFO", ":%s 004 %s %s %s oiwszcerkfydnxbaugl abcehiklmnoprstvI bkloveIh", NULL},
 /* 005 */  {"RPL_ISUPPORT", ":%s 005 %s %s :are supported by this server", NULL},
 /* 006 */  {NULL, NULL, NULL},
 /* 007 */  {NULL, NULL, NULL},
@@ -428,7 +428,7 @@ static struct NumericInfo replies[] = {
 /* 405 */  {"ERR_TOOMANYCHANNELS", ":%s 405 %s %s :You have joined too many channels", NULL},
 /* 406 */  {"ERR_WASNOSUCHNICK", ":%s 406 %s %s :There was no such nickname", NULL},
 /* 407 */  {"ERR_TOOMANYTARGETS", ":%s 407 %s %s :Too many recipients. Only %d processed", NULL},
-/* 408 */  {NULL, NULL, NULL},
+/* 408 */  {"ERR_NOCOLORSONCHAN", ":%s 408 %s %s :You cannot use colors on this channel.", NULL},
 /* 409 */  {"ERR_NOORIGIN", ":%s 409 %s :No origin specified", NULL},
 /* 410 */  {NULL, NULL, NULL},
 /* 411 */  {"ERR_NORECIPIENT", ":%s 411 %s :No recipient given (%s)", NULL},

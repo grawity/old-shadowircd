@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.h,v 1.1.1.1 2003/12/02 20:47:56 nenolod Exp $
+ *  $Id: channel_mode.h,v 1.2 2003/12/02 22:49:54 nenolod Exp $
  */
 
 
@@ -61,12 +61,14 @@ extern void unset_chcap_usage_counts(struct Client *serv_p);
 #define CHFL_INVEX      0x0040
 
 /* channel modes ONLY */
-#define MODE_PRIVATE    0x0001
-#define MODE_SECRET     0x0002
-#define MODE_MODERATED  0x0004
-#define MODE_TOPICLIMIT 0x0008
-#define MODE_INVITEONLY 0x0010
-#define MODE_NOPRIVMSGS 0x0020
+#define MODE_PRIVATE    0x00000001
+#define MODE_SECRET     0x00000002
+#define MODE_MODERATED  0x00000004
+#define MODE_TOPICLIMIT 0x00000008
+#define MODE_INVITEONLY 0x00000010
+#define MODE_NOPRIVMSGS 0x00000020
+#define MODE_NOCOLOR	0x00000040
+#define MODE_REGISTERED 0x00000080
 
 #define MODE_QUERY  0
 #define MODE_ADD    1

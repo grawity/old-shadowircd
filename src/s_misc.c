@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_misc.c,v 1.1.1.1 2003/12/02 20:46:57 nenolod Exp $
+ *  $Id: s_misc.c,v 1.2 2003/12/02 22:49:54 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -124,5 +124,27 @@ small_file_date(time_t lclock)
   strftime(timebuffer, MAX_DATE_STRING, "%Y%m%d", tmptr);
 
   return(timebuffer);
+}
+
+/* from Bahamut -- check for color codes.
+ * if there is a colorcode, return 1,
+ * if not, return 0.
+ *
+ * optimized it slightly. --nenolod
+ */
+int msg_has_colors(char *msg)
+{
+    char *c;
+    if (msg==NULL) return 0;
+    c=msg;
+
+    while(*c)
+    {
+        if(*c == '\003' || *c == '\033')
+	    return 1;
+        else
+            c++;
+    }
+    return 0;
 }
 

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_message.c,v 1.1 2003/12/02 21:37:32 nenolod Exp $
+ *  $Id: m_message.c,v 1.2 2003/12/02 22:49:54 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -117,7 +117,7 @@ _moddeinit(void)
   mod_del_cmd(&notice_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /*
@@ -130,7 +130,7 @@ const char *_version = "$Revision: 1.1 $";
 ** (I don't think there is a single line left from 6/91. Maybe.)
 ** m_privmsg and m_notice do basically the same thing.
 ** in the original 2.8.2 code base, they were the same function
-** "m_message.c." When we did the great cleanup in conjuncton with bleep
+** "m_message" When we did the great cleanup in conjuncton with bleep
 ** of ircu fame, we split m_privmsg.c and m_notice.c.
 ** I don't see the point of that now. Its harder to maintain, its
 ** easier to introduce bugs into one version and not the other etc.
@@ -472,7 +472,12 @@ msg_channel(int p_or_n, const char *command, struct Client *client_p,
     if (result == CAN_SEND_OPV ||
         !flood_attack_channel(p_or_n, source_p, chptr, chptr->chname))
     {
-      sendto_channel_butone(client_p, source_p, chptr, command, ":%s", text);
+      if (msg_has_colors(text) && (chptr->mode.mode & MODE_NOCOLOR))
+	sendto_one(source_p, form_str(ERR_NOCOLORSONCHAN),
+	           ID_or_name(&me, client_p),
+		   ID_or_name(source_p, client_p), chptr->chname);
+      else
+        sendto_channel_butone(client_p, source_p, chptr, command, ":%s", text);
     }
   }
   else
