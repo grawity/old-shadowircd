@@ -26,7 +26,7 @@
  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *
- * $Id: m_force.c,v 1.1 2004/04/30 18:14:09 nenolod Exp $
+ * $Id: m_force.c,v 1.1.1.1 2004/04/30 18:14:09 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -76,7 +76,7 @@ _moddeinit(void)
   mod_del_cmd(&forcepart_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.1.1.1 $";
 #endif
 
 /* m_forcejoin()

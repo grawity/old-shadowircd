@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_spingtime.c,v 1.1 2004/04/30 18:14:18 nenolod Exp $
+ *  $Id: m_spingtime.c,v 1.1.1.1 2004/04/30 18:14:18 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,7 +63,7 @@ _moddeinit(void)
 }
 
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.1.1.1 $";
 #endif
 /*
  * m_spingtime - SPINGTIME
