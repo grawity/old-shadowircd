@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_message.c,v 1.5 2003/12/04 06:38:42 nenolod Exp $
+ *  $Id: m_message.c,v 1.6 2003/12/05 22:02:12 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -28,6 +28,7 @@
 #include "ircd.h"
 #include "numeric.h"
 #include "common.h"
+#include "s_misc.h"
 #include "s_conf.h"
 #include "s_serv.h"
 #include "send.h"
@@ -117,7 +118,7 @@ _moddeinit(void)
   mod_del_cmd(&notice_msgtab);
 }
 
-const char *_version = "$Revision: 1.5 $";
+const char *_version = "$Revision: 1.6 $";
 #endif
 
 /*

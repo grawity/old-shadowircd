@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  s_misc.c: Yet another miscellaneous functions file.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_misc.c,v 1.2 2003/12/02 22:49:54 nenolod Exp $
+ *  $Id: s_misc.c,v 1.3 2003/12/05 22:02:12 nenolod Exp $
  */
 
 #include "stdinc.h"
