@@ -17,7 +17,7 @@ CFLAGS		+= -I../include/
 
 VERSION		= 1.0
 
-LIBS		= @LIBS@
+LIBS		= @LIBS@ ../libopm/libopm.a
 LDFLAGS		= @LDFLAGS@
 CPPFLAGS	= @CPPFLAGS@
 

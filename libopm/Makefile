@@ -1,6 +1,6 @@
 CC		= gcc
 RM		= /bin/rm
-AR		= @AR@
+AR		= /usr/bin/ar
 MV		= /bin/mv
 CP		= /bin/cp
 INSTALL		= /usr/bin/install -c
