@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.2 2003/12/12 20:22:57 nenolod Exp $
+ *  $Id: client.h,v 1.3 2003/12/12 20:32:31 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -371,7 +371,7 @@ struct LocalUser
 #define FLAGS_BLOCKED     0x01000000 /* must wait for COMM_SELECT_WRITE          */
 #define FLAGS_SBLOCKED    0x02000000 /* slinkq is blocked                        */
 #define FLAGS_USERHOST    0x04000000 /* client is in userhost hash               */
-/*                        0x08000000  */
+#define FLAGS_USERCLOAK   0x08000000 /* client is using nonstandard usercloak    */
 /*                        0x10000000  */
 /*                        0x20000000  */
 /*                        0x40000000  */
