@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.23 2004/03/11 05:27:32 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.24 2004/03/11 06:05:23 nenolod Exp $
  */
 
 %{
@@ -1363,86 +1363,102 @@ oper_flag: oper_flag_auspex | oper_flag_admin | oper_flag_die |
            oper_flag_xline | oper_flag_grant | oper_flag_immune |
            oper_flag_remote | oper_flag_globalkill |
            oper_flag_setowncloak | oper_flag_setanycloak |
-           oper_flag_hiddenadmin;
+           oper_flag_hiddenadmin | error;
 
 oper_flag_auspex: AUSPEX ';'
 {
-  yy_aconf->port |= OPER_FLAG_AUSPEX;
+  if (ypass == 2)
+    yy_aconf->port |= OPER_FLAG_AUSPEX;
 };
 
 oper_flag_admin: ADMIN ';'
 {
-  yy_aconf->port |= OPER_FLAG_ADMIN;
+  if (ypass == 2)
+    yy_aconf->port |= OPER_FLAG_ADMIN;
 };
 
 oper_flag_die: DIE ';'
 {
-  yy_aconf->port |= OPER_FLAG_DIE;
+  if (ypass == 2)
+    yy_aconf->port |= OPER_FLAG_DIE;
 };
 
 oper_flag_rehash: REHASH ';'
 {
-  yy_aconf->port |= OPER_FLAG_REHASH;
+  if (ypass == 2)
+    yy_aconf->port |= OPER_FLAG_REHASH;
 };
 
 oper_flag_override: OVERRIDE ';'
 {
-  yy_aconf->port |= OPER_FLAG_OVERRIDE;
+  if (ypass == 2)
+    yy_aconf->port |= OPER_FLAG_OVERRIDE;
 };
 
 oper_flag_nc: NICK_CHANGES ';'
 {
-  yy_aconf->port |= OPER_FLAG_N;
+  if (ypass == 2)
+    yy_aconf->port |= OPER_FLAG_N;
 };
 
 oper_flag_unkline: UNKLINE ';'
 {
-  yy_aconf->port |= OPER_FLAG_UNKLINE;
+  if (ypass == 2)
+    yy_aconf->port |= OPER_FLAG_UNKLINE;
 };
 
 oper_flag_kline: KLINE ';'
 {
-  yy_aconf->port |= OPER_FLAG_K;
+  if (ypass == 2)
+    yy_aconf->port |= OPER_FLAG_K;
 };
 
 oper_flag_xline: XLINE ';'
-{
-  yy_aconf->port |= OPER_FLAG_X;
+{ 
+  if (ypass == 2)
+    yy_aconf->port |= OPER_FLAG_X;
 };
 
 oper_flag_grant: GRANT ';'
 {
-  yy_aconf->port |= OPER_FLAG_GRANT;
+  if (ypass == 2)
+    yy_aconf->port |= OPER_FLAG_GRANT;
 };
 
 oper_flag_immune: IMMUNE ';'
 {
-  yy_aconf->port |= OPER_FLAG_IMMUNE;
+  if (ypass == 2)
+    yy_aconf->port |= OPER_FLAG_IMMUNE;
 };
 
 oper_flag_remote: REMOTE ';'
 {
-  yy_aconf->port |= OPER_FLAG_REMOTE;
+  if (ypass == 2)
+    yy_aconf->port |= OPER_FLAG_REMOTE;
 };
 
 oper_flag_globalkill: GLOBAL_KILL ';'
 {
-  yy_aconf->port |= OPER_FLAG_GLOBAL_KILL;
+  if (ypass == 2)
+    yy_aconf->port |= OPER_FLAG_GLOBAL_KILL;
 };
 
 oper_flag_setowncloak: SET_OWNCLOAK ';'
 {
-  yy_aconf->port |= OPER_FLAG_OWNCLOAK;
+  if (ypass == 2)
+    yy_aconf->port |= OPER_FLAG_OWNCLOAK;
 };
 
 oper_flag_setanycloak: SET_ANYCLOAK ';'
 {
-  yy_aconf->port |= OPER_FLAG_SETCLOAK;
+  if (ypass == 2)
+    yy_aconf->port |= OPER_FLAG_SETCLOAK;
 };
 
 oper_flag_hiddenadmin: HIDDEN_ADMIN ';'
 {
-  yy_aconf->port |= OPER_FLAG_HIDDEN_ADMIN;
+  if (ypass == 2)
+    yy_aconf->port |= OPER_FLAG_HIDDEN_ADMIN;
 };
 
 /***************************************************************************
