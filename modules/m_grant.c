@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_grant.c,v 1.3 2004/02/12 20:04:52 nenolod Exp $
+ *  $Id: m_grant.c,v 1.4 2004/02/12 20:12:03 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -42,28 +42,31 @@
 #include "parse.h"
 #include "modules.h"
 #include "packet.h"
+#include "hash.h"
 
-static void mo_grant(struct Client*, struct Client*, int, char**);
+static void string_to_bitmask (char *, struct Client *);
+static void remove_from_bitmask (char *, struct Client *);
+static void mo_grant (struct Client *, struct Client *, int, char **);
 
 struct Message grant_msgtab = {
   "GRANT", 0, 0, 3, 0, MFLG_SLOW, 0,
-  {m_unregistered, m_ignore, m_ignore, mo_grant, m_ignore} 
+  {m_unregistered, m_ignore, m_ignore, mo_grant, m_ignore}
 };
 
 #ifndef STATIC_MODULES
 void
-_modinit(void)
+_modinit (void)
 {
-  mod_add_cmd(&grant_msgtab);
+  mod_add_cmd (&grant_msgtab);
 }
 
 void
-_moddeinit(void)
+_moddeinit (void)
 {
-  mod_del_cmd(&grant_msgtab);
+  mod_del_cmd (&grant_msgtab);
 }
 
-const char *_version = "$Revision: 1.3 $";
+const char *_version = "$Revision: 1.4 $";
 #endif
 
 /* this is a struct, associating operator permissions with letters. */
@@ -104,18 +107,19 @@ static struct oper_flag_item oper_flags[] = {
  * output       - none
  * side effects - client_p has permissions added to it
  */
-static void string_to_bitmask(char *string, struct Client *target_p)
+static void
+string_to_bitmask (char *string, struct Client *target_p)
 {
   struct oper_flag_item *flag;
   char *tmp;
 
   for (tmp = string; *tmp; tmp++)
-    for (flag = flagtable; flag->letter; flag++)
+    for (flag = oper_flags; flag->letter; flag++)
       if (*flag->letter == *tmp)
-      {
-        target_p->localClient->operflags |= flag->bit;
-        continue;
-      }
+	{
+	  target_p->localClient->operflags |= flag->flag;
+	  continue;
+	}
 }
 
 /*
@@ -126,18 +130,19 @@ static void string_to_bitmask(char *string, struct Client *target_p)
  * output       - none
  * side effects - client_p has permissions removed from it
  */
-static void remove_from_bitmask(char *string, struct Client *target_p)
+static void
+remove_from_bitmask (char *string, struct Client *target_p)
 {
   struct oper_flag_item *flag;
   char *tmp;
 
   for (tmp = string; *tmp; tmp++)
-    for (flag = flagtable; flag->letter; flag++)
+    for (flag = oper_flags; flag->letter; flag++)
       if (*flag->letter == *tmp)
-      {
-        target_p->localClient->operflags &~ flag->bit;
-        continue;
-      }
+	{
+	  target_p->localClient->operflags &= ~flag->flag;
+	  continue;
+	}
 }
 
 /* This is the code for the ircd. */
@@ -150,171 +155,181 @@ static void remove_from_bitmask(char *string, struct Client *target_p)
  *      parv[3] = flags as string
  */
 static void
-mo_grant(struct Client *client_p, struct Client *source_p,
-       int parc, char *parv[])
+mo_grant (struct Client *client_p, struct Client *source_p,
+	  int parc, char *parv[])
 {
   struct Client *target_p;
   unsigned int old;
-  if (!strcmp(parv[1], "GIVE"))
-  {
-    if (!parv[2])
+
+  if (!strcmp (parv[1], "GIVE"))
     {
-      sendto_one(source_p, ":%s NOTICE %s :Not enough parameters",
-		 me.name, source_p->name);
-      return;
-    }
-    
-    if (!(target_p = find_client(parv[2]))
-    {
-      sendto_one(source_p, form_str (ERR_NOSUCHNICK), me.name,
-                 source_p->name, parv[2]);
+      if (!parv[2])
+	{
+	  sendto_one (source_p, ":%s NOTICE %s :Not enough parameters",
+		      me.name, source_p->name);
+	  return;
+	}
+
+      if (!(target_p = find_client (parv[2])))
+	{
+	  sendto_one (source_p, form_str (ERR_NOSUCHNICK), me.name,
+		      source_p->name, parv[2]);
+	  return;
+	}
+
+      if (!parv[3])
+	{
+	  sendto_one (source_p, ":%s NOTICE %s :Not enough parameters",
+		      me.name, source_p->name);
+	  return;
+	}
+
+      /* Since we're granting privs, lets make sure the user has umode +o. */
+      if (!(target_p->umodes & UMODE_OPER))
+	{
+	  old = target_p->umodes;
+	  SetOper (target_p);
+	  target_p->umodes |= UMODE_HELPOP;
+
+	  if (ConfigFileEntry.oper_umodes)
+	    target_p->umodes |= ConfigFileEntry.oper_umodes & ALL_UMODES;
+	  else
+	    target_p->umodes |= (UMODE_SERVNOTICE | UMODE_OPERWALL |
+				 UMODE_WALLOP | UMODE_LOCOPS) & ALL_UMODES;
+
+	  sendto_realops_flags (UMODE_ALL, L_ALL,
+				"%s (%s@%s) is now an operator",
+				source_p->name, source_p->username,
+				source_p->host);
+	  sendto_one (target_p, form_str (RPL_YOUREOPER), me.name,
+		      target_p->name);
+
+	  /* Since we're becoming an oper, lets set the spoof. */
+	  strncpy (target_p->virthost, ServerInfo.network_operhost, HOSTLEN);
+
+	  sendto_server (NULL, target_p, NULL, NOCAPS, NOCAPS, NOFLAGS,
+			 ":%s SVSCLOAK %s :%s", me.name, target_p->name,
+			 target_p->virthost);
+	}
+
+      /* Ok, lets grant the privs now. */
+
+      string_to_bitmask (parv[3], target_p);
+
+      if (target_p->localClient->operflags & OPER_FLAG_ADMIN)
+	target_p->umodes |= UMODE_ADMIN;
+
+      send_umode_out (target_p, target_p, old);
+
+      sendto_one (target_p,
+		  ":%s NOTICE %s :*** Notice -- %s used GRANT to GIVE you operator permissions: %s",
+		  me.name, target_p->name, source_p->name, parv[3]);
+
       return;
     }
 
-    if (!parv[3])
+  if (!strcmp (parv[1], "TAKE"))
     {
-      sendto_one(source_p, ":%s NOTICE %s :Not enough parameters",
-		 me.name, source_p->name);
+      if (!parv[2])
+	{
+	  sendto_one (source_p, ":%s NOTICE %s :Not enough parameters",
+		      me.name, source_p->name);
+	  return;
+	}
+
+      if (!(target_p = find_client (parv[2])))
+	{
+	  sendto_one (source_p, form_str (ERR_NOSUCHNICK), me.name,
+		      source_p->name, parv[2]);
+	  return;
+	}
+
+      if (!parv[3])
+	{
+	  sendto_one (source_p, ":%s NOTICE %s :Not enough parameters",
+		      me.name, source_p->name);
+	  return;
+	}
+
+      /* Ok, lets grant the privs now. */
+
+      remove_from_bitmask (parv[3], target_p);
+
+      if (target_p->localClient->operflags == 0)
+	{
+	  old = target_p->umodes;
+	  ClearOper (target_p);
+	  target_p->umodes &= ~UMODE_HELPOP;
+
+	  if (ConfigFileEntry.oper_umodes)
+	    target_p->umodes &= ~(ConfigFileEntry.oper_umodes & ALL_UMODES);
+	  else
+	    target_p->umodes &= ~((UMODE_SERVNOTICE | UMODE_OPERWALL |
+				   UMODE_WALLOP | UMODE_LOCOPS) & ALL_UMODES);
+
+	  /* Restore their spoof. */
+	  make_virthost (target_p->host, target_p->virthost);
+
+	  sendto_server (NULL, target_p, NULL, NOCAPS, NOCAPS, NOFLAGS,
+			 ":%s SVSCLOAK %s :%s", me.name, target_p->name,
+			 target_p->virthost);
+	}
+
+      send_umode_out (target_p, target_p, old);
+
+      sendto_one (target_p,
+		  ":%s NOTICE %s :*** Notice -- %s used GRANT to TAKE operator permissions: %s",
+		  me.name, target_p->name, source_p->name, parv[3]);
+
       return;
     }
 
-    /* Since we're granting privs, lets make sure the user has umode +o. */
-    if (!(target_p->umodes & UMODE_OPER))
+  if (!strcmp (parv[1], "CLEAR"))
     {
+      if (!parv[2])
+	{
+	  sendto_one (source_p, ":%s NOTICE %s :Not enough parameters",
+		      me.name, source_p->name);
+	  return;
+	}
+
+      if (!(target_p = find_client (parv[2])))
+	{
+	  sendto_one (source_p, form_str (ERR_NOSUCHNICK), me.name,
+		      source_p->name, parv[2]);
+	  return;
+	}
+
+      ClearOperFlags (target_p);
+
       old = target_p->umodes;
-      SetOper(target_p);
-      target_p->umodes |= UMODE_HELPOP;
-
-  if (ConfigFileEntry.oper_umodes)
-    target_p->umodes |= ConfigFileEntry.oper_umodes & ALL_UMODES;
-  else
-    target_p->umodes |= (UMODE_SERVNOTICE|UMODE_OPERWALL|
-			 UMODE_WALLOP|UMODE_LOCOPS) & ALL_UMODES;
-
-      sendto_realops_flags(UMODE_ALL, L_ALL, "%s (%s@%s) is now an operator",
-                       source_p->name, source_p->username, source_p->host);
-      sendto_one(target_p, form_str (RPL_YOUREOPER), me.name, target_p->name);
-
-      /* Since we're becoming an oper, lets set the spoof. */
-      strncpy(target_p->virthost, ServerInfo.network_operhost, HOSTLEN); 
-
-      sendto_server (NULL, target_p, NULL, NOCAPS, NOCAPS, NOFLAGS,
-                     ":%s SVSCLOAK %s :%s", me.name, target_p->name,
-                     target_p->virthost);
-    }
-
-    /* Ok, lets grant the privs now. */
-
-    string_to_bitmask(parv[3], target_p);
-
-    if (target_p->localClient->operflags & OPER_FLAG_ADMIN)
-      target_p->umodes |= UMODE_ADMIN;
-
-    send_umode_out(target_p, target_p, old);
-
-    sendto_one(target_p, ":%s NOTICE %s :*** Notice -- %s used GRANT to GIVE you operator permissions: %s", me.name, target_p->name, source_p->name, parv[3]);
-
-    return;
-  }
-
-  if (!strcmp(parv[1], "TAKE"))
-  {
-    if (!parv[2])
-    {
-      sendto_one(source_p, ":%s NOTICE %s :Not enough parameters",
-		 me.name, source_p->name);
-      return;
-    }
-    
-    if (!(target_p = find_client(parv[2]))
-    {
-      sendto_one(source_p, form_str (ERR_NOSUCHNICK), me.name,
-                 source_p->name, parv[2]);
-      return;
-    }
-
-    if (!parv[3])
-    {
-      sendto_one(source_p, ":%s NOTICE %s :Not enough parameters",
-		 me.name, source_p->name);
-      return;
-    }
-
-    /* Ok, lets grant the privs now. */
-
-    remove_from_bitmask(parv[3], target_p);
-
-    if (target_p->localClient->operflags == 0)
-    {
-      old = target_p->umodes;
-      ClearOper(target_p);
+      ClearOper (target_p);
       target_p->umodes &= ~UMODE_HELPOP;
 
-  if (ConfigFileEntry.oper_umodes)
-    target_p->umodes &= ~(ConfigFileEntry.oper_umodes & ALL_UMODES);
-  else
-    target_p->umodes &= ~((UMODE_SERVNOTICE|UMODE_OPERWALL|
-			 UMODE_WALLOP|UMODE_LOCOPS) & ALL_UMODES);
+      if (ConfigFileEntry.oper_umodes)
+	target_p->umodes &= ~(ConfigFileEntry.oper_umodes & ALL_UMODES);
+      else
+	target_p->umodes &= ~((UMODE_SERVNOTICE | UMODE_OPERWALL |
+			       UMODE_WALLOP | UMODE_LOCOPS) & ALL_UMODES);
 
       /* Restore their spoof. */
       make_virthost (target_p->host, target_p->virthost);
 
       sendto_server (NULL, target_p, NULL, NOCAPS, NOCAPS, NOFLAGS,
-                     ":%s SVSCLOAK %s :%s", me.name, target_p->name,
-                     target_p->virthost);
-    }
+		     ":%s SVSCLOAK %s :%s", me.name, target_p->name,
+		     target_p->virthost);
 
-    send_umode_out(target_p, target_p, old);
+      send_umode_out (target_p, target_p, old);
 
-    sendto_one(target_p, ":%s NOTICE %s :*** Notice -- %s used GRANT to TAKE operator permissions: %s", me.name, target_p->name, source_p->name, parv[3]);
+      sendto_one (target_p,
+		  ":%s NOTICE %s :*** Notice -- %s used GRANT to TAKE operator permissions: %s",
+		  me.name, target_p->name, source_p->name, parv[3]);
 
-    return;
-  }
-
-  if (!strcmp(parv[1], "CLEAR"))
-  {
-    if (!parv[2])
-    {
-      sendto_one(source_p, ":%s NOTICE %s :Not enough parameters",
-		 me.name, source_p->name);
-      return;
-    }
-    
-    if (!(target_p = find_client(parv[2]))
-    {
-      sendto_one(source_p, form_str (ERR_NOSUCHNICK), me.name,
-                 source_p->name, parv[2]);
       return;
     }
 
-    ClearOperFlags(target_p);
-
-    old = target_p->umodes;
-    ClearOper(target_p);
-    target_p->umodes &= ~UMODE_HELPOP;
-
-  if (ConfigFileEntry.oper_umodes)
-    target_p->umodes &= ~(ConfigFileEntry.oper_umodes & ALL_UMODES);
-  else
-    target_p->umodes &= ~((UMODE_SERVNOTICE|UMODE_OPERWALL|
-			 UMODE_WALLOP|UMODE_LOCOPS) & ALL_UMODES);
-
-      /* Restore their spoof. */
-      make_virthost (target_p->host, target_p->virthost);
-
-      sendto_server (NULL, target_p, NULL, NOCAPS, NOCAPS, NOFLAGS,
-                     ":%s SVSCLOAK %s :%s", me.name, target_p->name,
-                     target_p->virthost);
-    }
-
-    send_umode_out(target_p, target_p, old);
-
-    sendto_one(target_p, ":%s NOTICE %s :*** Notice -- %s used GRANT to TAKE operator permissions: %s", me.name, target_p->name, source_p->name, parv[3]);
-
-    return;
-  }
-
-  sendto_one(source_p, ":%s NOTICE %s :*** Syntax: /GRANT [GIVE|TAKE|CLEAR] <nick> <flags>",
-             me.name, source_p->name);
+  sendto_one (source_p,
+	      ":%s NOTICE %s :*** Syntax: /GRANT [GIVE|TAKE|CLEAR] <nick> <flags>",
+	      me.name, source_p->name);
 
 }
