@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_topic.c,v 1.7 2004/03/22 19:53:49 nenolod Exp $
+ *  $Id: m_topic.c,v 1.8 2004/04/05 18:49:21 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -62,7 +62,7 @@ _moddeinit(void)
   mod_del_cmd(&topic_msgtab);
 }
 
-const char *_version = "$Revision: 1.7 $";
+const char *_version = "$Revision: 1.8 $";
 #endif
 
 /* m_topic()
@@ -138,7 +138,7 @@ m_topic(struct Client *client_p, struct Client *source_p,
           return;
 	}
       }
-      if (((chptr->mode.mode & MODE_TOPICLOCK) ||
+      if (((chptr->mode.mode & MODE_TOPICLOCK) &&
           has_member_flags(ms, CHFL_CHANOWNER)) || !MyClient(source_p))
       {
         char topic_info[USERHOST_REPLYLEN];
@@ -162,7 +162,7 @@ m_topic(struct Client *client_p, struct Client *source_p,
                              chptr->chname, chptr->topic == NULL ?
                              "" : chptr->topic);
       }
-      else if (((chptr->mode.mode & MODE_TOPICLIMIT) ||
+      else if (((chptr->mode.mode & MODE_TOPICLIMIT) &&
           has_member_flags(ms, CHFL_CHANOP|CHFL_HALFOP|CHFL_CHANOWNER)) 
           || !MyClient(source_p))
       {
