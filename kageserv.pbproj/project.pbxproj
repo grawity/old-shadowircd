@@ -1,0 +1,271 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 38;
+	objects = {
+		F627FDC9066A73AD01A80164 = {
+			isa = PBXFileReference;
+			path = services.h;
+			refType = 4;
+		};
+		F627FDCA066A73AD01A80164 = {
+			isa = PBXFileReference;
+			path = services.cpp;
+			refType = 4;
+		};
+		F627FDCB066A7A0601A80164 = {
+			children = (
+				F6CCDB7B067EA8F601A80164,
+				F6CCDB7A067EA8F601A80164,
+				F627FDCC066A7A3201A80164,
+				F627FDCD066A7A3201A80164,
+				F6CEFF2D067264FD01A80164,
+				F6CEFF2C067264FD01A80164,
+				F6CEFF2F067264FD01A80164,
+				F6CEFF2E067264FD01A80164,
+			);
+			isa = PBXGroup;
+			name = serv;
+			refType = 4;
+		};
+		F627FDCC066A7A3201A80164 = {
+			isa = PBXFileReference;
+			path = nickserv.h;
+			refType = 4;
+		};
+		F627FDCD066A7A3201A80164 = {
+			isa = PBXFileReference;
+			path = nickserv.cpp;
+			refType = 4;
+		};
+		F647368906DAA62201A80164 = {
+			isa = PBXFileReference;
+			path = md5.cpp;
+			refType = 4;
+		};
+		F647368A06DAA62201A80164 = {
+			isa = PBXFileReference;
+			path = md5.h;
+			refType = 4;
+		};
+		F64FBF8306E1213001A80164 = {
+			isa = PBXFileReference;
+			path = datastorage.h;
+			refType = 4;
+		};
+		F64FBF8406E1213001A80164 = {
+			isa = PBXFileReference;
+			path = datastorage.cpp;
+			refType = 4;
+		};
+		F6A88899066030C301A80164 = {
+			children = (
+				F6A888A706603F9E01A80164,
+				F6A8889F0660313001A80164,
+				F6A888A00660313001A80164,
+				F6CCDB7C068203D301A80164,
+				F6CCDB7D068203D301A80164,
+				F6A888A50660338101A80164,
+				F6A888A60660338101A80164,
+				F6A888B70661068E01A80164,
+				F6A888B80661068E01A80164,
+				F6A888B30660ECAE01A80164,
+				F6A888B40660ECAE01A80164,
+				F6A888BF066156B701A80164,
+				F6A888C0066156B701A80164,
+				F6A888B90661377101A80164,
+				F6A888BA0661377101A80164,
+				F627FDC9066A73AD01A80164,
+				F627FDCA066A73AD01A80164,
+				F627FDCB066A7A0601A80164,
+				F6A888A80660432E01A80164,
+				F6A888AB0660EB7201A80164,
+				F647368906DAA62201A80164,
+				F647368A06DAA62201A80164,
+				F64FBF8306E1213001A80164,
+				F64FBF8406E1213001A80164,
+			);
+			isa = PBXGroup;
+			refType = 4;
+		};
+		F6A8889B066030C301A80164 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			isa = PBXBuildStyle;
+			name = Development;
+		};
+		F6A8889C066030C301A80164 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+			};
+			isa = PBXBuildStyle;
+			name = Deployment;
+		};
+		F6A8889D066030C301A80164 = {
+			buildStyles = (
+				F6A8889B066030C301A80164,
+				F6A8889C066030C301A80164,
+			);
+			isa = PBXProject;
+			mainGroup = F6A88899066030C301A80164;
+			projectDirPath = "";
+			targets = (
+			);
+		};
+		F6A8889F0660313001A80164 = {
+			isa = PBXFileReference;
+			path = kageserv.h;
+			refType = 4;
+		};
+		F6A888A00660313001A80164 = {
+			isa = PBXFileReference;
+			path = kageserv.cpp;
+			refType = 4;
+		};
+		F6A888A50660338101A80164 = {
+			isa = PBXFileReference;
+			path = server.h;
+			refType = 4;
+		};
+		F6A888A60660338101A80164 = {
+			isa = PBXFileReference;
+			path = server.cpp;
+			refType = 4;
+		};
+		F6A888A706603F9E01A80164 = {
+			isa = PBXFileReference;
+			path = config.h;
+			refType = 4;
+		};
+		F6A888A80660432E01A80164 = {
+			isa = PBXFileReference;
+			path = Makefile;
+			refType = 4;
+		};
+		F6A888AB0660EB7201A80164 = {
+			children = (
+				F6A888AC0660EB7201A80164,
+				F6A888AD0660EB7201A80164,
+				F6A888AE0660EB7201A80164,
+				F6A888AF0660EB7201A80164,
+				F6A888B00660EB7201A80164,
+			);
+			isa = PBXGroup;
+			path = doc;
+			refType = 4;
+		};
+		F6A888AC0660EB7201A80164 = {
+			isa = PBXFileReference;
+			path = s_hidehost.c;
+			refType = 4;
+		};
+		F6A888AD0660EB7201A80164 = {
+			isa = PBXFileReference;
+			path = "shadowircd-uid.txt";
+			refType = 4;
+		};
+		F6A888AE0660EB7201A80164 = {
+			isa = PBXFileReference;
+			path = ts5.txt;
+			refType = 4;
+		};
+		F6A888AF0660EB7201A80164 = {
+			isa = PBXFileReference;
+			path = ts6.txt;
+			refType = 4;
+		};
+		F6A888B00660EB7201A80164 = {
+			isa = PBXFileReference;
+			path = umodes.c;
+			refType = 4;
+		};
+		F6A888B30660ECAE01A80164 = {
+			isa = PBXFileReference;
+			path = protocol.h;
+			refType = 4;
+		};
+		F6A888B40660ECAE01A80164 = {
+			isa = PBXFileReference;
+			path = protocol.cpp;
+			refType = 4;
+		};
+		F6A888B70661068E01A80164 = {
+			isa = PBXFileReference;
+			path = parser.h;
+			refType = 4;
+		};
+		F6A888B80661068E01A80164 = {
+			isa = PBXFileReference;
+			path = parser.cpp;
+			refType = 4;
+		};
+		F6A888B90661377101A80164 = {
+			isa = PBXFileReference;
+			path = simulation.h;
+			refType = 4;
+		};
+		F6A888BA0661377101A80164 = {
+			isa = PBXFileReference;
+			path = simulation.cpp;
+			refType = 4;
+		};
+		F6A888BF066156B701A80164 = {
+			isa = PBXFileReference;
+			path = netsimul.h;
+			refType = 4;
+		};
+		F6A888C0066156B701A80164 = {
+			isa = PBXFileReference;
+			path = netsimul.cpp;
+			refType = 4;
+		};
+		F6CCDB7A067EA8F601A80164 = {
+			isa = PBXFileReference;
+			path = control.cpp;
+			refType = 4;
+		};
+		F6CCDB7B067EA8F601A80164 = {
+			isa = PBXFileReference;
+			path = control.h;
+			refType = 4;
+		};
+		F6CCDB7C068203D301A80164 = {
+			isa = PBXFileReference;
+			path = modes.h;
+			refType = 4;
+		};
+		F6CCDB7D068203D301A80164 = {
+			isa = PBXFileReference;
+			path = modes.cpp;
+			refType = 4;
+		};
+		F6CEFF2C067264FD01A80164 = {
+			isa = PBXFileReference;
+			path = blankserv.cpp;
+			refType = 4;
+		};
+		F6CEFF2D067264FD01A80164 = {
+			isa = PBXFileReference;
+			path = blankserv.h;
+			refType = 4;
+		};
+		F6CEFF2E067264FD01A80164 = {
+			isa = PBXFileReference;
+			path = operserv.cpp;
+			refType = 4;
+		};
+		F6CEFF2F067264FD01A80164 = {
+			isa = PBXFileReference;
+			path = operserv.h;
+			refType = 4;
+		};
+	};
+	rootObject = F6A8889D066030C301A80164;
+}

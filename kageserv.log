@@ -1,0 +1,204 @@
+Done constructing
+<< PASS password TS 6 :3DM
+
+<< CAPAB TS6 EOB HUB UVH RE IE QU QS IE EX
+
+<< SERVER kageserv.shadowircd.net 1 :Kageserv Services
+
+Listening to network
+>> NOTICE AUTH :*** Looking up your hostname...
+>> NOTICE AUTH :*** Checking Ident
+>> NOTICE AUTH :*** No Ident response
+>> NOTICE AUTH :*** Found your hostname
+>> PASS password TS 6 2AI
+>> CAPAB :HUB TBURST UNKLN KLN ENCAP KNOCK UVH RE QU CLUSTER PARA ZIP EOB LL QS CHW IE EX
+>> SERVER dementia.ok.us.shadowircd.net 1 :i am demented...
+>> SVINFO 6 3 0 :1085344184
+>> :2AI SERVER services.shadowircd.net 2 :.:shadowircd:. ye olde shadowservices
+** From: 2AI Type: 2
+** Command: SERVER Args: services.shadowircd.net 2 :.:shadowircd:. ye olde shadowservices
+** Long Arg: .:shadowircd:. ye olde shadowservices
+>> :2AI SID kermit.ok.us.shadowircd.net 2 666 :it's not easy being green
+** From: 2AI Type: 2
+** Command: SID Args: kermit.ok.us.shadowircd.net 2 666 :it's not easy being green
+** Long Arg: it's not easy being green
+>> :2AI SID cortana.ca.us.shadowircd.net 2 6FO :After the end has passed.
+** From: 2AI Type: 2
+** Command: SID Args: cortana.ca.us.shadowircd.net 2 6FO :After the end has passed.
+** Long Arg: After the end has passed.
+>> :2AI SID litterbox.in.us.shadowircd.net 2 9FQ :secksay irc home
+** From: 2AI Type: 2
+** Command: SID Args: litterbox.in.us.shadowircd.net 2 9FQ :secksay irc home
+** Long Arg: secksay irc home
+>> :6FO UID Lucifer7 2 1085278925 +sckydnwziloavHNTLW 1010 localhost 127.0.0.1 6FOAAAAAB * :ircd
+** From: 6FO Type: 2
+** Command: UID Args: Lucifer7 2 1085278925 +sckydnwziloavHNTLW 1010 localhost 127.0.0.1 6FOAAAAAB * :ircd
+** Long Arg: ircd
+>> :6FO UID X-[detached] 2 1085278926 +iv 1003 192.168.1.102 192.168.1.102 6FOAAAAAC * :Satan
+** From: 6FO Type: 2
+** Command: UID Args: X-[detached] 2 1085278926 +iv 1003 192.168.1.102 192.168.1.102 6FOAAAAAC * :Satan
+** Long Arg: Satan
+>> :2AI SJOIN 1085278925 #opers +nt :@6FOAAAAAB 6FOAAAAAC
+** From: 2AI Type: 2
+** Command: SJOIN Args: 1085278925 #opers +nt :@6FOAAAAAB 6FOAAAAAC
+** Long Arg: @6FOAAAAAB 6FOAAAAAC
+>> :2AI SJOIN 1085278925 #bopm +nt :@6FOAAAAAB 6FOAAAAAC
+** From: 2AI Type: 2
+** Command: SJOIN Args: 1085278925 #bopm +nt :@6FOAAAAAB 6FOAAAAAC
+** Long Arg: @6FOAAAAAB 6FOAAAAAC
+>> :2AI SJOIN 1085278926 #vHosts +nt :@6FOAAAAAC
+** From: 2AI Type: 2
+** Command: SJOIN Args: 1085278926 #vHosts +nt :@6FOAAAAAC
+** Long Arg: @6FOAAAAAC
+>> :2AI SJOIN 1085278926 #idlerpg +nt :@6FOAAAAAC
+** From: 2AI Type: 2
+** Command: SJOIN Args: 1085278926 #idlerpg +nt :@6FOAAAAAC
+** Long Arg: @6FOAAAAAC
+>> :2AI SJOIN 1085278926 #chat +nt :@6FOAAAAAC
+** From: 2AI Type: 2
+** Command: SJOIN Args: 1085278926 #chat +nt :@6FOAAAAAC
+** Long Arg: @6FOAAAAAC
+>> :2AI SJOIN 1085278926 #synatek +nt :@6FOAAAAAC
+** From: 2AI Type: 2
+** Command: SJOIN Args: 1085278926 #synatek +nt :@6FOAAAAAC
+** Long Arg: @6FOAAAAAC
+>> :2AI SJOIN 1085278926 #lycemia +nt :@6FOAAAAAC
+** From: 2AI Type: 2
+** Command: SJOIN Args: 1085278926 #lycemia +nt :@6FOAAAAAC
+** Long Arg: @6FOAAAAAC
+>> :9FQ UID Ashen 2 1085343432 +swziloavHNTL ~maniakal localhost 127.0.0.1 9FQAAAAAG * :Maniakat
+** From: 9FQ Type: 2
+** Command: UID Args: Ashen 2 1085343432 +swziloavHNTL ~maniakal localhost 127.0.0.1 9FQAAAAAG * :Maniakat
+** Long Arg: Maniakat
+>> :2AI SJOIN 1085255814 #eko +nt :9FQAAAAAG 6FOAAAAAC
+** From: 2AI Type: 2
+** Command: SJOIN Args: 1085255814 #eko +nt :9FQAAAAAG 6FOAAAAAC
+** Long Arg: 9FQAAAAAG 6FOAAAAAC
+>> :6FO UID kreoxie 2 1085335547 +iv ~bruce SP2-24.207.229.123.charter-stl.com 24.207.229.123 6FOAAAAAD * :bruce
+** From: 6FO Type: 2
+** Command: UID Args: kreoxie 2 1085335547 +iv ~bruce SP2-24.207.229.123.charter-stl.com 24.207.229.123 6FOAAAAAD * :bruce
+** Long Arg: bruce
+>> :9FQ UID Eko 2 1085327444 +iv ~eko user-12l2fjm.cable.mindspring.com 69.81.62.118 9FQAAAAAM * :Administrator
+** From: 9FQ Type: 2
+** Command: UID Args: Eko 2 1085327444 +iv ~eko user-12l2fjm.cable.mindspring.com 69.81.62.118 9FQAAAAAM * :Administrator
+** Long Arg: Administrator
+>> :666 UID nenolod 2 1085331957 +swziloavHNTL nenolod ip68-0-124-133.tu.ok.cox.net 68.0.124.133 666AAAAAB * :W. Pitcock
+** From: 666 Type: 2
+** Command: UID Args: nenolod 2 1085331957 +swziloavHNTL nenolod ip68-0-124-133.tu.ok.cox.net 68.0.124.133 666AAAAAB * :W. Pitcock
+** Long Arg: W. Pitcock
+>> :666 UID kib 2 1085276445 +iv ~kib adsl-68-72-153-243.dsl.sgnwmi.ameritech.net 68.72.153.243 666AAAAAD * :kib
+** From: 666 Type: 2
+** Command: UID Args: kib 2 1085276445 +iv ~kib adsl-68-72-153-243.dsl.sgnwmi.ameritech.net 68.72.153.243 666AAAAAD * :kib
+** Long Arg: kib
+>> :2AI UID nenolod_ 1 1085288836 +iv nenolod ip68-0-124-133.tu.ok.cox.net 68.0.124.133 2AIAAAAAH * :W. Pitcock
+** From: 2AI Type: 2
+** Command: UID Args: nenolod_ 1 1085288836 +iv nenolod ip68-0-124-133.tu.ok.cox.net 68.0.124.133 2AIAAAAAH * :W. Pitcock
+** Long Arg: W. Pitcock
+>> NICK ChanServ 2 1085270770 +oeS services shadowircd.net services.shadowircd.net :Channel Server
+>> :2AI UID dementia 1 1085270690 +swziloavH nenolod ip68-0-124-133.tu.ok.cox.net 68.0.124.133 2AIAAAAAF staff.shadownet :W. Pitcock
+** From: 2AI Type: 2
+** Command: UID Args: dementia 1 1085270690 +swziloavH nenolod ip68-0-124-133.tu.ok.cox.net 68.0.124.133 2AIAAAAAF staff.shadownet :W. Pitcock
+** Long Arg: W. Pitcock
+>> :2AI SJOIN 1085203924 #shadowircd +ntr :6FOAAAAAD @9FQAAAAAG @9FQAAAAAM @6FOAAAAAB @6FOAAAAAC !@666AAAAAB @666AAAAAD @2AIAAAAAH @ChanServ @2AIAAAAAF
+** From: 2AI Type: 2
+** Command: SJOIN Args: 1085203924 #shadowircd +ntr :6FOAAAAAD @9FQAAAAAG @9FQAAAAAM @6FOAAAAAB @6FOAAAAAC !@666AAAAAB @666AAAAAD @2AIAAAAAH @ChanServ @2AIAAAAAF
+** Long Arg: 6FOAAAAAD @9FQAAAAAG @9FQAAAAAM @6FOAAAAAB @6FOAAAAAC !@666AAAAAB @666AAAAAD @2AIAAAAAH @ChanServ @2AIAAAAAF
+>> :2AI SJOIN 1085262481 #kageserv +nt :@9FQAAAAAM 9FQAAAAAG 666AAAAAB 2AIAAAAAF
+** From: 2AI Type: 2
+** Command: SJOIN Args: 1085262481 #kageserv +nt :@9FQAAAAAM 9FQAAAAAG 666AAAAAB 2AIAAAAAF
+** Long Arg: @9FQAAAAAM 9FQAAAAAG 666AAAAAB 2AIAAAAAF
+>> NICK HelpServ 2 1085270770 +eS services shadowircd.net services.shadowircd.net :Help Server
+>> NICK StatServ 2 1085270770 +ieS services shadowircd.net services.shadowircd.net :Statistics Server
+>> NICK MemoServ 2 1085270770 +oeS services shadowircd.net services.shadowircd.net :Memo Server
+>> NICK NickServ 2 1085270770 +oeS services shadowircd.net services.shadowircd.net :Nickname Server
+>> NICK Global 2 1085270770 +ioeS services shadowircd.net services.shadowircd.net :Global Noticer
+>> NICK OperServ 2 1085270770 +ioeS services shadowircd.net services.shadowircd.net :Operator Server
+<< :3DM UID KageServ 0 1085344129 +oeaS Services kageserv.shadowircd.net kageserv.shadowircd.net 127.0.0.1 3DMXDP83 :KageServ Service
+
+>> :2AI EOB
+** From: 2AI Type: 2
+** Command: EOB Args: 
+<< PONG dementia.ok.us.shadowircd.net
+
+
+>> PING :dementia.ok.us.shadowircd.net
+>> :Global NOTICE KageServ :[Logon News - May 22 2004] Welcome to the ShadowIRCd testing and support network (also known as the Shadownet). Please visit our website at http://www.shadowircd.net/
+** From: Global Type: 1
+** Command: NOTICE Args: KageServ :[Logon News - May 22 2004] Welcome to the ShadowIRCd testing and support network (also known as the Shadownet). Please visit our website at http://www.shadowircd.net/
+** Long Arg: [Logon News - May 22 2004] Welcome to the ShadowIRCd testing and support network (also known as the Shadownet). Please visit our website at http://www.shadowircd.net/
+>> :dementia.ok.us.shadowircd.net SPINGTIME kageserv.shadowircd.net 1653907428
+** From: dementia.ok.us.shadowircd.net Type: 0
+** Command: SPINGTIME Args: kageserv.shadowircd.net 1653907428
+>> :dementia.ok.us.shadowircd.net WALLOPS :Remote CONNECT meerkat.* 6667 from nenolod[nenolod@ip68-0-124-133.tu.ok.cox.net]
+** From: dementia.ok.us.shadowircd.net Type: 0
+** Command: WALLOPS Args: :Remote CONNECT meerkat.* 6667 from nenolod[nenolod@ip68-0-124-133.tu.ok.cox.net]
+** Long Arg: Remote CONNECT meerkat.* 6667 from nenolod[nenolod@ip68-0-124-133.tu.ok.cox.net]
+>> :2AI SID meerkat.ok.us.shadowircd.net 2 323 :.:shadowircd:. linux 2.4.25 rtsigio server
+** From: 2AI Type: 2
+** Command: SID Args: meerkat.ok.us.shadowircd.net 2 323 :.:shadowircd:. linux 2.4.25 rtsigio server
+** Long Arg: .:shadowircd:. linux 2.4.25 rtsigio server
+>> :323 UID meerkat 2 1085274128 +swziloavHNTL nenolod localhost 127.0.0.1 323AAAAAB * :William Pitcock
+** From: 323 Type: 2
+** Command: UID Args: meerkat 2 1085274128 +swziloavHNTL nenolod localhost 127.0.0.1 323AAAAAB * :William Pitcock
+** Long Arg: William Pitcock
+>> :323 SJOIN 1085262481 #kageserv +nt :@323AAAAAB
+** From: 323 Type: 2
+** Command: SJOIN Args: 1085262481 #kageserv +nt :@323AAAAAB
+** Long Arg: @323AAAAAB
+>> :323 SJOIN 1085255814 #eko +nt :323AAAAAB
+** From: 323 Type: 2
+** Command: SJOIN Args: 1085255814 #eko +nt :323AAAAAB
+** Long Arg: 323AAAAAB
+>> :323 SJOIN 1085203924 #shadowircd +ntr :323AAAAAB
+** From: 323 Type: 2
+** Command: SJOIN Args: 1085203924 #shadowircd +ntr :323AAAAAB
+** Long Arg: 323AAAAAB
+>> :dementia.ok.us.shadowircd.net SPINGTIME meerkat.ok.us.shadowircd.net 1667016196
+** From: dementia.ok.us.shadowircd.net Type: 0
+** Command: SPINGTIME Args: meerkat.ok.us.shadowircd.net 1667016196
+>> :services.shadowircd.net SJOIN 1085203924 #shadowircd 0 :ChanServ
+** From: services.shadowircd.net Type: 0
+** Command: SJOIN Args: 1085203924 #shadowircd 0 :ChanServ
+** Long Arg: ChanServ
+>> :meerkat.ok.us.shadowircd.net SPINGTIME dementia.ok.us.shadowircd.net 1606686284
+** From: meerkat.ok.us.shadowircd.net Type: 0
+** Command: SPINGTIME Args: dementia.ok.us.shadowircd.net 1606686284
+>> :2AI WALLOPS :Remote SQUIT meerkat.ok.us.shadowircd.net from nenolod ()
+** From: 2AI Type: 2
+** Command: WALLOPS Args: :Remote SQUIT meerkat.ok.us.shadowircd.net from nenolod ()
+** Long Arg: Remote SQUIT meerkat.ok.us.shadowircd.net from nenolod ()
+>> SQUIT 323 :dementia.ok.us.shadowircd.net
+>> :dementia.ok.us.shadowircd.net WALLOPS :Remote CONNECT meerkat.* 6667 from nenolod[nenolod@ip68-0-124-133.tu.ok.cox.net]
+** From: dementia.ok.us.shadowircd.net Type: 0
+** Command: WALLOPS Args: :Remote CONNECT meerkat.* 6667 from nenolod[nenolod@ip68-0-124-133.tu.ok.cox.net]
+** Long Arg: Remote CONNECT meerkat.* 6667 from nenolod[nenolod@ip68-0-124-133.tu.ok.cox.net]
+>> :2AI SID meerkat.ok.us.shadowircd.net 2 323 :.:shadowircd:. linux 2.4.25 rtsigio server
+** From: 2AI Type: 2
+** Command: SID Args: meerkat.ok.us.shadowircd.net 2 323 :.:shadowircd:. linux 2.4.25 rtsigio server
+** Long Arg: .:shadowircd:. linux 2.4.25 rtsigio server
+>> :323 UID meerkat 2 1085274128 +swziloavHNTL nenolod localhost 127.0.0.1 323AAAAAB * :William Pitcock
+** From: 323 Type: 2
+** Command: UID Args: meerkat 2 1085274128 +swziloavHNTL nenolod localhost 127.0.0.1 323AAAAAB * :William Pitcock
+** Long Arg: William Pitcock
+>> :323 SJOIN 1085262481 #kageserv +nt :@323AAAAAB
+** From: 323 Type: 2
+** Command: SJOIN Args: 1085262481 #kageserv +nt :@323AAAAAB
+** Long Arg: @323AAAAAB
+>> :323 SJOIN 1085255814 #eko +nt :323AAAAAB
+** From: 323 Type: 2
+** Command: SJOIN Args: 1085255814 #eko +nt :323AAAAAB
+** Long Arg: 323AAAAAB
+>> :323 SJOIN 1085203924 #shadowircd +ntr :323AAAAAB
+** From: 323 Type: 2
+** Command: SJOIN Args: 1085203924 #shadowircd +ntr :323AAAAAB
+** Long Arg: 323AAAAAB
+>> :dementia.ok.us.shadowircd.net SPINGTIME meerkat.ok.us.shadowircd.net 1778957911
+** From: dementia.ok.us.shadowircd.net Type: 0
+** Command: SPINGTIME Args: meerkat.ok.us.shadowircd.net 1778957911
+>> :services.shadowircd.net SJOIN 1085203924 #shadowircd 0 :ChanServ
+** From: services.shadowircd.net Type: 0
+** Command: SJOIN Args: 1085203924 #shadowircd 0 :ChanServ
+** Long Arg: ChanServ
+>> :meerkat.ok.us.shadowircd.net SPINGTIME dementia.ok.us.shadowircd.net 1718633205
+** From: meerkat.ok.us.shadowircd.net Type: 0
+** Command: SPINGTIME Args: dementia.ok.us.shadowircd.net 1718633205

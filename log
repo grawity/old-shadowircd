@@ -1,0 +1,110 @@
+Done constructing
+<< PASS raymondsucks TS 6 :3JT
+<< CAPAB TS TBURST KNOCK UNKLN KLN ENCAP UVH RE QU CLUSTER PARA TS6 EOB QS CHW IE EX
+<< SERVER kageserv.pwnix.net 1 :Kageserv Services
+Listening to network
+>> NOTICE AUTH :*** Looking up your hostname...
+>> NOTICE AUTH :*** Checking Ident
+>> NOTICE AUTH :*** Couldn't look up your hostname
+>> NOTICE AUTH :*** No Ident response
+>> PASS raymondsucks TS 6 9FQ
+** PASS hook activated
+raymondsucks TS 6 9FQ
+(password) raymondsucks
+(TS)       TS
+(6)        6
+(SID)      9FQ
+>> CAPAB :HUB TBURST KNOCK UNKLN KLN ENCAP FILTER UVH RE QU CLUSTER PARA EOB LL QS CHW IE EX
+>> SERVER litterbox.ath.cx 1 :PwNix, home of the pwnix
+** SERVER hook activated
+CMDARGS      SERVER litterbox.ath.cx 1 :PwNix, home of the pwnix
+TEMP         0xbfffecc4
+(SERVER)     SERVER
+TEMP         0xbfffecc4
+(hostname)   litterbox.ath.cx
+(gecos)      PwNix, home of the pwnix
+>> SVINFO 6 3 0 :1093814830
+>> :9FQ SID smrtjustin.ath.cx 2 666 :Pwnix IRC Server
+** SID hook activated
+(server)  smrtjustin.ath.cx
+(hops)    2
+(sid)     666
+(gecos)   Pwnix IRC Server
+(link)    9FQ
+** Linking to litterbox.ath.cx
+** litterbox.ath.cx has 1 links
+>> :9FQ SERVER AxeServ.pwn 1 :Dont fuck with me
+>> :9FQ SID meatmanek.ath.cx 2 3AT :w00t!
+** SID hook activated
+(server)  meatmanek.ath.cx
+(hops)    2
+(sid)     3AT
+(gecos)   w00t!
+(link)    9FQ
+** Linking to litterbox.ath.cx
+** litterbox.ath.cx has 2 links
+>> :3AT SERVER irc.osts.net 3 :JUPED: Not there.
+>> :9FQ UID Eko 1 1093814356 +swziloavH ~Eko user-12l2fjm.cable.mindspring.com 69.81.62.118 9FQAAAAI3 staff.pwnix :Ethereal Flaim
+>> :9FQ SJOIN 1093814359 #evn +nt :@9FQAAAAI3
+>> :3AT UID meatmanek 2 1093800913 +swziloavHNTLW meatmanek 192.168.0.103 192.168.0.103 3ATAAAAIG meatmanek.pwnix.net :meatmanek
+>> :9FQ SJOIN 1093800913 #alephone +nt :@3ATAAAAIG
+>> :9FQ SJOIN 1093800913 #flood +nt :@3ATAAAAIG
+>> :9FQ SJOIN 1093800915 #poolparty +nt :@3ATAAAAIG
+>> :666 UID SmrtJustin 2 1093792920 +wziloaevHNTLW ~SmrtJusti 192.168.0.150 192.168.0.150 666AAAAA2 staff.pwnix :Justin
+>> :9FQ SJOIN 1093793179 #BHS +nt :!@666AAAAA2
+>> :9FQ UID Ashen 1 1093742590 +swziloaevHNTLW mdkuser 192.168.1.100 192.168.1.100 9FQAAAAIB staff.pwnix :Maniakat
+>> :9FQ SJOIN 1093738694 #boys +nt :@9FQAAAAIB
+>> :9FQ SJOIN 1093738686 #kageserv +nt :9FQAAAAI3 9FQAAAAIB
+>> :9FQ UID E 1 1093717714 +iv ~E user-12l2fjm.cable.mindspring.com 69.81.62.118 9FQAAAAHP * :E
+>> :9FQ SJOIN 1093717715 #ruby +nt :@9FQAAAAHP
+>> :9FQ SJOIN 1093717715 #eric +nt :@9FQAAAAHP
+>> :666 UID Hostile 2 1093792942 +iev 1000 192.168.0.151 192.168.0.151 666AAAAA3 * :Logan Anteau
+>> :9FQ UID nenolod 1 1093746650 +iev ~nenolod ip68-13-244-6.ok.ok.cox.net 68.13.244.6 9FQAAAAIH * :nenolod
+>> :9FQ SJOIN 1093063304 #chat +nt :666AAAAA3 9FQAAAAIH 9FQAAAAIB
+>> :litterbox.ath.cx TBURST 1093063304 #chat 1093743932 Ashen :/join #pwnix
+>> :9FQ SJOIN 1092951831 #eko +nt :9FQAAAAI3 9FQAAAAIB 9FQAAAAHP
+>> NICK Axe 2 1093806397 +wioaS Axe dont.fuck.with.me AxeServ.pwn :Axe_pwns_j00
+>> :9FQ UID jdhutchin1 1 1093797967 +iv ~jdhutchin user-0c93ksq.cable.mindspring.com 24.145.211.154 9FQAAAAIU * :joshua
+>> :9FQ UID mathkid 1 1093754987 +iv ~mathkid dhcp065-029-074-086.indy.rr.com 65.29.74.86 9FQAAAAIL * :hi guys
+>> :9FQ UID Ashen`` 1 1093735670 +iv mdkuser 192.168.1.100 192.168.1.100 9FQAAAAIA * :AxeClient
+>> :9FQ UID Ashen` 1 1093735670 +iv mdkuser 192.168.1.100 192.168.1.100 9FQAAAAH9 * :AxeClient
+>> :9FQ UID Axelle 1 1093663956 +iev mdkuser 192.168.1.100 192.168.1.100 9FQAAAAGU * :baby bot
+>> :9FQ SJOIN 1092703208 #pwnix +sc :@9FQAAAAI3 3ATAAAAIG !Axe %9FQAAAAIU @666AAAAA2 %666AAAAA3 %9FQAAAAIL !9FQAAAAIB %9FQAAAAIH 9FQAAAAIA 9FQAAAAH9 !@%+9FQAAAAHP @%9FQAAAAGU
+>> :9FQ BMASK 1092703208 #pwnix e :Ashen!*@* SmrtJustin!*@*
+>> :9FQ BMASK 1092703208 #pwnix q :meatmanek_!*@*
+>> :litterbox.ath.cx TBURST 1092703208 #pwnix 1093751318 iferology :<iferology> the study of me || party! friday in the library media room...get a SRT library pass from after wednesday's srt to before first period on friday
+>> :9FQ SJOIN 1092703334 #opers +nt :9FQAAAAI3 3ATAAAAIG !Axe 666AAAAA2 9FQAAAAIB
+>> :9FQ SJOIN 1092703334 #CHS +nt :@9FQAAAAI3 3ATAAAAIG !Axe 9FQAAAAIU 9FQAAAAIL !9FQAAAAIB 9FQAAAAIA 9FQAAAAHP @9FQAAAAGU
+>> NICK OperServ 2 1093806397 +wioaS OperServ oper.services AxeServ.pwn :Operator Services
+>> NICK ChanServ 2 1093806397 +wioaS ChanServ chan.services AxeServ.pwn :Channel Registrations!
+>> NICK NickServ 2 1093806397 +wioaS NickServ nick.services AxeServ.pwn :Nick Registrations!
+>> NICK B0tServ 2 1093806397 +wioaS B0tServ bots.are.god AxeServ.pwn :Botsies!
+>> NICK H0stServ 2 1093806397 +wioaS H0stServ yummy.hosts.for.all AxeServ.pwn :Hosties!
+>> NICK HackServ 2 1093806397 +wioaS Axe dont.fuck.with.me AxeServ.pwn :Ophacking tool
+>> :9FQ UID SubWolf 1 1093570101 +iv subwolf 207-224-71-114.dnvr.qwest.net 207.224.71.114 9FQAAAAFI * :Me!
+>> :9FQ EOB
+Starting services
+KageServ calling parent init
+KageServ.uid = 3JTAAAAAA
+KageServ sending signon
+<< :3JT UID KageServ 0 1093814830 +aoeSW control kageserv.pwnix.net 127.0.0.1 3JTAAAAAA services.pwnix.org :Services Control
+KageServ joining #kageserv
+<< :3JT SJOIN 1093814830 #kageserv +Ont :3JTAAAAAA
+Starting service #0 (NickServ)
+NickServ calling parent init
+NickServ.uid = 3JTAAAAAB
+NickServ sending signon
+<< :3JT UID NicServ 0 1093814830 +aoeSW services kageserv.pwnix.net 127.0.0.1 3JTAAAAAB services.pwnix.org :Nickname Services
+NickServ joining #kageserv
+<< :3JT SJOIN 1093814830 #kageserv +Ont :3JTAAAAAB
+Starting service #1 (OperServ)
+OperServ calling parent init
+OperServ.uid = 3JTAAAAAC
+OperServ sending signon
+<< :3JT UID OprServ 0 1093814830 +aoeSW services kageserv.pwnix.net 127.0.0.1 3JTAAAAAC services.pwnix.org :Oper Services
+OperServ joining #kageserv
+<< :3JT SJOIN 1093814830 #kageserv +Ont :3JTAAAAAC
+<< PONG litterbox.ath.cx
+
+>> PING :litterbox.ath.cx
+>> :666AAAAA3 QUIT :Remote host closed the connection

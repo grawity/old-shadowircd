@@ -1,0 +1,19 @@
+# Handshake testing for KageServ.
+
+use IO::Socket;
+
+$sock = IO::Socket::INET->new("PeerHost" => "127.0.0.1",
+                              "PeerPort" => 8887);
+
+print $sock "PASS password TS 6 237\n";
+print $sock "CAPAB TBURST KLN UNKLN ENCAP KNOCK UVH RE QU CLUSTER PARA TS6 EOB QS CHW IE EX\n";
+print $sock "SERVER testserv.shadowircd.net 1 :KageServ Services (perl handshake test)\n";
+print "Sent to server:\n";
+print "PASS password TS 6 237\n";
+print "CAPAB TBURST KLN UNKLN ENCAP KNOCK UVH RE QU CLUSTER PARA TS6 EOB QS CHW IE EX\n";
+print "SERVER testserv.shadowircd.net 1 :KageServ Services (perl handshake test)\n";
+
+while ($line = <$sock>) {
+  print $line;
+}
+
