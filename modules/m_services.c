@@ -1,7 +1,7 @@
 /*
  * shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  * 
- * $Id: m_services.c,v 1.2 2003/12/05 22:42:56 nenolod Exp $
+ * $Id: m_services.c,v 1.3 2004/02/14 03:07:09 nenolod Exp $
  */
 
 /* List of ircd includes from ../include/ */
@@ -104,7 +104,7 @@ struct Message hostserv_msgtab = {
 
 
 /* Aliases only for NickServ, ChanServ, MemoServ and BotServ:
- * /ns, /cs, /ms and /bs
+ * /ns, /cs, /ms, /bs, /hs, /ss
  */
 struct Message ns_msgtab = {
   "NS", 0, 0, 1, 0, MFLG_SLOW, 0,
@@ -122,7 +122,14 @@ struct Message bs_msgtab = {
   "BS", 0, 0, 1, 0, MFLG_SLOW, 0,
   {m_unregistered, m_botserv, m_ignore, m_botserv}
 };
-
+struct Message ss_msgtab = {
+  "SS", 0, 0, 1, 0, MFLG_SLOW, 0,
+  {m_unregistered, m_statserv, m_ignore, m_statserv}
+};
+struct Message hs_msgtab = {
+  "HS", 0, 0, 1, 0, MFLG_SLOW, 0,
+  {m_unregistered, m_hostserv, m_ignore, m_hostserv}
+};
 
 #ifndef STATIC_MODULES
 void
@@ -144,6 +151,9 @@ _modinit(void)
   mod_add_cmd(&cs_msgtab);
   mod_add_cmd(&ms_msgtab);
   mod_add_cmd(&bs_msgtab);
+  mod_add_cmd(&hs_msgtab);
+  mod_add_cmd(&ss_msgtab);
+
 }
 
 void
@@ -165,9 +175,11 @@ _moddeinit(void)
   mod_del_cmd(&cs_msgtab);
   mod_del_cmd(&ms_msgtab);
   mod_del_cmd(&bs_msgtab);
+  mod_del_cmd(&hs_msgtab);
+  mod_del_cmd(&ss_msgtab);
 }
 
-char *_version = "$Revision: 1.2 $";
+char *_version = "$Revision: 1.3 $";
 #endif
 
 /*
