@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.6 2004/02/05 20:15:48 nenolod Exp $
+ *  $Id: client.h,v 1.7 2004/02/05 23:29:43 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -168,6 +168,10 @@ struct Client
    * gcos field in /etc/passwd but anything can go here.
    */
   char              info[REALLEN + 1]; /* Free form additional client info */
+  /*
+   * client->persistpw contains the password used for persistant clients.
+   */
+  char              persistpw[PASSWDLEN + 1];
 
   /* caller ID allow list */
   /* This has to be here, since a client on an on_allow_list could
@@ -377,7 +381,7 @@ struct LocalUser
 #define FLAGS_USERHOST    0x04000000 /* client is in userhost hash               */
 #define FLAGS_USERCLOAK   0x08000000 /* client is using nonstandard usercloak    */
 #define FLAGS_SSL         0x10000000 /* client is using SSL */
-/*                        0x20000000  */
+#define FLAGS_PERSISTANT  0x20000000 /* client is PERSISTANT */
 /*                        0x40000000  */
 /*                        0x80000000  */
 

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.c,v 1.4 2004/01/20 19:56:34 nenolod Exp $
+ *  $Id: client.c,v 1.5 2004/02/05 23:29:43 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -145,6 +145,7 @@ make_client(struct Client *from)
 
   client_p->hnext  = client_p;
   client_p->status = STAT_UNKNOWN;
+  client_p->persistpw[0] = '\0';
   strcpy(client_p->username, "unknown");
 
   return(client_p);
@@ -245,6 +246,9 @@ check_pings_list(dlink_list *list)
   DLINK_FOREACH_SAFE(ptr, next_ptr, list->head)
   {
     client_p = ptr->data;
+
+    if (client_p->flags & FLAGS_PERSISTANT)
+      continue;
 
     /*
     ** Note: No need to notify opers here. It's
@@ -836,6 +840,28 @@ exit_one_client(struct Client *client_p, struct Client *source_p,
   else if (IsPerson(source_p)) /* ...just clean all others with QUIT... */
   {
     dlink_node *lp, *next_lp;
+
+    /* If we are a persistant client, we don't quit. We just go persistant.
+     * Otherwise, persistant clients wont work, will they? --nenolod
+     */
+    if (source_p->persistpw[0] && (!(source_p->flags & FLAGS_KILLED)))
+    {
+      source_p->flags |= FLAGS_PERSISTANT;
+
+      fd_close(source_p->localClient->fd);
+      source_p->localClient->fd = -1;
+      fd_close(source_p->localClient->ctrlfd);
+      source_p->localClient->ctrlfd = -1;
+
+#ifndef HAVE_SOCKETPAIR
+      fd_close(source_p->localClient->fd_r);
+      source_p->localClient->fd_r = -1;
+      fd_close(source_p->localClient->ctrlfd_r);
+      source_p->localClient->ctrlfd_r = -1;
+#endif
+
+      return;
+    }
 
     /* If this exit is generated from "m_kill", then there
      * is no sense in sending the QUIT--KILL's have been
