@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_who.c,v 1.3 2004/01/20 19:56:34 nenolod Exp $
+ *  $Id: m_who.c,v 1.4 2004/04/06 18:42:43 nenolod Exp $
  */
 #include "stdinc.h"
 #include "tools.h"
@@ -62,7 +62,7 @@ _moddeinit(void)
   mod_del_cmd(&who_msgtab);
 }
 
-const char *_version = "$Revision: 1.3 $";
+const char *_version = "$Revision: 1.4 $";
 #endif
 
 static void who_global(struct Client *source_p, char *mask, int server_oper);
@@ -237,7 +237,7 @@ who_common_channel(struct Client *source_p, struct Channel *chptr,
 
     if ((mask == NULL) ||
 	match(mask, target_p->name) || match(mask, target_p->username) ||
-	match(mask, target_p->host) || 
+	match(mask, GET_CLIENT_HOST(target_p)) || 
 	(match(mask, target_p->user->server->name)) ||
 	match(mask, target_p->info))
     {
@@ -300,7 +300,7 @@ who_global(struct Client *source_p,char *mask, int server_oper)
 
     if (!mask ||
         match(mask, target_p->name) || match(mask, target_p->username) ||
-	match(mask, target_p->host) || match(mask, target_p->user->server->name) ||
+	match(mask, GET_CLIENT_HOST(target_p)) || match(mask, target_p->user->server->name) ||
 	match(mask, target_p->info))
     {
       do_who(source_p, target_p, NULL, "");
