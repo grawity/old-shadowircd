@@ -1,6 +1,6 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
- *  m_capture.c: Makes a designated client captive
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
+ *  m_shun.c: Makes a designated client captive
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
  *
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_capture.c,v 1.1.1.1 2003/12/02 20:47:49 nenolod Exp $
+ *  $Id: m_shun.c,v 1.1 2003/12/18 18:21:08 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -44,36 +44,36 @@
 #include "modules.h"
 #include "hook.h"
 
-static void mo_capture(struct Client*, struct Client*, int, char**);
+static void mo_shun(struct Client*, struct Client*, int, char**);
 
 
-struct Message capture_msgtab = {
-  "CAPTURE", 0, 0, 0, 0, MFLG_SLOW, 0L,
-  {m_unregistered, m_ignore, m_ignore, mo_capture, m_ignore}
+struct Message shun_msgtab = {
+  "SHUN", 0, 0, 0, 0, MFLG_SLOW, 0L,
+  {m_unregistered, m_ignore, m_ignore, mo_shun, m_ignore}
 };
 
 #ifndef STATIC_MODULES
 void
 _modinit(void)
 {
-  mod_add_cmd(&capture_msgtab);
+  mod_add_cmd(&shun_msgtab);
 }
 
 void
 _moddeinit(void)
 {
-  mod_del_cmd(&capture_msgtab);
+  mod_del_cmd(&shun_msgtab);
 }
 
-const char *_version = "$Revision: 1.1.1.1 $";
+const char *_version = "$Revision: 1.1 $";
 #endif
 
-/* mo_capture
+/* mo_shun
  *      parv[0] = sender prefix
  *      parv[1] = nickname masklist
  */
 static void
-mo_capture(struct Client *client_p, struct Client *source_p,
+mo_shun(struct Client *client_p, struct Client *source_p,
         int parc, char *parv[])
 {
   struct Client *target_p;
@@ -90,7 +90,7 @@ mo_capture(struct Client *client_p, struct Client *source_p,
     if (MyClient(target_p))
     {
       target_p->handler = DUMMY_HANDLER;
-      sendto_one(source_p, ":%s NOTICE %s :%s is now captured",
+      sendto_one(source_p, ":%s NOTICE %s :%s is now shunned",
 		 me.name, source_p->name, parv[1]);
     }
   }
