@@ -1,5 +1,5 @@
 /*
- * $Id: m_persist.c,v 1.8 2004/04/01 18:07:57 nenolod Exp $
+ * $Id: m_persist.c,v 1.1 2004/04/02 22:40:00 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -87,6 +87,14 @@ m_persist(struct Client *client_p, struct Client *source_p,
     strncpy(source_p->persistpw, parv[2], PASSWDLEN);
     sendto_one(source_p, ":%s NOTICE %s :*** Password set to %s",
                  me.name, source_p->name, source_p->persistpw);
+    return;
+  }
+
+  if (!strcasecmp(parv[1], "CLEAR"))
+  {
+    source_p->persistpw[0] = '\0';
+    sendto_one(source_p, ":%s NOTICE %s :*** Persistant password cleared",
+                 me.name, source_p->name);
     return;
   }
 
@@ -192,10 +200,11 @@ m_persist(struct Client *client_p, struct Client *source_p,
                  source_p->name, source_p->username, GET_CLIENT_HOST(source_p));
 
       target_p->persistpw[0] = '\0';
-      target_p->flags &= ~FLAGS_PERSIST;
       target_p->flags |= FLAGS_KILLED;
+      target_p->flags &= ~FLAGS_PERSIST;
+      target_p->flags |= FLAGS_DEADSOCKET;
 
-      exit_client(client_p, target_p, client_p, reason);
+      exit_client(client_p, target_p, NULL, reason);
 
       /* Change the nick. */
       change_local_nick(client_p, source_p, target_n);      
