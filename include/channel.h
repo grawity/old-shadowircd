@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.h,v 1.5 2004/07/16 16:04:20 nenolod Exp $
+ *  $Id: channel.h,v 1.6 2004/07/18 13:11:38 nenolod Exp $
  */
 
 #ifndef INCLUDED_channel_h
@@ -136,7 +136,6 @@ struct Filter
 {
   dlink_node node;
   char *word;
-  char *who;
   time_t when;
 };
 

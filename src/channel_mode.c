@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 1.6 2004/07/15 12:27:09 nenolod Exp $
+ *  $Id: channel_mode.c,v 1.7 2004/07/18 13:11:38 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -145,9 +145,6 @@ static int channel_capabs[] = { CAP_EX, CAP_IE, CAP_TS6 };
 static struct ChCapCombo chcap_combos[NCHCAP_COMBOS];
 
 extern BlockHeap *ban_heap;
-
-extern int filter_add_word (struct Client *, struct Channel *, char *);
-extern int filter_del_word (struct Channel *, char *);
 
 /* check_string()
  *

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.8 2004/07/18 12:24:34 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.9 2004/07/18 13:11:38 nenolod Exp $
  */
 
 %{
@@ -30,6 +30,7 @@
 #define YY_NO_UNPUT
 #include "stdinc.h"
 #include "dalloca.h"
+#include "common.h"
 #include "ircd.h"
 #include "tools.h"
 #include "list.h"
@@ -56,6 +57,8 @@
 #include <openssl/bio.h>
 #include <openssl/pem.h>
 #endif
+
+extern int filter_add_word(char *); /* XXX */
 
 static char *class_name;
 static struct ConfItem *yy_conf = NULL;
@@ -132,6 +135,8 @@ unhook_hub_leaf_confs(void)
 %token  ACTION
 %token  ADMIN
 %token  AFTYPE
+%token  BADWORDS
+%token  FILTER
 %token	T_ALLOW
 %token  ANTI_NICK_FLOOD
 %token  ANTI_SPAM_EXIT_MESSAGE_TIME
@@ -372,10 +377,7 @@ unhook_hub_leaf_confs(void)
 %type <number> sizespec_
 
 %%
-configuration: CONFIGURATION
- '{' conf '}' ';';
-
-conf: conf conf_item | conf_item;
+conf: | conf conf_item;
 
 conf_item:        admin_entry
                 | logging_entry
@@ -396,6 +398,7 @@ conf_item:        admin_entry
 		| general_entry
                 | gecos_entry
                 | modules_entry
+                | badwords_entry
 		| wingate_entry
 		| hiding_entry
                 | error ';'
@@ -472,6 +475,23 @@ modules_path: PATH '=' QSTRING ';'
   if (ypass == 2)
     mod_add_path(yylval.string);
 #endif
+};
+
+/***************************************************************************
+ *  section badwords
+ ***************************************************************************/
+badwords_entry: BADWORDS
+  '{' badwords_items '}' ';';
+
+badwords_items:  badwords_items badwords_item | badwords_item;
+badwords_item:   badwords_filter | error;
+
+badwords_filter: FILTER '=' QSTRING ';'
+{
+  if (ypass == 2)
+  {
+    filter_add_word(yylval.string);
+  }
 };
 
 /***************************************************************************

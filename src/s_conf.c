@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.c,v 1.5 2004/06/09 05:45:02 nenolod Exp $
+ *  $Id: s_conf.c,v 1.6 2004/07/18 13:11:38 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -73,6 +73,10 @@ extern int yyparse(); /* defined in y.tab.c */
 extern int lineno;
 extern char linebuf[];
 extern char conffilebuf[IRCD_BUFSIZE];
+
+extern dlink_list global_filter_list;
+extern void free_filter_list(dlink_list *);
+
 int scount = 0; /* used by yyparse(), etc */
 int ypass  = 1; /* used by yyparse()      */
 
@@ -1830,6 +1834,8 @@ rehash(int sig)
 
   restart_resolver();
   /* don't close listeners until we know we can go ahead with the rehash */
+
+  free_filter_list(&global_filter_list);
 
   /* Check to see if we magically got(or lost) IPv6 support */
   check_can_use_v6();

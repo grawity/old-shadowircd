@@ -20,7 +20,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_filter.c,v 1.2 2004/07/15 12:27:09 nenolod Exp $
+ *  $Id: channel_filter.c,v 1.3 2004/07/18 13:11:38 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -48,21 +48,17 @@
 #include "s_log.h"
 
 extern BlockHeap *filter_heap;
-static char buf[BUFSIZE];
 
-int filter_add_word (struct Client *, struct Channel *, char *);
-int filter_del_word (struct Channel *, char *);
+int filter_add_word (char *);
+int filter_del_word (char *);
 
-int filter_add_word (struct Client *client_p, struct Channel *chptr, char *word)
+int filter_add_word (char *word)
 {
 	dlink_node *ptr;
 	dlink_list *list;
 	struct Filter *filter;
 
-	if(MyClient(client_p))
-	{
-		collapse(word);
-	}
+	collapse(word);
 
 	list = &global_filter_list;
 
@@ -87,17 +83,6 @@ int filter_add_word (struct Client *client_p, struct Channel *chptr, char *word)
 
 	filter = (struct Filter *) BlockHeapAlloc(filter_heap);
 	DupString(filter->word, word);
-
-	if(IsPerson(client_p))
-	{
-		filter->who = (char *) MyMalloc(strlen(client_p->name) + strlen(client_p->username) + strlen(client_p->host) + 3);
-		ircsprintf (filter->who, "%s!%s@%s", client_p->name, client_p->username, client_p->host);
-	}
-	else
-	{
-		DupString (filter->who, client_p->name);
-	}
-
 	filter->when = CurrentTime;
 	dlinkAdd(filter, &filter->node, list);
 
@@ -106,7 +91,7 @@ int filter_add_word (struct Client *client_p, struct Channel *chptr, char *word)
 	return 1;
 }
 
-int filter_del_word (struct Channel *chptr, char *word)
+int filter_del_word (char *word)
 {
 	dlink_node *ptr;
 	struct Filter *f;
@@ -126,7 +111,6 @@ int filter_del_word (struct Channel *chptr, char *word)
 		if(irccmp(word, f->word) == 0)
 		{
 			MyFree(f->word);
-			MyFree(f->who);
 			BlockHeapFree(filter_heap, f);
 
 			dlinkDelete(&f->node, &global_filter_list);
@@ -150,7 +134,6 @@ void free_filter_list (dlink_list * list)
 	{
 		f = ptr->data;
 		MyFree(f->word);
-		MyFree(f->who);
 		BlockHeapFree(filter_heap, f);
 
 		free_dlink_node(ptr);
@@ -158,57 +141,4 @@ void free_filter_list (dlink_list * list)
 
 	list->head = list->tail = NULL;
 	list->length = 0;
-}
-
-void
-send_filter_list(struct Client *client_p, char *chname, dlink_list * top, char flag)
-{
-    dlink_node *lp;
-	struct Filter *filter;
-    char mbuf[MODEBUFLEN];
-    char pbuf[BUFSIZE];
-    int tlen;
-    int mlen;
-    int cur_len;
-    char *mp;
-    char *pp;
-    int count = 0;
-
-	sendto_realops_flags (UMODE_DEBUG, L_ALL, "Sending filter list.");
-	ilog (L_INFO, "Sending filter list.");
-
-    mlen = ircsprintf(buf, ":%s MODE %s +", me.name, chname);
-    cur_len = mlen;
-
-    mp = mbuf;
-    pp = pbuf;
-
-    DLINK_FOREACH(lp, top->head)
-    {
-        filter = lp->data;
-        tlen = strlen(filter->word) + 3;
-
-        /* uh oh */
-        if(tlen > MODEBUFLEN)
-            continue;
-
-        if((count >= MAXMODEPARAMS) || ((cur_len + tlen + 2) > (BUFSIZE - 3)))
-        {
-            sendto_one(client_p, "%s%s %s", buf, mbuf, pbuf);
-
-            mp = mbuf;
-            pp = pbuf;
-            cur_len = mlen;
-            count = 0;
-        }
-
-        *mp++ = flag;
-        *mp = '\0';
-        pp += ircsprintf(pp, "%s ", filter->word);
-        cur_len += tlen;
-        count++;
-    }
-
-    if(count != 0)
-        sendto_one(client_p, "%s%s %s", buf, mbuf, pbuf);
 }
