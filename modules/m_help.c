@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  m_help.c: Provides help information to a user/operator.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_help.c,v 1.1.1.1 2003/12/02 20:47:33 nenolod Exp $
+ *  $Id: m_help.c,v 1.2 2003/12/12 17:58:42 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -51,6 +51,11 @@ struct Message help_msgtab = {
   {m_unregistered, m_help, m_ignore, mo_help, m_ignore}
 };
 
+struct Message ircdhelp_msgtab = {
+  "IRCDHELP", 0, 0, 0, 0, MFLG_SLOW, 0,
+  {m_unregistered, m_help, m_ignore, mo_help, m_ignore}
+};
+
 struct Message uhelp_msgtab = {
   "UHELP", 0, 0, 0, 0, MFLG_SLOW, 0,
   {m_unregistered, m_help, m_ignore, mo_uhelp, m_ignore}
@@ -62,6 +67,7 @@ _modinit(void)
 {
   mod_add_cmd(&help_msgtab);
   mod_add_cmd(&uhelp_msgtab);
+  mod_add_cmd(&ircdhelp_msgtab);
 }
 
 void
@@ -69,9 +75,10 @@ _moddeinit(void)
 {
   mod_del_cmd(&help_msgtab);
   mod_del_cmd(&uhelp_msgtab);
+  mod_del_cmd(&ircdhelp_msgtab);
 }
 
-const char *_version = "$Revision: 1.1.1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /*

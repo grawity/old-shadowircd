@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.c,v 1.2 2003/12/05 23:07:32 nenolod Exp $
+ *  $Id: s_conf.c,v 1.3 2003/12/12 17:58:42 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -341,6 +341,7 @@ delete_conf_item(struct ConfItem *conf)
 
   switch(type)
   {
+  case CLOAK_TYPE:
   case DLINE_TYPE:
   case EXEMPTDLINE_TYPE:
   case KLINE_TYPE:

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.h,v 1.2 2003/12/05 17:48:04 nenolod Exp $
+ *  $Id: channel.h,v 1.3 2003/12/12 17:58:42 nenolod Exp $
  */
 
 #ifndef INCLUDED_channel_h
@@ -52,13 +52,14 @@ struct Channel
   unsigned long lazyLinkChannelExists;
   time_t last_knock; /* don't allow knock to flood */
 
-  dlink_list members;
-  dlink_list locmembers;  /* local members are here too */
-  dlink_list invites;
-  dlink_list banlist;
-  dlink_list exceptlist;
-  dlink_list invexlist;
-  dlink_list quietlist;
+  dlink_list members;        /* a double linked list of members */
+  dlink_list locmembers;     /* local members are here too */
+  dlink_list invites;        /* a double linked list of invitations */
+  dlink_list banlist;        /* a double linked list of bans. */
+  dlink_list exceptlist;     /* a double linked list of ban exempts */
+  dlink_list invexlist;      /* a double linked list of invite exempts */
+  dlink_list quietlist;      /* a double linked list of quiets */
+  dlink_list restrictlist;   /* a double linked list of restricts */
 
   time_t first_received_message_time; /* channel flood control */
   int received_number_of_privmsgs;
@@ -84,6 +85,8 @@ extern void init_channels(void);
 extern int can_send (struct Channel *chptr, struct Client *who);
 extern int can_send_part(struct Membership *, struct Channel *, struct Client *);
 extern int is_banned (struct Channel *chptr, struct Client *who);
+extern int is_quieted (struct Channel *chptr, struct Client *who);
+extern int is_restricted (struct Channel *chptr, struct Client *who);
 extern int can_join(struct Client *source_p, struct Channel *chptr,
                     const char *key);
 extern int has_member_flags(struct Membership *ms, unsigned int flags);

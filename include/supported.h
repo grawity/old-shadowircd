@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  supported.h: Header for 005 numeric etc...
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: supported.h,v 1.2 2003/12/05 17:48:04 nenolod Exp $
+ *  $Id: supported.h,v 1.3 2003/12/12 17:58:42 nenolod Exp $
  */
 
 #ifndef INCLUDED_supported_h
@@ -59,45 +59,12 @@
                         "(uohv)!@%+", \
                         ConfigChannel.use_except ? "e" : "", \
                         ConfigChannel.use_invex ? "I" : "", \
-                        "b,k,l,imnpst", \
+                        "b,k,l,imnpstTFcz", \
                         ServerInfo.network_name, CASEMAP, \
 			(uplink && IsCapable(uplink, CAP_LL)) ? "" : " SAFELIST"
 
 /*
- * - from mirc's versions.txt
- *
- *  mIRC now supports the numeric 005 tokens: CHANTYPES=# and
- *  PREFIX=(ohv)@%+ and can handle a dynamic set of channel and
- *  nick prefixes.
- *
- *  mIRC assumes that @ is supported on all networks, any mode
- *  left of @ is assumed to have at least equal power to @, and
- *  any mode right of @ has less power.
- *
- *  mIRC has internal support for @%+ modes.
- *
- *  $nick() can now handle all mode letters listed in PREFIX.
- *
- *  Also added support for CHANMODES=A,B,C,D token (not currently
- *  supported by any servers), which lists all modes supported
- *  by a channel, where:
- *
- *    A = modes that take a parameter, and add or remove nicks
- *        or addresses to a list, such as +bIe for the ban,
- *        invite, and exception lists.
- *
- *    B = modes that change channel settings, but which take
- *        a parameter when they are set and unset, such as
- *        +k key, and -k key.
- *
- *    C = modes that change channel settings, but which take
- *        a parameter only when they are set, such as +l N,
- *        and -l.
- *
- *    D = modes that change channel settings, such as +imnpst
- *        and take no parameters.
- *
- *  All unknown/unlisted modes are treated as type D.
+ * mIRC's readme does not concern me. --nenolod.
  */
 
 #endif /* INCLUDED_supported_h */

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: send.c,v 1.3 2003/12/05 22:42:56 nenolod Exp $
+ *  $Id: send.c,v 1.4 2003/12/12 17:58:42 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -246,6 +246,8 @@ slinkq_unblocked(int fd, struct Client *client_p)
   send_queued_slink_write(client_p);
 }
 
+#define FLAGS_DEBUG UMODE_DEBUG /* I am a lazy bastard */
+
 /*
  ** send_queued_write
  **      This is called when there is a chance that some output would
@@ -272,7 +274,6 @@ send_queued_write(struct Client *to)
     return;  /* no use calling send() now */
 
   /* Next, lets try to write some data */
-  
   if (dbuf_length(&to->localClient->buf_sendq))
   {
 #ifndef NDEBUG

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_topic.c,v 1.3 2003/12/05 19:42:09 nenolod Exp $
+ *  $Id: m_topic.c,v 1.4 2003/12/12 17:58:42 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -62,7 +62,7 @@ _moddeinit(void)
   mod_del_cmd(&topic_msgtab);
 }
 
-const char *_version = "$Revision: 1.3 $";
+const char *_version = "$Revision: 1.4 $";
 #endif
 
 /* m_topic()
@@ -130,12 +130,16 @@ m_topic(struct Client *client_p, struct Client *source_p,
     {
       if ((ms = find_channel_link(source_p, chptr)) == NULL)
       {
-        sendto_one(source_p, form_str(ERR_NOTONCHANNEL), from,
-                   to, parv[1]);
-        return;
+	if (MyClient(source_p))
+        {
+          /* If it's local, stop it, otherwise let it go. */
+	  sendto_one(source_p, form_str(ERR_NOTONCHANNEL), from,
+            to, parv[1]);
+          return;
+	}
       }
-      if ((chptr->mode.mode & MODE_TOPICLOCK) == 0 ||
-          has_member_flags(ms, CHFL_CHANOWNER))
+      if (((chptr->mode.mode & MODE_TOPICLOCK) == 0 ||
+          has_member_flags(ms, CHFL_CHANOWNER)) || !MyClient(source_p))
       {
         char topic_info[USERHOST_REPLYLEN];
         ircsprintf(topic_info, "%s!%s@%s",
@@ -158,8 +162,8 @@ m_topic(struct Client *client_p, struct Client *source_p,
                              chptr->chname, chptr->topic == NULL ?
                              "" : chptr->topic);
       }
-      else if ((chptr->mode.mode & MODE_TOPICLIMIT) == 0 ||
-          has_member_flags(ms, CHFL_CHANOP|CHFL_HALFOP))
+      else if (((chptr->mode.mode & MODE_TOPICLIMIT) == 0 ||
+          has_member_flags(ms, CHFL_CHANOP|CHFL_HALFOP)) || !MyClient(source_p))
       {
         char topic_info[USERHOST_REPLYLEN]; 
         ircsprintf(topic_info, "%s!%s@%s",

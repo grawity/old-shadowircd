@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  whowas.c: WHOWAS user cache.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: whowas.c,v 1.1.1.1 2003/12/02 20:46:46 nenolod Exp $
+ *  $Id: whowas.c,v 1.2 2003/12/12 17:58:42 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -94,7 +94,7 @@ add_history(struct Client *client_p, int online)
    */
   strlcpy(who->name, client_p->name, sizeof(who->name));
   strcpy(who->username, client_p->username);
-  strcpy(who->hostname, client_p->host);
+  strcpy(who->hostname, GET_CLIENT_HOST(client_p));
   strcpy(who->realname, client_p->info);
 
   strlcpy(who->servername, client_p->user->server->name, sizeof(who->servername));

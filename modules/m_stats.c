@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  m_stats.c: Sends the user statistics or config information.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_stats.c,v 1.1.1.1 2003/12/02 20:47:38 nenolod Exp $
+ *  $Id: m_stats.c,v 1.2 2003/12/12 17:58:42 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -78,7 +78,7 @@ _moddeinit(void)
   mod_del_cmd(&stats_msgtab);
 }
 
-const char *_version = "$Revision: 1.1.1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 static char *parse_stats_args(int, char **, int *, int *);
@@ -868,13 +868,6 @@ stats_servlinks(struct Client *source_p)
   struct Client *target_p;
   dlink_node *ptr;
   int j = 0;
-
-  if (ConfigServerHide.flatten_links && !IsOper(source_p))
-  {
-    sendto_one(source_p, form_str(ERR_NOPRIVILEGES),
-               from, to);
-    return;
-  }
 
   sendK = receiveK = 0;
 

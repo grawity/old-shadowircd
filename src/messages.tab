@@ -16,7 +16,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *   $Id: messages.tab,v 1.5 2003/12/05 17:48:04 nenolod Exp $
+ *   $Id: messages.tab,v 1.6 2003/12/12 17:58:42 nenolod Exp $
  */
 
 static struct NumericInfo replies[] = {
@@ -398,15 +398,15 @@ static struct NumericInfo replies[] = {
 /* 375 */  {"RPL_MOTDSTART", ":%s 375 %s :- %s Message of the Day - ", NULL},
 /* 376 */  {"RPL_ENDOFMOTD", ":%s 376 %s :End of /MOTD command.", NULL},
 /* 377 */  {NULL, NULL, NULL},
-/* 378 */  {NULL, NULL, NULL},
-/* 379 */  {NULL, NULL, NULL},
+/* 378 */  {"RPL_QUIETLIST", ":%s 378 %s %s %s %s %lu", NULL},
+/* 379 */  {"RPL_ENDOFQUIETLIST", ":%s 379 %s %s :End of Channel Quiet List", NULL},
 /* 380 */  {NULL, NULL, NULL},
 /* 381 */  {"RPL_YOUREOPER", ":%s 381 %s :You have entered... the Twilight Zone!", NULL},
 /* 382 */  {"RPL_REHASHING", ":%s 382 %s %s :Rehashing", NULL},
 /* 383 */  {NULL, NULL, NULL},
-/* 384 */  {NULL, NULL, NULL},
-/* 385 */  {NULL, NULL, NULL},
-/* 386 */  {NULL, ":%s 386 %s :%s", NULL},
+/* 384 */  {"RPL_RESTRICTLIST", ":%s 384 %s %s %s %s %lu", NULL},
+/* 385 */  {"RPL_ENDOFRESTRICTLIST", ":%s 385 %s %s :End of Channel Restriction List", NULL},
+/* 386 */  {"RPL_RSACHALLENGE", ":%s 386 %s :%s", NULL},
 /* 387 */  {NULL, NULL, NULL},
 /* 388 */  {NULL, NULL, NULL},
 /* 389 */  {NULL, NULL, NULL},
@@ -466,7 +466,7 @@ static struct NumericInfo replies[] = {
 /* 443 */  {"ERR_USERONCHANNEL", ":%s 443 %s %s %s :is already on channel", NULL},
 /* 444 */  {NULL, NULL, NULL},
 /* 445 */  {NULL, NULL, NULL},
-/* 446 */  {NULL, NULL, NULL},
+/* 446 */  {"ERR_USERONDENYLIST", ":%s 446 %s %s :User is on deny list for %s", NULL},
 /* 447 */  {NULL, NULL, NULL},
 /* 448 */  {NULL, NULL, NULL},
 /* 449 */  {NULL, NULL, NULL},

@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  s_user.c: User related functions.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.8 2003/12/06 05:33:47 eko Exp $
+ *  $Id: s_user.c,v 1.9 2003/12/12 17:58:42 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1485,7 +1485,6 @@ add_one_to_uid(int i)
  */
 void docloak (struct Client *source_p) {
 
-  if (source_p->localClient->aftype != AF_INET6) {
     int alpha = 0, dots = 0;
     char buf[HOSTLEN+1];
     char *p = source_p->host;
@@ -1507,33 +1506,11 @@ void docloak (struct Client *source_p) {
     } else if (alpha) {
       strcpy(source_p->virthost, "cloaked");
     }
-  }
 
-  if (source_p->localClient->aftype == AF_INET6) {
-    int alpha = 0, dots = 0;
-    char buf[HOSTLEN+1];
-    char *p = source_p->host;
-
-    while (*p) {
-      if (isalpha(*p)) alpha = 1;
-      if (*p == '.' || *p++ == ':') ++dots;
-    }
-    strcpy(buf, source_p->host);
-
-    if (alpha && (dots > 1)) {
-      p = strchr(buf, '.'); *p++ = 0;
-      strcpy(source_p->virthost, "cloaked.");
-      strcat(source_p->virthost, p);
-    } else if (!alpha) {
-      p = strrchr(buf, ':'); *p++ = 0;
-      strcpy(source_p->virthost, buf);
-      strcat(source_p->virthost, ":0");
-    }
-  }
-
-
-  sendto_one(source_p, ":%s NOTICE %s :*** Notice -- Your usercloak is [%s]. Use of it is controlled by umode +/-v.",
+  if (MyClient(source_p)) {
+    sendto_one(source_p, ":%s NOTICE %s :*** Notice -- Your usercloak is [%s]. Use of it is controlled by umode +/-v.",
 		me.name, source_p->name, source_p->virthost);
+  }
 
 }
 

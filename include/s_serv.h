@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  s_serv.h: A header for the server functions.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_serv.h,v 1.1.1.1 2003/12/02 20:47:57 nenolod Exp $
+ *  $Id: s_serv.h,v 1.2 2003/12/12 17:58:42 nenolod Exp $
  */
 
 #ifndef INCLUDED_serv_h
@@ -69,6 +69,8 @@ struct Capability
 #define CAP_UNKLN	0x00040000 /* Can do UNKLINE message		  */
 #define CAP_CLUSTER	0x00080000 /* supports server clustering	  */
 #define CAP_ENCAP	0x00100000 /* supports ENCAP message		  */
+#define CAP_QU		0x00200000 /* supports quiets +q channel mode     */
+#define CAP_RE          0x00400000 /* supports restrict +d channel mode   */
 
 #ifdef HAVE_LIBZ
 #define CAP_ZIP_SUPPORTED CAP_ZIP

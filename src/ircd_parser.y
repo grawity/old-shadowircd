@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.4 2003/12/05 22:42:56 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.5 2003/12/12 17:58:42 nenolod Exp $
  */
 
 %{
@@ -175,7 +175,6 @@ unhook_hub_leaf_confs(void)
 %token  EXEMPT
 %token  FAILED_OPER_NOTICE
 %token  FAKENAME
-%token  FLATTEN_LINKS
 %token  FFAILED_OPERLOG
 %token  FOPERLOG
 %token  FUSERLOG
@@ -3247,18 +3246,12 @@ serverhide_entry: SERVERHIDE
   '{' serverhide_items '}' ';';
 
 serverhide_items:   serverhide_items serverhide_item | serverhide_item;
-serverhide_item:    serverhide_flatten_links | serverhide_hide_servers |
+serverhide_item:    serverhide_hide_servers |
 		    serverhide_links_delay |
 		    serverhide_disable_hidden |
 		    serverhide_hidden |
 		    serverhide_hide_server_ips |
                     error;
-
-serverhide_flatten_links: FLATTEN_LINKS '=' TBOOL ';'
-{
-  if (ypass == 2)
-    ConfigServerHide.flatten_links = yylval.number;
-};
 
 serverhide_hide_servers: HIDE_SERVERS '=' TBOOL ';'
 {

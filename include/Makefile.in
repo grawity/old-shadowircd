@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.1.1.1 2003/12/02 20:47:53 nenolod Exp $
+# $Id: Makefile.in,v 1.2 2003/12/12 17:58:42 nenolod Exp $
 # makefile for include/
 
 INSTALL		= @INSTALL@
@@ -11,11 +11,11 @@ includedir	= @includedir@
 all:
 
 install:
-	mkdir -p $(includedir)/ircd-hybrid-7
+	mkdir -p $(includedir)/shadowircd-2
 	@echo Installing header files...
 
 	@for header in *.h; do \
-		${INSTALL_DATA} $$header $(includedir)/ircd-hybrid-7; \
+		${INSTALL_DATA} $$header $(includedir)/shadowircd-2; \
 	done
 
 distclean:

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: numeric.h,v 1.4 2003/12/05 17:48:04 nenolod Exp $
+ *  $Id: numeric.h,v 1.5 2003/12/12 17:58:42 nenolod Exp $
  */
 
 #ifndef INCLUDED_numeric_h
@@ -282,6 +282,9 @@ extern const char *get_locale(void);
 #define RPL_MOTDSTART        375
 #define RPL_ENDOFMOTD        376
 
+#define RPL_QUIETLIST        378
+#define RPL_ENDOFQUIETLIST   379
+
 /*      RPL_KICKEXPIRED      377   aircd */
 /*	RPL_SPAM	     377   austnet */
 /*      RPL_BANEXPIRED       378   aircd */
@@ -291,6 +294,10 @@ extern const char *get_locale(void);
 #define RPL_YOUREOPER        381
 #define RPL_REHASHING        382
 /*	RPL_YOURSERVICE	     383	   Numeric List: various */
+
+#define RPL_RESTRICTLIST      384
+#define RPL_ENDOFRESTRICTLIST 385
+
 #define RPL_RSACHALLENGE     386
 
 /*	RPL_QLIST	     386	unreal */
@@ -347,6 +354,8 @@ extern const char *get_locale(void);
 #define ERR_USERNOTINCHANNEL 441
 #define ERR_NOTONCHANNEL     442
 #define ERR_USERONCHANNEL    443
+
+#define ERR_USERONDENYLIST   446
 
 #define ERR_NOTREGISTERED    451
 

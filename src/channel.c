@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.c,v 1.3 2003/12/11 18:16:47 nenolod Exp $
+ *  $Id: channel.c,v 1.4 2003/12/12 17:58:42 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -60,8 +60,9 @@ static BlockHeap *member_heap;
 static void destroy_channel(struct Channel *);
 static void send_mode_list(struct Client *, struct Channel *, dlink_list *, char);
 static int check_banned(struct Channel *, const char *, const char *);
+static int check_quieted(struct Channel *, const char *, const char *);
+static int check_restricted(struct Channel *, const char *, const char *);
 static const char *channel_pub_or_secret(struct Channel *);
-
 
 /* init_channels()
  *
@@ -225,6 +226,10 @@ send_channel_modes(struct Client *client_p, struct Channel *chptr)
     send_mode_list(client_p, chptr, &chptr->exceptlist, 'e');
   if (IsCapable(client_p, CAP_IE))
     send_mode_list(client_p, chptr, &chptr->invexlist, 'I');
+  if (IsCapable(client_p, CAP_QU))
+    send_mode_list(client_p, chptr, &chptr->quietlist, 'q');
+  if (IsCapable(client_p, CAP_RE))
+    send_mode_list(client_p, chptr, &chptr->restrictlist, 'd');
 }
 
 /* send_mode_list()
@@ -235,7 +240,7 @@ send_channel_modes(struct Client *client_p, struct Channel *chptr)
  *              - char flag flagging type of mode i.e. 'b' 'e' etc.
  *              - clear (remove all current modes, for ophiding, etc)
  * output       - NONE
- * side effects - sends +b/+e/+I
+ * side effects - sends +b/+e/+I/+q
  *
  */
 static void
@@ -610,11 +615,53 @@ is_banned(struct Channel *chptr, struct Client *who)
   if (!IsPerson(who))
     return(0);
 
-  ircsprintf(src_host,"%s!%s@%s", who->name, who->username, who->host);
+  ircsprintf(src_host,"%s!%s@%s", who->name, who->username, GET_CLIENT_HOST(who));
   ircsprintf(src_iphost,"%s!%s@%s", who->name, who->username,
 	     who->localClient->sockhost);
 
   return(check_banned(chptr, src_host, src_iphost));
+}
+
+/* is_quieted()
+ *
+ * inputs       - pointer to channel block
+ *              - pointer to client to check access fo
+ * output       - returns an int 0 if not banned,
+ *                CHFL_BAN if banned
+ *
+ * IP_BAN_ALL from comstud
+ * always on...
+ */
+int
+is_quieted(struct Channel *chptr, struct Client *who)
+{
+  char src_host[NICKLEN + USERLEN + HOSTLEN + 6];
+  char src_iphost[NICKLEN + USERLEN + HOSTLEN + 6];
+
+  if (!IsPerson(who))
+    return(0);
+
+  ircsprintf(src_host,"%s!%s@%s", who->name, who->username, GET_CLIENT_HOST(who));
+  ircsprintf(src_iphost,"%s!%s@%s", who->name, who->username,
+             who->localClient->sockhost);
+
+  return(check_quieted(chptr, src_host, src_iphost));
+}
+
+int
+is_restricted(struct Channel *chptr, struct Client *who)
+{
+  char src_host[NICKLEN + USERLEN + HOSTLEN + 6];
+  char src_iphost[NICKLEN + USERLEN + HOSTLEN + 6];
+
+  if (!IsPerson(who))
+    return(0);
+
+  ircsprintf(src_host,"%s!%s@%s", who->name, who->username, GET_CLIENT_HOST(who));
+  ircsprintf(src_iphost,"%s!%s@%s", who->name, who->username,
+             who->localClient->sockhost);
+
+  return(check_restricted(chptr, src_host, src_iphost));
 }
 
 /* check_banned()
@@ -666,6 +713,65 @@ check_banned(struct Channel *chptr, const char *s, const char *s2)
   }
 
   return((actualBan ? CHFL_BAN : 0));
+}
+
+static int
+check_restricted(struct Channel *chptr, const char *s, const char *s2)
+{
+  dlink_node *ban;
+  dlink_node *except;
+  struct Ban *actualBan = NULL;
+  struct Ban *actualExcept = NULL;
+
+  DLINK_FOREACH(ban, chptr->restrictlist.head)
+  {
+    actualBan = ban->data;
+
+    if (match(actualBan->banstr,  s) ||
+        match(actualBan->banstr, s2) ||
+        match_cidr(actualBan->banstr, s2))
+      break;
+    else
+      actualBan = NULL;
+  }
+
+  if ((actualBan != NULL) && ConfigChannel.use_except)
+  {
+    DLINK_FOREACH(except, chptr->exceptlist.head)
+    {
+      actualExcept = except->data;
+
+      if (match(actualExcept->banstr,  s) ||
+          match(actualExcept->banstr, s2) ||
+          match_cidr(actualExcept->banstr, s2))
+      {
+        return(CHFL_EXCEPTION);
+      }
+    }
+  }
+
+  return((actualBan ? CHFL_RESTRICT : 0));
+}
+
+static int
+check_quieted(struct Channel *chptr, const char *s, const char *s2)
+{
+  dlink_node *ban;
+  struct Ban *actualBan = NULL;
+
+  DLINK_FOREACH(ban, chptr->quietlist.head)
+  {
+    actualBan = ban->data;
+
+    if (match(actualBan->banstr,  s) ||
+        match(actualBan->banstr, s2) ||
+        match_cidr(actualBan->banstr, s2))
+      break;
+    else
+      actualBan = NULL;
+  }
+
+  return((actualBan ? CHFL_QUIET : 0));
 }
 
 /* can_join()
@@ -775,7 +881,7 @@ can_send(struct Channel *chptr, struct Client *source_p)
 
   ms = find_channel_link(source_p, chptr);
 
-  if ((ms != NULL) && ms->flags & (CHFL_CHANOP|CHFL_HALFOP|CHFL_VOICE))
+  if ((ms != NULL) && ms->flags & (CHFL_CHANOWNER|CHFL_CHANOP|CHFL_HALFOP|CHFL_VOICE))
      return(CAN_SEND_OPV);
 
   if (chptr->mode.mode & MODE_MODERATED)
@@ -783,6 +889,11 @@ can_send(struct Channel *chptr, struct Client *source_p)
 
   if (ConfigChannel.quiet_on_ban && MyClient(source_p) &&
       (is_banned(chptr, source_p) == CHFL_BAN))
+  {
+    return(CAN_SEND_NO);
+  }
+
+  if (MyClient(source_p) && (is_quieted(chptr, source_p) == CHFL_QUIET))
   {
     return(CAN_SEND_NO);
   }
@@ -797,7 +908,7 @@ int
 can_send_part(struct Membership *member, struct Channel *chptr,
               struct Client *source_p)
 {
-  if (has_member_flags(member, CHFL_CHANOP|CHFL_HALFOP))
+  if (has_member_flags(member, CHFL_CHANOWNER|CHFL_CHANOP|CHFL_HALFOP))
     return(CAN_SEND_OPV);
 
   if (chptr->mode.mode & MODE_MODERATED)
@@ -805,6 +916,11 @@ can_send_part(struct Membership *member, struct Channel *chptr,
 
   if (ConfigChannel.quiet_on_ban && MyClient(source_p) &&
       (is_banned(chptr, source_p) == CHFL_BAN))
+  {
+    return(CAN_SEND_NO);
+  }
+
+  if (MyClient(source_p) && (is_quieted(chptr, source_p) == CHFL_QUIET))
   {
     return(CAN_SEND_NO);
   }

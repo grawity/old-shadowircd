@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 1.7 2003/12/05 18:17:07 nenolod Exp $
+ *  $Id: channel_mode.c,v 1.8 2003/12/12 17:58:42 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -90,6 +90,14 @@ static void chm_voice(struct Client *, struct Client *, struct Channel *,
                       const char *chname);
 
 static void chm_ban(struct Client *, struct Client *, struct Channel *, int,
+                    int *, char **, int *, int, int, char, void *,
+                    const char *chname);
+
+static void chm_quiet(struct Client *, struct Client *, struct Channel *, int,
+                    int *, char **, int *, int, int, char, void *,
+                    const char *chname);
+
+static void chm_restrict(struct Client *, struct Client *, struct Channel *, int,
                     int *, char **, int *, int, int, char, void *,
                     const char *chname);
 
@@ -211,6 +219,9 @@ add_id(struct Client *client_p, struct Channel *chptr, char *banid, int type)
     case CHFL_QUIET:
       list = &chptr->quietlist;
       break;
+    case CHFL_RESTRICT:
+      list = &chptr->restrictlist;
+      break;
     default:
       sendto_realops_flags(UMODE_ALL, L_ALL,
                            "add_id() called with unknown ban type %d!", type);
@@ -288,6 +299,9 @@ del_id(struct Channel *chptr, const char *banid, int type)
       break;
     case CHFL_QUIET:
       list = &chptr->quietlist;
+      break;
+    case CHFL_RESTRICT:
+      list = &chptr->restrictlist;
       break;
     default:
       sendto_realops_flags(UMODE_ALL, L_ALL,
@@ -889,6 +903,216 @@ chm_ban(struct Client *client_p, struct Client *source_p,
 }
 
 static void
+chm_quiet(struct Client *client_p, struct Client *source_p,
+        struct Channel *chptr, int parc, int *parn,
+        char **parv, int *errors, int alev, int dir, char c, void *d,
+        const char *chname)
+{
+  char *mask;
+  char *raw_mask;
+  dlink_node *ptr;
+  struct Ban *banptr;
+
+  if (dir == 0 || parc <= *parn)
+  {
+    if ((*errors & SM_ERR_RPL_B) != 0)
+      return;
+    *errors |= SM_ERR_RPL_B;
+
+    DLINK_FOREACH(ptr, chptr->quietlist.head)
+    {
+      banptr = ptr->data;
+      sendto_one(client_p, form_str(RPL_QUIETLIST),
+                 me.name, client_p->name, chname,
+                 banptr->banstr, banptr->who, banptr->when);
+    }
+    sendto_one(source_p, form_str(RPL_ENDOFQUIETLIST), me.name,
+               source_p->name, chname);
+    return;
+  }
+
+  if ((alev < CHACCESS_CHANOWNER) && (chptr->mode.mode & MODE_PEACE))
+  {
+    sendto_one(source_p, form_str(ERR_CHANPEACE), me.name, source_p->name, chname);
+    return;
+  }
+
+  if (alev < CHACCESS_HALFOP)
+  {
+    if (!(*errors & SM_ERR_NOOPS))
+      sendto_one(source_p, form_str(alev == CHACCESS_NOTONCHAN ?
+                                    ERR_NOTONCHANNEL : ERR_CHANOPRIVSNEEDED),
+                 me.name, source_p->name, chname);
+    *errors |= SM_ERR_NOOPS;
+    return;
+  }
+
+  if (MyClient(source_p) && (++mode_limit > MAXMODEPARAMS))
+    return;
+
+  raw_mask = parv[(*parn)++];
+
+  if (IsServer(client_p))
+    mask = raw_mask;
+  else
+    mask = pretty_mask(raw_mask);
+
+  /* if we're adding a NEW id */
+  if (dir == MODE_ADD)
+  {
+    if((add_id(source_p, chptr, mask, CHFL_QUIET) == 0))
+      return;
+
+    mode_changes[mode_count].letter = c;
+    mode_changes[mode_count].dir = MODE_ADD;
+    mode_changes[mode_count].caps = 0;
+    mode_changes[mode_count].nocaps = 0;
+    mode_changes[mode_count].mems = ALL_MEMBERS;
+    mode_changes[mode_count].id = NULL;
+    mode_changes[mode_count++].arg = mask;
+  }
+  else if (dir == MODE_DEL)
+  {
+/* XXX grrrrrrr */
+#ifdef NO_BAN_COOKIE
+
+    if (del_id(chptr, mask, CHFL_QUIET) == 0)
+    {
+      /* mask isn't a valid ban, check raw_mask */
+      if((del_id(chptr, raw_mask, CHFL_QUIET) == 0) && MyClient(source_p))
+      {
+        /* nope */
+        return;
+      }
+      mask = raw_mask;
+    }
+
+#else
+/* XXX this hack allows /mode * +o-b nick ban.cookie
+ * I'd like to see this hack go away in the future.
+ */
+    if (del_id(chptr, raw_mask, CHFL_QUIET))
+      mask = raw_mask;
+    else
+      del_id(chptr, mask, CHFL_QUIET);
+#endif
+
+    mode_changes[mode_count].letter = c;
+    mode_changes[mode_count].dir = MODE_DEL;
+    mode_changes[mode_count].caps = 0;
+    mode_changes[mode_count].nocaps = 0;
+    mode_changes[mode_count].mems = ALL_MEMBERS;
+    mode_changes[mode_count].id = NULL;
+    mode_changes[mode_count++].arg = mask;
+  }
+}
+
+static void
+chm_restrict(struct Client *client_p, struct Client *source_p,
+        struct Channel *chptr, int parc, int *parn,
+        char **parv, int *errors, int alev, int dir, char c, void *d,
+        const char *chname)
+{
+  char *mask;
+  char *raw_mask;
+  dlink_node *ptr;
+  struct Ban *banptr;
+
+  if (dir == 0 || parc <= *parn)
+  {
+    if ((*errors & SM_ERR_RPL_B) != 0)
+      return;
+    *errors |= SM_ERR_RPL_B;
+
+    DLINK_FOREACH(ptr, chptr->restrictlist.head)
+    {
+      banptr = ptr->data;
+      sendto_one(client_p, form_str(RPL_RESTRICTLIST),
+                 me.name, client_p->name, chname,
+                 banptr->banstr, banptr->who, banptr->when);
+    }
+    sendto_one(source_p, form_str(RPL_ENDOFRESTRICTLIST), me.name,
+               source_p->name, chname);
+    return;
+  }
+
+  if ((alev < CHACCESS_CHANOWNER) && (chptr->mode.mode & MODE_PEACE))
+  {
+    sendto_one(source_p, form_str(ERR_CHANPEACE), me.name, source_p->name, chname);
+    return;
+  }
+
+  if (alev < CHACCESS_HALFOP)
+  {
+    if (!(*errors & SM_ERR_NOOPS))
+      sendto_one(source_p, form_str(alev == CHACCESS_NOTONCHAN ?
+                                    ERR_NOTONCHANNEL : ERR_CHANOPRIVSNEEDED),
+                 me.name, source_p->name, chname);
+    *errors |= SM_ERR_NOOPS;
+    return;
+  }
+
+  if (MyClient(source_p) && (++mode_limit > MAXMODEPARAMS))
+    return;
+
+  raw_mask = parv[(*parn)++];
+
+  if (IsServer(client_p))
+    mask = raw_mask;
+  else
+    mask = pretty_mask(raw_mask);
+
+  /* if we're adding a NEW id */
+  if (dir == MODE_ADD)
+  {
+    if((add_id(source_p, chptr, mask, CHFL_RESTRICT) == 0))
+      return;
+
+    mode_changes[mode_count].letter = c;
+    mode_changes[mode_count].dir = MODE_ADD;
+    mode_changes[mode_count].caps = 0;
+    mode_changes[mode_count].nocaps = 0;
+    mode_changes[mode_count].mems = ALL_MEMBERS;
+    mode_changes[mode_count].id = NULL;
+    mode_changes[mode_count++].arg = mask;
+  }
+  else if (dir == MODE_DEL)
+  {
+/* XXX grrrrrrr */
+#ifdef NO_BAN_COOKIE
+
+    if (del_id(chptr, mask, CHFL_RESTRICT) == 0)
+    {
+      /* mask isn't a valid ban, check raw_mask */
+      if((del_id(chptr, raw_mask, CHFL_RESTRICT) == 0) && MyClient(source_p))
+      {
+        /* nope */
+        return;
+      }
+      mask = raw_mask;
+    }
+
+#else
+/* XXX this hack allows /mode * +o-b nick ban.cookie
+ * I'd like to see this hack go away in the future.
+ */
+    if (del_id(chptr, raw_mask, CHFL_RESTRICT))
+      mask = raw_mask;
+    else
+      del_id(chptr, mask, CHFL_RESTRICT);
+#endif
+
+    mode_changes[mode_count].letter = c;
+    mode_changes[mode_count].dir = MODE_DEL;
+    mode_changes[mode_count].caps = 0;
+    mode_changes[mode_count].nocaps = 0;
+    mode_changes[mode_count].mems = ALL_MEMBERS;
+    mode_changes[mode_count].id = NULL;
+    mode_changes[mode_count++].arg = mask;
+  }
+}
+
+static void
 chm_except(struct Client *client_p, struct Client *source_p,
            struct Channel *chptr, int parc, int *parn,
            char **parv, int *errors, int alev, int dir, char c, void *d,
@@ -1145,6 +1369,13 @@ chm_op(struct Client *client_p, struct Client *source_p,
   if (!IsClient(targ_p))
     return;
 
+  if (MyClient(targ_p) && (is_restricted(chptr, targ_p)))
+  {
+    sendto_one(source_p, form_str(ERR_USERONDENYLIST),
+        me.name, source_p->name, opnick, chname);
+    return;
+  }
+
   if ((member = find_channel_link(targ_p, chptr)) == NULL)
   {
     if (!(*errors & SM_ERR_NOTONCHANNEL))
@@ -1221,6 +1452,13 @@ chm_owner(struct Client *client_p, struct Client *source_p,
     return;
   if (!IsClient(targ_p))
     return;
+
+  if (MyClient(targ_p) && (is_restricted(chptr, targ_p)))
+  {
+    sendto_one(source_p, form_str(ERR_USERONDENYLIST),
+        me.name, source_p->name, opnick, chname);
+    return;
+  }
 
   if ((member = find_channel_link(targ_p, chptr)) == NULL)
   {
@@ -1318,6 +1556,13 @@ chm_hop(struct Client *client_p, struct Client *source_p,
     return;
   if (!IsClient(targ_p))
     return;
+
+  if (MyClient(targ_p) && (is_restricted(chptr, targ_p)))
+  {
+    sendto_one(source_p, form_str(ERR_USERONDENYLIST),
+	me.name, source_p->name, opnick, chname);
+    return;
+  }
 
   if ((member = find_channel_link(targ_p, chptr)) == NULL)
   {
@@ -1608,7 +1853,7 @@ static struct ChannelMode ModeTable[255] =
   {chm_nosuch, NULL},				  /* a */
   {chm_ban, NULL},                                /* b */
   {chm_simple, (void *) MODE_NOCOLOR},            /* c */
-  {chm_nosuch, NULL},                             /* d */
+  {chm_restrict, NULL},                           /* d */
   {chm_except, NULL},                             /* e */
   {chm_nosuch, NULL},                             /* f */
   {chm_nosuch, NULL},                             /* g */
@@ -1621,7 +1866,7 @@ static struct ChannelMode ModeTable[255] =
   {chm_simple, (void *) MODE_NOPRIVMSGS},         /* n */
   {chm_op, NULL},                                 /* o */
   {chm_simple, (void *) MODE_PRIVATE},            /* p */
-  {chm_nosuch, NULL},                             /* q */
+  {chm_quiet, NULL},                              /* q */
   {chm_simple, (void *) MODE_REGISTERED},         /* r */
   {chm_simple, (void *) MODE_SECRET},             /* s */
   {chm_simple, (void *) MODE_TOPICLIMIT},         /* t */

@@ -1,22 +1,6 @@
                            ------------------------
-			   What's new in Hybrid 7.1
+			   What's new in ShadowIRCd
 			   ------------------------
-
-===================
-supported platforms
-===================
-
-- We now support a completely new platform, Tru64 UNIX. It now configures and
-  builds right out of the box. Thanks to HP's TestDrive program for their
-  public access Tru64 boxen.
-- We have mostly revamped the Windows Cygwin port, mostly thanks to some awesome
-  sleuth and compile work from James LaPlant.
-- The IRIX port has been brought up to date. Thanks to Mark Laws for access to a
-  fine Indigo2.
-- The HPUX port has been retested and minor warnings have been fixed. Thanks
-  Yusuf for testing.
-- Other than those, the platforms we 'support' in README.FIRST are all still
-  actively supported.
 
 ===================
 configure and build
@@ -29,7 +13,7 @@ configure and build
   currently supported are X11 makedepend, mkdep, cc -xM if using Sun Workshop
   and falling back to cc -MM if none work. If your C compiler has options to
   generate make-style dependency info and you have none of the other programs,
-  send a note to joshk@triplehelix.org.
+  send a note to nenolod@nenolod.net.
 - We now support an --enable-clobber option so that binaries are not moved to
   $NAME.old when making install if they already exist. This does not apply to 
   modules as a running ircd could core if the loaded modules are moved and then
@@ -37,13 +21,6 @@ configure and build
   depending on your variety of make, this may or may not work.
 - It is now possible to build the contrib modules into your statically linked
   ircd.
-
-====================
-internationalization
-====================
-
-- We now use our own .lang files to provide translated numeric messages. See
-  doc/messages.txt for information on how to use it and how to write your own.
 
 ==================
 networking support
@@ -67,5 +44,6 @@ ircd features
 - New ACL G-lines can now be 'rejected' from being placed on the local server as
   well as 'blocked' from being propogated through the local server onto another
   server. Failures can also be logged for rejected and/or blocked glines.
+- Many new channel modes.
 
-$Id: whats-new.txt,v 1.1.1.1 2003/12/02 20:46:20 nenolod Exp $
+$Id: whats-new.txt,v 1.2 2003/12/12 17:58:42 nenolod Exp $

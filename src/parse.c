@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  parse.c: The message parser.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: parse.c,v 1.1.1.1 2003/12/02 20:46:55 nenolod Exp $
+ *  $Id: parse.c,v 1.2 2003/12/12 17:58:42 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -373,13 +373,13 @@ handle_command(struct Message *mptr, struct Client *client_p,
     }
     else
     {
-      sendto_realops_flags(UMODE_ALL, L_ALL, 
+          sendto_realops_flags(UMODE_ALL, L_ALL, 
                            "Dropping server %s due to (invalid) command '%s' "
                            "with only %d arguments (expecting %d).",
                            client_p->name, mptr->cmd, i, mptr->parameters);
-      ilog(L_CRIT, "Insufficient parameters (%d) for command '%s' from %s.",
-           i, mptr->cmd, client_p->name);
-      exit_client(client_p, client_p, client_p,
+          ilog(L_CRIT, "Insufficient parameters (%d) for command '%s' from %s.",
+              i, mptr->cmd, client_p->name);
+          exit_client(client_p, client_p, client_p,
                   "Not enough arguments to server command.");
     }
   }
