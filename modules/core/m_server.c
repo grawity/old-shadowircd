@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_server.c,v 1.2 2004/09/08 03:44:29 nenolod Exp $
+ *  $Id: m_server.c,v 1.3 2004/09/22 18:52:55 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -77,7 +77,7 @@ _moddeinit(void)
   mod_del_cmd(&sid_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 const char *_desc = "Used in server to server communications.";
 #endif
 
@@ -707,12 +707,12 @@ ms_sid(struct Client *client_p, struct Client *source_p,
    * sendto_server() does the work of a nasty DLINK_FOREACH call
    * that used to be here
    */
-  sendto_server(client_p, NULL, NULL, CAP_TS6, NOCAPS, NOFLAGS,
+  sendto_server(client_p, CAP_TS6, NOCAPS,
                 ":%s SID %s %d %s :%s%s",
                 ID_or_name(source_p, client_p), target_p->name, hop + 1,
                 SID_SID, IsHidden(target_p) ? "(H) " : "",
                 target_p->info);
-  sendto_server(client_p, NULL, NULL, NOCAPS, CAP_TS6, NOFLAGS,
+  sendto_server(client_p, NOCAPS, CAP_TS6,
                 ":%s SERVER %s %d :%s%s",
                 source_p->name, target_p->name, hop + 1,
                 IsHidden(target_p) ? "(H) " : "",

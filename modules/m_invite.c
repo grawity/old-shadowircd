@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_invite.c,v 3.3 2004/09/08 01:18:07 nenolod Exp $
+ *  $Id: m_invite.c,v 3.4 2004/09/22 18:52:55 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,7 +63,7 @@ _moddeinit(void)
   mod_del_cmd(&invite_msgtab);
 }
 
-const char *_version = "$Revision: 3.3 $";
+const char *_version = "$Revision: 3.4 $";
 #endif
 
 /*
@@ -205,12 +205,12 @@ m_invite(struct Client *client_p, struct Client *source_p,
    */
   if (ParanoidChannel(chptr))
   {
-    sendto_server(client_p, source_p, NULL, CAP_PARA, NOCAPS, NOFLAGS,
+    sendto_server(client_p, CAP_PARA, NOCAPS,
                   ":%s INVITE %s %s :%s",
                   me.name, source_p->name, target_p->name, chptr->chname);
 
     /* XXX This possibly should be a numeric -db */
-    sendto_channel_local(CHFL_CHANOP|CHFL_HALFOP, chptr,
+    sendto_channel_local(CHFL_CHANOWNER|CHFL_CHANOP|CHFL_HALFOP, chptr,
                          ":%s NOTICE %s :%s is inviting %s to %s.",
 			 me.name, chptr->chname, source_p->name,
 			 target_p->name, chptr->chname);
@@ -325,7 +325,7 @@ ms_invite(struct Client *client_p, struct Client *source_p,
      */
     if (ParanoidChannel(chptr))
     {
-      sendto_server(source_p->from, source_p, NULL, CAP_PARA, NOCAPS, NOFLAGS,
+      sendto_server(source_p->from, CAP_PARA, NOCAPS,
 		    ":%s INVITE %s %s :%s",
 		    source_p->name, source_client_p->name,
 		    target_p->name, chptr->chname);

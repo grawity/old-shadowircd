@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_grant.c,v 3.3 2004/09/08 01:18:07 nenolod Exp $
+ *  $Id: m_grant.c,v 3.4 2004/09/22 18:52:55 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -68,7 +68,7 @@ _moddeinit (void)
   mod_del_cmd (&grant_msgtab);
 }
 
-const char *_version = "$Revision: 3.3 $";
+const char *_version = "$Revision: 3.4 $";
 #endif
 
 /* this is a struct, associating operator permissions with letters. */
@@ -221,7 +221,7 @@ mo_grant (struct Client *client_p, struct Client *source_p,
 	  /* Since we're becoming an oper, lets set the spoof. */
 	  strncpy (target_p->virthost, ServerInfo.network_operhost, HOSTLEN);
 
-	  sendto_server (NULL, target_p, NULL, NOCAPS, NOCAPS, NOFLAGS,
+	  sendto_server (NULL, NOCAPS, NOCAPS,
 			 ":%s SVSCLOAK %s :%s", me.name, target_p->name,
 			 target_p->virthost);
 	}
@@ -295,7 +295,7 @@ mo_grant (struct Client *client_p, struct Client *source_p,
 	  /* Restore their spoof. */
 	  hook_call_event("make_virthost", source_p);
 
-	  sendto_server (NULL, target_p, NULL, NOCAPS, NOCAPS, NOFLAGS,
+	  sendto_server (NULL, NOCAPS, NOCAPS,
 			 ":%s SVSCLOAK %s :%s", me.name, target_p->name,
 			 target_p->virthost);
 	}

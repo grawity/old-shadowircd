@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_locops.c,v 3.3 2004/09/08 01:18:07 nenolod Exp $
+ *  $Id: m_locops.c,v 3.4 2004/09/22 18:52:55 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -59,7 +59,7 @@ _moddeinit (void)
   mod_del_cmd (&locops_msgtab);
 }
 
-const char *_version = "$Revision: 3.3 $";
+const char *_version = "$Revision: 3.4 $";
 #endif
 
 /*
@@ -94,7 +94,7 @@ ms_locops (struct Client *client_p, struct Client *source_p,
   if (parc != 3 || EmptyString (parv[2]))
     return;
 
-  sendto_server (client_p, NULL, NULL, CAP_CLUSTER, 0, 0, "LOCOPS %s :%s",
+  sendto_server (client_p, CAP_CLUSTER, 0, "LOCOPS %s :%s",
 		 parv[1], parv[2]);
 
   if (!match (parv[1], me.name))

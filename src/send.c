@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: send.c,v 3.4 2004/09/22 18:23:53 nenolod Exp $
+ *  $Id: send.c,v 3.5 2004/09/22 18:52:56 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -204,11 +204,11 @@ send_message_remote(struct Client *to, struct Client *from,
                          from->name, from->username, from->host,
                          to->from->name);
 
-    sendto_server(NULL, to, NULL, CAP_TS6, NOCAPS, NOFLAGS,
+    sendto_server(NULL, CAP_TS6, NOCAPS,
                   ":%s KILL %s :%s (%s[%s@%s] Ghosted %s)",
                   me.id, to->name, me.name, to->name,
                   to->username, to->host, to->from->name);
-    sendto_server(NULL, to, NULL, NOCAPS, CAP_TS6, NOFLAGS,
+    sendto_server(NULL, NOCAPS, CAP_TS6,
                   ":%s KILL %s :%s (%s[%s@%s] Ghosted %s)",
                   me.name, to->name, me.name, to->name,
                   to->username, to->host, to->from->name);

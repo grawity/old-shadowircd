@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_mode.c,v 1.2 2004/09/08 03:44:29 nenolod Exp $
+ *  $Id: m_mode.c,v 1.3 2004/09/22 18:52:55 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -76,7 +76,7 @@ _moddeinit(void)
   mod_del_cmd(&bmask_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 const char *_desc = "Implements /mode command -- alters user/channel settings and channel acl's";
 #endif
 
@@ -318,7 +318,7 @@ ms_bmask(struct Client *client_p, struct Client *source_p, int parc, char *parv[
         *(pbuf - 1) = '\0';
         sendto_channel_local(ALL_MEMBERS, chptr, "%s %s",
                              modebuf, parabuf);
-        sendto_server(client_p, NULL, chptr, needcap, CAP_TS6, NOFLAGS,
+        sendto_server(client_p, needcap, CAP_TS6,
                       "%s %s",
                       modebuf, parabuf);
 
@@ -350,12 +350,12 @@ ms_bmask(struct Client *client_p, struct Client *source_p, int parc, char *parv[
   {
     *mbuf = *(pbuf - 1) = '\0';
     sendto_channel_local(ALL_MEMBERS, chptr, "%s %s", modebuf, parabuf);
-    sendto_server(client_p, NULL, chptr, needcap, CAP_TS6, NOFLAGS,
+    sendto_server(client_p, needcap, CAP_TS6,
                   "%s %s", modebuf, parabuf);
   }
 
   /* assumption here is that since the server sent BMASK, they are TS6, so they have an ID */
-  sendto_server(client_p, NULL, chptr, CAP_TS6|needcap, NOCAPS, NOFLAGS,
+  sendto_server(client_p, CAP_TS6|needcap, NOCAPS,
                 ":%s BMASK %lu %s %s :%s",
                  source_p->id, (unsigned long)chptr->channelts, chptr->chname,
                  parv[3], parv[4]);

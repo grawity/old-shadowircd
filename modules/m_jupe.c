@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_jupe.c,v 3.3 2004/09/08 01:18:07 nenolod Exp $
+ *  $Id: m_jupe.c,v 3.4 2004/09/22 18:52:55 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -66,7 +66,7 @@ _moddeinit(void)
   mod_del_cmd(&jupe_msgtab);
 }
 
-const char *_version = "$Revision: 3.3 $";
+const char *_version = "$Revision: 3.4 $";
 #endif
 
 /*
@@ -120,7 +120,7 @@ mo_jupe(struct Client *client_p, struct Client *source_p,
                        "JUPE for %s requested by %s: %s",
                        parv[1], get_oper_name(source_p), parv[2]);
 
-  sendto_server(NULL, source_p, NULL, NOCAPS, NOCAPS, LL_ICLIENT,
+  sendto_server(NULL, NOCAPS, NOCAPS,
                 ":%s WALLOPS :JUPE for %s requested by %s!%s@%s: %s",
                 me.name, parv[1], source_p->name, 
                 source_p->username, source_p->host, parv[2]);
@@ -130,7 +130,7 @@ mo_jupe(struct Client *client_p, struct Client *source_p,
   if ((target_p = find_server(parv[1])) != NULL)
     exit_client(client_p, target_p, &me, parv[2]);
 
-  sendto_server(NULL, NULL, NULL, NOCAPS, NOCAPS, NOFLAGS,
+  sendto_server(NULL, NOCAPS, NOCAPS,
                 ":%s SERVER %s 1 :JUPED: %s",
                 me.name, parv[1], parv[2]);
 

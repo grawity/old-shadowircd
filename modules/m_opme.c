@@ -15,7 +15,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *   $Id: m_opme.c,v 3.3 2004/09/08 01:18:07 nenolod Exp $
+ *   $Id: m_opme.c,v 3.4 2004/09/22 18:52:55 nenolod Exp $
  */
 #include "stdinc.h"
 #include "tools.h"
@@ -57,7 +57,7 @@ _moddeinit(void)
   mod_del_cmd(&opme_msgtab);
 }
 
-const char *_version = "$Revision: 3.3 $";
+const char *_version = "$Revision: 3.4 $";
 
 #endif
 
@@ -131,7 +131,7 @@ mo_opme(struct Client *client_p, struct Client *source_p,
                          "OPME called for [%s] by %s!%s@%s",
                          parv[1], source_p->name, source_p->username,
                          source_p->host);
-    sendto_server(NULL, source_p, NULL, NOCAPS, NOCAPS, LL_ICLIENT,
+    sendto_server(NULL, NOCAPS, NOCAPS,
                   ":%s WALLOPS :OPME called for [%s] by %s!%s@%s",
                   me.name, parv[1], source_p->name, source_p->username,
                   source_p->host);
@@ -141,15 +141,15 @@ mo_opme(struct Client *client_p, struct Client *source_p,
        parv[1], source_p->name, source_p->username,
        source_p->host);
 
-  sendto_server(NULL, source_p, chptr, CAP_TS6, NOCAPS, NOFLAGS,
+  sendto_server(NULL, CAP_TS6, NOCAPS,
                  ":%s PART %s", ID(source_p), parv[1]);
-  sendto_server(NULL, source_p, chptr, NOCAPS, CAP_TS6, NOFLAGS,
+  sendto_server(NULL, NOCAPS, CAP_TS6,
                 ":%s PART %s", source_p->name, parv[1]);
-  sendto_server(NULL, source_p, chptr, CAP_TS6, NOCAPS, NOFLAGS,
+  sendto_server(NULL, CAP_TS6, NOCAPS,
                 ":%s SJOIN %ld %s + :@%s",
                 me.id, (unsigned long)chptr->channelts,
                 parv[1], ID(source_p));
-  sendto_server(NULL, source_p, chptr, NOCAPS, CAP_TS6, NOFLAGS,
+  sendto_server(NULL, NOCAPS, CAP_TS6,
                 ":%s SJOIN %ld %s + :@%s",
                 me.name, (unsigned long)chptr->channelts,
                 parv[1], source_p->name);

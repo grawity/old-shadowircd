@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  m_operwall.c: Sends a message to all IRCOps.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_operwall.c,v 3.3 2004/09/08 01:18:07 nenolod Exp $
+ *  $Id: m_operwall.c,v 3.4 2004/09/22 18:52:55 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -56,7 +56,7 @@ _moddeinit(void)
   mod_del_cmd(&operwall_msgtab);
 }
 
-const char *_version = "$Revision: 3.3 $";
+const char *_version = "$Revision: 3.4 $";
 #endif
 
 /*
@@ -78,9 +78,9 @@ mo_operwall(struct Client *client_p, struct Client *source_p,
     return;
   }
 
-  sendto_server(NULL, source_p, NULL, CAP_TS6, NOCAPS, LL_ICLIENT,
+  sendto_server(NULL, CAP_TS6, NOCAPS,
                 ":%s OPERWALL :%s", ID(source_p), message);
-  sendto_server(NULL, source_p, NULL, NOCAPS, CAP_TS6, LL_ICLIENT,
+  sendto_server(NULL, NOCAPS, CAP_TS6,
                 ":%s OPERWALL :%s", parv[0], message);
   sendto_wallops_flags(UMODE_OPERWALL, source_p, "OPERWALL - %s", message);
 }
@@ -100,7 +100,7 @@ ms_operwall(struct Client *client_p, struct Client *source_p,
   if (EmptyString(message))
     return;
 
-  sendto_server(client_p, source_p, NULL, NOCAPS, NOCAPS, LL_ICLIENT,
+  sendto_server(client_p, NOCAPS, NOCAPS,
                 ":%s OPERWALL :%s", parv[0], message);
   sendto_wallops_flags(UMODE_OPERWALL, source_p, "OPERWALL - %s", message);
 }

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_topic.c,v 3.3 2004/09/08 01:18:08 nenolod Exp $
+ *  $Id: m_topic.c,v 3.4 2004/09/22 18:52:55 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -62,7 +62,7 @@ _moddeinit (void)
   mod_del_cmd (&topic_msgtab);
 }
 
-const char *_version = "$Revision: 3.3 $";
+const char *_version = "$Revision: 3.4 $";
 #endif
 
 /* m_topic()
@@ -146,12 +146,12 @@ m_topic (struct Client *client_p, struct Client *source_p,
 		ircsprintf (topic_info, "%s", source_p->name);
 		set_channel_topic (chptr, parv[2], topic_info, CurrentTime);
 
-		sendto_server (client_p, NULL, chptr, CAP_TS6, NOCAPS,
-			       NOFLAGS, ":%s TOPIC %s :%s", ID (source_p),
+		sendto_server (client_p, CAP_TS6, NOCAPS,
+			       ":%s TOPIC %s :%s", ID (source_p),
 			       chptr->chname,
 			       chptr->topic == NULL ? "" : chptr->topic);
-		sendto_server (client_p, NULL, chptr, NOCAPS, CAP_TS6,
-			       NOFLAGS, ":%s TOPIC %s :%s", source_p->name,
+		sendto_server (client_p, NOCAPS, CAP_TS6,
+			       ":%s TOPIC %s :%s", source_p->name,
 			       chptr->chname,
 			       chptr->topic == NULL ? "" : chptr->topic);
 		sendto_channel_local (ALL_MEMBERS, chptr,
@@ -172,11 +172,11 @@ m_topic (struct Client *client_p, struct Client *source_p,
 	      ircsprintf (topic_info, "%s", source_p->name);
 	      set_channel_topic (chptr, parv[2], topic_info, CurrentTime);
 
-	      sendto_server (client_p, NULL, chptr, CAP_TS6, NOCAPS, NOFLAGS,
+	      sendto_server (client_p, CAP_TS6, NOCAPS,
 			     ":%s TOPIC %s :%s",
 			     ID (source_p), chptr->chname,
 			     chptr->topic == NULL ? "" : chptr->topic);
-	      sendto_server (client_p, NULL, chptr, NOCAPS, CAP_TS6, NOFLAGS,
+	      sendto_server (client_p, NOCAPS, CAP_TS6,
 			     ":%s TOPIC %s :%s",
 			     source_p->name, chptr->chname,
 			     chptr->topic == NULL ? "" : chptr->topic);
@@ -200,11 +200,11 @@ m_topic (struct Client *client_p, struct Client *source_p,
 	      ircsprintf (topic_info, "%s", source_p->name);
 	      set_channel_topic (chptr, parv[2], topic_info, CurrentTime);
 
-	      sendto_server (client_p, NULL, chptr, CAP_TS6, NOCAPS, NOFLAGS,
+	      sendto_server (client_p, CAP_TS6, NOCAPS,
 			     ":%s TOPIC %s :%s",
 			     ID (source_p), chptr->chname,
 			     chptr->topic == NULL ? "" : chptr->topic);
-	      sendto_server (client_p, NULL, chptr, NOCAPS, CAP_TS6, NOFLAGS,
+	      sendto_server (client_p, NOCAPS, CAP_TS6,
 			     ":%s TOPIC %s :%s",
 			     source_p->name, chptr->chname,
 			     chptr->topic == NULL ? "" : chptr->topic);
@@ -222,11 +222,11 @@ m_topic (struct Client *client_p, struct Client *source_p,
 	      ircsprintf (topic_info, "%s", source_p->name);
 	      set_channel_topic (chptr, parv[2], topic_info, CurrentTime);
 
-	      sendto_server (client_p, NULL, chptr, CAP_TS6, NOCAPS, NOFLAGS,
+	      sendto_server (client_p, CAP_TS6, NOCAPS,
 			     ":%s TOPIC %s :%s",
 			     ID (source_p), chptr->chname,
 			     chptr->topic == NULL ? "" : chptr->topic);
-	      sendto_server (client_p, NULL, chptr, NOCAPS, CAP_TS6, NOFLAGS,
+	      sendto_server (client_p, NOCAPS, CAP_TS6,
 			     ":%s TOPIC %s :%s",
 			     source_p->name, chptr->chname,
 			     chptr->topic == NULL ? "" : chptr->topic);

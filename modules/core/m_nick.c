@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_nick.c,v 1.2 2004/09/08 03:44:29 nenolod Exp $
+ *  $Id: m_nick.c,v 1.3 2004/09/22 18:52:55 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -99,7 +99,7 @@ _moddeinit(void)
   mod_del_cmd(&uid_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 const char *_desc = "Implements /nick command -- declares a client's nickname.";
 #endif
 
@@ -823,11 +823,11 @@ nick_from_server(struct Client *client_p, struct Client *source_p, int parc,
     if (source_p->user != NULL)
     {
       add_history(source_p, 1);
-      sendto_server(client_p, source_p, NULL, CAP_TS6, NOCAPS,
-                    NOFLAGS, ":%s NICK %s :%lu", ID(source_p), nick,
+      sendto_server(client_p, CAP_TS6, NOCAPS,
+                    ":%s NICK %s :%lu", ID(source_p), nick,
                     (unsigned long)source_p->tsinfo);
-      sendto_server(client_p, source_p, NULL, NOCAPS, CAP_TS6,
-                    NOFLAGS, ":%s NICK %s :%lu", parv[0], nick,
+      sendto_server(client_p, NOCAPS, CAP_TS6,
+                    ":%s NICK %s :%lu", parv[0], nick,
                     (unsigned long)source_p->tsinfo);
     }
   }

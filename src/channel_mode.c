@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 3.4 2004/09/22 18:07:38 nenolod Exp $
+ *  $Id: channel_mode.c,v 3.5 2004/09/22 18:52:55 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -2129,8 +2129,8 @@ send_cap_mode_changes (struct Client *client_p, struct Client *source_p,
 	  (pbl + arglen + BAN_FUDGE) >= MODEBUFLEN)
 	{
 	  if (nc != 0)
-	    sendto_server (client_p, source_p, chptr, cap, nocap,
-			   LL_ICHAN | LL_ICLIENT, "%s %s", modebuf, parabuf);
+	    sendto_server (client_p, cap, nocap,
+			   "%s %s", modebuf, parabuf);
 	  nc = 0;
 	  mc = 0;
 
@@ -2170,8 +2170,8 @@ send_cap_mode_changes (struct Client *client_p, struct Client *source_p,
     parabuf[pbl - 1] = 0;
 
   if (nc != 0)
-    sendto_server (client_p, source_p, chptr, cap, nocap,
-		   LL_ICLIENT, "%s %s", modebuf, parabuf);
+    sendto_server (client_p, cap, nocap,
+		   "%s %s", modebuf, parabuf);
 }
 
 /* void send_mode_changes(struct Client *client_p,

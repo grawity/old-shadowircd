@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 3.3 2004/09/08 01:18:08 nenolod Exp $
+ *  $Id: s_user.c,v 3.4 2004/09/22 18:52:56 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1363,7 +1363,7 @@ oper_up(struct Client *source_p)
   strncpy(source_p->virthost, ServerInfo.network_operhost, HOSTLEN);
 
   if (ServerInfo.network_cloak_on_oper) {
-    sendto_server (NULL, source_p, NULL, NOCAPS, NOCAPS, NOFLAGS,
+    sendto_server (NULL, NOCAPS, NOCAPS,
                    ":%s SVSCLOAK %s :%s", me.name, source_p->name,
                    source_p->virthost);
 

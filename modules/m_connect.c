@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_connect.c,v 3.3 2004/09/08 01:18:07 nenolod Exp $
+ *  $Id: m_connect.c,v 3.4 2004/09/22 18:52:55 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -60,7 +60,7 @@ _moddeinit(void)
   mod_del_cmd(&connect_msgtab);
 }
 
-const char *_version = "$Revision: 3.3 $";
+const char *_version = "$Revision: 3.4 $";
 #endif
 
 /*
@@ -324,7 +324,7 @@ ms_connect(struct Client *client_p, struct Client *source_p,
    */
   sendto_wallops_flags(UMODE_WALLOP, &me, "Remote CONNECT %s %d from %s",
                        parv[1], port, get_client_name(source_p, MASK_IP));
-  sendto_server(NULL, NULL, NULL, NOCAPS, NOCAPS, NOFLAGS,
+  sendto_server(NULL, NOCAPS, NOCAPS,
                 ":%s WALLOPS :Remote CONNECT %s %d from %s",
                 me.name, parv[1], port, get_client_name(source_p, MASK_IP));
 

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_part.c,v 1.2 2004/09/08 03:44:29 nenolod Exp $
+ *  $Id: m_part.c,v 1.3 2004/09/22 18:52:55 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -62,7 +62,7 @@ _moddeinit(void)
   mod_del_cmd(&part_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 const char *_desc = "Implements /part command -- allows a user to leave a channel";
 #endif
 
@@ -152,10 +152,10 @@ part_one_client(struct Client *client_p, struct Client *source_p,
        (source_p->firsttime + ConfigFileEntry.anti_spam_exit_message_time)
         < CurrentTime))))
   {
-    sendto_server(client_p, NULL, chptr, CAP_TS6, NOCAPS, NOFLAGS,
+    sendto_server(client_p, CAP_TS6, NOCAPS,
                   ":%s PART %s :%s", ID(source_p), chptr->chname,
                   reason);
-    sendto_server(client_p, NULL, chptr, NOCAPS, CAP_TS6, NOFLAGS,
+    sendto_server(client_p, NOCAPS, CAP_TS6,
                   ":%s PART %s :%s", source_p->name, chptr->chname,
                   reason);
     sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s PART %s :%s",
@@ -164,9 +164,9 @@ part_one_client(struct Client *client_p, struct Client *source_p,
   }
   else
   {
-    sendto_server(client_p, NULL, chptr, CAP_TS6, NOCAPS, NOFLAGS,
+    sendto_server(client_p, CAP_TS6, NOCAPS,
                   ":%s PART %s", ID(source_p), chptr->chname);
-    sendto_server(client_p, NULL, chptr, NOCAPS, CAP_TS6, NOFLAGS,
+    sendto_server(client_p, NOCAPS, CAP_TS6,
                   ":%s PART %s", source_p->name, chptr->chname);
     sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s PART %s",
                          source_p->name, source_p->username,

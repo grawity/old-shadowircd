@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_join.c,v 1.2 2004/09/08 03:44:29 nenolod Exp $
+ *  $Id: m_join.c,v 1.3 2004/09/22 18:52:55 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -88,7 +88,7 @@ _moddeinit(void)
   mod_del_cmd(&join_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 const char *_desc = "Implements /join command -- allows users to join channels.";
 #endif
 
@@ -155,11 +155,11 @@ m_join(struct Client *client_p, struct Client *source_p,
       chptr->mode.mode |= MODE_TOPICLIMIT;
       chptr->mode.mode |= MODE_NOPRIVMSGS;
 
-      sendto_server(client_p, source_p, chptr, CAP_TS6, NOCAPS, LL_ICLIENT,
+      sendto_server(client_p, CAP_TS6, NOCAPS,
                     ":%s SJOIN %lu %s +nt :@%s",
                     me.id, (unsigned long)chptr->channelts,
                     chptr->chname, source_p->id);
-      sendto_server(client_p, source_p, chptr, NOCAPS, CAP_TS6, LL_ICLIENT,
+      sendto_server(client_p, NOCAPS, CAP_TS6,
                     ":%s SJOIN %lu %s +nt :@%s",
                     me.name, (unsigned long)chptr->channelts,
                     chptr->chname, parv[0]);
@@ -172,11 +172,11 @@ m_join(struct Client *client_p, struct Client *source_p,
     }
     else
     {
-      sendto_server(client_p, source_p, chptr, CAP_TS6, NOCAPS, LL_ICLIENT,
+      sendto_server(client_p, CAP_TS6, NOCAPS,
                     ":%s SJOIN %lu %s + :%s",
                     me.name, (unsigned long)chptr->channelts,
                     chptr->chname, source_p->id);
-      sendto_server(client_p, source_p, chptr, NOCAPS, CAP_TS6, LL_ICLIENT,
+      sendto_server(client_p, NOCAPS, CAP_TS6,
                     ":%s SJOIN %lu %s + :%s",
                     me.name, (unsigned long)chptr->channelts,
                     chptr->chname, source_p->name);
@@ -379,10 +379,10 @@ ms_join(struct Client *client_p, struct Client *source_p,
                          GET_CLIENT_HOST(source_p), chptr->chname);
   }
 
-  sendto_server(client_p, NULL, chptr, CAP_TS6, NOCAPS, NOFLAGS,
+  sendto_server(client_p, CAP_TS6, NOCAPS,
                 ":%s JOIN %lu %s +",
                 ID(source_p), (unsigned long)chptr->channelts, chptr->chname);
-  sendto_server(client_p, NULL, chptr, NOCAPS, CAP_TS6, NOFLAGS,
+  sendto_server(client_p, NOCAPS, CAP_TS6,
                 ":%s SJOIN %lu %s + :%s",
                 source_p->user->server->name, (unsigned long)chptr->channelts,
                 chptr->chname, source_p->name);
@@ -414,9 +414,9 @@ do_join_0(struct Client *client_p, struct Client *source_p)
     /* if the last occurance of this chan is before a 0, leave */
     if (is_target(chptr) < join_0)
     {
-      sendto_server(client_p, NULL, chptr, CAP_TS6, NOCAPS, NOFLAGS,
+      sendto_server(client_p, CAP_TS6, NOCAPS,
                     ":%s PART %s", ID(source_p), chptr->chname);
-      sendto_server(client_p, NULL, chptr, NOCAPS, CAP_TS6, NOFLAGS,
+      sendto_server(client_p, NOCAPS, CAP_TS6,
                     ":%s PART %s", source_p->name, chptr->chname);
       sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s PART %s",
                            source_p->name, source_p->username,
