@@ -1,4 +1,4 @@
-$Id: ts6.txt,v 1.1 2004/09/03 02:21:27 eko Exp $
+$Id: ts6.txt,v 1.1.1.1 2004/09/03 02:21:27 eko Exp $
 
 TS6 Proposal (v7)
 Written by Lee H <lee@leeh.co.uk>

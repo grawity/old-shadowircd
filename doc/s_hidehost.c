@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_hidehost.c,v 1.1 2004/09/03 02:21:27 eko Exp $
+ *  $Id: s_hidehost.c,v 1.1.1.1 2004/09/03 02:21:27 eko Exp $
  */
 
 #include "stdinc.h"
