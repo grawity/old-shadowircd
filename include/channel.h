@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.h,v 1.4 2004/07/15 12:27:09 nenolod Exp $
+ *  $Id: channel.h,v 1.5 2004/07/16 16:04:20 nenolod Exp $
  */
 
 #ifndef INCLUDED_channel_h
@@ -65,6 +65,8 @@ struct Channel
   time_t first_received_message_time; /* channel flood control */
   int received_number_of_privmsgs;
   char flood_noticed;
+
+  time_t last_privmsg; /* channel activity ratio */
 
   time_t channelts;
   char chname[CHANNELLEN + 1];
@@ -143,4 +145,5 @@ extern struct Membership *find_channel_link(struct Client *client_p,
 extern void set_channel_topic(struct Channel *chptr, const char *topic,
                               const char *topic_info, time_t topicts); 
 extern void free_topic(struct Channel *);
+extern int get_channel_activity(struct Channel *);
 #endif  /* INCLUDED_channel_h */
