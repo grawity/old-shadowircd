@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.c,v 1.1 2004/04/30 18:13:53 nenolod Exp $
+ *  $Id: client.c,v 1.2 2004/06/09 05:45:02 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1243,14 +1243,17 @@ exit_client (struct Client *client_p,	/* The local client originating the
 
       log_user_exit (source_p);
 
-      if (!IsDead (source_p))
-	{
-	  if (client_p != NULL && source_p != client_p)
-	    sendto_one (source_p, "ERROR :Closing Link: %s %s (%s)",
-			source_p->host, source_p->name, comment);
-	  else
-	    sendto_one (source_p, "ERROR :Closing Link: %s (%s)",
-			source_p->host, comment);
+      if (!(source_p->flags & FLAGS_IS_NOT_IRC))
+        {
+          if (!IsDead (source_p))
+    	    {
+	      if (client_p != NULL && source_p != client_p)
+	        sendto_one (source_p, "ERROR :Closing Link: %s %s (%s)",
+	 	   	    source_p->host, source_p->name, comment);
+	      else
+	        sendto_one (source_p, "ERROR :Closing Link: %s (%s)",
+			    source_p->host, comment);
+            }
 	}
 
       /*

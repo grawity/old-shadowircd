@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.9 2004/06/04 21:05:12 nenolod Exp $
+ *  $Id: client.h,v 1.10 2004/06/09 05:45:02 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -398,7 +398,7 @@ struct LocalUser
 #define FLAGS_USERCLOAK   0x08000000 /* client is using nonstandard usercloak    */
 #define FLAGS_SSL         0x10000000 /* client is using SSL */
 #define FLAGS_DOINGAUTH   0x20000000 /* client is still authenticating */
-/*                        0x40000000  */
+#define FLAGS_IS_NOT_IRC  0x40000000 /* for external applications */
 /*                        0x80000000  */
 
 #define UMODE_ALL	   UMODE_SERVNOTICE /* what is that? */

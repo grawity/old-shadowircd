@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_lexer.l,v 1.5 2004/05/26 14:30:58 nenolod Exp $
+ *  $Id: ircd_lexer.l,v 1.6 2004/06/09 05:45:02 nenolod Exp $
  */
 
 %option case-insensitive
@@ -216,6 +216,8 @@ max_ident	{ return MAX_IDENT; }
 max_local	{ return MAX_LOCAL; }
 max_global	{ return MAX_GLOBAL; }
 max_number	{ return MAX_NUMBER; }
+max_silence     { return MAX_SILENCE; }
+show_connection_headers { return SHOW_CONNECTION_HEADERS; }
 maximum_links   { return MAXIMUM_LINKS; }
 message_locale	{ return MESSAGE_LOCALE; }
 min_nonwildcard { return MIN_NONWILDCARD; }

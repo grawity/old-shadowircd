@@ -19,12 +19,13 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client_silence.c,v 1.5 2004/06/09 01:38:26 nenolod Exp $
+ *  $Id: client_silence.c,v 1.6 2004/06/09 05:45:02 nenolod Exp $
  */
 
 #include "stdinc.h"
 #include "tools.h"
 #include "client.h"
+#include "channel.h"
 #include "channel_mode.h"
 #include "common.h"
 #include "event.h"
@@ -52,6 +53,8 @@
 #include "listener.h"
 #include "irc_res.h"
 #include "userhost.h"
+
+static int check_silenced(struct Client *, const char *, const char *, const char *);
                       
 /* is_silenced()
  *
@@ -67,7 +70,7 @@ is_silenced(struct Client *target, struct Client *source)
   char src_vhost[NICKLEN + USERLEN + HOSTLEN + 6];
   char src_iphost[NICKLEN + USERLEN + HOSTLEN + 6];
 
-  if (!IsPerson(who))
+  if (!IsPerson(target))
     return(0);
 
   ircsprintf(src_host,"%s!%s@%s", source->name, source->username, source->host);
@@ -99,7 +102,7 @@ check_silenced(struct Client *target, const char *s, const char *s2, const char 
         match_cidr(actualSilence->banstr, s3))
       break;
     else
-      actualBan = NULL;
+      actualSilence = NULL;
   }
 
   return((actualSilence ? 1 : 0));
@@ -114,7 +117,7 @@ add_silence(struct Client *client_p, char *silenceid)
   if (MyClient(client_p))
   {
 
-    if (dlink_list_length(client_p->silence_list) >=
+    if (dlink_list_length(&client_p->silence_list) >=
         ConfigFileEntry.max_silence)
     {
       sendto_one(client_p, form_str(ERR_SILELISTFULL),
@@ -125,7 +128,7 @@ add_silence(struct Client *client_p, char *silenceid)
     collapse(silenceid);
   }
 
-  DLINK_FOREACH(ban, client_p->silence_list.head)
+  DLINK_FOREACH(silence, client_p->silence_list.head)
   {
     actualSilence = silence->data;
 
@@ -141,7 +144,7 @@ add_silence(struct Client *client_p, char *silenceid)
 
   actualSilence->when = CurrentTime;
 
-  dlinkAdd(actualSilence, &actualSilence->node, client_p->silence_list);
+  dlinkAdd(actualSilence, &actualSilence->node, &client_p->silence_list);
 
   return(1);
 }
@@ -163,8 +166,8 @@ del_silence(struct Client *client_p, char *banid)
     {
       MyFree(banptr->banstr);
       MyFree(banptr->who);
-      dlinkDelete(&banptr->node, client_p->silence_list);
-      BlockHeapFree(ban_heap, banptr);
+      dlinkDelete(&banptr->node, &client_p->silence_list);
+      MyFree(banptr);
       return(1);
     }
   }

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.h,v 1.5 2004/06/09 01:38:26 nenolod Exp $
+ *  $Id: s_conf.h,v 1.6 2004/06/09 05:45:02 nenolod Exp $
  */
 
 #ifndef INCLUDED_s_conf_h
@@ -313,6 +313,7 @@ struct config_file_entry
   int kill_chase_time_limit;
   int default_floodcount;
   int client_flood;
+  int send_connection_headers;
   /* 0 == don't use throttle... */
   int throttle_time;
   int use_egd;

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: parse.c,v 1.2 2004/06/09 01:38:26 nenolod Exp $
+ *  $Id: parse.c,v 1.3 2004/06/09 05:45:02 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -114,6 +114,7 @@ static void remove_unknown(struct Client *, char *, char *);
 static void do_numeric(char[], struct Client *, struct Client *, int, char **);
 static void handle_command(struct Message *, struct Client *, struct Client *, unsigned int, char **);
 static void recurse_report_messages(struct Client *source_p, struct MessageTree *mtree);
+static void recurse_report_commands(struct Client *source_p, struct MessageTree *mtree);
 static void add_msg_element(struct MessageTree *mtree_p, struct Message *msg_p, const char *cmd);
 static void del_msg_element(struct MessageTree *mtree_p, const char *cmd);
 

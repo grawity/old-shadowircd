@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: supported.h,v 1.2 2004/06/04 21:05:12 nenolod Exp $
+ *  $Id: supported.h,v 1.3 2004/06/09 05:45:02 nenolod Exp $
  */
 
 #ifndef INCLUDED_supported_h
@@ -41,7 +41,7 @@
                  " NICKLEN=%i"     \
                  " TOPICLEN=%i"    \
                  " KICKLEN=%i"     \
-                 " SILENCE=%i"     \
+                 " SILENCE=%i"     
 #else
 #define FEATURES "WALLCHOPS"       \
                  "%s%s%s"          \
@@ -52,7 +52,7 @@
                  " NICKLEN=%i"     \
                  " TOPICLEN=%i"    \
                  " KICKLEN=%i"     \
-                 " SILENCE=%i"     \
+                 " SILENCE=%i"     
 #endif
 
 #define FEATURESVALUES ConfigChannel.use_knock ? " KNOCK" : "", \

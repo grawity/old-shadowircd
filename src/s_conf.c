@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.c,v 1.4 2004/05/12 19:41:47 nenolod Exp $
+ *  $Id: s_conf.c,v 1.5 2004/06/09 05:45:02 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1948,6 +1948,8 @@ set_default_conf(void)
   ConfigFileEntry.idletime = 0;
   ConfigFileEntry.maximum_links = MAXIMUM_LINKS_DEFAULT;
   ConfigFileEntry.max_targets = MAX_TARGETS_DEFAULT;
+  ConfigFileEntry.max_silence = 10;
+  ConfigFileEntry.send_connection_headers = YES;
   ConfigFileEntry.client_flood = CLIENT_FLOOD_DEFAULT;
   ConfigFileEntry.crypt_oper_password = YES;
 

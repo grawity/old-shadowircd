@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_auth.c,v 1.1 2004/04/30 18:13:30 nenolod Exp $
+ *  $Id: s_auth.c,v 1.2 2004/06/09 05:45:02 nenolod Exp $
  */
 
 /*
@@ -90,15 +90,20 @@ enum {
 
 static void sendheader (struct Client *c, int r)
 {
-  if (IsSSL(c))
-     safe_SSL_write(c, HeaderMessages[(r)].message, HeaderMessages[(r)].length);
-  else
-     send((c)->localClient->fd, HeaderMessages[(r)].message, HeaderMessages[(r)].length, 0); \
+  if (ConfigFileEntry.send_connection_headers != 0) {
+    if (IsSSL(c))
+       safe_SSL_write(c, HeaderMessages[(r)].message, HeaderMessages[(r)].length);
+    else
+       send((c)->localClient->fd, HeaderMessages[(r)].message, HeaderMessages[(r)].length, 0); \
+  }
 }
 
 #else
-#define sendheader(c, r) \
-   send((c)->localClient->fd, HeaderMessages[(r)].message, HeaderMessages[(r)].length, 0)
+static void sendheader (struct Client *c, int r)
+{
+  if (ConfigFileEntry.send_connection_headers != 0)
+    send((c)->localClient->fd, HeaderMessages[(r)].message, HeaderMessages[(r)].length, 0); \
+}
 #endif
 
 /*

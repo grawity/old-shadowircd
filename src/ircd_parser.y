@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.5 2004/05/26 14:30:58 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.6 2004/06/09 05:45:02 nenolod Exp $
  */
 
 %{
@@ -233,6 +233,8 @@ unhook_hub_leaf_confs(void)
 %token  MAX_NICK_TIME
 %token  MAX_NUMBER
 %token  MAX_TARGETS
+%token  MAX_SILENCE
+%token  SHOW_CONNECTION_HEADERS
 %token  MESSAGE_LOCALE
 %token  MIN_NONWILDCARD
 %token  MIN_NONWILDCARD_SIMPLE
@@ -2925,7 +2927,7 @@ general_item:       general_hide_spoof_ips | general_ignore_bogus_ts |
                     general_iauth_server | general_iauth_port |
                     general_idletime | general_maximum_links |
                     general_message_locale |
-                    general_max_targets |
+                    general_max_targets | general_max_silence | general_show_connection_headers |
                     general_use_egd | general_egdpool_path |
                     general_crypt_oper_password |
                     general_caller_id_wait | general_default_floodcount |
@@ -3169,6 +3171,12 @@ general_max_targets: MAX_TARGETS '=' NUMBER ';'
     ConfigFileEntry.max_targets = $3;
 };
 
+general_max_silence: MAX_SILENCE '=' NUMBER ';'
+{
+  if (ypass == 2)
+    ConfigFileEntry.max_silence = $3;
+};
+
 general_servlink_path: SERVLINK_PATH '=' QSTRING ';'
 {
   if (ypass == 2)
@@ -3269,6 +3277,12 @@ general_crypt_oper_password: CRYPT_OPER_PASSWORD '=' TBOOL ';'
 {
   if (ypass == 2)
     ConfigFileEntry.crypt_oper_password = yylval.number;
+};
+
+general_show_connection_headers: SHOW_CONNECTION_HEADERS '=' TBOOL ';'
+{
+  if (ypass == 2)
+    ConfigFileEntry.send_connection_headers = yylval.number;
 };
 
 general_min_nonwildcard: MIN_NONWILDCARD '=' NUMBER ';'
