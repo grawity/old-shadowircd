@@ -6,7 +6,7 @@
  * do so under the terms of the GNU General Public License under which
  * this program is distributed.
  *
- * $Id: server.c,v 1.2 2003/12/18 23:01:36 nenolod Exp $
+ * $Id: server.c,v 1.3 2003/12/18 23:19:15 nenolod Exp $
  */
 
 #include "defs.h"
@@ -55,6 +55,8 @@
 extern aHashEntry hostTable[HASHCLIENTS];
 
 #endif /* STATSERVICES */
+
+void vs_process(const char *nick, char *command);
 
 /*
  * Global - list of network servers
@@ -1227,7 +1229,7 @@ s_privmsg(int ac, char **av)
 #endif
 
   else if (serviceptr == Me.vsptr)
-    hs_process(who, command);
+    vs_process(who, command);
 
 #ifdef MEMOSERVICES
 

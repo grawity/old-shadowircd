@@ -7,7 +7,7 @@
  * GNU General Public License, version 2. See LICENSE in the root
  * directory for more information.
  *
- * $Id: hostserv.c,v 1.2 2003/12/18 23:14:07 nenolod Exp $
+ * $Id: hostserv.c,v 1.3 2003/12/18 23:19:15 nenolod Exp $
  *******************************************************************/
 
 #include <stdio.h>
@@ -43,6 +43,7 @@
 #include "hybdefs.h"
 #include "sock.h"
 
+void vs_process (const char *nick, char *command);
 static void h_help (struct Luser *lptr, int ac, char **av);
 static void h_on (struct Luser *lptr, int ac, char **av);
 static void h_set (struct Luser *lptr, int ac, char **av);
@@ -60,7 +61,7 @@ static struct Command vhostcmds[] = {
  * processes input coming to HostServ.
  */
 
-void hs_process (char *nick, char *command) {
+void vs_process (const char *nick, char *command) {
   int acnt;
   char **arv;
   struct Command *cptr;
