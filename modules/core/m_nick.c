@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_nick.c,v 1.3 2003/12/13 02:44:11 nenolod Exp $
+ *  $Id: m_nick.c,v 1.4 2003/12/13 02:47:35 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -38,6 +38,7 @@
 #include "send.h"
 #include "list.h"
 #include "channel.h"
+#include "channel_mode.h"
 #include "s_log.h"
 #include "resv.h"
 #include "msg.h"
@@ -97,7 +98,7 @@ _moddeinit(void)
   mod_del_cmd(&uid_msgtab);
 }
 
-const char *_version = "$Revision: 1.3 $";
+const char *_version = "$Revision: 1.4 $";
 #endif
 
 /* mr_nick()
@@ -264,15 +265,16 @@ m_nick(struct Client *client_p, struct Client *source_p,
           {
             /* Well, we can't send... */
             sendto_one(source_p, form_str (ERR_BANNICKCHANGE),
-			me.name, source_p->name, chptr->name);
+			me.name, source_p->name, chptr->chname);
             return;
           }
-          else if (chptr->mode.mode & MODE_STICKYNICK)
+          if (chptr->mode.mode & MODE_STICKYNICK)
           {
             sendto_one(source_p, form_str (ERR_BANNICKCHANGE),
-                        me.name, source_p->name, chptr->name);
+                        me.name, source_p->name, chptr->chname);
             return;
           }
+        }
         change_local_nick(client_p, source_p, nick);
 	return;
       }
