@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.27 2004/08/26 21:35:07 nenolod Exp $
+ *  $Id: s_user.c,v 1.28 2004/09/03 14:18:25 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -987,6 +987,20 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
           }
           break;
 
+        case 'e':
+          if (what == MODE_ADD)
+          {
+            if (IsServer(client_p) && !HasUmode(target_p, UMODE_IDENTIFY))
+            {
+              SetUmode(target_p, UMODE_IDENTIFY);
+            }
+          }
+          else
+          {
+            ClearUmode(target_p, UMODE_IDENTIFY);
+          }
+          break;
+
         case 'N':
           if (what == MODE_ADD)
           {
@@ -1078,7 +1092,7 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
 
             Count.oper--;
 
-            if (MyConnect(source_p))
+            if (MyConnect(target_p))
             {
               dlink_node *dm;
 
@@ -1113,7 +1127,8 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
         default:
           if ((flag = user_modes_from_c_to_bitmask[(unsigned char)*m]))
           {
-            if (MyConnect(target_p) && !IsOper(target_p) &&
+            if (MyConnect(target_p) && !IsOper(source_p) &&
+                !IsServer(client_p) &&
               (user_mode_table[flag].operonly == 1))
             {
               badflag = 1;
