@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 1.7 2004/07/18 13:11:38 nenolod Exp $
+ *  $Id: channel_mode.c,v 1.8 2004/08/23 01:39:54 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -2182,7 +2182,7 @@ send_mode_changes (struct Client *client_p, struct Client *source_p,
     mbl = ircsprintf (modebuf, ":%s MODE %s ", source_p->name, chname);
   else
     mbl = ircsprintf (modebuf, ":%s!%s@%s MODE %s ", source_p->name,
-		      source_p->username, source_p->host, chname);
+		      source_p->username, GET_CLIENT_HOST(source_p), chname);
 
   mc = 0;
   nc = 0;
@@ -2222,7 +2222,7 @@ send_mode_changes (struct Client *client_p, struct Client *source_p,
 	    mbl = ircsprintf (modebuf, ":%s MODE %s ", me.name, chname);
 	  else
 	    mbl = ircsprintf (modebuf, ":%s!%s@%s MODE %s ", source_p->name,
-			      source_p->username, source_p->host, chname);
+			      source_p->username, GET_CLIENT_HOST(source_p), chname);
 
 	  pbl = 0;
 	  parabuf[0] = '\0';

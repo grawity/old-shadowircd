@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_mode.c,v 1.1 2004/04/30 18:19:27 nenolod Exp $
+ *  $Id: m_mode.c,v 1.2 2004/08/23 01:39:54 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -76,7 +76,7 @@ _moddeinit(void)
   mod_del_cmd(&bmask_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /*
@@ -130,13 +130,6 @@ m_mode(struct Client *client_p, struct Client *source_p,
       if (MyClient(source_p) && !ServerInfo.hub && uplink &&
 	   IsCapable(uplink, CAP_LL))
 	{
-#if 0
-	  /* cache the channel if it exists on uplink */
-	  /* Lets not for now -db */
-
-	  sendto_one(uplink, ":%s CBURST %s",
-                     me.name, parv[1]);
-#endif
 	  sendto_one(uplink, ":%s MODE %s %s",
                      ID_or_name(source_p, uplink),
 		     parv[1], (parv[2] ? parv[2] : ""));
