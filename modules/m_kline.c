@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_kline.c,v 3.3 2004/09/08 01:18:07 nenolod Exp $
+ *  $Id: m_kline.c,v 3.4 2004/09/22 18:07:38 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -105,7 +105,7 @@ _moddeinit (void)
   delete_capability ("KLN");
 }
 
-const char *_version = "$Revision: 3.3 $";
+const char *_version = "$Revision: 3.4 $";
 #endif
 
 #define TK_SECONDS 0
@@ -361,11 +361,10 @@ apply_tkline (struct Client *source_p, struct ConfItem *conf, int tkline_time)
 			"%s added temporary %d min. K-Line for [%s@%s] [%s]",
 			get_oper_name (source_p), tkline_time / 60,
 			aconf->user, aconf->host, aconf->reason);
-  sendto_one (source_p,
+  if (MyConnect(source_p))
+    sendto_one (source_p,
 	      ":%s NOTICE %s :Added temporary %d min. K-Line [%s@%s]",
-	      MyConnect (source_p) ? source_p->name : ID_or_name (&me,
-								  source_p->
-								  from),
+ 	      me.name,
 	      source_p->name, tkline_time / 60, aconf->user, aconf->host);
   ilog (L_TRACE, "%s added temporary %d min. K-Line for [%s@%s] [%s]",
 	source_p->name, tkline_time / 60, aconf->user, aconf->host,
@@ -1097,17 +1096,7 @@ mo_unkline (struct Client *client_p, struct Client *source_p,
       return;
     }
 
-  /* UNKLINE bill@mu.org ON irc.mu.org */
-  if ((parc > 3) && (irccmp (parv[2], "ON") == 0))
-    {
-      sendto_match_servs (source_p, parv[3], CAP_UNKLN,
-			  "UNKLINE %s %s %s", parv[3], user, host);
-
-      if (!match (parv[3], me.name))
-	return;
-    }
-  else if (dlink_list_length (&cluster_items))
-    cluster_unkline (source_p, user, host);
+  cluster_unkline (source_p, user, host);
 
   if (remove_tkline_match (host, user))
     {
@@ -1124,8 +1113,6 @@ mo_unkline (struct Client *client_p, struct Client *source_p,
 
   if (remove_conf_line (KLINE_TYPE, source_p, user, host) > 0)
     {
-      sendto_one (source_p, ":%s NOTICE %s :K-Line for [%s@%s] is removed",
-		  me.name, source_p->name, user, host);
       sendto_realops_flags (UMODE_ALL, L_ALL,
 			    "%s has removed the K-Line for: [%s@%s]",
 			    get_oper_name (source_p), user, host);

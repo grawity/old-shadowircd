@@ -2,7 +2,7 @@
  *  shadowircd: An advanced IRC daemon (ircd).
  *  reject.c: nenolod's reject engine. (inspired from the ratbox one.)
  *
- *  $Id: reject.c,v 3.3 2004/09/08 01:18:08 nenolod Exp $
+ *  $Id: reject.c,v 3.4 2004/09/22 18:07:38 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -64,7 +64,7 @@ reject_expires(void *unused)
 
 	DLINK_FOREACH(entry, rlist.head) {
 		data = (reject_data *)entry->data;
-		if (data->time + 3600 < CurrentTime) {
+		if (data->time + 300 < CurrentTime) {
 			dlinkDelete(entry, &rlist);
 			MyFree(data);
 		}

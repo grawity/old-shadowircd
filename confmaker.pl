@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# $Id: confmaker.pl,v 3.4 2004/09/22 17:54:30 nenolod Exp $
+# $Id: confmaker.pl,v 3.5 2004/09/22 18:07:38 nenolod Exp $
 # ShadowIRCd ircd.conf maker - (c) 2004 NhJm
 
 my $cfile;
@@ -17,7 +17,7 @@ sub a { $cfile .= join("", @_)."\n"; }
 sub b { ($n,$b,$l) = @_; &a("    $n = \"", &in($b,$l), "\";"); print "\n"; }
 
 
-&a("configuration {\n  serverinfo {");
+&a("  serverinfo {");
 
 print "\nServer Information\n\n";
 
@@ -710,8 +710,7 @@ print "\n\nLogging\n\n";
      */
     aftype = ipv6;
     class = \"server\";
-  };
-};");
+  };");
 
 system("mv ircd.conf ircd.conf.old") if (-e "ircd.conf");
 open(IRCDCONF, ">>ircd.conf");

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 3.3 2004/09/08 01:18:08 nenolod Exp $
+ *  $Id: channel_mode.c,v 3.4 2004/09/22 18:07:38 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -251,7 +251,7 @@ add_id (struct Client *client_p, struct Channel *chptr, char *banid, int type)
 			   strlen (client_p->username) +
 			   strlen (client_p->host) + 3);
       ircsprintf (actualBan->who, "%s!%s@%s",
-		  client_p->name, client_p->username, client_p->host);
+		  client_p->name, client_p->username, GET_CLIENT_HOST(client_p));
     }
   else
     {
