@@ -1,19 +1,65 @@
-$Id: Shadow-team,v 1.3 2004/05/12 16:57:59 nenolod Exp $
+$Id: Shadow-team,v 1.4 2004/05/13 19:42:53 nenolod Exp $
 
-ShadowIRCd is the collaboration of many people's ideas.
-The following people currently maintain the ShadowIRCd codebase:
+The people on this list are people who have helped with the
+development of ShadowIRCd. These people are known as the
+ShadowIRCd project.
+
+Active members in the ShadowIRCd project:
  
-nenolod                  nenolod@kpanic.org
-Ashen                    l43x@mindspring.com
+ - nenolod (nenolod@nenolod.net)
+   Main developer.
+ 
+ - Ashen (l43x@mindspring.com)
+   Additional development.
 
-Some help has been provided by the following (testing etc.)
+Others who have contributed to this release of ShadowIRCd:
 
-Zippoboy7                zippoboy7@criten.net
-Lucifer7                 schultz200ca@hotmail.com
-NhJm                     nhjm449@hotmail.com
+ - deadman (devinbrown@mindless.com)
+   Bug reporting on 2.x branch, causing fixes with the
+   forcejoin system in 3.x
+ 
+The ShadowIRCd project would like to denote gratitude for
+the work of the following people:
+ 
+ - Sarisa/Hwy
+   Mirroring ShadowIRCd's releases and making them
+   more available to the public.
+ 
+ - Lucifer7
+   Mirroring ShadowIRCd releases and maintaining
+   an archive of ShadowIRCd releases, especially when
+   berlios.de temporarily went offline.
+ 
+ - Zippoboy7
+   2.x branch maintainer, attempting to provide CVS hosting
+   after berlios.de went offline.
+ 
+ - Pufu
+   Bugtesting and patchwriting, adding new features to
+   the ircd.
+ 
+ - rakaur
+   Starting the Shrike project, leading to string manipulation
+   routines which were added to the ircd.
+ 
+ - asuffield
+   Creating a working method for the allocation of more
+   than 32 usermodes.
+ 
+ - Eko
+   Initial work on the ShadowIRCd 2.x branch.
+ 
+ - NhJm
+   Bugtesting.
+ 
+ - anfl
+   For inventing ETRACE for hybrid and ratbox, so that it could
+   be added to the IRCd.
+ 
+ - ksh/iso9660
+   For working on OpenIRCd, what this ircd is majorly derived from.
 
-As of 2.4.4, new methods of CIDR computation have been added.
-This was written by AndroSyn, and the rest of the ratbox team.
+Additional thanks has to go to the Hybrid development team for creating a
+good ircd to work from.
+ 
 
-For information concerning previous coders, see the Shadow-team file in 
-the doc/ subdirectory of the source tree.
