@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.33 2004/03/11 05:31:50 nenolod Exp $
+ *  $Id: s_user.c,v 1.34 2004/03/11 05:55:10 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -567,7 +567,7 @@ register_local_user(struct Client *client_p, struct Client *source_p,
 
   make_virthost(source_p->host, source_p->virthost);
 
-  if (ServerInfo.cloak_on_connect)
+  if (ServerInfo.network_cloak_on_connect)
     source_p->umodes |= UMODE_CLOAK;
 
   return(introduce_client(client_p, source_p));
@@ -1357,7 +1357,7 @@ oper_up(struct Client *source_p)
    */
   strncpy(source_p->virthost, ServerInfo.network_operhost, HOSTLEN);
 
-  if (ServerInfo.cloak_on_oper) {
+  if (ServerInfo.network_cloak_on_oper) {
     sendto_server (NULL, source_p, NULL, NOCAPS, NOCAPS, NOFLAGS,
                    ":%s SVSCLOAK %s :%s", me.name, source_p->name,
                    source_p->virthost);
