@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_nick.c,v 1.4 2004/05/12 21:22:13 nenolod Exp $
+ *  $Id: m_nick.c,v 1.5 2004/05/22 04:12:36 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -99,7 +99,7 @@ _moddeinit(void)
   mod_del_cmd(&uid_msgtab);
 }
 
-const char *_version = "$Revision: 1.4 $";
+const char *_version = "$Revision: 1.5 $";
 #endif
 
 /* mr_nick()
@@ -786,17 +786,23 @@ nick_from_server(struct Client *client_p, struct Client *source_p, int parc,
       /* parse usermodes */
       m = &parv[4][1];
 
-      while (*m)
-      {
-        flag = user_modes_from_c_to_bitmask[(unsigned char)*m];
-        if (!(HasUmode(source_p, UMODE_INVISIBLE)
-              && (flag == UMODE_INVISIBLE)))
-          Count.invisi++;
-        if (!(HasUmode(source_p, UMODE_OPER) && (flag == UMODE_OPER)))
-          Count.oper++;
-        SetUmode(source_p, flag);
-        m++;
-      }
+  while (*m)
+  {
+    flag = user_modes_from_c_to_bitmask[(unsigned char)*m];
+    if (!HasUmode(source_p, flag)) {
+      SetUmode(source_p, flag);
+      if (flag == UMODE_OPER)
+        Count.oper++;
+      if (flag == UMODE_INVISIBLE)
+        Count.invisi++;
+    } else {
+      sendto_realops_flags(UMODE_DEBUG, L_ALL,
+          "Major WTF: Duplicate flag detected in nick_from_server for %s -- umode string = %s",
+          nick, parv[4]);
+    }
+    m++;
+  }
+
 
       return (register_remote_user
               (client_p, source_p, parv[5], parv[6], parv[7],
@@ -867,11 +873,17 @@ client_from_server(struct Client *client_p,
   while (*m)
   {
     flag = user_modes_from_c_to_bitmask[(unsigned char)*m];
-    if (!(HasUmode(source_p, UMODE_INVISIBLE) && (flag == UMODE_INVISIBLE)))
-      Count.invisi++;
-    if (!(HasUmode(source_p, UMODE_OPER) && (flag == UMODE_OPER)))
-      Count.oper++;
-    SetUmode(source_p, flag);
+    if (!HasUmode(source_p, flag)) {
+      SetUmode(source_p, flag);
+      if (flag == UMODE_OPER)
+        Count.oper++;
+      if (flag == UMODE_INVISIBLE)
+        Count.invisi++;
+    } else {
+      sendto_realops_flags(UMODE_DEBUG, L_ALL,
+          "Major WTF: Duplicate flag detected in client_from_server for %s -- umode string = %s",
+          nick, parv[4]);
+    }
     m++;
   }
 

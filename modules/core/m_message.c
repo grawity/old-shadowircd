@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_message.c,v 1.1 2004/04/30 18:19:27 nenolod Exp $
+ *  $Id: m_message.c,v 1.2 2004/05/22 04:12:36 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -121,7 +121,7 @@ _moddeinit (void)
   mod_del_cmd (&notice_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /*
@@ -490,10 +490,6 @@ msg_channel (int p_or_n, const char *command, struct Client *client_p,
 	    strip_colour (text);
 	  sendto_channel_butone (client_p, source_p, chptr, command, ":%s",
 				 text);
-          if ((chptr2 = hash_find_channel(chptr->mode.linktarget)) != NULL) {
-            sendto_channel_butone (client_p, source_p, chptr2, command, ":%s",
-				 text);
-          }
 	}
     }
   else

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 1.2 2004/05/01 08:30:29 nenolod Exp $
+ *  $Id: channel_mode.c,v 1.3 2004/05/22 04:12:36 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -70,14 +70,6 @@ static void chm_limit(struct Client *, struct Client *, struct Channel *,
                       const char *chname);
 
 static void chm_key(struct Client *, struct Client *, struct Channel *,
-                    int, int *, char **, int *, int, int, char, void *,
-                    const char *chname);
-
-static void chm_linktarget(struct Client *, struct Client *, struct Channel *,
-                    int, int *, char **, int *, int, int, char, void *,
-                    const char *chname);
-
-static void chm_forward(struct Client *, struct Client *, struct Channel *,
                     int, int *, char **, int *, int, int, char, void *,
                     const char *chname);
 
@@ -410,22 +402,6 @@ channel_modes(struct Channel *chptr, struct Client *client_p,
 
     if (len || IsMember(client_p, chptr) || IsServer(client_p))
       ircsprintf(pbuf, "%s ", chptr->mode.key);
-  }
-
-  if (chptr->mode.linktarget[0])
-  {
-    *mbuf++ = 'L';
-
-    if (len || IsMember(client_p, chptr) || IsServer(client_p))
-      ircsprintf(pbuf, "%s ", chptr->mode.linktarget);
-  }
-
-  if (chptr->mode.forwardtarget[0])
-  {
-    *mbuf++ = 'f';
-
-    if (len || IsMember(client_p, chptr) || IsServer(client_p))
-      ircsprintf(pbuf, "%s ", chptr->mode.forwardtarget);
   }
 
   *mbuf = '\0';
@@ -1905,154 +1881,6 @@ chm_key(struct Client *client_p, struct Client *source_p,
   }
 }
 
-static void
-chm_linktarget(struct Client *client_p, struct Client *source_p,
-        struct Channel *chptr, int parc, int *parn,
-        char **parv, int *errors, int alev, int dir, char c, void *d,
-        const char *chname)
-{
-  int i;
-  char *key;
-
-  if (alev < CHACCESS_CHANOWNER)
-  {
-    if (!(*errors & SM_ERR_NOOPS))
-      sendto_one(source_p, form_str(alev == CHACCESS_NOTONCHAN ?
-                                    ERR_NOTONCHANNEL : ERR_CHANOPRIVSNEEDED),
-                 me.name, source_p->name, chname);
-    *errors |= SM_ERR_NOOPS;
-    return;
-  }
-
-  if (dir == MODE_QUERY)
-    return;
-
-  if ((dir == MODE_ADD) && parc > *parn)
-  {
-    key = parv[(*parn)++];
-
-    if (MyClient(source_p))
-      fix_key(key);
-    else
-      fix_key_old(key);
-
-    if (*key == '\0')
-      return;
-
-    assert(key[0] != ' ');
-    strlcpy(chptr->mode.linktarget, key, sizeof(chptr->mode.linktarget));
-
-    /* if somebody does MODE #channel +kk a b, accept latter --fl */
-    for (i = 0; i < mode_count; i++)
-    {
-      if (mode_changes[i].letter == c && mode_changes[i].dir == MODE_ADD)
-        mode_changes[i].letter = 0;
-    }
-
-    mode_changes[mode_count].letter = c;
-    mode_changes[mode_count].dir = MODE_ADD;
-    mode_changes[mode_count].caps = 0;
-    mode_changes[mode_count].nocaps = 0;
-    mode_changes[mode_count].mems = ALL_MEMBERS;
-    mode_changes[mode_count].id = NULL;
-    mode_changes[mode_count++].arg = chptr->mode.linktarget;
-  }
-  else if (dir == MODE_DEL)
-  {
-    if (parc > *parn)
-      (*parn)++;
-
-    if ((*chptr->mode.linktarget) == '\0')
-      return;
-
-    *chptr->mode.linktarget = '\0';
-
-    mode_changes[mode_count].letter = c;
-    mode_changes[mode_count].dir = MODE_DEL;
-    mode_changes[mode_count].caps = 0;
-    mode_changes[mode_count].nocaps = 0;
-    mode_changes[mode_count].mems = ALL_MEMBERS;
-    mode_changes[mode_count].id = NULL;
-    mode_changes[mode_count++].arg = "*";
-  }
-}
-
-static void
-chm_forward(struct Client *client_p, struct Client *source_p,
-        struct Channel *chptr, int parc, int *parn,
-        char **parv, int *errors, int alev, int dir, char c, void *d,
-        const char *chname)
-{
-  int i;
-  char *key;
-
-  if (!IsOper(source_p))
-    return;
-
-  if (alev < CHACCESS_CHANOWNER)
-  {
-    if (!(*errors & SM_ERR_NOOPS))
-      sendto_one(source_p, form_str(alev == CHACCESS_NOTONCHAN ?
-                                    ERR_NOTONCHANNEL : ERR_CHANOPRIVSNEEDED),
-                 me.name, source_p->name, chname);
-    *errors |= SM_ERR_NOOPS;
-    return;
-  }
-
-  if (dir == MODE_QUERY)
-    return;
-
-  if ((dir == MODE_ADD) && parc > *parn)
-  {
-    key = parv[(*parn)++];
-
-    if (MyClient(source_p))
-      fix_key(key);
-    else
-      fix_key_old(key);
-
-    if (*key == '\0')
-      return;
-
-    assert(key[0] != ' ');
-    strlcpy(chptr->mode.forwardtarget, key, sizeof(chptr->mode.forwardtarget));
-
-    /* if somebody does MODE #channel +kk a b, accept latter --fl */
-    for (i = 0; i < mode_count; i++)
-    {
-      if (mode_changes[i].letter == c && mode_changes[i].dir == MODE_ADD)
-        mode_changes[i].letter = 0;
-    }
-
-    mode_changes[mode_count].letter = c;
-    mode_changes[mode_count].dir = MODE_ADD;
-    mode_changes[mode_count].caps = 0;
-    mode_changes[mode_count].nocaps = 0;
-    mode_changes[mode_count].mems = ALL_MEMBERS;
-    mode_changes[mode_count].id = NULL;
-    mode_changes[mode_count++].arg = chptr->mode.forwardtarget;
-  }
-  else if (dir == MODE_DEL)
-  {
-    if (parc > *parn)
-      (*parn)++;
-
-    if ((*chptr->mode.forwardtarget) == '\0')
-      return;
-
-    *chptr->mode.forwardtarget = '\0';
-
-    mode_changes[mode_count].letter = c;
-    mode_changes[mode_count].dir = MODE_DEL;
-    mode_changes[mode_count].caps = 0;
-    mode_changes[mode_count].nocaps = 0;
-    mode_changes[mode_count].mems = ALL_MEMBERS;
-    mode_changes[mode_count].id = NULL;
-    mode_changes[mode_count++].arg = "*";
-    mode_changes[mode_count++].arg = "*";
-  }
-}
-
 struct ChannelMode
 {
   void (*func) (struct Client *client_p, struct Client *source_p,
@@ -2077,7 +1905,7 @@ static struct ChannelMode ModeTable[255] =
   {chm_invex, NULL},                              /* I */
   {chm_nosuch, NULL},                             /* J */
   {chm_simple, (void *) MODE_NOKNOCK},            /* K */
-  {chm_linktarget, NULL},                         /* L */
+  {chm_nosuch, NULL},                             /* L */
   {chm_nosuch, NULL},                             /* M */
   {chm_simple, (void *) MODE_STICKYNICK},         /* N */
   {chm_operonly, NULL},                           /* O */
@@ -2103,7 +1931,7 @@ static struct ChannelMode ModeTable[255] =
   {chm_simple, (void *) MODE_NOCOLOR},            /* c */
   {chm_restrict, NULL},                           /* d */
   {chm_except, NULL},                             /* e */
-  {chm_forward, NULL},                            /* f */
+  {chm_nosuch, NULL},                             /* f */
   {chm_nosuch, NULL},                             /* g */
   {chm_hop, NULL},                                /* h */
   {chm_simple, (void *) MODE_INVITEONLY},         /* i */
