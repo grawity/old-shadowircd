@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.11 2004/01/16 00:24:43 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.12 2004/01/16 00:45:22 nenolod Exp $
  */
 
 %{
@@ -532,15 +532,7 @@ network_cloak_key_1:  CLOAK_KEY_1 '=' NUMBER ';'
 {
   if (ypass == 2)
   {
-    if ($3 >= 10000)
-    {
-      ServerInfo.network_cloakkey1 = $3;
-    }
-    else
-    {
-      ilog(L_ERROR, "Setting network_cloak_key_1 to 10000");
-      ServerInfo.network_cloakkey1 = 10000;
-    }
+    ServerInfo.network_cloakkey1 = $3;
   }
 };
 
@@ -548,15 +540,7 @@ network_cloak_key_2:  CLOAK_KEY_2 '=' NUMBER ';'
 {
   if (ypass == 2)
   {
-    if ($3 >= 10000)
-    {
-      ServerInfo.network_cloakkey2 = $3;
-    }
-    else
-    {
-      ilog(L_ERROR, "Setting network_cloak_key_2 to 10001");
-      ServerInfo.network_cloakkey2 = 10001;
-    }
+    ServerInfo.network_cloakkey2 = $3;
   }
 };
 
@@ -564,15 +548,7 @@ network_cloak_key_3:  CLOAK_KEY_3 '=' NUMBER ';'
 {
   if (ypass == 2)
   {
-    if ($3 >= 10000)
-    {
-      ServerInfo.network_cloakkey3 = $3;
-    }
-    else
-    {
-      ilog(L_ERROR, "Setting network_cloak_key_1 to 10002");
-      ServerInfo.network_cloakkey1 = 10002;
-    }
+    ServerInfo.network_cloakkey3 = $3;
   }
 };
 

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.21 2004/01/15 23:57:05 nenolod Exp $
+ *  $Id: s_user.c,v 1.22 2004/01/16 00:45:22 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1355,6 +1355,10 @@ oper_up(struct Client *source_p)
     source_p->umodes &= ~UMODE_NCHANGE;
 
   source_p->umodes |= UMODE_HELPOP;
+
+  /* set the network staff virtual host. */
+  MyFree(source_p->virthost);
+  DupString(source_p->virthost, ServerInfo.network_operhost);
 
   sendto_realops_flags(UMODE_ALL, L_ALL, "%s (%s@%s) is now an operator",
                        source_p->name, source_p->username, source_p->host);
