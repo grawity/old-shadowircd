@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.1 2004/04/30 18:14:27 nenolod Exp $
+ *  $Id: client.h,v 1.2 2004/05/12 16:57:59 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -51,6 +51,13 @@ struct LocalUser;
 /*
  * Client structures
  */
+struct Umode
+{
+  int            ModeID;
+  int            Enabled;
+  const char     *letter;
+};
+
 struct User
 {
   dlink_list     channel;   /* chain of channel pointer blocks */

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ssl.c,v 1.1 2004/04/30 18:13:20 nenolod Exp $
+ *  $Id: ssl.c,v 1.2 2004/05/12 16:57:59 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -43,8 +43,6 @@ int safe_SSL_read(struct Client *acptr, void *buf, int sz)
 
   len = SSL_read(acptr->ssl, buf, sz);
 
-  printf("safe_SSL_read called\n");
-
   if (len <= 0) {
     switch (ssl_err = SSL_get_error(acptr->ssl, len)) {
       case SSL_ERROR_SYSCALL:
@@ -66,8 +64,6 @@ int safe_SSL_read(struct Client *acptr, void *buf, int sz)
 int safe_SSL_write(struct Client *acptr, const void *buf, int sz)
 {
   int len, ssl_err;
-
-  printf("safe_SSL_write called\n");
 
   len = SSL_write(acptr->ssl, buf, sz);
   if (len <= 0) {
@@ -92,8 +88,6 @@ int safe_SSL_accept(struct Client *acptr, int fd)
 {
 
   int ssl_err;
-
-  printf("safe_SSL_accept called\n");
 
   if ((ssl_err = SSL_accept(acptr->ssl)) <= 0) {
     switch (ssl_err = SSL_get_error(acptr->ssl, ssl_err)) {

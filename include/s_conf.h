@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.h,v 1.2 2004/04/30 21:48:00 nenolod Exp $
+ *  $Id: s_conf.h,v 1.3 2004/05/12 16:57:59 nenolod Exp $
  */
 
 #ifndef INCLUDED_s_conf_h
@@ -111,6 +111,7 @@ struct AccessItem
   time_t           hold;     /* Hold action until this time (calendar time) */
   struct ConfItem *class_ptr;  /* Class of connection */
   struct DNSQuery* dns_query;
+  int              encrypted;
   int              aftype;
 #ifdef HAVE_LIBCRYPTO
   char *           rsa_public_key_file;

@@ -1,60 +1,6 @@
-(n) = nenolod; (z) = Zippoboy7
+ShadowIRCd 3.0
 
-ShadowIRCd 2.4.4-3
+* More efficient protocol.
+* New usermode system.
+* New channelmode system.
 
-* Fixed some string overbounds checking to reduce crashes on systems
-  using a specific version of glibc. (n)
-
-ShadowIRCd 2.4.4-2
-
-* Fixed voicing issues. (n)
-
-ShadowIRCd 2.4.4-1
-
-* Fixed desync bug caused by silly typo. Sorry! (n)
-* Readded declaration for colourfilter umode +C. Sorry again. (n)
-
-ShadowIRCd 2.4.4
-
-* Fixed compatibility with older ShadowIRCd protocol. (n)
-* Fixed compatibility mode (TS5). (n)
-* Added a reject cache. (n)
-* Fixed some errors in the config file. (n)
-
-ShadowIRCd 2.4.3
-
-* Added vhost to UID statement. (n)
-* Backported fix for +L channels from 2.5 branch. (n)
-* Voices can now voice other users, really. (if cmode +V enabled) (n)
-* Colour filtering umode +C (n)
-* Fix SETNAME propigation. (n)
-* Fix /who bruteforce bug. (n)
-* Added ability to disable dns resolution. (n)
-
-ShadowIRCd 2.4.2
-
-* Fix issues in the example config file. (n)
-* Backported ShadowIRCd 2.5's config parser. (n)
-* WHOIS now shows the uncloaked hostname to operators. (n)
-* Voices can now voice other users. (n)
-* Backported ShadowIRCd 2.5's configuration frontend tool. (n)
-* Added new hooks, allowing for all sorts of new fun things. (n)
-* Included in3crypt's PM interception module, m_intercept.c in contrib/. (n)
-* Fix RESV/UNKLINE propigation. (n)
-* Add [SET|CHG]IDENT and [SET|CHG]NAME to Shadow. (n)
-* Fix TS6 desync bug. Thanks techno for reporting this! (n)
-* SPINGTIME bug fixed. (n)
-
-ShadowIRCd 2.4.1-1
-
-* TOPIC bug is fixed. Thanks to DXtremz for reporting this. (n)
-
-ShadowIRCd 2.4.1
-
-* Fix compile issue! (n)
-
-ShadowIRCd 2.4
-
-* New operator { } block. Soon I will be adding this to connect { }. :)
-* Ability to turn off +v on connect now in the conf file.
-* Fix bansystem bug!
