@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.2 2003/12/02 23:22:25 nenolod Exp $
+ *  $Id: s_user.c,v 1.3 2003/12/03 17:58:11 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1469,3 +1469,43 @@ add_one_to_uid(int i)
     else new_uid[i] = new_uid[i] + 1;
   }
 }
+
+/*
+ * docloak -- taken from 
+void docloak(aClient *sptr, int autocloak) {
+    char *pos, *posx;
+    int dcnt;
+
+    dcnt = 0;
+    if (inet_aton(sptr->user->host, (struct in_addr *) NULL)) {
+        /* The user is cloaking with an IP */
+        for (pos = posx = sptr->user->host; (*pos != '\0'); pos++) {
+            if (*pos == '.')
+                dcnt++;
+            if (dcnt == 2) {
+                posx = pos;
+                break;
+            }
+        }
+        bzero(sptr->user->virthost, HOSTLEN);
+        strncpy(sptr->user->virthost, sptr->user->host,
+                ((posx + 1) - sptr->user->host));
+        strcat(sptr->user->virthost, "0.0");
+    } else {
+        for (pos = posx = sptr->user->host; (*pos != '\0'); pos++)
+            if (*pos == '.') {
+                if (dcnt == 0)
+                    posx = pos;
+                dcnt++;
+            }
+        bzero(sptr->user->virthost, HOSTLEN);
+        if (dcnt == 1)
+            snprintf(sptr->user->host, HOSTLEN, "usercloak.%s",
+                sptr->user->host);
+        else
+            snprintf(sptr->user->virthost, HOSTLEN, "usercloak%s", posx);
+    }
+    if (MyClient(sptr))
+	sptr->umodes =~ UMODE_CLOAK;
+}
+
