@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: send.c,v 1.7 2004/02/12 01:47:12 nenolod Exp $
+ *  $Id: send.c,v 1.8 2004/02/12 02:04:40 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1041,7 +1041,7 @@ sendto_anywhere(struct Client *to, struct Client *from,
     }
     else
       len = ircsprintf(buffer, ":%s!%s@%s ",
-                       from->name, from->username, from->host);
+                       from->name, from->username, GET_CLIENT_HOST(from));
   }
   else len = ircsprintf(buffer, ":%s ", ID_or_name(from, send_to));
 
