@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_who.c,v 1.1 2004/04/30 18:14:11 nenolod Exp $
+ *  $Id: m_who.c,v 1.2 2004/07/12 13:02:16 nenolod Exp $
  */
 #include "stdinc.h"
 #include "tools.h"
@@ -62,7 +62,7 @@ _moddeinit(void)
   mod_del_cmd(&who_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 static void who_global(struct Client *source_p, char *mask, int server_oper);
@@ -237,7 +237,7 @@ who_common_channel(struct Client *source_p, struct Channel *chptr,
 
     if ((mask == NULL) ||
 	match(mask, target_p->name) || match(mask, target_p->username) ||
-	match(mask, target_p->host) || 
+	match(mask, GET_CLIENT_HOST(target_p)) || 
 	(match(mask, target_p->user->server->name)) ||
 	match(mask, target_p->info))
     {
