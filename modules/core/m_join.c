@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_join.c,v 1.1 2003/12/02 21:37:32 nenolod Exp $
+ *  $Id: m_join.c,v 1.2 2003/12/03 18:17:28 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -87,7 +87,7 @@ _moddeinit(void)
   mod_del_cmd(&join_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /* m_join()
@@ -167,7 +167,7 @@ m_join(struct Client *client_p, struct Client *source_p,
        */
       sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s JOIN :%s",
                            source_p->name, source_p->username,
-                           source_p->host, chptr->chname);
+                           GET_CLIENT_HOST(source_p), chptr->chname);
 
       sendto_channel_local(ALL_MEMBERS, chptr,
                            ":%s MODE %s +nt",
@@ -186,7 +186,7 @@ m_join(struct Client *client_p, struct Client *source_p,
 
       sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s JOIN :%s",
                            source_p->name, source_p->username,
-                           source_p->host, chptr->chname);
+                           GET_CLIENT_HOST(source_p), chptr->chname);
     }
 
     del_invite(chptr, source_p);
@@ -381,7 +381,7 @@ ms_join(struct Client *client_p, struct Client *source_p,
     add_user_to_channel(chptr, source_p, 0);
     sendto_channel_local(ALL_MEMBERS,chptr, ":%s!%s@%s JOIN :%s",
                          source_p->name, source_p->username,
-                         source_p->host, chptr->chname);
+                         GET_CLIENT_HOST(source_p), chptr->chname);
   }
 
   sendto_server(client_p, NULL, chptr, CAP_TS6, NOCAPS, NOFLAGS,
@@ -425,7 +425,7 @@ do_join_0(struct Client *client_p, struct Client *source_p)
                     ":%s PART %s", source_p->name, chptr->chname);
       sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s PART %s",
                            source_p->name, source_p->username,
-                           source_p->host, chptr->chname);
+                           GET_CLIENT_HOST(source_p), chptr->chname);
       remove_user_from_channel(ptr->data);
     }
   }
@@ -502,7 +502,7 @@ build_target_list(struct Client *client_p, struct Client *source_p,
                  me.name, source_p->name, chan);
       sendto_realops_flags(UMODE_SPY, L_ALL,
                            "User %s (%s@%s) is attempting to join locally juped channel %s",
-                           source_p->name, source_p->username, source_p->host, chan);
+                           source_p->name, source_p->username, GET_CLIENT_HOST(source_p), chan);
       continue;
     }
 

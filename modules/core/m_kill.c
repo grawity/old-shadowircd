@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_kill.c,v 1.1 2003/12/02 21:37:32 nenolod Exp $
+ *  $Id: m_kill.c,v 1.2 2003/12/03 18:17:28 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -65,7 +65,7 @@ _moddeinit(void)
   mod_del_cmd(&kill_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /* mo_kill()
@@ -143,7 +143,7 @@ mo_kill(struct Client *client_p, struct Client *source_p,
 
   if (MyConnect(target_p))
     sendto_one(target_p, ":%s!%s@%s KILL %s :%s", 
-               source_p->name, source_p->username, source_p->host,
+               source_p->name, source_p->username, GET_CLIENT_HOST(source_p),
                target_p->name, reason);
 
   /* Do not change the format of this message.  There's no point in changing messages
@@ -264,7 +264,7 @@ ms_kill(struct Client *client_p, struct Client *source_p,
     }
     else
       sendto_one(target_p, ":%s!%s@%s KILL %s :%s",
-		 source_p->name, source_p->username, source_p->host,
+		 source_p->name, source_p->username, GET_CLIENT_HOST(source_p),
 		 target_p->name, reason);
   }
 
@@ -278,7 +278,7 @@ ms_kill(struct Client *client_p, struct Client *source_p,
     sendto_realops_flags(UMODE_ALL, L_ALL,
                          "Received KILL message for %s. From %s Path: %s!%s!%s!%s %s",
                          target_p->name, source_p->name, source_p->user->server->name, 
-                         source_p->host, source_p->username, source_p->name, reason);
+                         GET_CLIENT_HOST(source_p), source_p->username, source_p->name, reason);
   }
   else
   {

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.3 2003/12/03 17:58:11 nenolod Exp $
+ *  $Id: s_user.c,v 1.4 2003/12/03 18:17:28 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -88,6 +88,7 @@ static const struct flag_item
   { UMODE_REJ,        'r' },
   { UMODE_SERVNOTICE, 's' },
   { UMODE_UNAUTH,     'u' },
+  { UMODE_CLOAK,      'v' },
   { UMODE_WALLOP,     'w' },
   { UMODE_EXTERNAL,   'x' },
   { UMODE_SPY,        'y' },
@@ -152,7 +153,7 @@ const unsigned int user_modes_from_c_to_bitmask[] =
   UMODE_SERVNOTICE, /* s */
   0,                /* t */
   UMODE_UNAUTH,     /* u */
-  0,                /* v */
+  UMODE_CLOAK,      /* v */
   UMODE_WALLOP,     /* w */
   UMODE_EXTERNAL,   /* x */
   UMODE_SPY,        /* y */
@@ -568,6 +569,8 @@ register_local_user(struct Client *client_p, struct Client *source_p,
   add_user_host(source_p->username, source_p->host, 0);
   SetUserHost(source_p);
 
+  docloak(source_p);
+
   return(introduce_client(client_p, source_p));
 }
 
@@ -644,6 +647,8 @@ register_remote_user(struct Client *client_p, struct Client *source_p,
 
   add_user_host(source_p->username, source_p->host, 1);
   SetUserHost(source_p);
+
+  docloak(source_p);
 
   return(introduce_client(client_p, source_p));
 }
@@ -1471,15 +1476,17 @@ add_one_to_uid(int i)
 }
 
 /*
- * docloak -- taken from 
-void docloak(aClient *sptr, int autocloak) {
+ * docloak -- taken from cyclone-0.3.1.1, and modified
+ * for shadow by nenolod.
+ */
+void docloak(aClient *sptr) {
     char *pos, *posx;
     int dcnt;
 
     dcnt = 0;
-    if (inet_aton(sptr->user->host, (struct in_addr *) NULL)) {
+    if (inet_aton(sptr->host, (struct in_addr *) NULL)) {
         /* The user is cloaking with an IP */
-        for (pos = posx = sptr->user->host; (*pos != '\0'); pos++) {
+        for (pos = posx = sptr->host; (*pos != '\0'); pos++) {
             if (*pos == '.')
                 dcnt++;
             if (dcnt == 2) {
@@ -1487,25 +1494,23 @@ void docloak(aClient *sptr, int autocloak) {
                 break;
             }
         }
-        bzero(sptr->user->virthost, HOSTLEN);
-        strncpy(sptr->user->virthost, sptr->user->host,
-                ((posx + 1) - sptr->user->host));
-        strcat(sptr->user->virthost, "0.0");
+        bzero(sptr->virthost, HOSTLEN);
+        strncpy(sptr->virthost, sptr->host,
+                ((posx + 1) - sptr->host));
+        strcat(sptr->virthost, "0.0");
     } else {
-        for (pos = posx = sptr->user->host; (*pos != '\0'); pos++)
+        for (pos = posx = sptr->host; (*pos != '\0'); pos++)
             if (*pos == '.') {
                 if (dcnt == 0)
                     posx = pos;
                 dcnt++;
             }
-        bzero(sptr->user->virthost, HOSTLEN);
+        bzero(sptr->virthost, HOSTLEN);
         if (dcnt == 1)
-            snprintf(sptr->user->host, HOSTLEN, "usercloak.%s",
-                sptr->user->host);
+            snprintf(sptr->virthost, HOSTLEN, "usercloak.%s",
+                sptr->virthost);
         else
-            snprintf(sptr->user->virthost, HOSTLEN, "usercloak%s", posx);
+            snprintf(sptr->virthost, HOSTLEN, "usercloak%s", posx);
     }
-    if (MyClient(sptr))
-	sptr->umodes =~ UMODE_CLOAK;
 }
 

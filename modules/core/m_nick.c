@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_nick.c,v 1.1 2003/12/02 21:37:32 nenolod Exp $
+ *  $Id: m_nick.c,v 1.2 2003/12/03 18:17:28 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -97,7 +97,7 @@ _moddeinit(void)
   mod_del_cmd(&uid_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /* mr_nick()
@@ -757,7 +757,7 @@ nick_from_server(struct Client *client_p, struct Client *source_p, int parc,
 
     sendto_common_channels_local(source_p, 1, ":%s!%s@%s NICK :%s",
                                  source_p->name,source_p->username,
-                                 source_p->host, nick);
+                                 GET_CLIENT_HOST(source_p), nick);
 
     if (source_p->user != NULL)
     {

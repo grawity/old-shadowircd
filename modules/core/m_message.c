@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_message.c,v 1.3 2003/12/02 23:22:25 nenolod Exp $
+ *  $Id: m_message.c,v 1.4 2003/12/03 18:17:28 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -117,7 +117,7 @@ _moddeinit(void)
   mod_del_cmd(&notice_msgtab);
 }
 
-const char *_version = "$Revision: 1.3 $";
+const char *_version = "$Revision: 1.4 $";
 #endif
 
 /*
@@ -537,7 +537,7 @@ msg_channel_flags(int p_or_n, const char *command, struct Client *client_p,
 
     sendto_channel_local_butone(source_p, type, chptr, ":%s!%s@%s %s %c%s :%s",
                                 source_p->name, source_p->username,
-                                source_p->host, command, c, chptr->chname, text);
+                                GET_CLIENT_HOST(source_p), command, c, chptr->chname, text);
   }
   else
   {
@@ -547,7 +547,7 @@ msg_channel_flags(int p_or_n, const char *command, struct Client *client_p,
      */
     sendto_channel_local(type, chptr, ":%s!%s@%s %s %c%s :%s",
                          source_p->name, source_p->username,
-                         source_p->host, command, c, chptr->chname, text);
+                         GET_CLIENT_HOST(source_p), command, c, chptr->chname, text);
   }
 
   if (chptr->chname[0] != '#')
@@ -597,7 +597,7 @@ msg_client(int p_or_n, const char *command, struct Client *source_p,
       {
         sendto_one(target_p, ":%s!%s@%s %s %s :%s",
                    source_p->name, source_p->username,
-                   source_p->host, command, target_p->name, text);
+                   GET_CLIENT_HOST(source_p), command, target_p->name, text);
       }
       else
       {
@@ -859,7 +859,7 @@ handle_special(int p_or_n, const char *command, struct Client *client_p,
 	if (count == 1)
 	{
 	  sendto_one(target_p, ":%s!%s@%s %s %s :%s",
-		     source_p->name, source_p->username, source_p->host,
+		     source_p->name, source_p->username, GET_CLIENT_HOST(source_p),
                      command, nick, text);
 	  if ((p_or_n != NOTICE) && source_p->user)
 	    source_p->user->last = CurrentTime;

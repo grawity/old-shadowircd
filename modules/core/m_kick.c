@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_kick.c,v 1.1 2003/12/02 21:37:32 nenolod Exp $
+ *  $Id: m_kick.c,v 1.2 2003/12/03 18:17:28 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -60,7 +60,7 @@ _moddeinit(void)
   mod_del_cmd(&kick_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /* m_kick()
@@ -217,7 +217,7 @@ m_kick(struct Client *client_p, struct Client *source_p,
     else
       sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s KICK %s %s :%s",
                            source_p->name, source_p->username,
-                           source_p->host, name, who->name, comment);
+                           GET_CLIENT_HOST(source_p), name, who->name, comment);
 
     sendto_server(client_p, NULL, chptr, CAP_TS6, NOCAPS, NOFLAGS,
                   ":%s KICK %s %s :%s",
