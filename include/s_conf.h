@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.h,v 1.10 2004/02/12 22:27:12 nenolod Exp $
+ *  $Id: s_conf.h,v 1.11 2004/02/13 20:02:57 nenolod Exp $
  */
 
 #ifndef INCLUDED_s_conf_h
@@ -369,6 +369,9 @@ struct server_info
   int specific_ipv6_vhost;
   struct sockaddr_in dns_host;
   int can_use_v6;
+  int wingate_enable;
+  char *wingate_website;
+  char *monitorbot;
 };
 
 struct admin_info

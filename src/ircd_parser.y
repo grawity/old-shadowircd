@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.18 2004/02/12 22:27:12 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.19 2004/02/13 20:02:57 nenolod Exp $
  */
 
 %{
@@ -345,6 +345,11 @@ unhook_hub_leaf_confs(void)
 %token  WARN
 %token  WARN_NO_NLINE
 
+%token  WINGATE
+%token  MONITORBOT
+%token  WINGATE_ENABLE
+%token  WINGATE_WEBSITE
+
 %type <string> QSTRING
 %type <number> NUMBER
 %type <number> timespec
@@ -377,6 +382,7 @@ conf_item:        admin_entry
 		| general_entry
                 | gecos_entry
                 | modules_entry
+		| wingate_entry
                 | error ';'
                 | error '}'
         ;
@@ -3213,3 +3219,39 @@ channel_no_join_on_split: NO_JOIN_ON_SPLIT '=' TBOOL ';'
   if (ypass == 2)
     ConfigChannel.no_join_on_split = yylval.number;
 };
+
+/***************************************************************************
+ *  section wingate
+ ***************************************************************************/
+
+wingate_entry: WINGATE
+  '{' wingate_items '}' ';';
+
+wingate_items: wingate_items wingate_item | wingate_item;
+
+wingate_item: wingate_enable | wingate_monitorbot | wingate_website;
+
+wingate_enable: WINGATE_ENABLE '=' TBOOL ';'
+{
+  if (ypass == 2)
+    ServerInfo.wingate_enable = yylval.number;
+};
+
+wingate_monitorbot: MONITORBOT '=' QSTRING ';'
+{
+  if (ypass == 2)
+  {
+    MyFree(ServerInfo.monitorbot);
+    DupString(ServerInfo.monitorbot, yylval.string);
+  }
+};
+
+wingate_website: WINGATE_WEBSITE '=' QSTRING ';'
+{
+  if (ypass == 2)
+  {
+    MyFree(ServerInfo.wingate_website);
+    DupString(ServerInfo.wingate_website, yylval.string);
+  }
+};
+
