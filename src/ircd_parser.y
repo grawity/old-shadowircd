@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.26 2004/04/01 20:07:14 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.27 2004/04/01 20:28:19 nenolod Exp $
  */
 
 %{
@@ -1792,7 +1792,7 @@ auth_item:      auth_user | auth_passwd | auth_class |
                 auth_exceed_limit | auth_no_tilde | 
                 auth_spoof | auth_spoof_notice |
                 auth_redir_serv | auth_redir_port | auth_can_flood |
-                auth_need_password | error;
+                auth_need_password | auth_flags_entry | error;
 
 auth_user: USER '=' QSTRING ';'
 {
@@ -1969,6 +1969,68 @@ auth_need_password: NEED_PASSWORD '=' TBOOL ';'
       yy_aconf->flags &= ~CONF_FLAGS_NEED_PASSWORD;
     else
       yy_aconf->flags |= CONF_FLAGS_NEED_PASSWORD;
+  }
+};
+
+auth_flags_entry: FLAGS '{' auth_flags '}' ';';
+auth_flags: auth_flags auth_flag | auth_flag;
+auth_flag: auth_flag_needpasswd | auth_flag_notilde | auth_flag_canflood |
+           auth_flag_haveident | auth_flag_restricted | auth_flag_klineexempt |
+           auth_flag_exceedlimit | error;
+
+auth_flag_needpasswd: NEED_PASSWORD ';'
+{
+  if (ypass == 2)
+  {
+    yy_aconf->flags |= CONF_FLAGS_NEED_PASSWORD;
+  }
+};
+
+auth_flag_notilde: NO_TILDE ';'
+{
+  if (ypass == 2)
+  {
+    yy_aconf->flags |= CONF_FLAGS_NO_TILDE;
+  }
+};
+
+auth_flag_canflood: CAN_FLOOD ';'
+{
+  if (ypass == 2)
+  {
+    yy_aconf->flags |= CONF_FLAGS_CAN_FLOOD;
+  }
+};
+
+auth_flag_haveident: HAVE_IDENT ';'
+{
+  if (ypass == 2)
+  {
+    yy_aconf->flags |= CONF_FLAGS_HAVE_IDENT;
+  }
+};
+
+auth_flag_restricted: RESTRICTED ';'
+{
+  if (ypass == 2)
+  {
+    yy_aconf->flags |= CONF_FLAGS_RESTRICTED;
+  }
+};
+
+auth_flag_klineexempt: KLINE_EXEMPT ';'
+{
+  if (ypass == 2)
+  {
+    yy_aconf->flags |= CONF_FLAGS_KLINE_EXEMPT;
+  }
+};
+
+auth_flag_exceedlimit: EXCEED_LIMIT ';'
+{
+  if (ypass == 2)
+  {
+    yy_aconf->flags |= CONF_FLAGS_EXCEED_LIMIT;
   }
 };
 
@@ -2334,7 +2396,7 @@ connect_item:   connect_name | connect_host | connect_send_password |
 		connect_leaf_mask | connect_class | connect_auto | 
 		connect_encrypted | connect_compressed | connect_cryptlink |
 		connect_rsa_public_key_file | connect_cipher_preference |
-                error;
+                connect_flags_entry | error;
 
 connect_name: NAME '=' QSTRING ';'
 {
@@ -2573,6 +2635,39 @@ connect_cipher_preference: CIPHER_PREFERENCE '=' QSTRING ';'
   if (ypass == 2)
     yyerror("Ignoring cipher_preference -- no OpenSSL support");
 #endif
+};
+
+connect_flags_entry: FLAGS '{' connect_flags '}' ';';
+connect_flags: connect_flags connect_flag | connect_flag;
+connect_flag: connect_flag_autoconn | connect_flag_compressed | 
+              connect_flag_lazylink | error;
+
+connect_flag_lazylink: LAZYLINK ';'
+{
+  if (ypass == 2)
+  {
+    yy_aconf->flags |= CONF_FLAGS_LAZY_LINK;
+  }
+};
+
+connect_flag_autoconn: AUTOCONN ';'
+{
+  if (ypass == 2)
+  {
+    yy_aconf->flags |= CONF_FLAGS_ALLOW_AUTO_CONN;
+  }
+};
+
+connect_flag_compressed: COMPRESSED ';'
+{
+  if (ypass == 2)
+  {
+#ifndef HAVE_LIBZ
+    yyerror("Compression flag ignored -- no zlib support");
+#else
+    yy_aconf->flags |= CONF_FLAGS_COMPRESSED;
+#endif
+  }
 };
 
 /***************************************************************************
