@@ -1,8 +1,8 @@
-# $Id: Makefile,v 1.3 2004/08/24 04:27:34 nenolod Exp $
+# $Id: Makefile,v 1.4 2004/08/25 00:22:13 nenolod Exp $
 #
 RM            = /bin/rm
 MV            = /bin/mv
-INSTALL       = /usr/bin/install -c
+INSTALL       = /bin/install -c
 INSTALL_DATA  = ${INSTALL} -m 644
 prefix        = /home/nenolod/shadow3.2
 messagedir    = /home/nenolod/shadow3.2/messages

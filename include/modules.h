@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: modules.h,v 1.2 2004/06/10 21:48:50 nenolod Exp $
+ *  $Id: modules.h,v 1.3 2004/08/25 00:22:13 nenolod Exp $
  */
 
 #ifndef INCLUDED_modules_h
@@ -190,6 +190,7 @@ extern struct Message time_msgtab;
 extern struct Message topic_msgtab;
 extern struct Message trace_msgtab;
 extern struct Message trace_msgtab4;
+extern struct Message tmode_msgtab;
 extern struct Message unresv_msgtab;
 extern struct Message unxline_msgtab;
 extern struct Message user_msgtab;
