@@ -1,3 +1,5 @@
+$Id: ChangeLog,v 1.12 2004/08/03 06:29:36 eddie Exp $
+
 ShadowIRCd 3.2:
 
 * Changed hostmasking (+x) to MD5 (uncrackable).
