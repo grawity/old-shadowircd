@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.14 2004/02/27 00:04:06 nenolod Exp $
+ *  $Id: client.h,v 1.15 2004/03/22 20:23:29 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -179,7 +179,10 @@ struct Client
    * gcos field in /etc/passwd but anything can go here.
    */
   char              info[REALLEN + 1]; /* Free form additional client info */
-
+  /*
+   * client->persistpw is used for persistant client support.
+   */
+  char              persistpw[PASSWDLEN + 1];
   /* caller ID allow list */
   /* This has to be here, since a client on an on_allow_list could
    * be a remote client. simpler to keep both here.
@@ -379,7 +382,7 @@ struct LocalUser
 #define FLAGS_SERVLINK    0x00000800 /* servlink has servlink process            */
 #define FLAGS_MARK	  0x00001000 /* marked client                            */
 #define FLAGS_CANFLOOD	  0x00002000 /* client has the ability to flood          */
-/*                        0x00004000  */
+#define FLAGS_PERSIST     0x00004000 /* client is persistant                     */
 #define FLAGS_EXEMPTKLINE 0x00008000 /* client is exempt from kline              */
 #define FLAGS_NOLIMIT     0x00010000 /* client is exempt from limits             */
 #define FLAGS_RESTRICTED  0x00020000 /* client cannot op others                  */
