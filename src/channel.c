@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.c,v 1.7 2003/12/18 23:39:32 nenolod Exp $
+ *  $Id: channel.c,v 1.8 2004/03/16 05:15:00 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -610,16 +610,18 @@ int
 is_banned(struct Channel *chptr, struct Client *who)
 {
   char src_host[NICKLEN + USERLEN + HOSTLEN + 6];
+  char src_vhost[NICKLEN + USERLEN + HOSTLEN + 6];
   char src_iphost[NICKLEN + USERLEN + HOSTLEN + 6];
 
   if (!IsPerson(who))
     return(0);
 
-  ircsprintf(src_host,"%s!%s@%s", who->name, who->username, GET_CLIENT_HOST(who));
+  ircsprintf(src_host,"%s!%s@%s", who->name, who->username, who->host);
+  ircsprintf(src_vhost,"%s!%s@%s", who->name, who->username, who->virthost);
   ircsprintf(src_iphost,"%s!%s@%s", who->name, who->username,
 	     who->localClient->sockhost);
 
-  return(check_banned(chptr, src_host, src_iphost));
+  return(check_banned(chptr, src_host, src_vhost, src_iphost));
 }
 
 /* is_quieted()
@@ -678,7 +680,7 @@ is_restricted(struct Channel *chptr, struct Client *who)
  * +e code from orabidoo
  */
 static int
-check_banned(struct Channel *chptr, const char *s, const char *s2)
+check_banned(struct Channel *chptr, const char *s, const char *s2, const char *s3)
 {
   dlink_node *ban;
   dlink_node *except;
@@ -691,7 +693,8 @@ check_banned(struct Channel *chptr, const char *s, const char *s2)
 
     if (match(actualBan->banstr,  s) || 
     	match(actualBan->banstr, s2) ||
-        match_cidr(actualBan->banstr, s2))
+    	match(actualBan->banstr, s3) ||
+        match_cidr(actualBan->banstr, s3))
       break;
     else
       actualBan = NULL;
@@ -705,7 +708,8 @@ check_banned(struct Channel *chptr, const char *s, const char *s2)
 
       if (match(actualExcept->banstr,  s) || 
           match(actualExcept->banstr, s2) ||
-          match_cidr(actualExcept->banstr, s2))
+          match(actualExcept->banstr, s3) ||
+          match_cidr(actualExcept->banstr, s3))
       {
         return(CHFL_EXCEPTION);
       }
