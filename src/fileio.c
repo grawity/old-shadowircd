@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: fileio.c,v 1.2 2003/12/05 22:42:56 nenolod Exp $
+ *  $Id: fileio.c,v 1.3 2004/01/12 20:16:36 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -50,7 +50,7 @@ file_open(const char *filename, int mode, int fmode)
     fd = -1;
   }
   else if (fd >= 0)
-    fd_open(fd, FD_FILE, filename, NULL);
+    fd_open(fd, FD_FILE, filename);
 
   return(fd);
 }

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_bsd.c,v 1.5 2004/01/12 19:59:26 nenolod Exp $
+ *  $Id: s_bsd.c,v 1.6 2004/01/12 20:16:36 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -806,7 +806,7 @@ comm_open(int family, int sock_type, int proto, const char *note)
  * comm_open() does.
  */
 int
-comm_accept(int fd, struct irc_ssaddr *pn, int is_ssl)
+comm_accept(int fd, struct irc_ssaddr *pn)
 {
   int newfd;
   socklen_t addrlen = sizeof(struct irc_ssaddr);
@@ -840,7 +840,7 @@ comm_accept(int fd, struct irc_ssaddr *pn, int is_ssl)
       return -1;
     }
 
-  fd_open(newfd, FD_SOCKET, "Incoming connection", ssl);
+  fd_open(newfd, FD_SOCKET, "Incoming connection");
 
   /* .. and return */
   return newfd;

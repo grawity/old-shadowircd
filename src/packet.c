@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: packet.c,v 1.4 2004/01/12 19:59:26 nenolod Exp $
+ *  $Id: packet.c,v 1.5 2004/01/12 20:16:36 nenolod Exp $
  */
 #include "stdinc.h"
 #include "tools.h"
@@ -403,15 +403,10 @@ void
 read_packet(int fd, void *data)
 {
   struct Client *client_p = data;
-  struct LocalUser *lclient_p = client_p->localClient;
   int length = 0;
   int fd_r;
 #ifndef NDEBUG
   struct hook_io_data hdata;
-#endif
-
-#ifdef HAVE_LIBCRYPTO
-  fde_t *F = (lclient_p->fd > -1)? &fd_table[lclient_p->fd] : NULL;
 #endif
 
   if (IsDefunct(client_p))

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: fdlist.h,v 1.4 2003/12/05 22:42:56 nenolod Exp $
+ *  $Id: fdlist.h,v 1.5 2004/01/12 20:16:36 nenolod Exp $
  */
 
 #ifndef INCLUDED_fdlist_h
@@ -129,7 +129,7 @@ extern fde_t *fd_table;
 
 void fdlist_init(void);
 
-extern void  fd_open(int, unsigned int, const char *, void *);
+extern void  fd_open(int, unsigned int, const char *);
 extern void  fd_close(int);
 extern void  fd_dump(struct Client *source_p);
 #ifndef __GNUC__

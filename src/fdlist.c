@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: fdlist.c,v 1.2 2003/12/05 20:31:44 nenolod Exp $
+ *  $Id: fdlist.c,v 1.3 2004/01/12 20:16:36 nenolod Exp $
  */
 #include "stdinc.h"
 #include "fdlist.h"
@@ -82,7 +82,7 @@ fdlist_init(void)
 
 /* Called to open a given filedescriptor */
 void
-fd_open(int fd, unsigned int type, const char *desc, void *ssl)
+fd_open(int fd, unsigned int type, const char *desc)
 {
   fde_t *F = &fd_table[fd];
   assert(fd >= 0);
@@ -112,9 +112,6 @@ fd_open(int fd, unsigned int type, const char *desc, void *ssl)
   if (desc)
     strlcpy(F->desc, desc, sizeof(F->desc));
   number_fd++;
-#ifdef HAVE_LIBCRYPTO
-  F->ssl = (SSL *)ssl;
-#endif
 }
 
 /* Called to close a given filedescriptor */
