@@ -1,11 +1,11 @@
-# $Id: Makefile,v 1.1 2004/07/12 12:32:49 nenolod Exp $
+# $Id: Makefile,v 1.2 2004/08/21 08:11:53 nenolod Exp $
 #
 RM            = /bin/rm
 MV            = /bin/mv
-INSTALL       = /bin/install -c
+INSTALL       = /usr/bin/install -c
 INSTALL_DATA  = ${INSTALL} -m 644
-prefix        = /home/nenolod/shadow
-messagedir    = /home/nenolod/shadow/messages
+prefix        = /home/nenolod/shadow3.2
+messagedir    = /home/nenolod/shadow3.2/messages
 
 CLOBBER=
 

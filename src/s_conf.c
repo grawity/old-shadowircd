@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.c,v 1.6 2004/07/18 13:11:38 nenolod Exp $
+ *  $Id: s_conf.c,v 1.7 2004/08/21 08:11:53 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1833,11 +1833,8 @@ rehash(int sig)
                          "Got signal SIGHUP, reloading ircd.conf file");
 
   restart_resolver();
+
   /* don't close listeners until we know we can go ahead with the rehash */
-
-  free_filter_list(&global_filter_list);
-
-  /* Check to see if we magically got(or lost) IPv6 support */
   check_can_use_v6();
 
   read_conf_files(0);

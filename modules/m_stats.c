@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_stats.c,v 1.2 2004/07/12 12:59:48 nenolod Exp $
+ *  $Id: m_stats.c,v 1.3 2004/08/21 08:11:53 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -77,7 +77,7 @@ _moddeinit(void)
   mod_del_cmd(&stats_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 static char *parse_stats_args(int, char **, int *, int *);
@@ -113,6 +113,9 @@ static void stats_memory(struct Client *);
 static void stats_servlinks(struct Client *);
 static void stats_ltrace(struct Client *, int, char**);
 static void stats_ziplinks(struct Client *);
+static void filter_dump(struct Client *);
+
+extern dlink_list global_filter_list;
 
 /* This table contains the possible stats items, in order:
  * /stats name,  function to call, operonly? adminonly? /stats letter
@@ -135,6 +138,7 @@ static const struct StatsStruct
   { 'E',	stats_events,		1,	1,	},
   { 'f',	fd_dump,		1,	1,	},
   { 'F',	fd_dump,		1,	1,	},
+  { 'g',        filter_dump,            0,      0,      },
   { 'h',	stats_hubleaf,		1,	0,	},
   { 'H',	stats_hubleaf,		1,	0,	},
   { 'i',	stats_auth,		0,	0,	},
@@ -621,6 +625,20 @@ stats_ports(struct Client *source_p)
                from, to);
   else
     show_ports(source_p);
+}
+
+static void
+filter_dump(struct Client *source_p)
+{
+  struct Filter *f;
+  dlink_node *node;
+
+  DLINK_FOREACH(node, global_filter_list.head)
+  {
+    f = node->data;
+    sendto_one(source_p, ":%s %d %s g %s",
+               from, RPL_STATSDEBUG, to, f->word);
+  }
 }
 
 static void

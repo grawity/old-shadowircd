@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.21 2004/08/21 07:34:03 nenolod Exp $
+ *  $Id: s_user.c,v 1.22 2004/08/21 08:11:53 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1097,6 +1097,14 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
         case '\r':
         case '\t':
           break;
+
+	case 'v':
+	  if (MyClient(client_p) && MyClient(source_p) && ServerInfo.disable_hostmasking != 0)
+          {
+            sendto_one(source_p, ":%s NOTICE %s :*** User control of hostmasking is disabled.",
+                        me.name, source_p->name);
+            break;
+          }
 
         default:
           if ((flag = user_modes_from_c_to_bitmask[(unsigned char)*m]))

@@ -20,10 +20,7 @@
 /* The configuration block holds all the ircd settings. This will become 
  * ircd { } in a future release of the ircd.
  */
-configuration { 
-
-  /* The serverinfo block contains core information about the ircd.
-  serverinfo {
+serverinfo {
     name = "devel.shadowircd.org";
 
     /* sid's must start with a number, next two characters can be 
@@ -710,5 +707,3 @@ configuration {
     /* module: the name of a module to load on startup/rehash */
     /* module = "some_module.so"; */
   };
-
-};

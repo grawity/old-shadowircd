@@ -20,7 +20,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_filter.c,v 1.3 2004/07/18 13:11:38 nenolod Exp $
+ *  $Id: channel_filter.c,v 1.4 2004/08/21 08:11:53 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -62,20 +62,23 @@ int filter_add_word (char *word)
 
 	list = &global_filter_list;
 
-	DLINK_FOREACH (ptr, list->head)
-	{
-		filter = ptr->data;
-		if(match(filter->word, word))
+        if (global_filter_list.length > 0)
+        {
+  		DLINK_FOREACH (ptr, list->head)
 		{
-			sendto_realops_flags (UMODE_DEBUG, L_ALL, "Matching word, aborting addition.");
-			return 0;
+			filter = ptr->data;
+			if(!strcasecmp(filter->word, word))
+			{
+				sendto_realops_flags (UMODE_DEBUG, L_ALL, "Matching word, aborting addition.");
+				return 0;
+			}
 		}
 	}
 
 	/* Reject <censored> as one of the filter words
          * Warning recieved from Hwy
          */
-	if (match(word, "<censored>"))
+	if (!strcasecmp(word, "<censored>"))
 	{
 		sendto_realops_flags (UMODE_DEBUG, L_ALL, "Forbidden filter word, aborting addition.");
 		return 0;
@@ -133,9 +136,9 @@ void free_filter_list (dlink_list * list)
 	DLINK_FOREACH_SAFE (ptr, next_ptr, list->head)
 	{
 		f = ptr->data;
+                sendto_realops_flags (UMODE_DEBUG, L_ALL, "freeing: 0x%lX word: %s", f, f->word);
 		MyFree(f->word);
 		BlockHeapFree(filter_heap, f);
-
 		free_dlink_node(ptr);
 	}
 

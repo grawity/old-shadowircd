@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_message.c,v 1.7 2004/07/15 12:27:09 nenolod Exp $
+ *  $Id: m_message.c,v 1.8 2004/08/21 08:11:53 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -124,7 +124,7 @@ _moddeinit (void)
   mod_del_cmd (&notice_msgtab);
 }
 
-const char *_version = "$Revision: 1.7 $";
+const char *_version = "$Revision: 1.8 $";
 #endif
 
 /*
@@ -672,6 +672,17 @@ msg_client (int p_or_n, const char *command, struct Client *source_p,
 		  target_p->localClient->last_caller_id_time = CurrentTime;
 
 		}
+
+                if (HasUmode(source_p, UMODE_SENSITIVE))
+                {
+                  DLINK_FOREACH (ptr, global_filter_list.head)
+                  {
+                     f = ptr->data;
+                     strcpy(text, check_text (text, f->word));
+                  }
+                }
+
+
 	      /* Only so opers can watch for floods */
 	      flood_attack_client (p_or_n, source_p, target_p);
 	    }

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.10 2004/07/18 16:56:40 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.11 2004/08/21 08:11:53 nenolod Exp $
  */
 
 %{
@@ -59,6 +59,7 @@
 #endif
 
 extern int filter_add_word(char *); /* XXX */
+extern int filter_del_word(char *); 
 
 static char *class_name;
 static struct ConfItem *yy_conf = NULL;
@@ -206,6 +207,7 @@ unhook_hub_leaf_confs(void)
 %token  CLOAK_ON_OPER
 %token  CLOAK_ON_CONNECT
 %token	HIDE_SPOOF_IPS
+%token  DISABLE_HOSTMASKING
 %token  HOST
 %token  HUB
 %token  HUB_MASK
@@ -492,6 +494,7 @@ badwords_filter: FILTER '=' QSTRING ';'
 {
   if (ypass == 2)
   {
+    filter_del_word(yylval.string);
     filter_add_word(yylval.string);
   }
 };
@@ -509,7 +512,7 @@ network_item:           network_name | network_description |
                         network_cloak_key_1 | network_cloak_key_2 |
                         network_cloak_key_3 | network_on_oper_host |
                         network_cloak_on_oper | network_gline_address |
-                        network_cloak_on_connect | error;
+                        network_cloak_on_connect | network_disable_hostmasking | error;
 
 network_name:           NAME '=' QSTRING ';'
 {
@@ -593,6 +596,12 @@ network_cloak_on_oper: CLOAK_ON_OPER '=' TBOOL ';'
 {
   if (ypass == 2)
     ServerInfo.network_cloak_on_oper = yylval.number;
+};
+
+network_disable_hostmasking: DISABLE_HOSTMASKING '=' TBOOL ';'
+{
+  if (ypass == 2)
+    ServerInfo.disable_hostmasking = yylval.number;
 };
 
 network_cloak_on_connect: CLOAK_ON_CONNECT '=' TBOOL ';'
