@@ -19,13 +19,13 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_kill.c,v 1.3 2004/09/22 19:27:01 nenolod Exp $
+ *  $Id: m_kill.c,v 1.4 2004/09/22 19:44:10 nenolod Exp $
  */
 
 #include "stdinc.h"
 #include "handlers.h"
 #include "client.h"
-#include "hash.h"       /* for find_client() */
+#include "hash.h"               /* for find_client() */
 #include "ircd.h"
 #include "numeric.h"
 #include "s_log.h"
@@ -65,8 +65,9 @@ _moddeinit(void)
   mod_del_cmd(&kill_msgtab);
 }
 
-const char *_version = "$Revision: 1.3 $";
-const char *_desc = "Implements /kill command -- disconnects a user from the network";
+const char *_version = "$Revision: 1.4 $";
+const char *_desc =
+  "Implements /kill command -- disconnects a user from the network";
 #endif
 
 /* mo_kill()
@@ -84,8 +85,8 @@ mo_kill(struct Client *client_p, struct Client *source_p,
   char *reason;
   char def_reason[] = "No reason specified";
 
-  user   = parv[1];
-  reason = parv[2]; /* Either defined or NULL (parc >= 2!!) */
+  user = parv[1];
+  reason = parv[2];             /* Either defined or NULL (parc >= 2!!) */
 
   if (*user == '\0')
   {
@@ -96,14 +97,13 @@ mo_kill(struct Client *client_p, struct Client *source_p,
 
   if (!IsOperK(source_p) && !IsOperGlobalKill(source_p))
   {
-    sendto_one(source_p, form_str(ERR_NOPRIVILEGES),
-               me.name, source_p->name);
+    sendto_one(source_p, form_str(ERR_NOPRIVILEGES), me.name, source_p->name);
     return;
   }
 
   if (!EmptyString(reason))
   {
-    if (strlen(reason) > (size_t)KILLLEN)
+    if (strlen(reason) > (size_t) KILLLEN)
       reason[KILLLEN] = '\0';
   }
   else
@@ -115,9 +115,9 @@ mo_kill(struct Client *client_p, struct Client *source_p,
      * rewrite the KILL for this new nickname--this keeps
      * servers in synch when nick change and kill collide
      */
-    if ((target_p = get_history(user, 
-				(time_t)ConfigFileEntry.kill_chase_time_limit))
-				== NULL)
+    if ((target_p = get_history(user,
+                                (time_t) ConfigFileEntry.
+                                kill_chase_time_limit)) == NULL)
     {
       sendto_one(source_p, form_str(ERR_NOSUCHNICK),
                  me.name, source_p->name, user);
@@ -130,7 +130,8 @@ mo_kill(struct Client *client_p, struct Client *source_p,
 
   if (HasUmode(target_p, UMODE_KILLPROT))
   {
-    sendto_one(source_p, ":%s NOTICE %s :User cannot be killed, they are a protected Network Administrator (+K).",
+    sendto_one(source_p,
+               ":%s NOTICE %s :User cannot be killed, they are a protected Network Administrator (+K).",
                me.name, source_p->name);
     return;
   }
@@ -150,33 +151,33 @@ mo_kill(struct Client *client_p, struct Client *source_p,
   }
 
   if (MyConnect(target_p))
-    sendto_one(target_p, ":%s!%s@%s KILL %s :%s", 
+    sendto_one(target_p, ":%s!%s@%s KILL %s :%s",
                source_p->name, source_p->username, GET_CLIENT_HOST(source_p),
                target_p->name, reason);
 
   /* Do not change the format of this message.  There's no point in changing messages
    * that have been around for ever, for no reason.. */
   sendto_realops_flags(UMODE_ALL, L_ALL,
-		       "Received KILL message for %s. From %s Path: %s (%s)", 
-		       target_p->name, source_p->name, me.name, reason);
+                       "Received KILL message for %s. From %s Path: %s (%s)",
+                       target_p->name, source_p->name, me.name, reason);
 
   ilog(L_INFO, "KILL From %s For %s Path %s (%s)",
        source_p->name, target_p->name, me.name, reason);
 
   /*
-  ** And pass on the message to other servers. Note, that if KILL
-  ** was changed, the message has to be sent to all links, also
-  ** back.
-  ** Suicide kills are NOT passed on --SRB
-  */
+   ** And pass on the message to other servers. Note, that if KILL
+   ** was changed, the message has to be sent to all links, also
+   ** back.
+   ** Suicide kills are NOT passed on --SRB
+   */
   if (!MyConnect(target_p))
   {
     relay_kill(client_p, source_p, target_p, inpath, reason);
-      /*
-      ** Set FLAGS_KILLED. This prevents exit_one_client from sending
-      ** the unnecessary QUIT for this. (This flag should never be
-      ** set in any other place)
-      */
+    /*
+     ** Set FLAGS_KILLED. This prevents exit_one_client from sending
+     ** the unnecessary QUIT for this. (This flag should never be
+     ** set in any other place)
+     */
     SetKilled(target_p);
   }
 
@@ -234,21 +235,21 @@ ms_kill(struct Client *client_p, struct Client *source_p,
 
   if ((target_p = find_person(user)) == NULL)
   {
-      /* If the user has recently changed nick, but only if its 
-       * not an uid, automatically rewrite the KILL for this new nickname.
-       * --this keeps servers in synch when nick change and kill collide
-       */
-      if (*user == '.' ||
-	  (target_p = get_history(user,
-                                (time_t)ConfigFileEntry.kill_chase_time_limit))
-                                == NULL)
-      {
-        sendto_one(source_p, form_str(ERR_NOSUCHNICK),
-                   me.name, source_p->name, user);
-        return;
-      }
-      sendto_one(source_p,":%s NOTICE %s :KILL changed from %s to %s",
-                 me.name, source_p->name, user, target_p->name);
+    /* If the user has recently changed nick, but only if its 
+     * not an uid, automatically rewrite the KILL for this new nickname.
+     * --this keeps servers in synch when nick change and kill collide
+     */
+    if (*user == '.' ||
+        (target_p = get_history(user,
+                                (time_t) ConfigFileEntry.
+                                kill_chase_time_limit)) == NULL)
+    {
+      sendto_one(source_p, form_str(ERR_NOSUCHNICK),
+                 me.name, source_p->name, user);
+      return;
+    }
+    sendto_one(source_p, ":%s NOTICE %s :KILL changed from %s to %s",
+               me.name, source_p->name, user, target_p->name);
   }
 
   if (IsServer(target_p) || IsMe(target_p))
@@ -263,12 +264,12 @@ ms_kill(struct Client *client_p, struct Client *source_p,
     if (IsServer(source_p))
     {
       sendto_one(target_p, ":%s KILL %s :%s",
-	         source_p->name, target_p->name, reason);
+                 source_p->name, target_p->name, reason);
     }
     else
       sendto_one(target_p, ":%s!%s@%s KILL %s :%s",
-		 source_p->name, source_p->username, GET_CLIENT_HOST(source_p),
-		 target_p->name, reason);
+                 source_p->name, source_p->username,
+                 GET_CLIENT_HOST(source_p), target_p->name, reason);
   }
 
   /* Be warned, this message must be From %s, or it confuses clients
@@ -276,12 +277,14 @@ ms_kill(struct Client *client_p, struct Client *source_p,
   /* path must contain at least 2 !'s, or bitchx falsely declares it
    * local --fl
    */
-  if (IsOper(source_p)) /* send it normally */
+  if (IsOper(source_p))         /* send it normally */
   {
     sendto_realops_flags(UMODE_ALL, L_ALL,
                          "Received KILL message for %s. From %s Path: %s!%s!%s!%s %s",
-                         target_p->name, source_p->name, source_p->user->server->name, 
-                         GET_CLIENT_HOST(source_p), source_p->username, source_p->name, reason);
+                         target_p->name, source_p->name,
+                         source_p->user->server->name,
+                         GET_CLIENT_HOST(source_p), source_p->username,
+                         source_p->name, reason);
   }
   else
   {
@@ -290,7 +293,7 @@ ms_kill(struct Client *client_p, struct Client *source_p,
                          target_p->name, source_p->name, reason);
   }
 
-  ilog(L_INFO,"KILL From %s For %s Path %s %s",
+  ilog(L_INFO, "KILL From %s For %s Path %s %s",
        source_p->name, target_p->name, source_p->name, reason);
 
   relay_kill(client_p, source_p, target_p, path, reason);
@@ -335,25 +338,21 @@ relay_kill(struct Client *one, struct Client *source_p,
 
     if (client_p == NULL || client_p == one)
       continue;
-    }
+  }
 
-    /* use UID if possible */
-    from = ID_or_name(source_p, client_p);
-    to = ID_or_name(target_p, client_p);
+  /* use UID if possible */
+  from = ID_or_name(source_p, client_p);
+  to = ID_or_name(target_p, client_p);
 
-    if (MyClient(source_p))
-    {
-        sendto_one(client_p, ":%s KILL %s :%s!%s!%s!%s (%s)",
-                   from, to,
-                   me.name, source_p->host, source_p->username,
-                   source_p->name, reason);
-    }
-    else
-    {
-        sendto_one(client_p, ":%s KILL %s :%s %s",
-                   from, to,
-                   inpath, reason);
-    }
+  if (MyClient(source_p))
+  {
+    sendto_one(client_p, ":%s KILL %s :%s!%s!%s!%s (%s)",
+               from, to,
+               me.name, source_p->host, source_p->username,
+               source_p->name, reason);
+  }
+  else
+  {
+    sendto_one(client_p, ":%s KILL %s :%s %s", from, to, inpath, reason);
   }
 }
-
