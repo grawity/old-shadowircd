@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client_silence.c,v 1.4 2004/06/07 17:12:56 nenolod Exp $
+ *  $Id: client_silence.c,v 1.5 2004/06/09 01:38:26 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -117,8 +117,8 @@ add_silence(struct Client *client_p, char *silenceid)
     if (dlink_list_length(client_p->silence_list) >=
         ConfigFileEntry.max_silence)
     {
-      sendto_one(client_p, form_str(ERR_SILENCELISTFULL),
-                 me.name, client_p->name, chptr->chname, banid);
+      sendto_one(client_p, form_str(ERR_SILELISTFULL),
+                 me.name, client_p->name, silenceid);
       return(0);
     }
 

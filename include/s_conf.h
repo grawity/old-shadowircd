@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.h,v 1.4 2004/05/23 00:08:39 nenolod Exp $
+ *  $Id: s_conf.h,v 1.5 2004/06/09 01:38:26 nenolod Exp $
  */
 
 #ifndef INCLUDED_s_conf_h
@@ -305,6 +305,7 @@ struct config_file_entry
   int oper_only_umodes;
   int oper_umodes;
   int crypt_oper_password;
+  int max_silence;
   int max_targets;
   int caller_id_wait;
   int min_nonwildcard;

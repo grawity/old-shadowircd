@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: parse.c,v 1.1 2004/04/30 18:13:37 nenolod Exp $
+ *  $Id: parse.c,v 1.2 2004/06/09 01:38:26 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -616,6 +616,45 @@ recurse_report_messages(struct Client *source_p, struct MessageTree *mtree)
   {
     if (mtree->pointers[i] != NULL)
       recurse_report_messages(source_p, mtree->pointers[i]);
+  }
+}
+
+/* list_commands()
+ *
+ * inputs	- pointer to client to report to
+ * output	- NONE
+ * side effects	- client is shown list of commands
+ */
+void
+list_commands(struct Client *source_p)
+{
+  struct MessageTree *mtree;
+  int i;
+
+  mtree = &msg_tree;
+
+  for (i = 0; i < MAXPTRLEN; i++)
+  {
+    if (mtree->pointers[i] != NULL)
+      recurse_report_commands(source_p, mtree->pointers[i]);
+  }
+}
+
+static void
+recurse_report_commands(struct Client *source_p, struct MessageTree *mtree)
+{
+  int i;
+
+  if (mtree->msg != NULL)
+  {
+    sendto_one(source_p, ":%s NOTICE %s :%s",
+               me.name, source_p->name, mtree->msg->cmd);
+  }
+
+  for (i = 0; i < MAXPTRLEN; i++)
+  {
+    if (mtree->pointers[i] != NULL)
+      recurse_report_commands(source_p, mtree->pointers[i]);
   }
 }
 

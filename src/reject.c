@@ -2,7 +2,7 @@
  *  shadowircd: An advanced IRC daemon (ircd).
  *  reject.c: nenolod's reject engine. (inspired from the ratbox one.)
  *
- *  $Id: reject.c,v 1.3 2004/04/30 22:57:59 nenolod Exp $
+ *  $Id: reject.c,v 1.4 2004/06/09 01:38:26 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -31,7 +31,7 @@ typedef struct reject_data_ reject_data;
 
 reject_data *create_reject(char *ipaddr)
 {
-        reject_data *new;
+        reject_data *new = MyMalloc(sizeof(reject_data));
         dlink_node *entry;
         entry = make_dlink_node();
 
