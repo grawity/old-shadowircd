@@ -1,4 +1,4 @@
-$Id: TODO,v 1.5 2003/12/04 05:29:23 nenolod Exp $
+$Id: TODO,v 1.6 2003/12/04 06:36:10 eko Exp $
 
 - colorblock, colorstrip (done)
 - identified umode (done)
@@ -20,7 +20,7 @@ $Id: TODO,v 1.5 2003/12/04 05:29:23 nenolod Exp $
 - channel mode +Z: SSL only (nenolod)
 - channel mode +N: Stickynicks (Bagheera)
 - channel mode +L: Channel linking. (Eko)
-                   (Eko, you should write a spec on how this will work.)
+                   Spec: l_spec.txt (Eko - Done)
 - channel mode +F: Free Invite (nenolod)
 - usermode +Z: No private messages (Eko/Bagheera/Lunis)
                (see detailed spec on this)
