@@ -1,0 +1,45 @@
+################
+#
+# Channel Modes
+#
+# $Id: chanmodes.txt,v 1.1 2003/12/05 18:11:53 nenolod Exp $
+#
+################
+
+Mode | Setby | Implemented | Description
+-------------------------------------------------------------------------------
+ +a  |  +o   |     No      | Auditorium
+ +b  |  +h   |    Yes      | Channel ban
+ +c  |  +h   |    Yes      | Colour block
+ +d  |  --   |     --      | Reserved for later.
+ +e  |  +h   |    Yes      | Ban exception.
+ +f  |  +h   |     No      | Flood protection.
+ +F  |  +h   |    Yes      | Free invite.
+ +g  |  +h   |     No      | Enables spam protection for a channel.
+ +h  |  +o   |    Yes      | Halfop
+ +i  |  +h   |    Yes      | Invite only.
+ +I  |  +h   |    Yes      | Invite exception.
+ +k  |  +h   |    Yes      | Channel key.
+ +l  |  +h   |    Yes      | Channel limit.
+ +L  |  +u   |     No      | Channel link.
+ +m  |  +h   |    Yes      | Moderated.
+ +M  |  +h   |     No      | Only registered users may speak.
+ +n  |  +h   |    Yes      | No external messages.
+ +N  |  +h   |     No      | Sticky nicks.
+ +o  |  +o   |    Yes      | Channel ops.
+ +O  | Oper  |     No      | Operonly channel.
+ +p  |  +h   |    Yes      | Private channel (do not display in list)
+ +P  |  +u   |    Yes      | Peace. (do not allow kicks/ops/deops)
+ +q  |  +h   |     No      | Quiet.
+ +r  | Serv  |     No      | Registered Channel.
+ +R  |  +h   |     No      | Registered nicks only.
+ +s  |  +h   |    Yes      | Secret channel.
+ +S  |  +h   |    Yes      | Colour strip.
+ +t  |  +h   |    Yes      | Topic lock.
+ +T  |  +u   |    Yes      | Topic lock, owner-only.
+ +u  |  +u   |    Yes      | Channel owner.
+ +v  |  +h   |    Yes      | Channel voice.
+ +z  | Oper  |    Yes      | Disable throttling for channel.
+ +Z  |  +o   |     No      | SSL clients only.
+-------------------------------------------------------------------------------
+  

@@ -1,0 +1,19 @@
+$Id: Shadow-team,v 1.1 2003/12/05 18:11:53 nenolod Exp $
+
+The Shadowircd coding group is a group of developers who were annoyed with 
+the slowness of OpenIRCd. The original ircd was based on hybrid/6.3.1, 
+with subsequent releases based on hybrid/6.4.1. All of the necessary 
+compatibility code was added, and the ircd was ran through stackguard and 
+purify to ensure reliability.
+
+Now, The group maintains a very solid IRCd with many improvements over the 
+original ircd used. As of this release, the coding team has expanded, with 
+many new people and ideas.
+
+As of present, the current ShadowIRCd coding team is (in nick-alphabetical 
+order):
+
+AsierDelcroath, Bagheera, Eko, Lunis, nenolod, NhJm.
+
+Anyone is welcome to contribute to the project, as long as they are 
+competant developers. Contact ircd@nenolod.net for more information.
