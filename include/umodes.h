@@ -2,7 +2,7 @@
  * shadowircd: an advanced IRC daemon.
  * umodes.h: part of new usermodes system
  *
- * $Id: umodes.h,v 3.4 2004/09/25 02:49:53 nenolod Exp $
+ * $Id: umodes.h,v 3.5 2004/09/25 03:07:19 nenolod Exp $
  */
 
 /* nice flashy bitfield math, care of asuffield and dancer-ircd.
@@ -153,7 +153,8 @@ extern void umodes_from_string(user_modes *, char *);
 extern char *umode_difference(user_modes *, user_modes *);
 extern user_modes *build_umodes(user_modes *, int, ...);
 extern int available_slot;
-extern void register_umode(char, int, int);
+extern void register_umode(char, int, int, int);
+extern void setup_umodesys(void);
 
 #endif
 

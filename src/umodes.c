@@ -2,12 +2,13 @@
  * shadowircd: an advanced IRC daemon.
  * umodes.c: New usermode system, derived from dancer-ircd's usermode code.
  *
- * $Id: umodes.c,v 3.4 2004/09/25 02:49:53 nenolod Exp $
+ * $Id: umodes.c,v 3.5 2004/09/25 03:07:19 nenolod Exp $
  */
 #include "stdinc.h"
 #include "s_user.h"
 #include "umodes.h"
 
+#ifdef OLD_SYSTEM
 FLAG_ITEM user_mode_table[256] = {
   { UMODE_SERVNOTICE,	's', 0 },
   { UMODE_CCONN,	'c', 1 },
@@ -49,6 +50,11 @@ FLAG_ITEM user_mode_table[256] = {
   { UMODE_WANTSWHOIS, 	'W', 1 },
   { 0, 0, 0 }
 };
+#else
+FLAG_ITEM user_mode_table[256] {
+  { 0, 0, 0 }
+};
+#endif
 
 int user_modes_from_c_to_bitmask[256];
 char umode_list[256];
@@ -171,7 +177,7 @@ umode_difference(user_modes *old_modes, user_modes *new_modes)
  * side effects - umode is added to the umode table
  */
 void
-register_umode(char letter, int slot, int operonly)
+register_umode(char letter, int slot, int operonly, int rebuild)
 {
   user_mode_table[available_slot].letter = letter;
   user_mode_table[available_slot].mode = slot;
@@ -179,6 +185,54 @@ register_umode(char letter, int slot, int operonly)
 
   available_slot++;
 
-  /* rebuild things */
-  init_umodes();
+  if (rebuild == 1)
+    init_umodes();
+}
+
+/* 
+ * MAKE SURE THE LAST ENTRY IN HERE USES 1 AS THE FOURTH OPTION! 
+ * This will ensure that the umode table is properly generated!
+ *       --nenolod
+ */
+void
+setup_umodesys(void)
+{
+  register_umode('s', UMODE_SERVNOTICE, 0, 0);
+  register_umode('c', UMODE_CCONN, 1, 0);
+  register_umode('r', UMODE_REJ, 1, 0);
+  register_umode('k', UMODE_SKILL, 1, 0);
+  register_umode('f', UMODE_FULL, 1, 0);
+  register_umode('y', UMODE_SPY, 1, 0);
+  register_umode('d', UMODE_DEBUG, 1, 0);
+  register_umode('n', UMODE_NCHANGE, 1, 0);
+  register_umode('w', UMODE_WALLOP, 0, 0);
+  register_umode('z', UMODE_OPERWALL, 1, 0);
+  register_umode('i', UMODE_INVISIBLE, 1, 0);
+  register_umode('b', UMODE_BOTS, 1, 0);
+  register_umode('x', UMODE_EXTERNAL, 1, 0);
+  register_umode('g', UMODE_CALLERID, 0, 0);
+  register_umode('u', UMODE_UNAUTH, 1, 0);
+  register_umode('l', UMODE_LOCOPS, 1, 0);
+  register_umode('o', UMODE_OPER, 1, 0);
+  register_umode('a', UMODE_ADMIN, 1, 0);
+  register_umode('e', UMODE_IDENTIFY, 1, 0);
+  register_umode('h', UMODE_HIDEOPER, 1, 0);
+  register_umode('v', UMODE_CLOAK, 0, 0);
+  register_umode('q', UMODE_PROTECTED, 1, 0);
+  register_umode('I', UMODE_BLOCKINVITE, 0, 0);
+  register_umode('E', UMODE_PMFILTER, 0, 0);
+  register_umode('H', UMODE_HELPOP, 1, 0);
+  register_umode('O', UMODE_SVSOPER, 1, 0);
+  register_umode('A', UMODE_SVSADMIN, 1, 0);
+  register_umode('R', UMODE_SVSROOT, 1, 0);
+  register_umode('S', UMODE_SERVICE, 1, 0);
+  register_umode('Z', UMODE_SECURE, 1, 0);
+  register_umode('D', UMODE_DEAF, 1, 0);
+  register_umode('N', UMODE_NETADMIN, 1, 0);
+  register_umode('T', UMODE_TECHADMIN, 1, 0);
+  register_umode('C', UMODE_NOCOLOUR, 0, 0);
+  register_umode('G', UMODE_SENSITIVE, 0, 0);
+  register_umode('L', UMODE_ROUTING, 1, 0);
+  register_umode('K', UMODE_KILLPROT, 1, 0);
+  register_umode('W', UMODE_WANTSWHOIS, 1, 1);
 }
