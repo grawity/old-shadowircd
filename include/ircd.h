@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd.h,v 1.1 2004/04/30 18:14:23 nenolod Exp $
+ *  $Id: ircd.h,v 1.2 2004/05/21 21:49:06 nenolod Exp $
  */
 
 #ifndef INCLUDED_ircd_h
@@ -28,6 +28,7 @@
 #include "setup.h"
 #include "tools.h"
 #include "memory.h"
+#include "patchlevel.h"
 
 struct Client;
 struct dlink_list;
@@ -70,7 +71,6 @@ extern const char *generation;
 extern const char *platform;
 extern const char *infotext[];
 extern const char *serno;
-extern const char *ircd_version;
 extern const char *logFileName;
 extern const char *pidFileName;
 extern int dorehash;

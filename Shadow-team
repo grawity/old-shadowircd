@@ -1,9 +1,9 @@
-$Id: Shadow-team,v 1.4 2004/05/13 19:42:53 nenolod Exp $
-
+$Id: Shadow-team,v 1.5 2004/05/21 21:49:06 nenolod Exp $
+ 
 The people on this list are people who have helped with the
 development of ShadowIRCd. These people are known as the
 ShadowIRCd project.
-
+ 
 Active members in the ShadowIRCd project:
  
  - nenolod (nenolod@nenolod.net)
@@ -11,9 +11,9 @@ Active members in the ShadowIRCd project:
  
  - Ashen (l43x@mindspring.com)
    Additional development.
-
+ 
 Others who have contributed to this release of ShadowIRCd:
-
+ 
  - deadman (devinbrown@mindless.com)
    Bug reporting on 2.x branch, causing fixes with the
    forcejoin system in 3.x
@@ -58,8 +58,7 @@ the work of the following people:
  
  - ksh/iso9660
    For working on OpenIRCd, what this ircd is majorly derived from.
-
+ 
 Additional thanks has to go to the Hybrid development team for creating a
 good ircd to work from.
  
-

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- * $Id: stdinc.h,v 1.1 2004/04/30 18:14:25 nenolod Exp $
+ * $Id: stdinc.h,v 1.2 2004/05/21 21:49:06 nenolod Exp $
  *
  */
 
@@ -142,5 +142,7 @@ extern int errno;
 #endif
 
 #include "inet_misc.h"
+
+extern char ircd_version[512];
 
 #endif

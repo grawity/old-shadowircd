@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd.c,v 1.3 2004/05/12 20:41:49 nenolod Exp $
+ *  $Id: ircd.c,v 1.4 2004/05/21 21:49:06 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -89,6 +89,8 @@ struct LocalUser meLocalUser;	/* That's also part of me */
 static unsigned long initialVMTop = 0;	/* top of virtual memory at init */
 const char *logFileName = LPATH;
 const char *pidFileName = PPATH;
+
+char ircd_version[512];
 
 char **myargv;
 int dorehash = 0;
@@ -376,6 +378,20 @@ initialize_message_files (void)
   read_message_file (&ConfigFileEntry.shortmotd);
 }
 
+/* build_version()
+ *
+ * inputs       - none
+ * output       - none
+ * side effects - builds the ircd version string
+ */
+void
+build_version (void)
+{
+  char *s = PATCHES;
+  ircsprintf(ircd_version, "%s-%d.%d%s", BASENAME,
+             MAJOR, MINOR, (*s != 0 ? PATCHES : ""));
+}
+
 /* initialize_server_capabs()
  *
  * inputs       - none
@@ -540,6 +556,8 @@ main (int argc, char *argv[])
   umask (077);			/* better safe than sorry --SRB */
 
   parseargs (&argc, &argv, myopts);
+
+  build_version ();
 
   if (printVersion)
     {

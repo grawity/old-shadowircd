@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# $Id: version.c.SH,v 1.1 2004/04/30 18:13:17 nenolod Exp $
+# $Id: version.c.SH,v 1.2 2004/05/21 21:49:06 nenolod Exp $
 
 spitshell=cat
 package=IRC
@@ -55,7 +55,6 @@ $spitshell >version.c <<!SUB!THIS!
 const char *generation = "$generation";
 const char *creation = "$creation";
 const char *platform = "$uname";
-const char *ircd_version = PATCHLEVEL;
 const char *serno = SERIALNUM;
 
 const char *infotext[] =

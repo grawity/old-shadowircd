@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.10 2004/05/13 19:23:58 nenolod Exp $
+ *  $Id: s_user.c,v 1.11 2004/05/21 21:49:06 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -966,8 +966,6 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
         default:
           if ((flag = user_modes_from_c_to_bitmask[(unsigned char)*m]))
           {
-	    if (HasUmode(target_p, flag))
-              continue;
             if (MyConnect(target_p) && !IsOper(target_p) &&
               (user_mode_table[flag].operonly == 1))
             {

@@ -19,9 +19,29 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: patchlevel.h,v 1.4 2004/05/12 16:57:59 nenolod Exp $
+ *  $Id: patchlevel.h,v 1.5 2004/05/21 21:49:06 nenolod Exp $
  */
 
 #ifndef PATCHLEVEL
-#define PATCHLEVEL   "ShadowIRCd-3.0.unstable"
+#define RELEASE 1
+#define BETA 2
+#define ALPHA 3
+#define CURRENT 4
+
+#define BRANCHSTATUS ALPHA
+
+#define BASENAME "ShadowIRCd"
+#define MAJOR 3
+#define MINOR 0
+
+#define PATCH1 ".cvs"
+#define PATCH2 ""
+#define PATCH3 ""
+#define PATCH4 ""
+#define PATCH5 ""
+
+#define PATCHES PATCH1 PATCH2 PATCH3 PATCH4 PATCH5
+
+void build_version(void);
+
 #endif
