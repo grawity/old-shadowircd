@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_bsd.c,v 1.8 2004/02/05 20:15:48 nenolod Exp $
+ *  $Id: s_bsd.c,v 1.9 2004/02/05 22:39:31 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -383,18 +383,6 @@ add_connection(struct Listener* listener, int fd)
 #endif
   assert(NULL != listener);
 
-#ifdef USE_IAUTH
-  if (iAuth.socket == NOSOCK)
-  {
-    send(fd,
-      "NOTICE AUTH :*** Ircd Authentication Server is temporarily down, please connect later\r\n",
-      87,
-      0);
-    fd_close(fd);
-    return;
-  }
-#endif
-
   /* 
    * get the client socket name from the socket
    * the client has already been checked out in accept_connection
@@ -449,8 +437,10 @@ add_connection(struct Listener* listener, int fd)
   new_client->localClient->listener  = listener;
   ++listener->ref_count;
 
+  printf("debug: accept called...\n");
+
 #ifdef HAVE_LIBCRYPTO
-  if ((listener->is_ssl) && !(new_client->ssl))
+  if ((listener->is_ssl == 1) && !(new_client->ssl))
   {
     new_ssl = 1;
 
@@ -495,6 +485,10 @@ add_connection(struct Listener* listener, int fd)
     }
   }
 #endif
+  if (new_ssl != 1)
+  {
+    start_auth(new_client);
+  }
   comm_setselect(fd, FDLIST_SERVER, COMM_SELECT_WRITE, comm_tryssl_callback, new_client, 0);
 }
 

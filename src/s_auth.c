@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_auth.c,v 1.2 2004/02/05 20:15:48 nenolod Exp $
+ *  $Id: s_auth.c,v 1.3 2004/02/05 22:39:31 nenolod Exp $
  */
 
 /*
@@ -87,12 +87,15 @@ enum {
 };
 
 #ifdef HAVE_LIBCRYPTO
-#define sendheader(c, r) \
-   if (IsSSL(c)) { \
-     safe_SSL_write(c, HeaderMessages[(r)].message, HeaderMessages[(r)].length); \
-   } else { \
+
+static void sendheader (struct Client *c, int r)
+{
+  if (IsSSL(c))
+     safe_SSL_write(c, HeaderMessages[(r)].message, HeaderMessages[(r)].length);
+  else
      send((c)->localClient->fd, HeaderMessages[(r)].message, HeaderMessages[(r)].length, 0); \
-   }
+}
+
 #else
 #define sendheader(c, r) \
    send((c)->localClient->fd, HeaderMessages[(r)].message, HeaderMessages[(r)].length, 0)

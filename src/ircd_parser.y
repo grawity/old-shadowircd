@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.16 2004/02/05 20:15:48 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.17 2004/02/05 22:39:31 nenolod Exp $
  */
 
 %{
@@ -49,6 +49,7 @@
 #include "resv.h"
 #include "numeric.h"
 #include "cluster.h"
+#include "dh.h"
 
 #ifdef HAVE_LIBCRYPTO
 #include <openssl/rsa.h>
@@ -663,17 +664,11 @@ serverinfo_ssl_certificate_file: SSL_CERTIFICATE_FILE '=' QSTRING ';'
 
         if (SSL_CTX_use_certificate_file(ServerInfo.ctx,
             ServerInfo.ssl_certificate_file, SSL_FILETYPE_PEM) <= 0) {
-          yyerror(strncat("Error using config file entry ssl_certificate -- ",
-                               ERR_error_string(ERR_get_error(), NULL),
-                               strlen(ERR_error_string(ERR_get_error(), NULL))));
           break;
         }
 
         if (SSL_CTX_use_PrivateKey_file(ServerInfo.ctx,
             ServerInfo.rsa_private_key_file, SSL_FILETYPE_PEM) <= 0) {
-          yyerror(strncat("Error using config file entry rsa_private_key -- ",
-                               ERR_error_string(ERR_get_error(), NULL),
-                               strlen(ERR_error_string(ERR_get_error(), NULL))));
           break;
         }
 
@@ -684,7 +679,7 @@ serverinfo_ssl_certificate_file: SSL_CERTIFICATE_FILE '=' QSTRING ';'
       }
     }
 #endif
-  };
+};
 
 serverinfo_ssl_ca_certificate_file: SSL_CA_CERTIFICATE_FILE '=' QSTRING ';'
   {
