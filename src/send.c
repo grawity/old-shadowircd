@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  send.c: Functions for sending messages.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: send.c,v 1.1.1.1 2003/12/02 20:46:50 nenolod Exp $
+ *  $Id: send.c,v 1.2 2003/12/05 20:48:49 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -112,6 +112,7 @@ send_format(char *lsendbuf, int bufsize, const char *pattern, va_list args)
 static void
 send_message(struct Client *to, char *buf, int len)
 {
+
 #ifdef INVARIANTS
   if (IsMe(to))
   {
@@ -254,6 +255,9 @@ slinkq_unblocked(int fd, struct Client *client_p)
 void
 send_queued_write(struct Client *to)
 {
+#ifdef HAVE_LIBCRYPTO
+  fde_t *F = (fd > -1)? &fd_table[to->localClient->fd] : NULL;
+#endif
   int retlen;
 #ifndef NDEBUG
   struct hook_io_data hdata;

@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  tools.c: Various functions needed here and there.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: tools.c,v 1.1.1.1 2003/12/02 20:46:46 nenolod Exp $
+ *  $Id: tools.c,v 1.2 2003/12/05 20:48:49 nenolod Exp $
  *
  * When you update these functions make sure you update the ones in tools.h
  * as well!!!
@@ -282,3 +282,33 @@ slink_find(slink_list *list, void *data)
     }
     return NULL;
 }
+
+#ifdef HAVE_LIBCRYPTO
+static struct {
+        int err;
+        char *str;
+} errtab[] = {
+        {SSL_ERROR_NONE, "SSL_ERROR_NONE"},
+        {SSL_ERROR_ZERO_RETURN, "SSL_ERROR_ZERO_RETURN"},
+        {SSL_ERROR_WANT_READ, "SSL_ERROR_WANT_READ"},
+        {SSL_ERROR_WANT_WRITE, "SSL_ERROR_WANT_WRITE"},
+        {SSL_ERROR_WANT_CONNECT, "SSL_ERROR_WANT_CONNECT"},
+        /*{SSL_ERROR_WANT_ACCEPT, "SSL_ERROR_WANT_ACCEPT"},*/
+        {SSL_ERROR_WANT_X509_LOOKUP, "SSL_ERROR_WANT_X509_LOOKUP"},
+        {SSL_ERROR_SYSCALL, "SSL_ERROR_SYSCALL"},
+        {SSL_ERROR_SSL, "SSL_ERROR_SSL"},
+        {-1, NULL}
+};
+
+char *get_ssl_error(int sslerr)
+{
+        int i;
+
+        for (i=0; errtab[i].err != -1; i++)
+                if (errtab[i].err == sslerr)
+                        return errtab[i].str;
+
+        return "<NULL>";
+}
+#endif
+

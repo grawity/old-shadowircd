@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: fdlist.h,v 1.1.1.1 2003/12/02 20:47:54 nenolod Exp $
+ *  $Id: fdlist.h,v 1.2 2003/12/05 20:48:49 nenolod Exp $
  */
 
 #ifndef INCLUDED_fdlist_h
@@ -105,6 +105,10 @@ struct _fde {
         unsigned int nonblocking:1;
         unsigned int ipc:1;
         unsigned int called_connect:1;
+#ifdef HAVE_LIBCRYPTO
+                unsigned int accept_read:1;
+                unsigned int accept_write:1;
+#endif
     } flags;
     struct {
         /* We don't need the host here ? */
@@ -114,6 +118,10 @@ struct _fde {
         void *data;
         /* We'd also add the retry count here when we get to that -- adrian */
     } connect;
+#ifdef HAVE_LIBCRYPTO
+        SSL *ssl;
+        int accept_failures;
+#endif
 };
 
 

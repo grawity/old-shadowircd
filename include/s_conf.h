@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  s_conf.h: A header for the configuration functions.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.h,v 1.2 2003/12/05 18:08:59 nenolod Exp $
+ *  $Id: s_conf.h,v 1.3 2003/12/05 20:48:49 nenolod Exp $
  */
 
 #ifndef INCLUDED_s_conf_h
@@ -370,6 +370,9 @@ struct server_info
 #ifdef HAVE_LIBCRYPTO
   char *rsa_private_key_file;
   RSA *rsa_private_key;
+  char *      ssl_certificate_file;
+  SSL_CTX *   ctx;
+  SSL_METHOD *meth;
 #endif
   char *sid;
   int hub;
