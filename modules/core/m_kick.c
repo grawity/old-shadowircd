@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_kick.c,v 1.5 2004/07/18 18:44:55 nenolod Exp $
+ *  $Id: m_kick.c,v 1.6 2004/08/21 07:34:03 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -59,7 +59,7 @@ _moddeinit(void)
   mod_del_cmd(&kick_msgtab);
 }
 
-const char *_version = "$Revision: 1.5 $";
+const char *_version = "$Revision: 1.6 $";
 #endif
 
 /* m_kick()
@@ -205,6 +205,32 @@ m_kick(struct Client *client_p, struct Client *source_p,
         return;
       }
     }
+
+   /* Actually protect the +u's. We were silly and forgot about this one.
+    * Thanks to akba on Subnova for discovering this.
+    *
+    * - however, we do want opers to be able to override this, that way
+    *   some of the more abusive networks running shadow can still have 
+    *   their fun, as uncool as it probably is. -nenolod
+    */
+   if (!MyConnect(source_p) || (MyConnect(source_p) && 
+         source_p->localClient->operflags & OPER_FLAG_OVERRIDE))
+   {
+      if (has_member_flags(ms, CHFL_CHANOP) && has_member_flags(ms_target, CHFL_CHANOWNER))
+      {
+          sendto_one(source_p, form_str(ERR_CHANOPRIVSNEEDED),
+                    me.name, source_p->name, name);
+          return;
+      }
+
+      if (has_member_flags(ms, CHFL_HALFOP) && has_member_flags(ms_target, CHFL_CHANOWNER))
+      {
+          sendto_one(source_p, form_str(ERR_CHANOPRIVSNEEDED),
+                me.name, source_p->name, name);
+          return;
+      }
+   }
+
    /* jdc
     * - In the case of a server kicking a user (i.e. CLEARCHAN),
     *   the kick should show up as coming from the server which did

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.20 2004/07/18 13:41:35 nenolod Exp $
+ *  $Id: s_user.c,v 1.21 2004/08/21 07:34:03 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -585,6 +585,7 @@ static int
 introduce_client(struct Client *client_p, struct Client *source_p)
 {
   dlink_node *server_node;
+  struct Client *nickservClient;
 
   /* XXX THESE NEED A PREFIX!?!?!? */
   if (!ServerInfo.hub && uplink && IsCapable(uplink, CAP_LL) &&
@@ -678,6 +679,18 @@ introduce_client(struct Client *client_p, struct Client *source_p)
     }
   }
 
+  /* Silly hack requested by kib of MGMServers.net. Identifies to NickServ with
+   * password in source_p->localClient->passwd. Uses SIDENTIFY so that it is silent.
+   * Should work with anope and shadowservices.
+   */
+  if (MyClient(source_p) && source_p->localClient->passwd)
+  {
+    if ((nickservClient = find_client("NickServ")) != NULL)
+    {
+      sendto_one(nickservClient, ":%s PRIVMSG NickServ :SIDENTIFY %s",
+                 source_p->name, source_p->localClient->passwd);
+    }
+  }
 
   return(0);
 }
