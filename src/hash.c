@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: hash.c,v 1.2 2004/02/14 01:07:59 nenolod Exp $
+ *  $Id: hash.c,v 1.3 2004/02/14 01:24:18 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -35,6 +35,7 @@
 #include "resv.h"
 #include "userhost.h"
 #include "irc_string.h"
+#include "sprintf_irc.h"
 #include "ircd.h"
 #include "numeric.h"
 #include "send.h"
@@ -1134,10 +1135,15 @@ list_one_channel(struct Client *source_p, struct Channel *chptr,
   char modebuf[32];
   char parabuf[64];
   *modebuf = *parabuf = '\0';
+  char modes_and_topic[TOPICLEN + 100];
   channel_modes(chptr, source_p, modebuf, parabuf);
 
+  ircsprintf(modes_and_topic, "[%s %s] %s", modebuf,
+             IsOperAuspex(source_p) ? parabuf : "",
+             (chptr->topic != NULL) ? chptr->topic : "");
+
   if ((remote_request && chptr->chname[0] == '&') ||
-      (SecretChannel(chptr) && !IsMember(source_p, chptr)))
+      (SecretChannel(chptr) && (!IsOperAuspex(source_p) || !IsMember(source_p, chptr))))
     return;
 
   if ((unsigned int)dlink_list_length(&chptr->members) < list_task->users_min ||
@@ -1154,8 +1160,7 @@ list_one_channel(struct Client *source_p, struct Channel *chptr,
     return;
   sendto_one(source_p, form_str(RPL_LIST), me.name, source_p->name,
              chptr->chname, dlink_list_length(&chptr->members),
-             modebuf, IsOperAuspex(source_p) ? parabuf : "",
-             chptr->topic == NULL ? "" : chptr->topic);
+             modes_and_topic);
 }
 
 /* safe_list_channels()
