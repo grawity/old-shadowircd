@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_grant.c,v 1.1 2004/02/12 18:10:27 nenolod Exp $
+ *  $Id: m_grant.c,v 1.2 2004/02/12 18:23:01 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,7 +63,7 @@ _moddeinit(void)
   mod_del_cmd(&grant_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /* this is a struct, associating operator permissions with letters. */
@@ -153,5 +153,36 @@ static void
 mo_grant(struct Client *client_p, struct Client *source_p,
        int parc, char *parv[])
 {
-  
+  struct Client *target_p;
+  if (!strcmp(parv[1], "GIVE"))
+  {
+    if (!parv[2])
+    {
+      sendto_one(source_p, ":%s NOTICE %s :Not enough parameters",
+		 me.name, source_p->name);
+      return;
+    }
+    
+    if (!(target_p = find_client(parv[2]))
+    {
+      sendto_one(source_p, form_str (ERR_NOSUCHNICK), me.name,
+                 source_p->name, parv[2]);
+      return;
+    }
+
+    if (!parv[3])
+    {
+      sendto_one(source_p, ":%s NOTICE %s :Not enough parameters",
+		 me.name, source_p->name);
+      return;
+    }
+
+    /* Since we're granting privs, lets make sure the user has umode +o. */
+    if (!(target_p->umodes & UMODE_OPER))
+    {
+      sendto_one(target_p, form_str (RPL_YOUREOPER), me.name, target_p->name);
+      target_p->umodes |= UMODE_OPER;
+    }
+
+    /* Ok, lets grant the privs now. */
 }
