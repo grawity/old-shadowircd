@@ -16,7 +16,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *   $Id: messages.tab,v 1.9 2004/06/09 01:38:26 nenolod Exp $
+ *   $Id: messages.tab,v 1.10 2004/06/09 01:41:18 nenolod Exp $
  */
 
 static struct NumericInfo replies[] = {
@@ -291,7 +291,7 @@ static struct NumericInfo replies[] = {
 /* 268 */  {NULL, NULL, NULL},
 /* 269 */  {NULL, NULL, NULL},
 /* 270 */  {NULL, NULL, NULL},
-/* 271 */  {"RPL_SILELIST", ":%s 271 %s %s %s", NULL},
+/* 271 */  {"RPL_SILELIST", ":%s 271 %s %s", NULL},
 /* 272 */  {"RPL_ENDOFSILELIST", ":%s 272 %s :End of Silence List", NULL},
 /* 273 */  {NULL, NULL, NULL},
 /* 274 */  {NULL, NULL, NULL},
