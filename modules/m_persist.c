@@ -1,10 +1,5 @@
 /*
- * shadowircd: an advanced Internet Relay Chat daemon(ircd). 
- * m_persist.c: No comment.
- * 
- * Copyright (c) 2004 ShadowIRCd development group
- * 
- * $Id: m_persist.c,v 1.7 2004/03/22 23:41:57 nenolod Exp $
+ * $Id: m_persist.c,v 1.8 2004/04/01 18:07:57 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -89,7 +84,9 @@ m_persist(struct Client *client_p, struct Client *source_p,
                  me.name, source_p->name);
       return;
     }
-    strcpy(source_p->persistpw, parv[2]);
+    strncpy(source_p->persistpw, parv[2], PASSWDLEN);
+    sendto_one(source_p, ":%s NOTICE %s :*** Password set to %s",
+                 me.name, source_p->name, source_p->persistpw);
     return;
   }
 
@@ -194,7 +191,11 @@ m_persist(struct Client *client_p, struct Client *source_p,
       ircsprintf(reason, "Persistant ATTACH from %s!%s@%s.",
                  source_p->name, source_p->username, GET_CLIENT_HOST(source_p));
 
-      exit_client(target_p, target_p, &me, reason);
+      target_p->persistpw[0] = '\0';
+      target_p->flags &= ~FLAGS_PERSIST;
+      target_p->flags |= FLAGS_KILLED;
+
+      exit_client(client_p, target_p, client_p, reason);
 
       /* Change the nick. */
       change_local_nick(client_p, source_p, target_n);      

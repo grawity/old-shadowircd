@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.15 2004/03/22 20:23:29 nenolod Exp $
+ *  $Id: client.h,v 1.16 2004/04/01 18:07:57 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -606,9 +606,10 @@ extern const char *get_client_name(struct Client *client, int show_ip);
 extern void init_client(void);
 extern struct Client *make_client(struct Client *from);
 extern void free_client(struct Client *client_p);
-extern int exit_client(struct Client *, struct Client *, struct Client *, const char *);
 extern struct Client *find_chasing(struct Client *, const char *, int *);
 extern struct Client *find_person(const char *);
+extern int exit_client(struct Client *, struct Client *, struct Client *, const char *);
+extern void exit_one_client(struct Client *, struct Client *, struct Client *, const char *);
 extern int accept_message(struct Client *source, struct Client *target);
 extern void del_from_accept(struct Client *source, struct Client *target);
 extern void del_all_accepts(struct Client *client_p);

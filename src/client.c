@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.c,v 1.10 2004/03/22 23:41:57 nenolod Exp $
+ *  $Id: client.c,v 1.11 2004/04/01 18:07:57 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -722,7 +722,7 @@ free_exited_clients (void)
 ** Exit one client, local or remote. Assuming all dependents have
 ** been already removed, and socket closed for local client.
 */
-static void
+void
 exit_one_client (struct Client *client_p, struct Client *source_p,
 		 struct Client *from, const char *comment)
 {
@@ -768,24 +768,6 @@ exit_one_client (struct Client *client_p, struct Client *source_p,
       /* The bulk of this is done in remove_dependents now, all
        ** we have left to do is send the SQUIT upstream.  -orabidoo
        */
-      if (MyClient (source_p))
-        {
-          if (source_p->persistpw[0] && (!(source_p->flags & FLAGS_KILLED)))
-            {
-              source_p->flags |= FLAGS_PERSIST;
-	      fd_close (source_p->localClient->ctrlfd);
-	      fd_close (source_p->localClient->fd);
-              source_p->localClient->ctrlfd = -1;
-              source_p->localClient->fd = -1;
-#ifndef HAVE_SOCKETPAIR
-              fd_close (source_p->localClient->ctrlfd_r);
-              fd_close (source_p->localClient->fd_r);
-              source_p->localClient->ctrlfd_r = -1;
-              source_p->localClient->fd_r = -1;
-#endif
-              return;
-            }
-        }
 
       if (MyConnect (source_p))
 	{
@@ -814,6 +796,29 @@ exit_one_client (struct Client *client_p, struct Client *source_p,
   else if (IsPerson (source_p))	/* ...just clean all others with QUIT... */
     {
       dlink_node *lp, *next_lp;
+
+      /* If we are persistant, do not quit. */
+      if (source_p->persistpw[0] && (!(source_p->flags & FLAGS_KILLED)))
+        {
+          source_p->flags |= FLAGS_PERSIST;
+
+          sendto_realops_flags(UMODE_DEBUG, L_ALL, "debug: persistant client %s not quitted",
+              source_p->name);
+
+          fd_close(source_p->localClient->fd);
+          source_p->localClient->fd          = -1;
+          fd_close(source_p->localClient->ctrlfd);
+          source_p->localClient->ctrlfd      = -1;
+
+#ifndef HAVE_SOCKETPAIR
+          fd_close(source_p->localClient->fd_r);
+          source_p->localClient->fd_r        = -1;
+          fd_close(source_p->localClient->ctrlfd_r);
+          source_p->localClient->ctrlfd_r    = -1;
+#endif
+
+          return;
+        }
 
       /* If this exit is generated from "m_kill", then there
        * is no sense in sending the QUIT--KILL's have been

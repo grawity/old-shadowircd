@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.34 2004/03/11 05:55:10 nenolod Exp $
+ *  $Id: s_user.c,v 1.35 2004/04/01 18:07:57 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -976,6 +976,14 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
   {
      sendto_one(source_p, form_str(ERR_USERSDONTMATCH),
                 me.name, source_p->name);
+     return;
+  }
+
+  /* Pass on services mode changes... */
+  if (!MyClient(target_p))
+  {
+     sendto_server(NULL, source_p, NULL, 0, 0, 0, ":%s MODE %s %s",
+      source_p->name, target_p->name, parv[2]);
      return;
   }
 

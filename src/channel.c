@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.c,v 1.11 2004/03/22 20:01:57 nenolod Exp $
+ *  $Id: channel.c,v 1.12 2004/04/01 18:07:57 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -892,6 +892,10 @@ can_send(struct Channel *chptr, struct Client *source_p)
   struct Membership *ms;
 
   if (IsServer(source_p))
+    return(CAN_SEND_OPV);
+
+  /* If it does not belong to me, just trust that it is valid. */
+  if (!MyClient(source_p))
     return(CAN_SEND_OPV);
 
   if (IsOperImmune(source_p))

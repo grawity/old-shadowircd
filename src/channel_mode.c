@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 1.18 2004/03/22 20:01:57 nenolod Exp $
+ *  $Id: channel_mode.c,v 1.19 2004/04/01 18:07:57 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1940,6 +1940,10 @@ chm_linktarget(struct Client *client_p, struct Client *source_p,
     if (*key == '\0')
       return;
 
+    /* if the target is not really a channel... do not do it! */
+    if (key[0] != '#')
+      return;
+
     assert(key[0] != ' ');
     strlcpy(chptr->mode.linktarget, key, sizeof(chptr->mode.linktarget));
 
@@ -1974,7 +1978,6 @@ chm_linktarget(struct Client *client_p, struct Client *source_p,
     mode_changes[mode_count].nocaps = 0;
     mode_changes[mode_count].mems = ALL_MEMBERS;
     mode_changes[mode_count].id = NULL;
-    mode_changes[mode_count++].arg = "*";
     mode_changes[mode_count++].arg = "*";
   }
 }
