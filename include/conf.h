@@ -2,7 +2,7 @@
  * conf.h
  * HybServ2 Services by HybServ2 team
  *
- * $Id: conf.h,v 1.1 2003/12/16 19:52:38 nenolod Exp $
+ * $Id: conf.h,v 1.2 2003/12/18 23:14:07 nenolod Exp $
  */
 
 #ifndef INCLUDED_conf_h
@@ -87,6 +87,8 @@ struct MyInfo
 #ifdef SEENSERVICES
   struct Luser *esptr;   /* pointer to SeenServ */
 #endif /* SEENSERVICES */
+
+  struct Luser *vsptr;   /* pointer to HostServ */
 
 };
 

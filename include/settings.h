@@ -2,7 +2,7 @@
  * settings.h
  * HybServ2 Services by HybServ2 team
  *
- * $Id: settings.h,v 1.1 2003/12/16 19:52:38 nenolod Exp $
+ * $Id: settings.h,v 1.2 2003/12/18 23:14:07 nenolod Exp $
  */
 
 #ifndef INCLUDED_settings_h
@@ -78,6 +78,7 @@ extern  char      *n_StatServ;
 extern  char      *n_HelpServ;
 extern  char      *n_Global;
 extern  char      *n_SeenServ;
+extern  char      *n_HostServ;
 
 extern  char      *id_OperServ;
 extern  char      *id_NickServ;
@@ -87,6 +88,7 @@ extern  char      *id_StatServ;
 extern  char      *id_HelpServ;
 extern  char      *id_Global;
 extern  char      *id_SeenServ;
+extern  char      *id_HostServ;
 
 extern  char      *desc_OperServ;
 extern  char      *desc_NickServ;
@@ -96,6 +98,7 @@ extern  char      *desc_StatServ;
 extern  char      *desc_HelpServ;
 extern  char      *desc_Global;
 extern  char      *desc_SeenServ;
+extern  char      *desc_HostServ;
 
 extern  char      *ServiceUmodes;
 

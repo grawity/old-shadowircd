@@ -6,7 +6,7 @@
  * do so under the terms of the GNU General Public License under which
  * this program is distributed.
  *
- * $Id: settings.c,v 1.1 2003/12/16 19:52:15 nenolod Exp $
+ * $Id: settings.c,v 1.2 2003/12/18 23:14:07 nenolod Exp $
  */
 
 #include "defs.h"
@@ -60,6 +60,7 @@ char      *n_StatServ;
 char      *n_HelpServ;
 char      *n_SeenServ;
 char      *n_Global;
+char      *n_HostServ;
 char      *id_OperServ;
 char      *id_NickServ;
 char      *id_ChanServ;
@@ -67,6 +68,7 @@ char      *id_MemoServ;
 char      *id_StatServ;
 char      *id_HelpServ;
 char      *id_SeenServ;
+char      *id_HostServ;
 char      *desc_SeenServ;
 char      *id_Global;
 char      *desc_OperServ;
@@ -75,6 +77,7 @@ char      *desc_ChanServ;
 char      *desc_MemoServ;
 char      *desc_StatServ;
 char      *desc_HelpServ;
+char      *desc_HostServ;
 char      *desc_Global;
 char      *ServiceUmodes;
 
@@ -228,6 +231,10 @@ struct Directive directives[] =
     { "SeenServNick", D_NORUNTIME,    { { PARAM_STRING, &n_SeenServ },
                                         { PARAM_STRING, &id_SeenServ },
                                         { PARAM_STRING, &desc_SeenServ } } },
+
+    { "HostServNick", D_NORUNTIME,    { { PARAM_STRING, &n_HostServ },
+                                        { PARAM_STRING, &id_HostServ },
+                                        { PARAM_STRING, &desc_HostServ } } },
 
     { "ServiceUmodes", D_NORUNTIME,   { { PARAM_STRING, &ServiceUmodes } } },
 

@@ -7,7 +7,7 @@
  * GNU General Public License, version 2. See LICENSE in the root
  * directory for more information.
  *
- * $Id: hostserv.c,v 1.1 2003/12/18 23:01:36 nenolod Exp $
+ * $Id: hostserv.c,v 1.2 2003/12/18 23:14:07 nenolod Exp $
  *******************************************************************/
 
 #include <stdio.h>
@@ -42,6 +42,10 @@
 #include "err.h"
 #include "hybdefs.h"
 #include "sock.h"
+
+static void h_help (struct Luser *lptr, int ac, char **av);
+static void h_on (struct Luser *lptr, int ac, char **av);
+static void h_set (struct Luser *lptr, int ac, char **av);
 
 static struct Command vhostcmds[] = {
   { "HELP", h_help, LVL_NONE },
@@ -152,27 +156,7 @@ h_help(struct Luser *lptr, int ac, char **av)
     if (ac >= 3)
       ircsprintf(str, "%s %s", av[1], av[2]);
     else
-    {
-      struct Command *cptr;
-
-      for (cptr = vhostcmds; cptr->cmd; cptr++)
-        if (!irccmp(av[1], cptr->cmd))
-          break;
-
-      if (cptr->cmd)
-        if ((cptr->level == LVL_ADMIN) &&
-            !(IsValidAdmin(lptr)))
-        {
-          notice(n_HostServ, lptr->nick,
-            "No help available on \002%s\002",
-            av[1]);
-          return;
-        }
-
       ircsprintf(str, "%s", av[1]);
-
-      }
-    }
 
     GiveHelp(n_HostServ, lptr->nick, str, NODCC);
   }
@@ -194,7 +178,7 @@ h_set (struct Luser *lptr, int ac, char **av)
 
   user = GetLink(av[0]);
 
-  MyStrdup(user->vhost, av[1]);
+  user->vhost = MyStrdup(av[1]);
 
   notice (n_HostServ, av[0], "A virtualhost [\2%s\2] has been set for your nickname by [\2%s\2].",
           user->vhost, lptr->nick);
