@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: cloak.c,v 1.1 2004/08/24 05:29:00 nenolod Exp $
+ *  $Id: cloak.c,v 1.2 2004/08/24 06:17:13 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -32,6 +32,7 @@
 #include "common.h"
 #include "sprintf_irc.h"
 #include "md5.h"
+#include "hook.h"
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <utmp.h>
@@ -177,15 +178,14 @@ makevirthost (struct Client *client_p)
 void
 _modinit(void)
 {
-  return;
+  printf("hook_add_hook make_virthost\n");
+  hook_add_hook("make_virthost", (hookfn *)makevirthost);
 }
 
 void
 _moddeinit(void)
 {
-  /* Make sure our interface is NULL. */
-  make_virthost = NULL;
-  return;
+  hook_del_hook("make_virthost", (hookfn *)makevirthost);
 }
 
-char *_version = "$Revision: 1.1 $";
+char *_version = "$Revision: 1.2 $";

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- * $Id: dynlink.c,v 1.2 2004/08/24 05:29:00 nenolod Exp $
+ * $Id: dynlink.c,v 1.3 2004/08/24 06:17:13 nenolod Exp $
  *
  */
 #include "stdinc.h"
@@ -37,9 +37,6 @@
 extern struct module **modlist;
 extern int num_mods;
 extern int max_mods;
-
-/* This is so that we can make cloaking modular. --nenolod */
-void (*make_virthost)(struct Client *);
 
 static void increase_modlist(void);
 
@@ -302,12 +299,6 @@ load_a_module(char *path, int warn, int core)
     }
   }
 
-  /* here we check if make_virthost is null, then shl_findsym to see if it is still
-   * null... --nenolod
-   */
-  if (make_virthost == NULL)
-    shl_findsym(&tmpptr, "makevirthost", TYPE_UNDEFINED, (void *)&make_virthost);
-
   if (shl_findsym(&tmpptr, "_version", TYPE_UNDEFINED, &verp) == -1)
   {
     if (shl_findsym(&tmpptr, "__version", TYPE_UNDEFINED, &verp) == -1)
@@ -339,9 +330,6 @@ load_a_module(char *path, int warn, int core)
     /* blah blah soft error, see above. */
     mod_deinit = NULL;
   }
-
-  if (make_virthost == NULL)
-    make_virthost = (void(*)(void))dlfunc(tmpptr, "makevirthost");
 
   verp = (char **)dlsym(tmpptr, "_version");
 

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: hook.c,v 1.1 2004/04/30 18:13:30 nenolod Exp $
+ *  $Id: hook.c,v 1.2 2004/08/24 06:17:13 nenolod Exp $
  */
 
 /* hooks are used by modules to hook into events called by other parts of
@@ -32,6 +32,8 @@
 #include "list.h"
 #include "hook.h"
 #include "memory.h"
+#include "send.h"
+#include "umodes.h"
 
 static dlink_list hooks = { NULL, NULL, 0 };
 static hook *find_hook(const char *name);
@@ -139,6 +141,7 @@ hook_add_hook(const char *event, hookfn *fn)
     return(-1);
 
   dlinkAdd(fn, make_dlink_node(), &h->hooks);
+  printf("adding hook: %s 0x%lX\n", event, fn);
   return(0);
 }
 
@@ -152,9 +155,15 @@ hook_call_event(const char *event, void *data)
   if ((h = find_hook(event)) == NULL)
     return(-1);
 
+  sendto_realops_flags(UMODE_DEBUG, L_ALL, "looking for %s (%d registered hooks)",
+                       event, h->hooks.length);
+
   DLINK_FOREACH(node, h->hooks.head)
   {
     fn = (hookfn)(uintptr_t)node->data;
+
+    sendto_realops_flags(UMODE_DEBUG, L_ALL, "%s: executing event code..",
+			event);
 
     if (fn(data) != 0)
       return(0);

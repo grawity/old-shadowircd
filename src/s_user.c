@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.25 2004/08/24 05:29:00 nenolod Exp $
+ *  $Id: s_user.c,v 1.26 2004/08/24 06:17:13 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -52,6 +52,7 @@
 #include "userhost.h"
 #include "reject.h"
 #include "umodes.h"
+#include "hook.h"
 
 int MaxClientCount     = 1;
 int MaxConnectionCount = 1;
@@ -64,7 +65,6 @@ static void user_welcome(struct Client *);
 static void report_and_set_user_flags(struct Client *, struct AccessItem *);
 static int check_x_line(struct Client *, struct Client *);
 static int introduce_client(struct Client *, struct Client *);
-extern void (*make_virthost)(struct Client *);
 
 FLAG_ITEM user_mode_table[256];
 char umode_list[256];
@@ -461,10 +461,10 @@ register_local_user(struct Client *client_p, struct Client *source_p,
   add_user_host(source_p->username, source_p->host, 0);
   SetUserHost(source_p);
 
-  if (make_virthost != NULL)
-    make_virthost(source_p);
-  else
-    strcpy(source_p->virthost, source_p->host);
+  /* This is incase you dont have a cloaking module loaded. */
+  strcpy(source_p->virthost, source_p->host);
+
+  hook_call_event("make_virthost", source_p);
 
   if (ServerInfo.network_cloak_on_connect)
     SetUmode(source_p, UMODE_CLOAK);
@@ -564,10 +564,11 @@ register_remote_user(struct Client *client_p, struct Client *source_p,
   add_user_host(source_p->username, source_p->host, 1);
   SetUserHost(source_p);
 
-  if (source_p->virthost[0] == '*' && make_virthost != NULL)
-    make_virthost(source_p);
-  else if (source_p->virthost[0])
+  if (source_p->virthost[0] == '*')
+  {
     strcpy(source_p->virthost, source_p->host);
+    hook_call_event("make_virthost", source_p);
+  }
   else
     source_p->flags |= FLAGS_USERCLOAK;
 
