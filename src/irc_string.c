@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: irc_string.c,v 3.3 2004/09/08 01:18:08 nenolod Exp $
+ *  $Id: irc_string.c,v 3.4 2004/09/23 19:36:09 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -575,8 +575,8 @@ char* strip_colour(char* string)
               }
           }
         break;
-      case 2: case 6: case 7: case 22: case 23: case 27: case 31:
-        break;
+      case 7:
+	break;
       case 32:
         *c2++ = *c;
         break;
