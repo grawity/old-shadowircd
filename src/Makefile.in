@@ -1,7 +1,7 @@
 #
 # Makefile.in for ircd/src
 #
-# $Id: Makefile.in,v 1.7 2004/08/24 05:29:00 nenolod Exp $
+# $Id: Makefile.in,v 1.8 2004/09/06 22:20:06 nenolod Exp $
 #
 @SET_MAKE@
 
@@ -58,6 +58,7 @@ lex.yy.c:	ircd_lexer.l
 SSL_SRCS = rsa.c ssl.c dh.c
 
 BASE_SRCS =	\
+ adns.c \
  channel.c \
  channel_mode.c \
  channel_filter.c \
