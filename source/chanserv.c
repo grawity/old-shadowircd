@@ -6,7 +6,7 @@
  * do so under the terms of the GNU General Public License under which
  * this program is distributed.
  *
- * $Id: chanserv.c,v 1.1 2003/12/16 19:52:37 nenolod Exp $
+ * $Id: chanserv.c,v 1.2 2003/12/18 23:01:36 nenolod Exp $
  */
 
 #include "defs.h"
@@ -293,11 +293,9 @@ static AccessInfo accessinfo[] = {
        { CA_CMDVOICE, "CMDVOICE", "Use of command VOICE" },
        { CA_ACCESS, "ACCESS", "Allow ACCESS modification" },
        { CA_CMDINVITE, "CMDINVITE", "Use of command INVITE" },
-#ifdef HYBRID7
        /* Halfop help indices -Janos */
        { CA_AUTOHALFOP, "AUTOHALFOP", "Automatic halfop"},
        { CA_CMDHALFOP, "CMDHALFOP", "Use of command HALFOP"},
-#endif /* HYBRID7 */
        { CA_AUTOOP, "AUTOOP", "Automatic op" },
        { CA_CMDOP, "CMDOP", "Use of command OP" },
        { CA_CMDUNBAN, "CMDUNBAN", "Use of command UNBAN" },
@@ -645,17 +643,10 @@ cs_loaddata()
               /* channel access levels */
               if (ac != (CA_SIZE + 1))
                 {
-#ifndef HYBRID7
-                  fatal(1, "%s:%d Invalid database format (FATAL)",
-                        ChanServDB,
-                        cnt);
-                  ret = -2;
-#else
                   SetDefaultALVL(cptr);
                   fatal(1, "%s:%d No access level list for "
                       "registered channel [%s] (using default)",
                         ChanServDB, cnt, cptr->name);
-#endif /* HYBRID7 */
                 }
               else if (!cptr->access_lvl)
                 {
@@ -1332,27 +1323,8 @@ cs_SetTopic(struct Channel *chanptr, char *topic)
   if (!chanptr || !topic)
     return;
 
-  if (cs_ShouldBeOnChan(FindChan(chanptr->name)))
-    {
-      /*
-       * ChanServ should already be on the channel - just set
-       * topic normally
-       */
-      toserv(":%s TOPIC %s :%s\r\n", n_ChanServ, chanptr->name, topic);
-    }
-  else
-    {
-      /*
-       * Hybrid won't accept a TOPIC from a user unless they are
-       * on the channel - have ChanServ join and leave.
-       *
-       * Modifications to be sure all fits in linebuf of ircd. -kre
-       * However +ins supports topic burst -Janos
-       * It won't help if topiclen > ircdbuflen, that was original bug.
-       * Anyway, it is dealt with c_topic() code, too. :-) -kre
-       */
-      toserv(":%s TOPIC %s :%s\r\n", n_ChanServ, chanptr->name, topic);
-    }
+  /* This sets the topic without chanserv having to join. */
+  toserv(":%s TOPIC %s %s 0 :%s\r\n", Me.name, chanptr->name, n_ChanServ, topic);
 } /* cs_SetTopic() */
 
 /*
@@ -1390,6 +1362,62 @@ cs_CheckModes(struct Luser *source, struct ChanInfo *cptr,
     return;
 
   slev = GetAccess(cptr, source);
+
+  if (mode == MODE_U)
+    {
+      int    ulev; /* user level for (de)opped nick */
+
+      if (!lptr)
+        return;
+
+      ulev = GetAccess(cptr, lptr);
+      if (isminus)
+        {
+          /*
+           * don't let someone deop a user with a greater user level,
+           * but allow a user to deop him/herself
+           */
+          if ((lptr != source) &&
+              HasAccess(cptr, lptr, CA_FOUNDER) &&
+              (ulev >= slev))
+            {
+              if (HasFlag(lptr->nick, NS_NOCHANOPS))
+                return;
+
+              ircsprintf(modes, "+u %s", lptr->nick);
+              toserv(":%s MODE %s %s\r\n", n_ChanServ, cptr->name, modes);
+              UpdateChanModes(Me.csptr, n_ChanServ, chptr, modes);
+            }
+        }
+      else /* mode +o */
+        {
+          if (((cptr->flags & CS_SECUREOPS) &&
+               !HasAccess(cptr, lptr, CA_AUTOOP)) ||
+              (GetAccess(cptr, lptr) == cptr->access_lvl[CA_AUTODEOP]))
+            {
+              ircsprintf(modes, "-u %s", lptr->nick);
+              toserv(":%s MODE %s %s\r\n", n_ChanServ, cptr->name, modes);
+              UpdateChanModes(Me.csptr, n_ChanServ, chptr, modes);
+            }
+          else if (HasFlag(lptr->nick, NS_NOCHANOPS))
+            {
+              ircsprintf(modes, "-u %s", lptr->nick);
+              toserv(":%s MODE %s %s\r\n", n_ChanServ, cptr->name, modes);
+              UpdateChanModes(Me.csptr, n_ChanServ, chptr, modes);
+
+              notice(n_ChanServ, lptr->nick,
+                     "You are not permitted to have channel op privileges");
+              SendUmode(OPERUMODE_Y,
+                        "Flagged user %s!%s@%s was opped on channel [%s] by %s",
+                        lptr->nick,
+                        lptr->username,
+                        lptr->hostname,
+                        cptr->name,
+                        source->nick);
+            }
+        }
+      return;
+    } /* if (mode == MODE_U) */
 
   if (mode == MODE_O)
     {
@@ -1463,9 +1491,6 @@ cs_CheckModes(struct Luser *source, struct ChanInfo *cptr,
       return;
     } /* if (mode == MODE_V) */
 
-#ifdef HYBRID7
-  /* Properly handle autodeop and halfop -Janos
-   * XXX: Merge this into upper statement! -kre */
   if (mode == MODE_H)
     {
       if (!isminus)
@@ -1479,7 +1504,6 @@ cs_CheckModes(struct Luser *source, struct ChanInfo *cptr,
             }
         }
     } /* if (mode == MODE_H) */
-#endif /* HYBRID7 */
 
   /*
    * Check if the mode conflicts with any enforced modes for the
@@ -1711,7 +1735,13 @@ cs_CheckOp(struct Channel *chanptr, struct ChanInfo *cptr, char *nick)
   }
 #endif
 
-  if (HasAccess(cptr, tempuser->lptr, CA_AUTOOP))
+  if (HasAccess(cptr, tempuser->lptr, CA_FOUNDER))
+    {
+      ircsprintf(modes, "+u %s", tempuser->lptr->nick);
+      toserv(":%s MODE %s %s\r\n", n_ChanServ, chanptr->name, modes);
+      UpdateChanModes(Me.csptr, n_ChanServ, chanptr, modes);
+    }
+  else if (HasAccess(cptr, tempuser->lptr, CA_AUTOOP))
     {
       ircsprintf(modes, "+o %s", tempuser->lptr->nick);
       toserv(":%s MODE %s %s\r\n", n_ChanServ, chanptr->name, modes);

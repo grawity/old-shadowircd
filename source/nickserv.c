@@ -6,7 +6,7 @@
  * do so under the terms of the GNU General Public License under which
  * this program is distributed.
  *
- * $Id: nickserv.c,v 1.1 2003/12/16 19:52:02 nenolod Exp $
+ * $Id: nickserv.c,v 1.2 2003/12/18 23:01:36 nenolod Exp $
  */
 
 #include "defs.h"
@@ -1977,10 +1977,9 @@ n_register(struct Luser *lptr, int ac, char **av)
   notice(n_NickServ, lptr->nick,
          "Your password is [\002%s\002] - Remember this for later use",
          av[1]);
-#ifdef DANCER
+
   /* for ircds that have +e mode -kre */
   toserv(":%s MODE %s +e\r\n", Me.name, lptr->nick);
-#endif /* DANCER */
 
   MyFree(mask);
 
@@ -2186,9 +2185,7 @@ n_identify(struct Luser *lptr, int ac, char **av)
   realptr->flags &= ~(NS_COLLIDE | NS_RELEASE);
   notice(n_NickServ, lptr->nick,
          "Password accepted - you are now recognized");
-#ifdef DANCER
   toserv(":%s MODE %s +e\r\n", Me.name, lptr->nick);
-#endif /* DANCER */
 
   if ((nptr->flags & NS_AUTOMASK) &&
       (!OnAccessList(lptr->username, lptr->hostname, nptr)))
@@ -2244,6 +2241,13 @@ n_identify(struct Luser *lptr, int ac, char **av)
                "You have no new memos");
     }
 #endif /* MEMOSERVICES */
+
+  if (nptr->flags & NS_USERCLOAK)
+    {
+      notice(n_HostServ, lptr->nick, "Your virtual host has been enabled.");
+      toserv(":%s SVSCLOAK %s :%s\r\n",
+		Me.name, lptr->nick, GetLink(lptr->nick)->vhost);
+    }
 
   nptr->lastseen = realptr->lastseen = current_ts;
   

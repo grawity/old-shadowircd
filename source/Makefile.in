@@ -1,5 +1,5 @@
 # HybServ ./source Makefile
-# $Id: Makefile.in,v 1.1 2003/12/16 19:52:14 nenolod Exp $
+# $Id: Makefile.in,v 1.2 2003/12/18 23:01:36 nenolod Exp $
 
 CC = @CC@
 CFLAGS = -Wall -pipe @CFLAGS@
@@ -32,6 +32,7 @@ SOURCES =                  \
   global.c                 \
   hash.c                   \
   helpserv.c               \
+  hostserv.c               \
   hybserv.c                \
   init.c                   \
   jupe.c                   \

@@ -6,7 +6,7 @@
  * do so under the terms of the GNU General Public License under which
  * this program is distributed.
  *
- * $Id: misc.c,v 1.1 2003/12/16 19:52:17 nenolod Exp $
+ * $Id: misc.c,v 1.2 2003/12/18 23:01:36 nenolod Exp $
  */
 
 #include "defs.h"
@@ -99,6 +99,8 @@ struct aService ServiceBots[] =
       { &n_SeenServ, &id_SeenServ, &desc_SeenServ, &Me.esptr },
 
 #endif /* SEENSERVICES */
+
+      { &n_HostServ, &id_HostServ, &desc_HostServ, &Me.vsptr },
 
       { 0, 0, 0, 0 }
     };
@@ -610,6 +612,13 @@ Substitute(char *nick, char *str, int sockfd)
             case 'B':
               {
                 strcat(finalstr, "\002");
+                break;
+              }
+	    case 'x':
+            case 'X':
+              {
+                strcat(finalstr, n_HostServ);
+                fcnt += strlen(n_HostServ) - 1;
                 break;
               }
             case 'v':

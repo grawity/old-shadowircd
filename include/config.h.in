@@ -124,7 +124,7 @@
  * HybServ use Hybrid7 features like glines/klines, etc. -kre
  * This includes still experimental +h, +a and +I support -Janos
  */
-#undef    HYBRID7
+#define    HYBRID7
 
 /*
  * Defining this will turn on IRCNet daemon compatibility. Undergoing a

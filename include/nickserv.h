@@ -2,7 +2,7 @@
  * nickserv.h
  * HybServ2 Services by HybServ2 team
  *
- * $Id: nickserv.h,v 1.1 2003/12/16 19:52:37 nenolod Exp $
+ * $Id: nickserv.h,v 1.2 2003/12/18 23:01:36 nenolod Exp $
  */
 
 #ifndef INCLUDED_nickserv_h
@@ -55,6 +55,7 @@
 #define NS_NOCHANOPS    0x00200000 /* not allowed to be opped */
 #define NS_NUMERIC      0x00400000 /* ignores 432 numeric */
 #define NS_PRIVMSG      0x00800000 /* PRIVMSG or NOTICE */
+#define NS_USERCLOAK    0x01000000 /* usercloak */
 
 struct NickHost
 {
@@ -84,6 +85,7 @@ struct NickInfo
   char *nick;                /* registered nickname */
   char *password;            /* password */
   struct NickHost *hosts;    /* recognized hosts for this nick */
+  char *vhost;               /* virtual host */
   time_t created;            /* timestamp when it was registered */
   time_t lastseen;           /* for expiration purposes */
   long flags;                /* nick flags */

@@ -6,7 +6,7 @@
  * do so under the terms of the GNU General Public License under which
  * this program is distributed.
  *
- * $Id: channel.c,v 1.1 2003/12/16 19:52:08 nenolod Exp $
+ * $Id: channel.c,v 1.2 2003/12/18 23:01:36 nenolod Exp $
  */
 
 #include "defs.h"
@@ -802,7 +802,7 @@ Inputs: cptr    - channel
         lptr    - optional user for o/v/h modes
         arg     - optional string for b/e modes
  
-NOTE: This is currently used only for o/v/h modes since the others
+NOTE: This is currently used only for o/v/h/u modes since the others
       are simplistic enough to handle in UpdateChanModes()
 */
 
@@ -818,7 +818,23 @@ SetChannelMode(struct Channel *cptr, int add , int type, struct Luser
 
     assert(cptr != 0);
 
-    if (type == MODE_O)
+    if (type == MODE_U)
+      {
+        if (tempu && tempc)
+          {
+            if (add)
+              {
+                tempu->flags |= CH_OWNER;
+                tempc->flags |= CH_OWNER;
+              }
+            else
+              {
+                tempu->flags &= ~CH_OWNER;
+                tempc->flags &= ~CH_OWNER;
+              }
+          } /* if (tempu && tempc) */
+      }
+    else if (type == MODE_O)
       {
         if (tempu && tempc)
           {
@@ -850,8 +866,6 @@ SetChannelMode(struct Channel *cptr, int add , int type, struct Luser
               }
           }
       }
-#ifdef HYBRID7
-    /* Halfop mode setup - Janos */
     else if (type == MODE_H)
       {
         if (tempu && tempc)
@@ -868,7 +882,6 @@ SetChannelMode(struct Channel *cptr, int add , int type, struct Luser
               }
           } /* if (tempu && tempc) */
       } /* (type == MODE_H) */
-#endif /* HYBRID7 */
 } /* SetChannelMode() */
 
 /*

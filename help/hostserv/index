@@ -1,0 +1,9 @@
+%b%N%b allows users to request and use virtual hosts
+or usercloaks. The following commands allow users to
+maintain their virtual hosts; to use them, type
+%b/msg %N <command>%b. For more information on a
+specific command, type %b/msg %N help <command>%b.
+
+    ON         Enables your virtualhost.
+    OFF        Disables your virtualhost.
+%+a    SET        Sets a user's virtualhost.

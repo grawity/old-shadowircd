@@ -6,7 +6,7 @@
  * do so under the terms of the GNU General Public License under which
  * this program is distributed.
  *
- * $Id: server.c,v 1.1 2003/12/16 19:52:28 nenolod Exp $
+ * $Id: server.c,v 1.2 2003/12/18 23:01:36 nenolod Exp $
  */
 
 #include "defs.h"
@@ -749,9 +749,7 @@ s_nick(int ac, char **av)
               if (newptr && IsLinked(nptr, newptr))
               {
                 newptr->flags |= NS_IDENTIFIED;
-#ifdef DANCER
                 toserv(":%s MODE %s +e\r\n", Me.name, newptr->nick);
-#endif /* DANCER */
               }
               tmp = GetMaster(nptr);
               tmp->lastseen = current_ts;
@@ -1227,6 +1225,9 @@ s_privmsg(int ac, char **av)
   else if (serviceptr == Me.csptr)
     cs_process(who, command);
 #endif
+
+  else if (serviceptr == Me.vsptr)
+    hs_process(who, command);
 
 #ifdef MEMOSERVICES
 

@@ -1,8 +1,8 @@
 /*
  * channel.h
- * HybServ2 Services by HybServ2 team
+ * shadow-services by shadowircd team
  *
- * $Id: channel.h,v 1.1 2003/12/16 19:52:38 nenolod Exp $
+ * $Id: channel.h,v 1.2 2003/12/18 23:01:36 nenolod Exp $
  */
 
 #ifndef INCLUDED_channel_h
@@ -24,29 +24,22 @@ struct UserChannel;
 /*
  * Channel flags
  */
-#define CH_VOICED       0x000001 /* user is voiced */
-#define CH_OPPED        0x000002 /* user is opped */
-#define MODE_O          0x000004 /* someone was +o'd */
-#define MODE_V          0x000008 /* someone was +v'd */
-#define MODE_L          0x000010 /* channel is +l */
-#define MODE_K          0x000020 /* channel is +k */
-#define MODE_S          0x000040 /* channel is +s */
-#define MODE_P          0x000080 /* channel is +p */
-#define MODE_N          0x000100 /* channel is +n */
-#define MODE_T          0x000200 /* channel is +t */
-#define MODE_M          0x000400 /* channel is +m */
-#define MODE_I          0x000800 /* channel is +i */
-
-#ifdef DANCER
-# define MODE_C         0x001000 /* channel is +c */
-# define MODE_F         0x002000 /* channel is +f */
-#endif /* DANCER */
-
-#ifdef HYBRID7
-# define CH_HOPPED       0x001000 /* user is halfopped - Janos */
-# define MODE_H          0x002000 /* someone was +h - Janos */
-# define MODE_A          0x004000 /* channel is +a - Janos */
-#endif /* HYBRID7 */
+#define CH_VOICED       0x0000001 /* user is voiced */
+#define CH_OPPED        0x0000002 /* user is opped */
+#define MODE_O          0x0000004 /* someone was +o'd */
+#define MODE_V          0x0000008 /* someone was +v'd */
+#define MODE_L          0x0000010 /* channel is +l */
+#define MODE_K          0x0000020 /* channel is +k */
+#define MODE_S          0x0000040 /* channel is +s */
+#define MODE_P          0x0000080 /* channel is +p */
+#define MODE_N          0x0000100 /* channel is +n */
+#define MODE_T          0x0000200 /* channel is +t */
+#define MODE_M          0x0000400 /* channel is +m */
+#define MODE_I          0x0000800 /* channel is +i */
+#define CH_HOPPED       0x0001000 /* user is halfopped */
+#define MODE_H          0x0002000 /* someone was +h'd */
+#define CH_OWNER        0x0004000 /* user is a channel owner */
+#define MODE_U          0x0008000 /* someone was +u'd */
 
 #ifdef GECOSBANS
 struct ChannelGecosBan
