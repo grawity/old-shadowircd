@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_grant.c,v 1.8 2004/02/12 22:27:12 nenolod Exp $
+ *  $Id: m_grant.c,v 1.9 2004/02/12 22:32:16 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -66,7 +66,7 @@ _moddeinit (void)
   mod_del_cmd (&grant_msgtab);
 }
 
-const char *_version = "$Revision: 1.8 $";
+const char *_version = "$Revision: 1.9 $";
 #endif
 
 /* this is a struct, associating operator permissions with letters. */
@@ -114,7 +114,7 @@ string_to_bitmask (char *string, struct Client *target_p)
   char *tmp;
 
   for (tmp = string; *tmp; tmp++)
-    for (flag = oper_flags; flag->letter; flag++)
+    for (flag = oper_flags; *flag->letter; flag++)
       if (*flag->letter == *tmp)
 	{
 	  target_p->localClient->operflags |= flag->flag;
@@ -137,7 +137,7 @@ remove_from_bitmask (char *string, struct Client *target_p)
   char *tmp;
 
   for (tmp = string; *tmp; tmp++)
-    for (flag = oper_flags; flag->letter; flag++)
+    for (flag = oper_flags; *flag->letter; flag++)
       if (*flag->letter == *tmp)
 	{
 	  target_p->localClient->operflags &= ~flag->flag;
