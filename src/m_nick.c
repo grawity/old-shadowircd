@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_nick.c,v 1.1 2003/11/04 07:11:08 nenolod Exp $
+ *  $Id: m_nick.c,v 1.2 2003/11/05 04:54:28 nenolod Exp $
  *
  */
 
@@ -683,16 +683,13 @@ m_nick (aClient * client_p, aClient * source_p, int parc, char *parv[])
 }
 
 /*
- * This is pretty much just a cleaned up version of m_nick with hiddenhost and smode (still not started)
- * added.
- *
  * m_client
  * parv[0] = sender prefix
  * parv[1] = nickname
  * parv[2] = hopcount when new user
  * parv[3] = TS
  * parv[4] = umode
- * parv[5] = smode
+ * parv[5] = UID (not yet used, only reserved.)
  * parv[6] = username
  * parv[7] = hostname
  * parv[8] = hiddenhost (* if none)
@@ -972,17 +969,6 @@ m_client (aClient * client_p, aClient * source_p, int parc, char *parv[])
 		  && !IsULine (source_p))
 		Count.oper++;
 	      source_p->umode |= flag & SEND_UMODES;
-	    }
-	  mptr++;
-	}
-
-      /* parse the servemodes intelligently */
-      mptr = &parv[5][1];
-      while (*mptr)
-	{
-	  if ((flag = server_mode_table[(unsigned char) *mptr]))
-	    {
-	      source_p->smode |= flag & SEND_SMODES;
 	    }
 	  mptr++;
 	}

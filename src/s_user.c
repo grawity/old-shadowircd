@@ -178,128 +178,11 @@ int user_mode_table[] = {
   0, 0, 0, 0, 0, 0, 0, 0, 0	/* 247 - 255 */
 };
 
-
-int server_modes[] = {
-  SMODE_s, 's',			/* SSL Client */
-  0, 0
-};
-
-int server_mode_table[] = {
-  /* 0 - 32 are control chars and space */
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0,				/* ! */
-  0,				/* " */
-  0,				/* # */
-  0,				/* $ */
-  0,				/* % */
-  0,				/* & */
-  0,				/* ' */
-  0,				/* ( */
-  0,				/* ) */
-  0,				/* * */
-  0,				/* + */
-  0,				/* , */
-  0,				/* - */
-  0,				/* . */
-  0,				/* / */
-  0,				/* 0 */
-  0,				/* 1 */
-  0,				/* 2 */
-  0,				/* 3 */
-  0,				/* 4 */
-  0,				/* 5 */
-  0,				/* 6 */
-  0,				/* 7 */
-  0,				/* 8 */
-  0,				/* 9 */
-  0,				/* : */
-  0,				/* ; */
-  0,				/* < */
-  0,				/* = */
-  0,				/* > */
-  0,				/* ? */
-  0,				/* @ */
-  0,				/* A */
-  0,				/* B */
-  0,				/* C */
-  0,				/* D */
-  0,				/* E */
-  0,				/* F */
-  0,				/* G */
-  0,				/* H */
-  0,				/* I */
-  0,				/* J */
-  0,				/* K */
-  0,				/* L */
-  0,				/* M */
-  0,				/* N */
-  0,				/* O */
-  0,				/* P */
-  0,				/* Q */
-  0,				/* R */
-  0,				/* S */
-  0,				/* T */
-  0,				/* U */
-  0,				/* V */
-  0,				/* W */
-  0,				/* X */
-  0,				/* Y */
-  0,				/* Z */
-  0,				/* [ */
-  0,				/* \ */
-  0,				/* ] */
-  0,				/* ^ */
-  0,				/* _ */
-  0,				/* ` */
-  0,				/* a */
-  0,				/* b */
-  0,				/* c */
-  0,				/* d */
-  0,				/* e */
-  0,				/* f */
-  0,				/* g */
-  0,				/* h */
-  0,				/* i */
-  0,				/* j */
-  0,				/* k */
-  0,				/* l */
-  0,				/* m */
-  0,				/* n */
-  0,				/* o */
-  0,				/* p */
-  0,				/* q */
-  0,				/* r */
-  SMODE_s,			/* s */
-  0,				/* t */
-  0,				/* u */
-  0,				/* v */
-  0,				/* w */
-  0,				/* x */
-  0,				/* y */
-  0,				/* z */
-  0,				/* { */
-  0,				/* | */
-  0,				/* } */
-  0,				/* ~ */
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/* 127 - 141 */
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/* 142 - 156 */
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/* 157 - 171 */
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/* 172 - 186 */
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/* 187 - 201 */
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/* 202 - 216 */
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/* 217 - 231 */
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/* 232 - 246 */
-  0, 0, 0, 0, 0, 0, 0, 0, 0	/* 247 - 255 */
-};
-
-
 /*
  * internally defined functions
  */
 int botreject (char *);
 unsigned long my_rand (void);	/*
-
 				 * provided by orabidoo 
 				 */
 /*
@@ -1353,18 +1236,12 @@ register_user (aClient * client_p, aClient * source_p, char *nick,
       ubuf[1] = '\0';
     }
 
-  send_smode (NULL, source_p, 0, SEND_SMODES, sbuf);
-  if (!*sbuf)
-    {
-      sbuf[0] = '+';
-      sbuf[1] = '\0';
-    }
   hash_check_watch (source_p, RPL_LOGON);
 
   sendto_clientcapab_servs_butone (1, client_p,
 				   "CLIENT %s %d %ld %s %s %s %s %s %s %lu %lu :%s",
 				   nick, source_p->hopcount + 1,
-				   source_p->tsinfo, ubuf, sbuf,
+				   source_p->tsinfo, ubuf, "*",
 				   user->username, user->host,
 				   (IsHidden (source_p) ? source_p->user->
 				    virthost : "*"), user->server,
@@ -1388,9 +1265,6 @@ register_user (aClient * client_p, aClient * source_p, char *nick,
 
       if (ubuf[1])
 	send_umode (client_p, source_p, 0, ALL_UMODES, ubuf);
-
-      if (sbuf[1])
-	send_smode (client_p, source_p, 0, SEND_SMODES, sbuf);
 
     }
 
@@ -1981,27 +1855,6 @@ get_mode_str (aClient * target_p)
 
 
 /*
-** get_smode_str
-** returns an ascii string of modes
-*/
-char *
-get_smode_str (aClient * target_p)
-{
-  int flag;
-  int *s;
-  char *m;
-
-  m = buf2;
-  *m++ = '+';
-  for (s = server_modes; (flag = *s) && (m - buf2 < BUFSIZE - 4); s += 2)
-    if ((target_p->smode & flag))
-      *m++ = (char) (*(s + 1));
-  *m = '\0';
-  return buf2;
-}
-
-
-/*
  * * m_whois *        parv[0] = sender prefix *       parv[1] = nickname
  * masklist
  */
@@ -2088,8 +1941,7 @@ m_whois (aClient * client_p, aClient * source_p, int parc, char *parv[])
       if ((source_p->oflag & OFLAG_AUSPEX) || source_p == target_p)
 	{
 	  sendto_one (source_p, rpl_str (RPL_WHOISMODES),
-		      me.name, parv[0], name, get_mode_str (target_p),
-		      get_smode_str (target_p));
+		      me.name, parv[0], name, get_mode_str (target_p));
 	}
 
       /*
@@ -2818,7 +2670,6 @@ m_oper (aClient * client_p, aClient * source_p, int parc, char *parv[])
       StrEq (encr, aconf->passwd) && !attach_conf (source_p, aconf))
     {
       int old = (source_p->umode & ALL_UMODES);
-      int old2 = (source_p->smode & SEND_SMODES);
       char *s;
 
       s = strchr (aconf->host, '@');
@@ -2860,7 +2711,6 @@ m_oper (aClient * client_p, aClient * source_p, int parc, char *parv[])
                 me.name, parv[0], oflagstr(source_p->oflag));
 
       send_umode_out (client_p, source_p, old);
-      send_smode_out (client_p, source_p, old2);
 
       Count.oper++;
       *--s = '@';
@@ -3168,7 +3018,6 @@ m_umode (aClient * client_p, aClient * source_p, int parc, char *parv[])
   char **p, *m;
   aClient *target_p;
   int what, setflags;
-  int old = (source_p->smode & SEND_SMODES);
   int badflag = NO;		/*
 				 * Only send one bad flag notice
 				 * * -Dianora
@@ -3342,7 +3191,6 @@ m_umode (aClient * client_p, aClient * source_p, int parc, char *parv[])
     sendto_one (source_p, err_str (ERR_UMODEUNKNOWNFLAG), me.name, parv[0]);
 
   send_umode_out (client_p, source_p, setflags);
-  send_smode_out (client_p, source_p, old);
   return 0;
 }
 
@@ -3430,177 +3278,12 @@ send_umode_out (aClient * client_p, aClient * source_p, int old)
     }
 }
 
-
-
-int
-m_smode (aClient * client_p, aClient * source_p, int parc, char *parv[])
-{
-  int flag;
-  int *s;
-  char **p, *m;
-  aClient *target_p;
-  int what, setflags;
-  what = MODE_ADD;
-
-  /*
-   * We dont allow local clients to change their own SMODE's
-   */
-  if (MyClient (source_p))
-    {
-      sendto_one (source_p, err_str (ERR_SERVERONLY), me.name, parv[0]);
-      return 0;
-    }
-
-  if (parc < 2)
-    {
-      sendto_one (source_p, err_str (ERR_NEEDMOREPARAMS),
-		  me.name, parv[0], "SMODE");
-      return 0;
-    }
-
-  if (!(target_p = find_person (parv[1], NULL)))
-    {
-      if (MyConnect (source_p))
-	sendto_one (source_p, err_str (ERR_NOSUCHCHANNEL),
-		    me.name, parv[0], parv[1]);
-      return 0;
-    }
-
-  if ((IsServer (source_p) || (source_p != target_p)
-       || (target_p->from != source_p->from)))
-    {
-      if (!IsServer (client_p))
-	sendto_one (source_p, err_str (ERR_USERSDONTMATCH), me.name, parv[0]);
-      return 0;
-    }
-
-  /*
-   * find flags already set for user
-   */
-  setflags = 0;
-  for (s = server_modes; (flag = *s); s += 2)
-    if (source_p->smode & flag)
-      setflags |= flag;
-  /*
-   * parse mode change string(s)
-   */
-  for (p = &parv[2]; p && *p; p++)
-    for (m = *p; *m; m++)
-      switch (*m)
-	{
-	case '+':
-	  what = MODE_ADD;
-	  break;
-	case '-':
-	  what = MODE_DEL;
-	  break;
-	  /*
-	   * we may not get these, but they shouldnt be in
-	   * default
-	   */
-	case ' ':
-	case '\r':
-	case '\n':
-	case '\t':
-	  break;
-	default:
-	  if ((flag = server_mode_table[(unsigned char) *m]))
-	    {
-	      if (what == MODE_ADD)
-		{
-		  source_p->smode |= flag;
-		}
-	      else
-		{
-		  source_p->smode &= ~flag;
-		}
-	    }
-	  break;
-	}
-  send_smode_out (client_p, source_p, setflags);
-  return 0;
-}
-
-
-/*
- * send the SMODE string for user (user) to connection client_p
- */
-void
-send_smode (aClient * client_p,
-	    aClient * source_p, int old, int sendmask, char *smode_buf)
-{
-  int *s, flag;
-  char *m;
-  int what = MODE_NULL;
-  /*
-   * build a string in smode_buf to represent the change in the user's
-   * mode between the new (source_p->flag) and 'old'.
-   */
-  m = smode_buf;
-  *m = '\0';
-  for (s = server_modes; (flag = *s); s += 2)
-    {
-      if (MyClient (source_p) && !(flag & sendmask))
-	continue;
-      if ((flag & old) && !(source_p->smode & flag))
-	{
-	  if (what == MODE_DEL)
-	    *m++ = *(s + 1);
-	  else
-	    {
-	      what = MODE_DEL;
-	      *m++ = '-';
-	      *m++ = *(s + 1);
-	    }
-	}
-      else if (!(flag & old) && (source_p->smode & flag))
-	{
-	  if (what == MODE_ADD)
-	    *m++ = *(s + 1);
-	  else
-	    {
-	      what = MODE_ADD;
-	      *m++ = '+';
-	      *m++ = *(s + 1);
-	    }
-	}
-    }
-  *m = '\0';
-  if (*smode_buf && client_p && !IsPerson (client_p))
-    sendto_one (client_p, ":%s SMODE %s :%s", source_p->name, source_p->name,
-		smode_buf);
-}
-
-
 /*
  * extra argument evenTS added to send to TS servers or not -orabidoo
  *
  * extra argument evenTS no longer needed with TS only th+hybrid server
  * -Dianora
  */
-void
-send_smode_out (aClient * client_p, aClient * source_p, int old)
-{
-  int i, j;
-  aClient *target_p;
-  fdlist fdl = serv_fdlist;
-  send_smode (NULL, source_p, old, SEND_SMODES, buf);
-  /*
-   * Cycling through serv_fdlist here should be MUCH faster than
-   * looping through every client looking for servers. -ThemBones
-   */
-  for (i = fdl.entry[j = 1]; j <= fdl.last_entry; i = fdl.entry[++j])
-    {
-      if ((target_p = local[i]) && (target_p != client_p)
-	  && (target_p != source_p) && (*buf))
-	{
-	  sendto_one (target_p, ":%s SMODE %s :%s", source_p->name,
-		      source_p->name, buf);
-	}
-    }
-  if (client_p && MyClient (client_p))
-    send_smode (client_p, source_p, old, SEND_SMODES, buf);
-}
 
 /*
  * This function checks to see if a CTCP message (other than ACTION) is

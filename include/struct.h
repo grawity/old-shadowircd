@@ -259,7 +259,7 @@ typedef struct t_crline aCRline;
 
 #define IsExempt(x)		(IsKLineExempt(x) || IsSuperExempt(x))
 
-/* Capabilities of the ircd */
+/* Capabilities of the ircd -- OLD VERSION */
 
 #define CAPAB_TS3     0x0000001	/* Supports the TS3 Protocal */
 #define CAPAB_NOQUIT  0x0000002	/* Supports NOQUIT */
@@ -278,6 +278,22 @@ typedef struct t_crline aCRline;
 #define CAPAB_IPV6   0x0004000 /* Server is able to handle ipv6 address masks */
 #define CAPAB_SSJ4    0x0008000 /* Server supports smart join protocol 4 */
 #define CAPAB_SSJ5    0x0010000 /* Server supports smart join protocol 5 */
+
+/* Capability Structure */
+struct Capability {
+  char *name;  /* name of capability */
+  unsigned int cap; /* bitmask */
+};
+
+#define CAP_NOQUIT	0x00000001
+#define CAP_EXCEPT	0x00000002
+#define CAP_INVEX	0x00000004
+#define CAP_QUIET	0x00000008
+#define CAP_KNOCK	0x00000010
+#define CAP_HUB		0x00000020
+#define CAP_GLINE	0x00000040
+#define CAP_UID		0x00000080
+#define CAP_CLI		0x00000100
 
 #define SetTS3(x)   	((x)->capabilities |= CAPAB_TS3)
 #define IsTS3(x)       	((x)->capabilities & CAPAB_TS3)

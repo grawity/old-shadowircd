@@ -107,6 +107,20 @@ time_t pending_kline_time = 0;
 
 #endif /* LOCKFILE */
 
+/* Capability Structure */
+struct Capability captab[] = {
+/* name cap */
+  {"NQ", CAP_NOQUIT},
+  {"EX", CAP_EXCEPT},
+  {"IE", CAP_INVEX},
+  {"QU", CAP_QUIET},
+  {"KN", CAP_KNOCK},
+  {"HUB", CAP_HUB},
+  {"GLN", CAP_GLINE},
+  {"UID", CAP_UID},
+  { 0, 0 },
+};
+
 /*
  * m_functions execute protocol messages on this server:
  *
@@ -170,6 +184,58 @@ m_version (aClient * client_p, aClient * source_p, int parc, char *parv[])
     }
   return 0;
 }
+
+send_capabilities(struct Client *client_p, struct ConfItem *aconf,
+                  int cap_can_send, int enc_can_send )
+{
+  struct Capability *cap;
+  char  msgbuf[BUFSIZE];
+  char  *t;
+  int   tl;
+
+  t = msgbuf;
+
+  for (cap = captab; cap->name; ++cap)
+    {
+      if (cap->cap & cap_can_send)
+        {
+          tl = ircsprintf(t, "%s ", cap->name);
+          t += tl;
+        }
+    }
+
+  t--;
+  *t = '\0';
+  sendto_one(client_p, "CAPAB :%s", msgbuf);
+}
+
+const char*
+show_capabilities(struct Client* target_p)
+{
+  static char        msgbuf[BUFSIZE];
+  struct Capability* cap;
+  char *t;
+  int  tl;
+
+  t = msgbuf;
+  tl = ircsprintf(msgbuf,"TS ");
+  t += tl;
+
+  for (cap = captab; cap->cap; ++cap)
+    {
+      if(cap->cap & target_p->capabilities)
+        {
+          tl = ircsprintf(t, "%s ", cap->name);
+          t += tl;
+        }
+    }
+
+  t--;
+  *t = '\0';
+
+  return msgbuf;
+}
+
 
 /*
  * m_squit
@@ -900,19 +966,12 @@ sendnick_TS (aClient * client_p, aClient * target_p)
 	  ubuf[1] = '\0';
 	}
 
-      send_smode (NULL, target_p, 0, SEND_SMODES, sbuf);
-      if (!*sbuf)		/* trivial optimization - Dianora */
-	{
-	  sbuf[0] = '+';
-	  sbuf[1] = '\0';
-	}
-
       if (IsClientCapable (client_p))
 	{
 	  sendto_one (client_p,
 		      "CLIENT %s %d %ld %s %s %s %s %s %s %lu %lu :%s",
 		      target_p->name, target_p->hopcount + 1,
-		      target_p->tsinfo, ubuf, sbuf, target_p->user->username,
+		      target_p->tsinfo, ubuf, "*", target_p->user->username,
 		      target_p->user->host,
 		      (IsHidden (target_p) ? target_p->user->virthost : "*"),
 		      target_p->user->server, target_p->user->servicestamp,
@@ -1046,37 +1105,15 @@ do_server_estab (aClient * client_p)
     }
 
   sendto_snomask
-    (SNOMASK_NETINFO, "from %s: Link with %s established, states: %s%s%s%s%s%s%s%s%s%s%s",
-     me.name, inpath, ZipOut (client_p) ? " Output-compressed" : "",
-     RC4EncLink (client_p) ? " Encrypted" : "",
-     IsULine (client_p) ? " ULined" : "",
-     IsNICKIP (client_p) ? " NickIP" : " Non-NickIP",
-     IsClientCapable (client_p) ? " Client" : " Non-CLIENT",
-     IsSSJoin5 (client_p) ? " SSJoin5" : IsSSJoin4 (client_p) ? " SSJoin4" :
-     IsSSJoin3 (client_p) ? " SSJoin3" : " SSJoin",
-     DoesTS (client_p) ? " TS" : " Non-TS", IsTS3 (client_p) ? "3" : "",
-     IsTS5 (client_p) ? "5" : "",
-     IsTSMODE (client_p) ? " TSMode" : " Non-TSMode",
-     IsIpv6 (client_p) ? " IPv6" : " Non-IPv6");
+    (SNOMASK_NETINFO, "from %s: Link with %s established, capabilities(%s)",
+	me.name, inpath, show_capabilities(client_p));
 
   /* Notify everyone of the fact that this has just linked: the entire network should get two
      of these, one explaining the link between me->serv and the other between serv->me */
 
   sendto_serv_butone (NULL,
-		      ":%s GNOTICE :Link with %s established, states: %s%s%s%s%s%s%s%s%s%s%s",
-		      me.name, inpath,
-		      ZipOut (client_p) ? " Output-compressed" : "",
-		      RC4EncLink (client_p) ? " Encrypted" : "",
-		      IsULine (client_p) ? " ULined" : "",
-		      IsClientCapable (client_p) ? " Client" : " Non-Client",
-		      IsNICKIP (client_p) ? " NickIP" : " Non-NickIP",
-		      IsSSJoin5 (client_p) ? " SSJoin5" : IsSSJoin4 (client_p)
-		      ? " SSJoin4" : IsSSJoin3 (client_p) ? " SSJoin3" :
-		      " Non-SSJoin", DoesTS (client_p) ? " TS" : " Non-TS",
-		      IsTS3 (client_p) ? "3" : "",
-		      IsTS5 (client_p) ? "5" : "",
-		      IsTSMODE (client_p) ? " TSMode" : " Non-TSMode",
-		      IsIpv6 (client_p) ? " IPv6" : " Non-IPv6");
+		      ":%s GNOTICE :Link with %s established, capabilities(%s)",
+		      me.name, inpath, show_capabilities(client_p));
 
   (void) add_to_client_hash_table (client_p->name, client_p);
 
@@ -4971,68 +5008,28 @@ m_die (aClient * client_p, aClient * source_p, int parc, char *parv[])
   return 0;
 }
 
-
-/*
- * m_capab
- * Communicate what I can do to another server
- * This has to be able to be sent and understood while
- * the client is UNREGISTERED. Therefore, we
- * absolutely positively must not check to see if
- * this is a server or a client. It's probably an unknown!
- */
-int
-m_capab (aClient * client_p, aClient * source_p, int parc, char *parv[])
+int m_capab(struct aClient *client_p, struct aClient *source_p,
+                    int parc, char *parv[])
 {
+  struct Capability *cap;
   int i;
+  char* p;
+  char* s;
 
-  /* If it's not local, or it has already set capabilities, silently ignore it. */
-
-  if (client_p != source_p || client_p->capabilities)
-    return 0;
-
-  for (i = 1; i < parc; i++)
+  for (i=1; i<parc; i++)
+  {
+    for (s = strtoken(&p, parv[i], " "); s; s = strtoken(&p, NULL, " "))
     {
-      if (strcmp (parv[i], "TS3") == 0)
-	SetTS3 (client_p);
-      else if (strcmp (parv[i], "TS5") == 0)
-	SetTS5 (client_p);
-      else if (strcmp (parv[i], "NOQUIT") == 0)
-	SetNoQuit (client_p);
-      else if (strcmp (parv[i], "SSJ3") == 0)
-	SetSSJoin3 (client_p);
-      else if (strcmp (parv[i], "SSJ4") == 0)
-	{
-	  SetSSJoin4 (client_p);
-	  /* a25 servers will be sending both SSJ3 and SSJ4. This is a temporary kludge */
-	  ClearSSJoin3 (client_p);
-	}
-      else if (strcmp (parv[i], "SSJ5") == 0)
-	{
-	  SetSSJoin5 (client_p);
-	  /* a26 servers will be sending both SSJ3, SSJ4 and SSJ5. This is a temporary kludge */
-	  ClearSSJoin3 (client_p);
-	  ClearSSJoin4 (client_p);
-	}
-      else if (strcmp (parv[i], "SSJOIN") == 0)
-	SetSSJoin (client_p);
-      else if (strcmp (parv[i], "BURST") == 0)
-	SetBurst (client_p);
-      else if (strcmp (parv[i], "UNCONNECT") == 0)
-	SetUnconnect (client_p);
-      else if (strcmp (parv[i], "DKEY") == 0)
-	SetDKEY (client_p);
-      else if (strcmp (parv[i], "ZIP") == 0)
-	SetZipCapable (client_p);
-      else if (strcmp (parv[i], "NICKIP") == 0)
-	SetNICKIP (client_p);
-      else if (strcmp (parv[i], "TSMODE") == 0)
-	SetTSMODE (client_p);
-      else if (strcmp (parv[i], "CLIENT") == 0)
-	SetClientCapable (client_p);
-      else if (strcmp (parv[i], "IPV6") == 0)
-	SetIpv6 (client_p);
-    }
-
+        for (cap = captab; cap->name; cap++)
+        {
+          if (!irccmp(cap->name, s))
+          {
+            client_p->capabilities |= cap->cap;
+            break;
+          }
+        }
+    } /* for */
+  } /* for */
   return 0;
 }
 
