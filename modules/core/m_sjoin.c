@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  m_sjoin.c: Joins a user to a channel.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_sjoin.c,v 1.2 2003/12/02 23:22:25 nenolod Exp $
+ *  $Id: m_sjoin.c,v 1.3 2003/12/04 06:38:42 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,7 +63,7 @@ _moddeinit(void)
   mod_del_cmd(&sjoin_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 static char modebuf[MODEBUFLEN];
@@ -152,6 +152,9 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
 	break;
       case 'r':
 	mode.mode |= MODE_REGISTERED;
+	break;
+      case 'z':
+	mode.mode |= MODE_NOTHROTTLE;
 	break;
       case 't':
         mode.mode |= MODE_TOPICLIMIT;

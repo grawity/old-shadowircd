@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 1.4 2003/12/03 20:21:06 nenolod Exp $
+ *  $Id: channel_mode.c,v 1.5 2003/12/04 06:38:42 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -312,6 +312,7 @@ static const struct mode_letter
   { MODE_REGISTERED, 'r' },
   { MODE_STRIPCOLOR, 'S' },
   { MODE_NOKNOCK,    'K' },
+  { MODE_NOTHROTTLE, 'z' },
   { 0, '\0' }
 };
 
@@ -1456,7 +1457,7 @@ static struct ChannelMode ModeTable[255] =
   {chm_nosuch, NULL},                             /* w */
   {chm_nosuch, NULL},                             /* x */
   {chm_nosuch, NULL},                             /* y */
-  {chm_nosuch, NULL},                             /* z */
+  {chm_simple, (void *) MODE_NOTHROTTLE},         /* z */
 };
 /* *INDENT-ON* */
 

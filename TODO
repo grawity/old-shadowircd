@@ -1,10 +1,10 @@
-$Id: TODO,v 1.6 2003/12/04 06:36:10 eko Exp $
+$Id: TODO,v 1.7 2003/12/04 06:38:42 nenolod Exp $
 
 - colorblock, colorstrip (done)
 - identified umode (done)
 - cloaking (done)
 - invite block, knock deny (50% done)
-- channel mode +z: Disable throttling (nenolod)
+- channel mode +z: Disable throttling (nenolod) - done
 - channel mode +a: Auditorium (Eko)
 - /modehelp command (or /ircdhelp modes documentation) (also from Eko)
 - usermode +B: Marked for bots. (+B would lower flood restrictions) (NhJm/Eko/Bagheera)

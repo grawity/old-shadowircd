@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  m_message.c: Sends a (PRIVMSG|NOTICE) message to a user or channel.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_message.c,v 1.4 2003/12/03 18:17:28 nenolod Exp $
+ *  $Id: m_message.c,v 1.5 2003/12/04 06:38:42 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -117,7 +117,7 @@ _moddeinit(void)
   mod_del_cmd(&notice_msgtab);
 }
 
-const char *_version = "$Revision: 1.4 $";
+const char *_version = "$Revision: 1.5 $";
 #endif
 
 /*
@@ -721,6 +721,9 @@ flood_attack_channel(int p_or_n, struct Client *source_p,
                      struct Channel *chptr, char *chname)
 {
   int delta;
+
+  if (chptr->mode.mode & MODE_NOTHROTTLE)
+    return(0);
 
   if (GlobalSetOptions.floodcount && !IsConfCanFlood(source_p))
   {
