@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_bsd.c,v 1.10 2004/02/12 01:47:12 nenolod Exp $
+ *  $Id: s_bsd.c,v 1.11 2004/02/14 03:26:31 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -801,8 +801,6 @@ comm_tryssl_callback(int fd, void *data)
 
   fdlist = FDLIST_SERVER;
   doauth = 1;
-
-  printf("comm_tryssl_callback called. client_ssl = %d\n", IsSSL(new_client) ? 1 : 0);
 
 #ifdef HAVE_LIBCRYPTO
   if (IsSSL(new_client))
