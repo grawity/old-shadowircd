@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client_silence.c,v 1.2 2004/06/04 22:00:38 nenolod Exp $
+ *  $Id: client_silence.c,v 1.3 2004/06/07 17:03:01 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -144,5 +144,31 @@ add_silence(struct Client *client_p, char *silenceid)
   dlinkAdd(actualSilence, &actualSilence->node, client_p->silence_list);
 
   return(1);
+}
+
+int
+del_silence(struct Client *client_p, char *banid)
+{
+  dlink_node *ban;
+  struct Ban *banptr;
+                                                                                                                                              
+  if (banid == NULL)
+    return(0);
+                                                                                                                                              
+  DLINK_FOREACH(ban, client_p->silence_list.head)
+  {
+    banptr = ban->data;
+                                                                                                                                              
+    if (irccmp(banid, banptr->banstr) == 0)
+    {
+      MyFree(banptr->banstr);
+      MyFree(banptr->who);
+      dlinkDelete(&banptr->node, client_p->silence_list);
+      BlockHeapFree(ban_heap, banptr);
+      return(1);
+    }
+  }
+                                                                                                                                              
+  return(0);
 }
 
