@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.c,v 1.2 2003/12/05 22:09:00 nenolod Exp $
+ *  $Id: client.c,v 1.3 2003/12/11 18:16:47 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1136,8 +1136,8 @@ dead_link_on_read(struct Client *client_p, int error)
     strlcpy(errmsg, "Remote host closed the connection",
             sizeof(errmsg));
   else
-    ircsprintf(errmsg, "Read error: %s",
-               strerror(current_error));
+    ircsprintf(errmsg, "Read error: %d (%s)",
+               current_error, strerror(current_error));
 
   exit_client(client_p, client_p, &me, errmsg);
 }

@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  motd.c: Message of the day functions.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: motd.c,v 1.1.1.1 2003/12/02 20:46:47 nenolod Exp $
+ *  $Id: motd.c,v 1.2 2003/12/11 18:16:47 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -101,21 +101,6 @@ send_message_file(struct Client *source_p, MessageFile *motdToPrint)
       }
 
       sendto_one(source_p, form_str(RPL_ENDOFMOTD), from, to);
-      return(0);
-      /* NOT REACHED */
-      break;
-
-    case USER_LINKS:
-      if (motdToPrint->contentsOfFile == NULL)
-        return(-1);
-
-      for (linePointer = motdToPrint->contentsOfFile; linePointer;
-           linePointer = linePointer->next)
-      {
-        sendto_one(source_p, ":%s 364 %s %s",
-                   from, to, linePointer->line);
-      }
-
       return(0);
       /* NOT REACHED */
       break;

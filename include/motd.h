@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  motd.h: A header for the MOTD functions.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: motd.h,v 1.1.1.1 2003/12/02 20:47:54 nenolod Exp $
+ *  $Id: motd.h,v 1.2 2003/12/11 18:16:47 nenolod Exp $
  */
 
 #ifndef INCLUDED_motd_h
@@ -32,7 +32,6 @@
 
 typedef enum {
   USER_MOTD,
-  USER_LINKS,
   OPER_MOTD
 } MotdType;
 

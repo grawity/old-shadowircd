@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_sjoin.c,v 1.4 2003/12/05 17:48:04 nenolod Exp $
+ *  $Id: m_sjoin.c,v 1.5 2003/12/11 18:16:47 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,7 +63,7 @@ _moddeinit(void)
   mod_del_cmd(&sjoin_msgtab);
 }
 
-const char *_version = "$Revision: 1.4 $";
+const char *_version = "$Revision: 1.5 $";
 #endif
 
 static char modebuf[MODEBUFLEN];
@@ -343,7 +343,7 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
     fl = 0;
     num_prefix = 0;
 
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < 4; i++)
     {
       if (*s == '@')
       {
@@ -710,6 +710,7 @@ remove_our_modes(struct Channel *chptr, struct Client *source_p)
   remove_a_mode(chptr, source_p, CHFL_CHANOP, 'o');
   remove_a_mode(chptr, source_p, CHFL_HALFOP, 'h');
   remove_a_mode(chptr, source_p, CHFL_VOICE, 'v');
+  remove_a_mode(chptr, source_p, CHFL_CHANOWNER, 'u');
 }
 
 /* remove_a_mode()

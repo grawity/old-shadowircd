@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.c,v 1.2 2003/12/05 17:48:04 nenolod Exp $
+ *  $Id: channel.c,v 1.3 2003/12/11 18:16:47 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -170,6 +170,8 @@ send_members(struct Client *client_p, struct Channel *chptr,
     ms = ptr->data;
 
     tlen = strlen(ms->client_p->name) + 1;  /* nick + space */
+    if (ms->flags & CHFL_CHANOWNER)
+      tlen++;
     if (ms->flags & CHFL_CHANOP)
       tlen++;
     if (ms->flags & CHFL_HALFOP)
@@ -552,7 +554,7 @@ del_invite(struct Channel *chptr, struct Client *who)
 const char *
 get_member_status(struct Membership *ms, int combine)
 {
-  static char buffer[4];
+  static char buffer[5];
   char *p;
 
   if (ms == NULL)
