@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.5 2003/12/03 19:51:04 nenolod Exp $
+ *  $Id: s_user.c,v 1.6 2003/12/03 19:59:28 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,6 +63,8 @@ static void user_welcome(struct Client *);
 static void report_and_set_user_flags(struct Client *, struct AccessItem *);
 static int check_x_line(struct Client *, struct Client *);
 static int introduce_client(struct Client *, struct Client *);
+
+void docloak(struct Client *);
 
 /* table of ascii char letters
  * to corresponding bitmask
@@ -1479,7 +1481,7 @@ add_one_to_uid(int i)
  * docloak -- taken from cyclone-0.3.1.1, and modified
  * for shadow by nenolod.
  */
-void docloak(aClient *sptr) {
+void docloak (struct Client *sptr) {
     char *pos, *posx;
     int dcnt;
 
