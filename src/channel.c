@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.c,v 1.10 2004/03/16 05:46:30 nenolod Exp $
+ *  $Id: channel.c,v 1.11 2004/03/22 20:01:57 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -805,6 +805,10 @@ can_join(struct Client *source_p, struct Channel *chptr, const char *key)
 
   if ((check_banned(chptr, src_host, src_vhost, src_iphost)) == CHFL_BAN)
     return(ERR_BANNEDFROMCHAN);
+
+  /* Operator-only channels are operator-only. */
+  if ((chptr->mode.mode & MODE_OPERONLY) && !IsOper(source_p))
+    return(ERR_NOPRIVILEGES);
 
   /* Immune opers can walk through bans. --nenolod */
   if (IsOperImmune(source_p))

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 1.17 2004/01/20 19:56:34 nenolod Exp $
+ *  $Id: channel_mode.c,v 1.18 2004/03/22 20:01:57 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -205,7 +205,9 @@ add_id(struct Client *client_p, struct Channel *chptr, char *banid, int type)
   {
     num_mask = dlink_list_length(&chptr->banlist) +
                dlink_list_length(&chptr->exceptlist) +
-               dlink_list_length(&chptr->invexlist);
+               dlink_list_length(&chptr->invexlist) +
+               dlink_list_length(&chptr->quietlist) +
+               dlink_list_length(&chptr->restrictlist);
 
     if (num_mask >= ConfigChannel.max_bans)
     {
@@ -259,7 +261,7 @@ add_id(struct Client *client_p, struct Channel *chptr, char *banid, int type)
                        strlen(client_p->username) +
                        strlen(client_p->host) + 3);
     ircsprintf(actualBan->who, "%s!%s@%s",
-               client_p->name, client_p->username, client_p->host);
+               client_p->name, client_p->username, GET_CLIENT_HOST(client_p));
   }
   else
   {
