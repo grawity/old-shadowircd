@@ -1,0 +1,5 @@
+The channel activity index: Where lower is better.
+
+The index is computed by
+(current time - time of last message / number of users on channel).
+
