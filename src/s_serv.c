@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_serv.c,v 1.3 2004/05/13 16:56:19 nenolod Exp $
+ *  $Id: s_serv.c,v 1.4 2004/05/22 23:26:12 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -847,7 +847,7 @@ sendnick_TS(struct Client *client_p, struct Client *target_p)
   {
     if (IsCapable(client_p, CAP_UVH))
     {
-      sendto_one(client_p, ":%s UID %s %d %lu %s %s %s %s %s %s :%s",
+      sendto_one(client_p, ":%s UID %s %d %lu +%s %s %s %s %s %s :%s",
                target_p->user->server->id,
                target_p->name, target_p->hopcount+1,
                (unsigned long)target_p->tsinfo,
@@ -858,7 +858,7 @@ sendnick_TS(struct Client *client_p, struct Client *target_p)
     }
     else
     {
-      sendto_one(client_p, ":%s UID %s %d %lu %s %s %s %s %s :%s",
+      sendto_one(client_p, ":%s UID %s %d %lu +%s %s %s %s %s :%s",
              target_p->user->server->id,
 	     target_p->name, target_p->hopcount + 1,
 	     (unsigned long) target_p->tsinfo,
@@ -868,7 +868,7 @@ sendnick_TS(struct Client *client_p, struct Client *target_p)
     }
   }
   else
-    sendto_one(client_p, "NICK %s %d %lu %s %s %s %s :%s",
+    sendto_one(client_p, "NICK %s %d %lu +%s %s %s %s :%s",
 	       target_p->name, target_p->hopcount + 1,
 	       (unsigned long) target_p->tsinfo,
 	       umodes_as_string(&target_p->umodes), target_p->username, target_p->host,
