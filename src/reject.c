@@ -2,7 +2,7 @@
  *  shadowircd: An advanced IRC daemon (ircd).
  *  reject.c: nenolod's reject engine. (inspired from the ratbox one.)
  *
- *  $Id: reject.c,v 1.1 2004/04/30 19:46:58 nenolod Exp $
+ *  $Id: reject.c,v 1.2 2004/04/30 21:55:57 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -46,7 +46,7 @@ reject_data search_reject(dlink_list *rejlist, char *ipaddr)
 
         DLINK_FOREACH(entry, rejlist->head) {
 		data = (reject_data *)entry->data;
-		if (match_cidr(data->banaddr, ipaddr))
+		if (match(data->banaddr, ipaddr))
 			return data->banaddr;
         }
 
