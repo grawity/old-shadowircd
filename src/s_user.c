@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.24 2004/08/21 08:25:09 nenolod Exp $
+ *  $Id: s_user.c,v 1.25 2004/08/24 05:29:00 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -64,6 +64,7 @@ static void user_welcome(struct Client *);
 static void report_and_set_user_flags(struct Client *, struct AccessItem *);
 static int check_x_line(struct Client *, struct Client *);
 static int introduce_client(struct Client *, struct Client *);
+extern void (*make_virthost)(struct Client *);
 
 FLAG_ITEM user_mode_table[256];
 char umode_list[256];
@@ -460,11 +461,10 @@ register_local_user(struct Client *client_p, struct Client *source_p,
   add_user_host(source_p->username, source_p->host, 0);
   SetUserHost(source_p);
 
-  make_virthost(source_p);
-
-#ifdef DEBUG
-  printf("source_p(%s)->virthost = %s\n", source_p->name, source_p->virthost);
-#endif
+  if (make_virthost != NULL)
+    make_virthost(source_p);
+  else
+    strcpy(source_p->virthost, source_p->host);
 
   if (ServerInfo.network_cloak_on_connect)
     SetUmode(source_p, UMODE_CLOAK);
@@ -564,14 +564,12 @@ register_remote_user(struct Client *client_p, struct Client *source_p,
   add_user_host(source_p->username, source_p->host, 1);
   SetUserHost(source_p);
 
-  if (source_p->virthost[0] == '*')
+  if (source_p->virthost[0] == '*' && make_virthost != NULL)
     make_virthost(source_p);
+  else if (source_p->virthost[0])
+    strcpy(source_p->virthost, source_p->host);
   else
     source_p->flags |= FLAGS_USERCLOAK;
-
-#ifdef DEBUG
-  printf("source_p(%s)->virthost = %s\n", source_p->name, source_p->virthost);
-#endif
 
   return(introduce_client(client_p, source_p));
 }

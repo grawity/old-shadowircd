@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 1.9 2004/08/24 03:57:47 nenolod Exp $
+ *  $Id: channel_mode.c,v 1.10 2004/08/24 05:29:00 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1950,7 +1950,7 @@ static struct ChannelMode ModeTable[255] =
   {chm_nosuch, NULL},                             /* L */
   {chm_nosuch, NULL},                             /* M */
   {chm_simple, (void *) MODE_STICKYNICK},         /* N */
-  {chm_operonly, NULL},                           /* O */
+  {chm_operonly, (void *) MODE_OPERONLY},                           /* O */
 #ifndef DISABLE_CHAN_OWNER
   {chm_owneronly, (void *) MODE_PEACE},           /* P */
 #else

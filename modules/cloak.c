@@ -1,6 +1,6 @@
 /*
  *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
- *  s_hidehost.c: Usercloaking.
+ *  cloak.c: Sexy cloaking module.
  *
  *  Copyright (C) 2004 by the past and present ircd coders, and others.
  *
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_hidehost.c,v 1.6 2004/07/18 16:56:40 nenolod Exp $
+ *  $Id: cloak.c,v 1.1 2004/08/24 05:29:00 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -53,28 +53,6 @@ convert_md5_to_int (unsigned char *i)
   return (((unsigned int) r[0] << 24) +
 	  ((unsigned int) r[1] << 16) +
 	  ((unsigned int) r[2] << 8) + (unsigned int) r[3]);
-}
-
-/* This function is used at config parsing time.
- * If your cloak keys are not random enough, the ircd will complain.
- */
-int
-check_for_randomness (char *key)
-{
-  int gotlowcase = 0, gotupcase = 0, gotdigit = 0;
-  char *p;
-
-  for (p = key; *p; p++)
-    if (islower (*p))
-      gotlowcase = 1;
-    else if (isupper (*p))
-      gotupcase = 1;
-    else if (isdigit (*p))
-      gotdigit = 1;
-
-  if (gotlowcase && gotupcase && gotdigit)
-    return 0;
-  return 1;
 }
 
 void
@@ -182,7 +160,7 @@ hidehost_normalhost (char *host, char *out)
 }
 
 void
-make_virthost (struct Client *client_p)
+makevirthost (struct Client *client_p)
 {
   if (strchr (client_p->host, ':'))
     hidehost_ipv6 (client_p->host, client_p->virthost);
@@ -195,3 +173,19 @@ make_virthost (struct Client *client_p)
 
   return;
 }
+
+void
+_modinit(void)
+{
+  return;
+}
+
+void
+_moddeinit(void)
+{
+  /* Make sure our interface is NULL. */
+  make_virthost = NULL;
+  return;
+}
+
+char *_version = "$Revision: 1.1 $";

@@ -1,7 +1,7 @@
 #
 # Makefile.in for ircd/modules
 #
-# $Id: Makefile.in,v 1.4 2004/06/09 05:24:47 nenolod Exp $
+# $Id: Makefile.in,v 1.5 2004/08/24 05:29:00 nenolod Exp $
 #
 CC		= @CC@
 AR		= @AR@
@@ -125,7 +125,8 @@ SRCS =       \
   m_whois.c \
   m_whowas.c \
   m_xline.c \
-  spy_notices.c
+  spy_notices.c \
+  cloak.c
 
 ALL_SRCS = $(CORE_SRCS) $(SRCS) @SSL_SRCS_ENABLE@
 

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: tools.c,v 1.1 2004/04/30 18:13:30 nenolod Exp $
+ *  $Id: tools.c,v 1.2 2004/08/24 05:29:00 nenolod Exp $
  *
  * When you update these functions make sure you update the ones in tools.h
  * as well!!!
@@ -287,3 +287,26 @@ slink_find(slink_list *list, void *data)
     }
     return NULL;
 }
+
+/* This function is used at config parsing time.
+ * If your cloak keys are not random enough, the ircd will complain.
+ */
+int
+check_for_randomness (char *key)
+{
+  int gotlowcase = 0, gotupcase = 0, gotdigit = 0;
+  char *p;
+  
+  for (p = key; *p; p++)
+    if (islower (*p))
+      gotlowcase = 1;
+    else if (isupper (*p))
+      gotupcase = 1;
+    else if (isdigit (*p))
+      gotdigit = 1;
+
+  if (gotlowcase && gotupcase && gotdigit)
+    return 0;
+  return 1;
+}
+
