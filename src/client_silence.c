@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client_silence.c,v 1.1 2004/06/04 21:20:13 nenolod Exp $
+ *  $Id: client_silence.c,v 1.2 2004/06/04 22:00:38 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -103,5 +103,46 @@ check_silenced(struct Client *target, const char *s, const char *s2, const char 
   }
 
   return((actualSilence ? 1 : 0));
+}
+
+int
+add_silence(struct Client *client_p, char *silenceid)
+{
+  dlink_node *silence;
+  struct Ban *actualSilence;
+
+  if (MyClient(client_p))
+  {
+
+    if (dlink_list_length(client_p->silence_list) >=
+        ConfigFileEntry.max_silence)
+    {
+      sendto_one(client_p, form_str(ERR_SILENCELISTFULL),
+                 me.name, client_p->name, chptr->chname, banid);
+      return(0);
+    }
+
+    collapse(silenceid);
+  }
+
+  DLINK_FOREACH(ban, client_p->silence_list.head)
+  {
+    actualSilence = silence->data;
+
+    if (match(actualSilence->banstr, silenceid))
+      return(0);
+  }
+
+  actualSilence = (struct Ban *)MyMalloc(sizeof(struct Ban));
+  memset(actualSilence, 0, sizeof(struct Ban));
+  DupString(actualSilence->banstr, silenceid);
+
+  DupString(actualSilence->who, client_p->name);
+
+  actualSilence->when = CurrentTime;
+
+  dlinkAdd(actualSilence, &actualSilence->node, client_p->silence_list);
+
+  return(1);
 }
 
