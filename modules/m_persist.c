@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_persist.c,v 1.1 2004/02/05 23:29:43 nenolod Exp $
+ *  $Id: m_persist.c,v 1.2 2004/02/08 01:44:23 nenolod Exp $
  */
 
 #include <string.h>
@@ -157,6 +157,8 @@ static void m_persist(struct Client* client_p, struct Client* source_p,
       /* Client is no longer persistent, also swap fd's for reattachment */
 
       target_p->flags &= ~FLAGS_PERSISTANT;
+      source_p = target_p; /* This is so wrong in so many ways. */
+#if 0
       target_p->localClient->fd = source_p->localClient->fd;
       target_p->localClient->ctrlfd = source_p->localClient->ctrlfd;
 
@@ -168,7 +170,7 @@ static void m_persist(struct Client* client_p, struct Client* source_p,
 #endif
       source_p->localClient->fd = -1;
       source_p->localClient->ctrlfd = -1;
-
+#endif
       fd_note(target_p->localClient->fd, "Nick: %s", target_p->name);
 
       /* mark socket to be looked at for read events again */
@@ -207,8 +209,6 @@ static void m_persist(struct Client* client_p, struct Client* source_p,
       namepointer[0] = namepointer[1] = target_p->name;
       send_umode_out(target_p, target_p, 0);
 
-      /* Set source_p as dead; it will go away in it's own time. */
-      SetDead(source_p);
       return;
     }
 
