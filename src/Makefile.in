@@ -30,7 +30,6 @@ m_who.c				\
 packet.c			\
 parse.c				\
 res.c				\
-s_auth.c			\
 s_bsd.c				\
 s_conf.c			\
 s_debug.c			\

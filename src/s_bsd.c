@@ -1,7 +1,7 @@
 /*
- *  UltimateIRCd - an Internet Relay Chat Daemon, src/s_bsd.c
+ *  ShadowIRCd -- an Internet Relay Chat Daemon.
  *
- *  Copyright (C) 2002 by the past and present ircd coders, and others.
+ *  Copyright (C) 2003 by the past and present ircd coders, and others.
  *  Refer to the documentation within doc/authors/ for full credits and copyrights.
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_bsd.c,v 1.1 2003/11/04 07:11:13 nenolod Exp $
+ *  $Id: s_bsd.c,v 1.2 2003/11/04 07:35:16 nenolod Exp $
  *
  */
 
@@ -1087,14 +1087,6 @@ completed_connection (aClient * client_p)
 
   sendto_one (client_p, "NETCTRL 0 0 0 0 0 0 0 0 0 0 0 0 0");
 
-#ifdef DO_IDENTD
-  /*
-   * Is this the right place to do this?  dunno... -Taner
-   */
-  if (!IsDead (client_p))
-    start_auth (client_p);
-#endif
-
   return (IsDead (client_p)) ? -1 : 0;
 }
 
@@ -1707,9 +1699,6 @@ add_connection (aClient * client_p, int fd)
 #endif
   nextdnscheck = 1;
 
-#ifdef DO_IDENTD
-  start_auth (target_p);
-#endif
 #ifdef INET6
   client_p->flags |= FLAGS_IPV6;
 #endif
@@ -2199,22 +2188,6 @@ read_message (time_t delay, fdlist * listp)
 	  FAST_FD_INC continue;
 	}
 
-      /* Check the auth fd's first... */
-      if ((auth > 0) && (client_p->authfd >= 0))
-	{
-	  auth--;
-	  if ((nfds > 0) && FD_ISSET (client_p->authfd, write_set))
-	    {
-	      nfds--;
-	      send_authports (client_p);
-	    }
-	  else if ((nfds > 0) && FD_ISSET (client_p->authfd, read_set))
-	    {
-	      nfds--;
-	      read_authports (client_p);
-	    }
-	}
-
       /* Now see if there's a connection pending... */
       if (IsListening (client_p) && MYFD_ISSET_READ)
 	{
@@ -2490,16 +2463,6 @@ read_message (time_t delay, fdlist * listp)
 	  nfds--;
 	  rr = pfd->revents & (POLLREADFLAGS | POLLERRORS);
 	  rw = pfd->revents & POLLWRITEFLAGS;
-	  if ((auth > 0) && ((client_p = authclnts[fd]) != NULL)
-	      && (client_p->authfd == fd))
-	    {
-	      auth--;
-	      if (rr)
-		read_authports (client_p);
-	      if (rw && client_p->authfd >= 0)
-		send_authports (client_p);
-	      continue;
-	    }
 
 	  if (!(client_p = local[fd]))
 	    continue;
