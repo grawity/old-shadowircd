@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.c,v 1.7 2004/08/24 03:57:47 nenolod Exp $
+ *  $Id: channel.c,v 1.8 2004/08/28 21:27:09 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -823,10 +823,13 @@ can_join(struct Client *source_p, struct Channel *chptr, const char *key)
   if (IsOperImmune(source_p))
     return(0);
 
-  if ((chptr->mode.mode & MODE_REGONLY) && (IsIdentified(source_p)))
+  if ((chptr->mode.mode & MODE_REGONLY) && (!IsIdentified(source_p)))
   {
     return(ERR_REGONLYCHAN);
   }
+
+  if ((chptr->mode.mode & MODE_OPERONLY) && (!IsOper(source_p)))
+    return(ERR_NOPRIVILEGES);
 
   if (chptr->mode.mode & MODE_INVITEONLY)
   {

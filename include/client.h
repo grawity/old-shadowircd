@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.13 2004/08/24 05:29:00 nenolod Exp $
+ *  $Id: client.h,v 1.14 2004/08/28 21:27:08 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -199,6 +199,9 @@ struct Client
 
   /* silence list... masks i have on silence, i.e. rejections */
   dlink_list    silence_list;
+
+  /* dccallow list... clients that can send to me. */
+  dlink_list    dccallow;
 
   struct LocalUser *localClient;
 };
@@ -386,7 +389,7 @@ struct LocalUser
 #define FLAGS_SERVLINK    0x00000800 /* servlink has servlink process            */
 #define FLAGS_MARK	  0x00001000 /* marked client                            */
 #define FLAGS_CANFLOOD	  0x00002000 /* client has the ability to flood          */
-/*                        0x00004000  */
+#define FLAGS_DCCWARN     0x00004000 /* has seen dcc warning                     */
 #define FLAGS_EXEMPTKLINE 0x00008000 /* client is exempt from kline              */
 #define FLAGS_NOLIMIT     0x00010000 /* client is exempt from limits             */
 #define FLAGS_RESTRICTED  0x00020000 /* client cannot op others                  */
@@ -468,6 +471,9 @@ struct LocalUser
 
 #define SetSendQExceeded(x)	((x)->flags |= FLAGS_SENDQEX)
 #define IsSendQExceeded(x)	((x)->flags &  FLAGS_SENDQEX)
+
+#define SeenDCCNotice(x)        ((x)->flags &  FLAGS_DCCWARN)
+#define SetSeenDCCNotice(x)     ((x)->flags |= FLAGS_DCCWARN)
 
 #define SetIpHash(x)            ((x)->flags |= FLAGS_IPHASH)
 #define ClearIpHash(x)          ((x)->flags &= ~FLAGS_IPHASH)

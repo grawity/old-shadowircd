@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: supported.h,v 1.5 2004/08/24 04:00:20 nenolod Exp $
+ *  $Id: supported.h,v 1.6 2004/08/28 21:27:08 nenolod Exp $
  */
 
 #ifndef INCLUDED_supported_h
@@ -68,24 +68,24 @@
 		  " CHANMODES=%s%s%s" \
 		  " NETWORK=%s"       \
 		  " CASEMAPPING=%s"   \
-		  " ELIST=%s"         \
-		  " GRANT ETRACE CALLERID%s"
+		  " ELIST=%s LANGUAGE=%s"         \
+		  " GRANT ETRACE DCCALLOW CALLERID%s"
 
 #ifndef DISABLE_CHAN_OWNER
 #define FEATURES2VALUES ConfigChannel.disable_local_channels ? "#" : "#&", \
                         "(uohv)!@%+", \
                         ConfigChannel.use_except ? "e" : "", \
                         ConfigChannel.use_invex ? "I" : "", \
-                        "b,k,l,imnpstTFcz", \
-                        ServerInfo.network_name, CASEMAP, "CTA", \
+                        "bqd,k,l,imnpstTFczGETPScrVNOF", \
+                        ServerInfo.network_name, CASEMAP, "CTAU", get_locale(), \
 			(uplink && IsCapable(uplink, CAP_LL)) ? "" : " SAFELIST"
 #else
 #define FEATURES2VALUES ConfigChannel.disable_local_channels ? "#" : "#&", \
                         "(ohv)@%+", \
                         ConfigChannel.use_except ? "e" : "", \
                         ConfigChannel.use_invex ? "I" : "", \
-                        "b,k,l,imnpstTFcz", \
-                        ServerInfo.network_name, CASEMAP, "CTA", \
+                        "bqd,k,l,imnpstTFczGETPScrVNOF", \
+                        ServerInfo.network_name, CASEMAP, "CTAU", get_locale(), \
 			(uplink && IsCapable(uplink, CAP_LL)) ? "" : " SAFELIST"
 #endif
 

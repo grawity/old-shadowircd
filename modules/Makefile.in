@@ -1,7 +1,7 @@
 #
 # Makefile.in for ircd/modules
 #
-# $Id: Makefile.in,v 1.5 2004/08/24 05:29:00 nenolod Exp $
+# $Id: Makefile.in,v 1.6 2004/08/28 21:27:08 nenolod Exp $
 #
 CC		= @CC@
 AR		= @AR@
@@ -59,6 +59,7 @@ SRCS =       \
   @SSL_SRCS_ENABLE@ \
   m_connect.c \
   m_ctrace.c \
+  m_dccallow.c \
   m_dmem.c \
   m_drop.c \
   m_encap.c \

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_message.c,v 1.10 2004/08/21 08:18:05 nenolod Exp $
+ *  $Id: m_message.c,v 1.11 2004/08/28 21:27:09 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -95,6 +95,8 @@ static void handle_special (int p_or_n, const char *command,
 			    struct Client *client_p,
 			    struct Client *source_p, char *nick, char *text);
 
+static int check_dccsend(struct Client *from, struct Client *to, char *msg);
+
 char *check_text (char *, char *);
 
 struct Message privmsg_msgtab = {
@@ -124,7 +126,7 @@ _moddeinit (void)
   mod_del_cmd (&notice_msgtab);
 }
 
-const char *_version = "$Revision: 1.10 $";
+const char *_version = "$Revision: 1.11 $";
 #endif
 
 /*
@@ -614,6 +616,14 @@ msg_client (int p_or_n, const char *command, struct Client *source_p,
 
   hook_call_event("send_privmsg", &pmd);
 
+  if (MyClient (target_p) && text[0] == 1)
+    {
+       char buf[BUFSIZE];
+       strcpy(buf, text);
+       if (check_dccsend(source_p, target_p, buf) == 1)
+          return;
+    }
+
   if (MyClient (source_p))
     {
       /* reset idle time for message only if its not to self 
@@ -1090,3 +1100,205 @@ char *check_text (char *origstr, char *search)
   return target;
 }
 
+/* these are lifted from bahamut. they are exploit extension tables */
+char *exploits_2char[] =
+{
+    "js",
+    "pl",
+    NULL
+};
+char *exploits_3char[] =
+{
+    "exe",
+    "com",
+    "bat",
+    "dll",
+    "ini",
+    "vbs",
+    "pif",
+    "mrc",
+    "scr",
+    "doc",
+    "xls",
+    "lnk",
+    "shs",
+    "htm",
+    "zip",
+    NULL
+};
+                                                                                                                                               
+char *exploits_4char[] =
+{
+    "html",
+    NULL
+};
+
+/*
+ * allow_dcc: lifted from Bahamut, modified for Shadow.
+ *            checks against dccallow dlink list.
+ *
+ * input        - two client objects
+ * output       - 0 or 1 depending on if the send is allowed or not.
+ * side effects - none
+ */
+static int
+allow_dcc(struct Client *to, struct Client *from)
+{
+    dlink_node *node;
+    struct Client *client;
+                                                                                                                                               
+    DLINK_FOREACH(node, to->dccallow.head)
+    {
+        client = node->data;
+
+        if (client == from)
+           return 1;
+    }
+    return 0;
+}
+
+/*
+ * check_dccsend: lifted from Bahamut, modified for shadow. 
+ *                checks for DCC trojans/whatever.
+ *
+ * input        - two client objects, and the message.
+ * output       - 0 or 1 depending on if the send was rejected or not.
+ * side effects - none
+ */
+static int
+check_dccsend(struct Client *from, struct Client *to, char *msg)
+{
+    /*
+     * we already know that msg will consist of "DCC SEND" so we can skip
+     * to the end
+     */
+    char *ext;
+    char **farray = NULL;
+    char *filename = msg + 9;
+    int arraysz;
+    int len = 0, extlen = 0, i;
+
+    /* people can send themselves stuff all the like..
+     * opers need to be able to send cleaner files
+     * sanity checks..
+     */
+
+    if(from == to || !IsPerson(from) || IsOper(from) || !MyClient(to))
+        return 0;
+
+    while(*filename == ' ')
+        filename++;
+                                                                                                                                               
+    if(!(*filename)) return 0;
+                                                                                                                                               
+    while(*(filename + len) != ' ')
+    {
+        if(!(*(filename + len))) break;
+        len++;
+    }
+
+    for(ext = filename + len;; ext--)
+    {
+        if(ext == filename)
+        {
+            sendto_realops_flags(UMODE_DEBUG, L_ALL, "check_dccsend: ext = filename = %s\n", filename);
+            return 0;
+        }
+                                                                                                                                               
+        if(*ext == '.')
+        {
+            ext++;
+            extlen--;
+            break;
+        }
+        extlen++;
+
+    }
+
+    /* clear out the other dcc info */
+    *(ext + extlen) = '\0';
+
+    switch(extlen)
+    {
+        case 0:
+            arraysz = 0;
+            break;
+                                                                                                                                               
+        case 2:
+            farray = exploits_2char;
+            arraysz = 2;
+            break;
+                                                                                                                                               
+        case 3:
+            farray = exploits_3char;
+            arraysz = 3;
+            break;
+                                                                                                                                               
+        case 4:
+            farray = exploits_4char;
+            arraysz = 4;
+            break;
+                                                                                                                                               
+        /* no executable file here.. */
+        default:
+            return 0;
+    }
+
+    if (arraysz != 0)
+    {
+        for(i = 0; farray[i]; i++)
+        {
+            if(strcasecmp(farray[i], ext) == 0)
+                break;
+        }
+                                                                                                                                               
+        if(farray[i] == NULL)
+            return 0;
+    }
+
+    if(!allow_dcc(to, from))
+    {
+        char tmpext[8];
+        char tmpfn[128];
+                                                                                                                                               
+        strncpy(tmpext, ext, extlen);
+        tmpext[extlen] = '\0';
+                                                                                                                                               
+        if(len > 127)
+            len = 127;
+        strncpy(tmpfn, filename, len);
+        tmpfn[len] = '\0';
+                                                                                                                                               
+        /* use notices!
+         *   server notices are hard to script around.
+         *   server notices are not ignored by clients.
+         */
+                                                                                                                                               
+        sendto_one(from, ":%s NOTICE %s :The user %s is not accepting DCC "
+                   "sends of filetype *.%s from you.  Your file %s was not "
+                   "sent.", me.name, from->name, to->name, tmpext, tmpfn);
+                                                                                                                                               
+        sendto_one(to, ":%s NOTICE %s :%s (%s@%s) has attempted to send you a "
+                   "file named %s, which was blocked.", me.name, to->name,
+                   from->name, from->username, GET_CLIENT_HOST(from), tmpfn);
+                                                                                                                                               
+        if(!SeenDCCNotice(to))
+        {
+            SetSeenDCCNotice(to);
+                                                                                                                                               
+            sendto_one(to, ":%s NOTICE %s :The majority of files sent of this "
+                       "type are malicious virii and trojan horses."
+                       " In order to prevent the spread of this problem, we "
+                       "are blocking DCC sends of these types of"
+                       " files by default.", me.name, to->name);
+            sendto_one(to, ":%s NOTICE %s :If you trust %s, and want him/her "
+                       "to send you this file, you may add him to your dccallow "
+                       "list by typing /dccallow +%s.",
+                       me.name, to->name, from->name, from->name);
+        }
+
+        return 1;
+    }
+
+    return 0;
+}

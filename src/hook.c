@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: hook.c,v 1.4 2004/08/26 21:35:07 nenolod Exp $
+ *  $Id: hook.c,v 1.5 2004/08/28 21:27:09 nenolod Exp $
  */
 
 /* hooks are used by modules to hook into events called by other parts of
@@ -141,7 +141,6 @@ hook_add_hook(const char *event, hookfn *fn)
     return(-1);
 
   dlinkAdd(fn, make_dlink_node(), &h->hooks);
-  printf("adding hook: %s 0x%lX\n", event, fn);
   return(0);
 }
 
