@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_kline.c,v 3.4 2004/09/22 18:07:38 nenolod Exp $
+ *  $Id: m_kline.c,v 3.5 2004/09/22 18:13:15 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -47,6 +47,7 @@
 #include "modules.h"
 #include "cluster.h"
 #include "tools.h"
+#include "reject.h"
 
 static void mo_kline (struct Client *, struct Client *, int, char **);
 static void ms_kline (struct Client *, struct Client *, int, char **);
@@ -105,7 +106,7 @@ _moddeinit (void)
   delete_capability ("KLN");
 }
 
-const char *_version = "$Revision: 3.4 $";
+const char *_version = "$Revision: 3.5 $";
 #endif
 
 #define TK_SECONDS 0
@@ -1097,6 +1098,15 @@ mo_unkline (struct Client *client_p, struct Client *source_p,
     }
 
   cluster_unkline (source_p, user, host);
+
+  /*
+   * Eko thinks that we should clear out our reject cache here, and while
+   * I originally thought that would be a bad idea, I agree now, and happen
+   * to have been recently working in this file, so I decided to make it
+   * happen.
+   *       --nenolod
+   */
+  flush_rejects();
 
   if (remove_tkline_match (host, user))
     {
