@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_nick.c,v 1.5 2004/05/22 04:12:36 nenolod Exp $
+ *  $Id: m_nick.c,v 1.6 2004/05/22 05:31:13 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -99,7 +99,7 @@ _moddeinit(void)
   mod_del_cmd(&uid_msgtab);
 }
 
-const char *_version = "$Revision: 1.5 $";
+const char *_version = "$Revision: 1.6 $";
 #endif
 
 /* mr_nick()
@@ -853,8 +853,8 @@ client_from_server(struct Client *client_p,
   unsigned int flag;
   const char *id = ID_ID;
   const char *servername = source_p->name;
-  const char *gecos = IsCapable(source_p, CAP_UVH) ? ID_GECOS : ID_VHOST;
-  const char *vhost = IsCapable(source_p, CAP_UVH) ? ID_VHOST : "*";
+  const char *gecos = (parc > 10) ? ID_GECOS : ID_VHOST;
+  const char *vhost = (parc > 10) ? ID_VHOST : "*";
   const char *ip = ID_IP;
   source_p = make_client(client_p);
   dlinkAdd(source_p, &source_p->node, &global_client_list);
