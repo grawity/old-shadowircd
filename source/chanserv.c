@@ -6,7 +6,7 @@
  * do so under the terms of the GNU General Public License under which
  * this program is distributed.
  *
- * $Id: chanserv.c,v 1.3 2003/12/18 23:14:07 nenolod Exp $
+ * $Id: chanserv.c,v 1.4 2003/12/19 02:34:22 nenolod Exp $
  */
 
 #include "defs.h"
@@ -77,18 +77,11 @@ static int DefaultAccess[CA_SIZE] = {
      8,           /* CA_CMDVOICE */
      5,           /* CA_ACCESS */
      5,           /* CA_CMDINVITE */
-#ifdef HYBRID7
-     /* Default access for halfop and cmdhalfop -Janos */
      8,           /* CA_AUTOHALFOP */
      10,          /* CA_CMDHALFOP */
-#endif /* HYBRID7 */
      10,          /* CA_AUTOOP */
      10,          /* CA_CMDOP */
-#ifndef HYBRID7
-     10,          /* CA_CMDUNBAN */
-#else
      8,           /* CA_CMDUNBAN */
-#endif /* HYBRID7 */
      15,          /* CA_AKICK */
      20,          /* CA_CMDCLEAR */
      25,          /* CA_SET */
@@ -1366,7 +1359,7 @@ cs_CheckModes(struct Luser *source, struct ChanInfo *cptr,
            * but allow a user to deop him/herself
            */
           if ((lptr != source) &&
-              HasAccess(cptr, lptr, CA_FOUNDER) &&
+              HasAccess(cptr, lptr, 45) &&
               (ulev >= slev))
             {
               if (HasFlag(lptr->nick, NS_NOCHANOPS))
@@ -1687,29 +1680,8 @@ cs_CheckOp(struct Channel *chanptr, struct ChanInfo *cptr, char *nick)
    * If ChanServ should be on the channel, but isn't, don't
    * do anything
    */
-  if (cs_ShouldBeOnChan(cptr) && !IsChannelOp(chanptr, Me.csptr))
-    return;
-
   if (!(tempuser = FindUserByChannel(chanptr, FindClient(nick))))
     return;
-
-  if (tempuser->flags & CH_OPPED)
-    {
-      /*
-       * They're already opped on the channel - we don't need to do anything
-       */
-      return;
-    }
-
-  /* XXX: isn't working as it should */
-#if 0
-  if (HasAccess(cptr, tempuser->lptr, CA_AUTODEOP))
-  {
-    /* If user has autodeop access, do nothing
-     * -- OnGeboren -- */
-    return;
-  }
-#endif
 
   if (HasAccess(cptr, tempuser->lptr, CA_FOUNDER))
     {
@@ -1723,7 +1695,6 @@ cs_CheckOp(struct Channel *chanptr, struct ChanInfo *cptr, char *nick)
       toserv(":%s MODE %s %s\r\n", n_ChanServ, chanptr->name, modes);
       UpdateChanModes(Me.csptr, n_ChanServ, chanptr, modes);
     }
-#ifdef HYBRID7
   /* Add autohalfop -Janos */
   else if (!(tempuser->flags & CH_HOPPED) &&
            HasAccess(cptr, tempuser->lptr, CA_AUTOHALFOP))
@@ -1732,7 +1703,6 @@ cs_CheckOp(struct Channel *chanptr, struct ChanInfo *cptr, char *nick)
       toserv(":%s MODE %s %s\r\n", n_ChanServ, chanptr->name, modes);
       UpdateChanModes(Me.csptr, n_ChanServ, chanptr, modes);
     }
-#endif /* HYBRID7 */
   else if (!(tempuser->flags & CH_VOICED) &&
            HasAccess(cptr, tempuser->lptr, CA_AUTOVOICE))
     {
@@ -3021,7 +2991,7 @@ HasAccess(struct ChanInfo *cptr, struct Luser *lptr, int level)
   if (!AutoOpAdmins && IsValidAdmin(lptr) && ((level == CA_AUTOOP) ||
       /* check CA_AUTOHALFOP level only if hybrid7 -kre */
 #ifdef HYBRID7
-      (level == CA_AUTOHALFOP) ||
+      (level == CA_AUTOHALFOP) || (level == 45) ||
 #endif /* HYBRID7 */
       (level == CA_AUTOVOICE)))
     {

@@ -6,7 +6,7 @@
  * do so under the terms of the GNU General Public License under which
  * this program is distributed.
  *
- * $Id: channel.c,v 1.3 2003/12/18 23:14:07 nenolod Exp $
+ * $Id: channel.c,v 1.4 2003/12/19 02:34:22 nenolod Exp $
  */
 
 #include "defs.h"
@@ -988,6 +988,98 @@ void UpdateChanModes(struct Luser *lptr, char *who, struct Channel *cptr,
             add = 1;
             break;
           }
+
+          /*
+           * Owner/DeOwner
+           */
+        case 'u':
+          {
+            ++argidx;
+            if (argidx >= argcnt)
+              {
+                /*
+                 * there are more 'o' flags than there are nicknames,
+                 * just break
+                 */
+                break;
+              }
+
+            if (!(userptr = FindClient(modeargs[argidx])))
+              break;
+
+            /* never mark ChanServ/OperServ as deopped -adx */
+#if defined CHANNELSERVICES
+
+            if (add || (userptr != Me.csptr && userptr != Me.osptr))
+#else
+            if (add || userptr != Me.osptr)
+#endif
+              SetChannelMode(cptr, add
+                               , MODE_U, userptr, 0);
+
+            if (add)
+              {
+#ifdef STATSERVICES
+                if (lptr)
+                  ++lptr->numops;
+#endif
+
+              } /* if (add) */
+            else
+              {
+                if (userptr == Me.osptr)
+                  {
+                    if (!FloodCheck(cptr, lptr, Me.osptr, 0))
+                      {
+#ifdef SAVE_TS
+                        os_part(cptr);
+                        os_join(cptr);
+#else
+
+                        toserv(":%s MODE %s +u %s\r\n", Me.name,
+                            cptr->name, n_OperServ);
+#endif
+
+                      }
+
+                    if (!lptr)
+                      {
+                        putlog(LOG1, "%s: %s attempted to deop %s",
+                               cptr->name,
+                               who,
+                               n_OperServ);
+                      }
+                    else
+                      {
+                        putlog(LOG1, "%s: %s!%s@%s attempted to deop %s",
+                               cptr->name,
+                               lptr->nick,
+                               lptr->username,
+                               lptr->hostname,
+                               n_OperServ);
+                      }
+                  }
+#if defined(NICKSERVICES) && defined(CHANNELSERVICES)
+                else if (userptr == Me.csptr)
+                  {
+                    cs_deoped = 1;
+                  }
+#endif /* defined(NICKSERVICES) && defined(CHANNELSERVICES) */
+
+#ifdef STATSERVICES
+                if (lptr)
+                  ++lptr->numdops;
+#endif
+
+              } /* else if (!add) */
+
+#if defined(NICKSERVICES) && defined(CHANNELSERVICES)
+            cs_CheckModes(lptr, FindChan(cptr->name), !add , MODE_U,
+                userptr);
+#endif
+
+            break;
+          } /* case 'o' */
 
           /*
            * Op/DeOp

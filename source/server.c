@@ -6,7 +6,7 @@
  * do so under the terms of the GNU General Public License under which
  * this program is distributed.
  *
- * $Id: server.c,v 1.3 2003/12/18 23:19:15 nenolod Exp $
+ * $Id: server.c,v 1.4 2003/12/19 02:34:22 nenolod Exp $
  */
 
 #include "defs.h"
@@ -2028,6 +2028,7 @@ s_sjoin(int ac, char **av)
 
 #if defined NICKSERVICES && defined CHANNELSERVICES
 
+
   ci = FindChan(cptr->name);
 
   if (ci)
@@ -2040,6 +2041,7 @@ s_sjoin(int ac, char **av)
        * the channel is brand new.
        */
       cs_CheckSjoin(cptr, ci, ncnt, nicks, oldptr ? 0 : 1);
+
 
       for (ii = 0; ii < ncnt; ii++)
         {
