@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_grant.c,v 1.6 2004/08/25 00:41:19 nenolod Exp $
+ *  $Id: m_grant.c,v 1.7 2004/08/25 00:44:53 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -44,6 +44,7 @@
 #include "packet.h"
 #include "hash.h"
 #include "umodes.h"
+#include "hook.h"
 
 static void string_to_bitmask (char *, struct Client *);
 static void remove_from_bitmask (char *, struct Client *);
@@ -67,7 +68,7 @@ _moddeinit (void)
   mod_del_cmd (&grant_msgtab);
 }
 
-const char *_version = "$Revision: 1.6 $";
+const char *_version = "$Revision: 1.7 $";
 #endif
 
 /* this is a struct, associating operator permissions with letters. */

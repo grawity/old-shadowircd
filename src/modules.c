@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: modules.c,v 1.4 2004/08/21 07:34:03 nenolod Exp $
+ *  $Id: modules.c,v 1.5 2004/08/25 00:44:53 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -37,6 +37,7 @@
 #include "irc_string.h"
 #include "memory.h"
 #include "list.h"
+#include "hook.h"
 
 /* -TimeMr14C:
  * I have moved the dl* function definitions and
@@ -48,6 +49,10 @@
  * I added the ability to load *.sl files, too.
  * 27/02/2002
  */
+
+#ifdef STATIC_MODULES
+extern void makevirthost(struct Client *); /* nenolod */
+#endif
 
 #ifndef STATIC_MODULES
 
@@ -625,6 +630,7 @@ load_all_modules(int warn)
   mod_add_cmd(&global_msgtab);
   mod_add_cmd(&hs_msgtab);
   mod_add_cmd(&hash_msgtab);
+  hook_add_hook("make_virthost", (hookfn *)makevirthost);
   mod_add_cmd(&helpserv_msgtab);
   mod_add_cmd(&hostserv_msgtab);
   mod_add_cmd(&identify_msgtab);
