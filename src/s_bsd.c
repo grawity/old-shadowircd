@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_bsd.c,v 1.2 2004/04/30 19:46:58 nenolod Exp $
+ *  $Id: s_bsd.c,v 1.3 2004/05/22 18:14:50 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -68,7 +68,9 @@ static void comm_connect_callback(int fd, int status);
 static PF comm_connect_timeout;
 static void comm_connect_dns_callback(void *vptr, struct DNSReply *reply);
 static PF comm_connect_tryconnect;
+#ifdef HAVE_LIBCRYPTO
 static void comm_tryssl_callback(int fd, void *data);
+#endif
 
 /* close_all_connections() can be used *before* the system come up! */
 void
@@ -796,6 +798,7 @@ comm_connect_tryconnect(int fd, void *notused)
  comm_connect_callback(fd, COMM_OK);
 }
 
+#ifdef HAVE_LIBCRYPTO
 static void
 comm_tryssl_callback(int fd, void *data)
 {
@@ -807,7 +810,6 @@ comm_tryssl_callback(int fd, void *data)
   fdlist = FDLIST_SERVER;
   doauth = 1;
 
-#ifdef HAVE_LIBCRYPTO
   if (IsSSL(new_client))
   {
     if (!SSL_is_init_finished(new_client->ssl))
@@ -833,9 +835,9 @@ comm_tryssl_callback(int fd, void *data)
       start_auth(new_client);
     }
   }
-#endif
 
 }
+#endif
 
 /*
  * comm_errorstr() - return an error string for the given error condition

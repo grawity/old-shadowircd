@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_message.c,v 1.2 2004/05/22 04:12:36 nenolod Exp $
+ *  $Id: m_message.c,v 1.3 2004/05/22 18:14:50 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -121,7 +121,7 @@ _moddeinit (void)
   mod_del_cmd (&notice_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 /*
@@ -463,7 +463,6 @@ static void
 msg_channel (int p_or_n, const char *command, struct Client *client_p,
 	     struct Client *source_p, struct Channel *chptr, char *text)
 {
-  struct Channel *chptr2;
   int result;
 
   if (MyClient (source_p))

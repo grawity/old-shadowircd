@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.12 2004/05/22 18:03:10 nenolod Exp $
+ *  $Id: s_user.c,v 1.13 2004/05/22 18:14:50 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1000,7 +1000,7 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
             ClearUmode(target_p, UMODE_ROUTING);
 
             /* clear operonly usermodes for this user */
-            for (i = 0; user_mode_table[i].flag; i++) {
+            for (i = 0; user_mode_table[i].letter; i++) {
               if (user_mode_table[i].operonly == 1) {
                 ClearUmode(target_p, user_mode_table[i].mode);
               }
