@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.10 2004/01/16 00:18:15 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.11 2004/01/16 00:24:43 nenolod Exp $
  */
 
 %{
@@ -675,29 +675,6 @@ serverinfo_description: DESCRIPTION '=' QSTRING ';'
   {
     MyFree(ServerInfo.description);
     DupString(ServerInfo.description,yylval.string);
-  }
-};
-
-serverinfo_network_name: NETWORK_NAME '=' QSTRING ';'
-{
-  if (ypass == 2)
-  {
-    char *p;
-
-    if ((p = strchr(yylval.string, ' ')) != NULL)
-      p = '\0';
-
-    MyFree(ServerInfo.network_name);
-    DupString(ServerInfo.network_name, yylval.string);
-  }
-};
-
-serverinfo_network_desc: NETWORK_DESC '=' QSTRING ';'
-{
-  if (ypass == 2)
-  {
-    MyFree(ServerInfo.network_desc);
-    DupString(ServerInfo.network_desc, yylval.string);
   }
 };
 

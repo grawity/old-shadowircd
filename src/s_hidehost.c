@@ -19,15 +19,17 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_hidehost.c,v 1.5 2004/01/16 00:21:05 nenolod Exp $
+ *  $Id: s_hidehost.c,v 1.6 2004/01/16 00:24:43 nenolod Exp $
  */
 
 #include "stdinc.h"
 #include "tools.h"
 #include "s_user.h"
+#include "s_conf.h"
 #include "channel.h"
 #include "channel_mode.h"
 #include "client.h"
+#include "common.h"
 #include "sprintf_irc.h"
 #include <sys/stat.h>
 #include <fcntl.h>
