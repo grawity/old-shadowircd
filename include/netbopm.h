@@ -4,7 +4,7 @@
  *
  * <licensing info here>
  *
- * $Id: netbopm.h,v 1.3 2004/05/25 01:45:36 nenolod Exp $
+ * $Id: netbopm.h,v 1.4 2004/08/29 05:58:00 nenolod Exp $
  */
 
 #ifndef INCLUDED_NETBOPM_H
@@ -53,6 +53,7 @@ struct me_ {
    int port;       /* Connection Port */
    int bursting;   /* Are we bursting? */
    char *targetip; /* Target IP for proxy scanner connect */
+   char *snoopchan; /* snoop channel */
 };
 
 typedef struct me_ me_t;
@@ -72,6 +73,7 @@ typedef struct message_ message_t;
 
 void irc_parse(char *);
 int sendto_server(char *, ...);
+int snoop(char *, ...);
 
 struct message_ *msg_find(const char *);
 long tv2ms(struct timeval *tv);

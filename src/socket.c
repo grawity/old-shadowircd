@@ -2,7 +2,7 @@
  * NetworkBOPM: The ShadowIRCd Anti-Proxy System.
  * socket.c: Socket handling functions.
  *
- * $Id: socket.c,v 1.4 2004/08/29 05:53:06 nenolod Exp $
+ * $Id: socket.c,v 1.5 2004/08/29 05:58:00 nenolod Exp $
  */
 
 #include "netbopm.h"
@@ -17,7 +17,7 @@ int             irc_raw_length = 0;
  * inputs         - hostname to connect to, port to connect to
  * outputs        - socket
  * side effects   - connection to server is established
- [ */
+ */
 
 int
 conn(char *host, unsigned int port)
@@ -26,25 +26,22 @@ conn(char *host, unsigned int port)
     struct sockaddr_in their_addr;
     unsigned long   flags;
 
-    if ((he = gethostbyname(host)) == NULL) {	// get the host info
+    if ((he = gethostbyname(host)) == NULL) {
 	perror("gethostbyname");
-	exit(1);		// exit(1);
+	exit(1);
     }
 
     if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
 	perror("socket");
-	exit(1);		// exit(1);
+	exit(1);
     }
 
-    their_addr.sin_family = AF_INET;	// host byte order
-    their_addr.sin_port = htons(port);	// short, network byte order
+    their_addr.sin_family = AF_INET;
+    their_addr.sin_port = htons(port);
     their_addr.sin_addr = *((struct in_addr *) he->h_addr);
-    memset(&(their_addr.sin_zero), '\0', 8);	// zero the rest of the
-						// struct
+    memset(&(their_addr.sin_zero), '\0', 8);
 
     connect(sockfd, (struct sockaddr *) &their_addr, sizeof(their_addr));
-
-
 }
 
 int
@@ -136,6 +133,21 @@ sendto_server(char *format, ...)
     return 0;
 }
 
+int
+snoop(char *format, ...)
+{
+    va_list         ap;
+    char            buf[512];
+    unsigned int    len,
+                    n;
+    va_start(ap, format);
+    vsnprintf(buf, 512, format, ap);
+    sendto_server(":%s PRIVMSG %s :%s", bopmuid, me.snoopchan, format);
+    va_end(ap);
+    return 0;
+}
+
+
 char           *
 init_psuedoclient(char *nick, char *user, char *gecos, char *host)
 {
@@ -146,3 +158,5 @@ init_psuedoclient(char *nick, char *user, char *gecos, char *host)
 
     return uid;
 }
+
+
