@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.h,v 1.3 2003/12/12 17:58:42 nenolod Exp $
+ *  $Id: channel.h,v 1.4 2003/12/16 17:58:32 nenolod Exp $
  */
 
 #ifndef INCLUDED_channel_h
@@ -36,6 +36,7 @@ struct Mode
   unsigned int mode;
   unsigned int limit;
   char key[KEYLEN];
+  char linktarget[CHANNELLEN];
 };
 
 /* channel structure */

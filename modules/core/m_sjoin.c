@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_sjoin.c,v 1.8 2003/12/13 02:44:11 nenolod Exp $
+ *  $Id: m_sjoin.c,v 1.9 2003/12/16 17:58:32 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,7 +63,7 @@ _moddeinit(void)
   mod_del_cmd(&sjoin_msgtab);
 }
 
-const char *_version = "$Revision: 1.8 $";
+const char *_version = "$Revision: 1.9 $";
 #endif
 
 static char modebuf[MODEBUFLEN];
@@ -189,6 +189,12 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
         if (parc < 5+args)
           return;
         break;
+      case 'L':
+        strlcpy(mode.linktarget, parv[4 + args], sizeof(mode.linktarget));
+        args++;
+        if (parc < 5+args)
+          return;
+        break;
       case 'l':
         mode.limit = atoi(parv[4 + args]);
         args++;
@@ -279,11 +285,13 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
       if (dlink_list_length(&chptr->invexlist) > 0)
         remove_ban_list(chptr, client_p, &chptr->invexlist,
                         'I', CAP_IE);
+      if (dlink_list_length(&chptr->quietlist) > 0)
+        remove_ban_list(chptr, client_p, &chptr->quietlist,
+                        'q', CAP_IE);
+      if (dlink_list_length(&chptr->restrictlist) > 0)
+        remove_ban_list(chptr, client_p, &chptr->restrictlist,
+                        'd', CAP_IE);
     }
-    sendto_channel_local(ALL_MEMBERS, chptr,
-   		         ":%s NOTICE %s :*** Notice -- TS for %s changed from %lu to %lu",
-	 		 me.name, chptr->chname, chptr->chname,
-			 (unsigned long)oldts, (unsigned long)newts);
   }
 
   if (*modebuf != '\0')
