@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.19 2004/07/18 13:19:04 nenolod Exp $
+ *  $Id: s_user.c,v 1.20 2004/07/18 13:41:35 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -894,6 +894,7 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
   struct Client *target_p;
   int what = MODE_ADD;
   int badflag = 0; /* Only send one bad flag notice */
+  dlink_node *server_node;
 
   if ((target_p = find_person(parv[1])) == NULL)
   {
