@@ -1,4 +1,4 @@
-dnl $Id: configure.ac,v 1.4 2003/12/05 23:07:32 nenolod Exp $
+dnl $Id: configure.ac,v 1.5 2004/01/20 17:53:57 nenolod Exp $
 dnl Process this file with autoconf to produce a configure script.
 
 dnl TODO: clean up all the OpenSSL and shared module checking stuff;
@@ -8,7 +8,7 @@ dnl said functions need to be just about as complex as they already are.
 AC_PREREQ(2.57)
 
 dnl Sneaky way to get an Id tag into the configure script
-AC_COPYRIGHT([$Id: configure.ac,v 1.4 2003/12/05 23:07:32 nenolod Exp $])
+AC_COPYRIGHT([$Id: configure.ac,v 1.5 2004/01/20 17:53:57 nenolod Exp $])
 
 AC_INIT([shadowircd],[2.0])
 
@@ -458,7 +458,7 @@ AC_ARG_ENABLE(openssl,
 [AC_HELP_STRING([--enable-openssl[=DIR]],[Enable OpenSSL support (DIR optional).])
 AC_HELP_STRING([--disable-openssl],[Disable OpenSSL support.])],
 [cf_enable_openssl=$enableval],
-[cf_enable_openssl="auto"])
+[cf_enable_openssl="no"])
 
 if test "$cf_enable_openssl" != "no" ; then
 	cf_openssl_basedir=""

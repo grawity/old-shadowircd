@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_lexer.l,v 1.8 2004/01/16 00:45:22 nenolod Exp $
+ *  $Id: ircd_lexer.l,v 1.9 2004/01/20 17:53:57 nenolod Exp $
  */
 
 %option case-insensitive
@@ -182,8 +182,6 @@ have_ident	{ return HAVE_IDENT; }
 havent_read_conf { return HAVENT_READ_CONF; }
 hidden		{ return HIDDEN; }
 hidden_admin	{ return HIDDEN_ADMIN; }
-hide_server_ips	{ return HIDE_SERVER_IPS; }
-hide_servers	{ return HIDE_SERVERS; }
 hide_spoof_ips	{ return HIDE_SPOOF_IPS; }
 host		{ return HOST; }
 hub		{ return HUB; }
@@ -261,7 +259,6 @@ rsa_private_key_file		{ return RSA_PRIVATE_KEY_FILE; }
 rsa_public_key_file		{ return RSA_PUBLIC_KEY_FILE; }
 send_password	{ return SEND_PASSWORD; }
 sendq		{ return SENDQ; }
-serverhide	{ return SERVERHIDE; }
 serverinfo	{ return SERVERINFO; }
 servlink_path   { return SERVLINK_PATH; }
 shared          { return T_SHARED; }
@@ -301,7 +298,6 @@ anti_nick_flood         { return ANTI_NICK_FLOOD; }
 anti_spam_exit_message_time { return ANTI_SPAM_EXIT_MESSAGE_TIME; }
 ts_max_delta            { return TS_MAX_DELTA; }
 ts_warn_delta           { return TS_WARN_DELTA; }
-links_delay           { return LINKS_DELAY; }
 kline_with_connection_closed { return KLINE_WITH_CONNECTION_CLOSED; }
 kline_with_reason       { return KLINE_WITH_REASON; }
 warn_no_nline           { return WARN_NO_NLINE; }
@@ -358,11 +354,6 @@ minutes			{ return MINUTES; }
 minute			{ return MINUTES; }
 seconds			{ return SECONDS; }
 second			{ return SECONDS; }
-
-usercloak		{ return USERCLOAK; }
-cloakstring		{ return CLOAKSTRING; }
-
-crypt_usercloak		{ return CRYPT_USERCLOAK; }
 
 bytes			{ return BYTES; }
 byte			{ return BYTES; }

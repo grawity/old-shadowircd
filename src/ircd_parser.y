@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.12 2004/01/16 00:45:22 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.13 2004/01/20 17:53:57 nenolod Exp $
  */
 
 %{
@@ -202,8 +202,6 @@ unhook_hub_leaf_confs(void)
 %token  HAVENT_READ_CONF
 %token  HIDDEN
 %token  HIDDEN_ADMIN
-%token  HIDE_SERVER_IPS
-%token  HIDE_SERVERS
 %token	HIDE_SPOOF_IPS
 %token  HOST
 %token  HUB
@@ -223,7 +221,6 @@ unhook_hub_leaf_confs(void)
 %token  KNOCK_DELAY_CHANNEL
 %token  LAZYLINK
 %token  LEAF_MASK
-%token  LINKS_DELAY
 %token  LISTEN
 %token  LOGGING
 %token  LOG_LEVEL
@@ -284,7 +281,6 @@ unhook_hub_leaf_confs(void)
 %token  SECONDS MINUTES HOURS DAYS WEEKS
 %token  SENDQ
 %token  SEND_PASSWORD
-%token  SERVERHIDE
 %token  SERVERINFO
 %token  SERVLINK_PATH
 %token  SID
@@ -374,7 +370,6 @@ conf_item:        admin_entry
                 | listen_entry
                 | auth_entry
                 | serverinfo_entry
-		| serverhide_entry
                 | resv_entry
                 | shared_entry
 		| cluster_entry
@@ -3310,136 +3305,4 @@ channel_no_join_on_split: NO_JOIN_ON_SPLIT '=' TBOOL ';'
 {
   if (ypass == 2)
     ConfigChannel.no_join_on_split = yylval.number;
-};
-
-/***************************************************************************
- *  section serverhide
- ***************************************************************************/
-serverhide_entry: SERVERHIDE
-  '{' serverhide_items '}' ';';
-
-serverhide_items:   serverhide_items serverhide_item | serverhide_item;
-serverhide_item:    serverhide_hide_servers |
-		    serverhide_links_delay |
-		    serverhide_disable_hidden |
-		    serverhide_hidden |
-		    serverhide_hide_server_ips |
-                    error;
-
-serverhide_hide_servers: HIDE_SERVERS '=' TBOOL ';'
-{
-  if (ypass == 2)
-    ConfigServerHide.hide_servers = yylval.number;
-};
-
-serverhide_links_delay: LINKS_DELAY '=' timespec ';'
-{
-  if (ypass == 2)
-  {
-    if (($3 > 0) && ConfigServerHide.links_disabled == 1)
-    {
-      eventAddIsh("write_links_file", write_links_file, NULL, $3);
-      ConfigServerHide.links_disabled = 0;
-    }
-
-    ConfigServerHide.links_delay = $3;
-  }
-};
-
-serverhide_hidden: HIDDEN '=' TBOOL ';'
-{
-  if (ypass == 2)
-    ConfigServerHide.hidden = yylval.number;
-};
-
-serverhide_disable_hidden: DISABLE_HIDDEN '=' TBOOL ';'
-{
-  if (ypass == 2)
-    ConfigServerHide.disable_hidden = yylval.number;
-};
-
-serverhide_hide_server_ips: HIDE_SERVER_IPS '=' TBOOL ';'
-{
-  if (ypass == 2)
-    ConfigServerHide.hide_server_ips = yylval.number;
-};
-
-/***************************************************************************
- * section usercloak
- ***************************************************************************/
-usercloak_entry: USERCLOAK
-{
-  if (ypass == 2)
-  {
-    yy_conf = make_conf_item(CLOAK_TYPE);
-    yy_aconf = (struct AccessItem *)map_to_conf(yy_conf);
-  }
-  else
-  {
-    MyFree(class_name);
-    class_name = NULL;
-  }
-} '{' usercloak_items '}' ';' ;
-
-usercloak_items: usercloak_items usercloak_item | usercloak_item;
-usercloak_item:  usercloak_name | usercloak_host | usercloak_password |
-                 usercloak_cloakstring | error;
-
-usercloak_name: NAME '=' QSTRING ';'
-{
-  if (ypass == 2)
-  {
-    if (strlen(yylval.string) > OPERNICKLEN)
-      yylval.string[OPERNICKLEN] = '\0';
-
-    MyFree(yy_conf->name);
-    DupString(yy_conf->name, yylval.string);
-  }
-};
-
-usercloak_host: USER '=' QSTRING ';'
-{
-  if (ypass == 2)
-  {
-    struct CollectItem *yy_tmp;
-
-    if (yy_aconf->user == NULL)
-    {
-      DupString(yy_aconf->host, yylval.string);
-      split_user_host(yy_aconf->host, &yy_aconf->user, &yy_aconf->host);
-    }
-    else
-    {
-      yy_tmp = (struct CollectItem *)MyMalloc(sizeof(struct CollectItem));
-
-      DupString(yy_tmp->host, yylval.string);
-      split_user_host(yy_tmp->host, &yy_tmp->user, &yy_tmp->host);
-
-      dlinkAdd(yy_tmp, &yy_tmp->node, &col_conf_list);
-    }
-  }
-};
-
-usercloak_password: PASSWORD '=' QSTRING ';'
-{
-  if (ypass == 2)
-  {
-    if (yy_aconf->passwd != NULL)
-      memset(yy_aconf->passwd, 0, strlen(yy_aconf->passwd));
-
-    MyFree(yy_aconf->passwd);
-    DupString(yy_aconf->passwd, yylval.string);
-  }
-};
-
-usercloak_cloakstring: CLOAKSTRING '=' QSTRING ';'
-{
-  if (ypass == 2)
-  {
-    if (yy_aconf->cloakstring != NULL)
-      memset(yy_aconf->cloakstring, 0, strlen(yy_aconf->cloakstring));
-
-    MyFree(yy_aconf->cloakstring);
-    DupString(yy_aconf->cloakstring, yylval.string);
-  }
 };
