@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  cluster.c: Code for handling kline/dline/xline/resv clusters
  *
  *  Copyright (C) 2003 Hybrid Development Team
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: cluster.c,v 1.1.1.1 2003/12/02 20:46:47 nenolod Exp $
+ *  $Id: cluster.c,v 1.2 2004/02/09 23:02:24 nenolod Exp $
  */
 
 #include "cluster.h"
@@ -33,134 +33,54 @@
 
 
 void
-cluster_kline(struct Client *source_p, int tkline_time, const char *user,
-              const char *host, const char *reason)
+cluster_kline (struct Client *source_p, int tkline_time, const char *user,
+	       const char *host, const char *reason)
 {
-  struct ConfItem *conf;
-  struct MatchItem *cptr;
-  dlink_node *ptr;
-
-  DLINK_FOREACH(ptr, cluster_items.head)
-  {
-    conf = ptr->data;
-    cptr = (struct MatchItem *)map_to_conf(conf);
-
-    if (IsClusterKline(cptr))
-      sendto_match_servs(source_p, conf->name, CAP_KLN,
-                         "KLINE %s %d %s %s :%s",
-                         conf->name, tkline_time, user, host, reason);
-  }
+  sendto_match_servs (source_p, "*", CAP_KLN,
+		      "KLINE %s %d %s %s :%s",
+		      conf->name, tkline_time, user, host, reason);
 }
 
 void
-cluster_unkline(struct Client *source_p, const char *user, const char *host)
+cluster_unkline (struct Client *source_p, const char *user, const char *host)
 {
-  struct ConfItem *conf;
-  struct MatchItem *cptr;
-  dlink_node *ptr;
-
-  DLINK_FOREACH(ptr, cluster_items.head)
-  {
-    conf = ptr->data;
-    cptr = (struct MatchItem *)map_to_conf(conf);
-
-    if (IsClusterUnkline(cptr))
-      sendto_match_servs(source_p, conf->name, CAP_UNKLN,
-                         "UNKLINE %s %s %s",
-                         conf->name, user, host);
-  }
+  sendto_match_servs (source_p, "*", CAP_UNKLN,
+		      "UNKLINE %s %s %s", conf->name, user, host);
 }
 
 void
-cluster_xline(struct Client *source_p, const char *gecos,
-              int xtype, const char *reason)
+cluster_xline (struct Client *source_p, const char *gecos,
+	       int xtype, const char *reason)
 {
-  struct ConfItem *conf;
-  struct MatchItem *cptr;
-  dlink_node *ptr;
-
-  DLINK_FOREACH(ptr, cluster_items.head)
-  {
-    conf = ptr->data;
-    cptr = (struct MatchItem *)map_to_conf(conf);
-
-    if (IsClusterXline(cptr))
-      sendto_match_servs(source_p, conf->name, CAP_CLUSTER,
-                         "XLINE %s %s %d :%s",
-                         conf->name, gecos, xtype, reason);
-  }
+  sendto_match_servs (source_p, "*", CAP_CLUSTER,
+		      "XLINE %s %s %d :%s", conf->name, gecos, xtype, reason);
 }
 
 void
-cluster_unxline(struct Client *source_p, const char *gecos)
+cluster_unxline (struct Client *source_p, const char *gecos)
 {
-  struct ConfItem *conf;
-  struct MatchItem *cptr;
-  dlink_node *ptr;
-
-  DLINK_FOREACH(ptr, cluster_items.head)
-  {
-    conf = ptr->data;
-    cptr = (struct MatchItem *)map_to_conf(conf);
-
-    if (IsClusterUnxline(cptr))
-      sendto_match_servs(source_p, conf->name, CAP_CLUSTER,
-                         "UNXLINE %s %s",
-                         conf->name, gecos);
-  }
+  sendto_match_servs (source_p, "*", CAP_CLUSTER,
+		      "UNXLINE %s %s", conf->name, gecos);
 }
 
 void
-cluster_resv(struct Client *source_p, const char *name, const char *reason)
+cluster_resv (struct Client *source_p, const char *name, const char *reason)
 {
-  struct ConfItem *conf;
-  struct MatchItem *cptr;
-  dlink_node *ptr;
-
-  DLINK_FOREACH(ptr, cluster_items.head)
-  {
-    conf = ptr->data;
-    cptr = (struct MatchItem *)map_to_conf(conf);
-
-    if (IsClusterResv(cptr))
-      sendto_match_servs(source_p, conf->name, CAP_CLUSTER,
-                         "RESV %s %s :%s",
-                         conf->name, name, reason);
-  }
+  sendto_match_servs (source_p, "*", CAP_CLUSTER,
+		      "RESV %s %s :%s", conf->name, name, reason);
 }
 
 void
-cluster_unresv(struct Client *source_p, const char *name)
+cluster_unresv (struct Client *source_p, const char *name)
 {
-  struct ConfItem *conf;
-  struct MatchItem *cptr;
-  dlink_node *ptr;
-
-  DLINK_FOREACH(ptr, cluster_items.head)
-  {
-    conf = ptr->data;
-    cptr = (struct MatchItem *)map_to_conf(conf);
-
-    if (IsClusterUnresv(cptr))
-      sendto_match_servs(source_p, conf->name, CAP_CLUSTER,
-                         "UNRESV %s %s", conf->name, name);
-  }
+  sendto_match_servs (source_p, "*", CAP_CLUSTER,
+		      "UNRESV %s %s", conf->name, name);
 }
 
+/* remind me to take out locops... it's pointless. --nenolod */
 void
-cluster_locops(struct Client *source_p, const char *message)
+cluster_locops (struct Client *source_p, const char *message)
 {
-  struct ConfItem *conf;
-  struct MatchItem *cptr;
-  dlink_node *ptr;
-
-  DLINK_FOREACH(ptr, cluster_items.head)
-  {
-    conf = ptr->data;
-    cptr = (struct MatchItem *)map_to_conf(conf);
-
-    if (IsClusterLocops(cptr))
-      sendto_match_servs(source_p, conf->name, CAP_CLUSTER,
-                         "LOCOPS %s :%s", conf->name, message);
-  }
+  sendto_match_servs (source_p, "*", CAP_CLUSTER,
+		      "LOCOPS %s :%s", conf->name, message);
 }
