@@ -1,5 +1,6 @@
 /*   contrib/m_ojoin.c
  *   Copyright (C) 2002 Hybrid Development Team
+ *   Copyright (C) 2003 ShadowIRCd Development Team
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -15,7 +16,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *   $Id: m_ojoin.c,v 1.1.1.1 2003/12/02 20:47:44 nenolod Exp $
+ *   $Id: m_ojoin.c,v 1.2 2003/12/12 18:21:42 nenolod Exp $
  */
 
 /* Remove this if you do not wish /OJOIN to support multiple channels
@@ -61,7 +62,7 @@ _moddeinit(void)
   mod_del_cmd(&ojoin_msgtab);
 }
 
-const char *_version = "$Revision: 1.1.1.1 $";
+const char *_version = "$Revision: 1.2 $";
 
 #endif
 
@@ -99,6 +100,8 @@ mo_ojoin(struct Client *client_p, struct Client *source_p,
     
     switch (*name)
     {
+      case '!': tmp_flags = CHFL_CHANOWNER;
+                modeletter = 'u'; name++; break;
       case '@': tmp_flags = CHFL_CHANOP;
                 modeletter = 'o'; name++; break;
       case '+': tmp_flags = CHFL_VOICE;
@@ -162,7 +165,7 @@ mo_ojoin(struct Client *client_p, struct Client *source_p,
       sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s JOIN %s",
                       source_p->name,
                       source_p->username,
-                      source_p->host,
+                      GET_CLIENT_HOST(source_p),
                       chptr->chname);
       
       if (modeletter != '\0')

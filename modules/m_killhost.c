@@ -1,8 +1,10 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
- *  m_killhost.c: Kills a users with agree host.
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
+ *  m_killhost.c: Kills users matching a hostmask.
  *
  *  Copyright (C) 2002 by Ilya Shtift.
+ *
+ *  Copyright (C) 2003 ShadowIRCd Development Team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,7 +21,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_killhost.c,v 1.1.1.1 2003/12/02 20:47:36 nenolod Exp $
+ *  $Id: m_killhost.c,v 1.2 2003/12/12 18:21:42 nenolod Exp $
  *
  */
 
@@ -65,7 +67,7 @@ _moddeinit(void)
   mod_del_cmd(&killhost_msgtab);
 }
 
-const char *_version = "$Revision: 1.1.1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /*

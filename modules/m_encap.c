@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  m_encap.c: encapsulated command propogation and parsing
  *
  *  Copyright (C) 2003 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_encap.c,v 1.1.1.1 2003/12/02 20:47:34 nenolod Exp $
+ *  $Id: m_encap.c,v 1.2 2003/12/12 18:21:42 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -55,7 +55,7 @@ _moddeinit(void)
   mod_del_cmd(&encap_msgtab);
   delete_capability("ENCAP");
 }
-const char *_version = "$Revision: 1.1.1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /*
@@ -93,6 +93,11 @@ ms_encap(struct Client *client_p, struct Client *source_p,
    * if the final parameter crosses our buffer size, should we bail, 
    * like the rest, or should we truncate?  ratbox seems to think truncate,
    * so i'll do that for now until i can talk to lee.  -bill
+   *
+   * if the rest bail, we should too, but i'll make it optional for now.
+   * frankily, bailing shouldn't matter, as ENCAP is basically worthless anyway.
+   * infact, it will most likely not make final release.
+   *                                       --nenolod
    */
 
   if (parc == 3)
@@ -100,8 +105,13 @@ ms_encap(struct Client *client_p, struct Client *source_p,
   else
     ircsprintf(ptr, ":%s", parv[parc-1]);
 
+#ifdef RATBOX_STYLE_ENCAP
   if ((cur_len + len) >= sizeof(buffer))
     buffer[sizeof(buffer)-1] = '\0';
+#else
+  if ((cur_len + len) >= sizeof(buffer))
+    return;
+#endif
 
   sendto_match_servs(source_p, parv[1], CAP_ENCAP,
                      "ENCAP %s", buffer);

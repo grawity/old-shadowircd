@@ -1,4 +1,4 @@
-$Id: TODO,v 1.10 2003/12/06 20:29:36 eko Exp $
+$Id: TODO,v 1.11 2003/12/12 18:21:42 nenolod Exp $
 
 done (rc1):
 
@@ -14,13 +14,12 @@ done (rc1):
 - channel mode +q: Quiet (nenolod) -- DONE.
 - channel mode +O: Oper only channel. (nenolod) -- DONE.
 
-rc2:
+rc2 / rc3 / rc4:
 
-- usermode +S: Antispam (admin-defined pattern) (nenolod)
-- usermode +C: Block CTCP (nenolod)
 - usermode +E: Registered users only (Eko) (done)
-- channel mode +C: Block CTCP (nenolod)
-- channel mode +N: Stickynicks (Bagheera)
+- linking (done)
+- fix modules which arent fully TS6 yet. (nenolod)
+- Finish SSL. (nenolod)
 
 rc3:
 
@@ -33,7 +32,11 @@ rc4 and beyond:
                (see detailed spec on this)
 - Automatically set +Z on client floods. (nenolod)
 - SSL Support (Eko/Bagheera) (Partially done as of rc1 -- nenolod)
-- channel mode +Z: SSL only (nenolod)
+- channel mode +Z: SSL only (nenolod) (82% done)
 - channel mode +L: Channel linking. (Eko)
                    Spec: l_spec.txt (Eko - Done)
+- usermode +S: Antispam (admin-defined pattern) (nenolod)
+- usermode +C: Block CTCP (nenolod)
+- channel mode +C: Block CTCP (nenolod)
+- channel mode +N: Stickynicks (Bagheera)
 

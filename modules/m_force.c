@@ -1,5 +1,6 @@
-/* contrib/m_force.c
+/* modules/m_force.c
  * Copyright (C) 2002 Hybrid Development Team
+ * Copyright (C) 2003 ShadowIRCd Development Team
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions are
@@ -25,7 +26,7 @@
  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *
- * $Id: m_force.c,v 1.1.1.1 2003/12/02 20:47:40 nenolod Exp $
+ * $Id: m_force.c,v 1.2 2003/12/12 18:21:42 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -75,7 +76,7 @@ _moddeinit(void)
   mod_del_cmd(&forcepart_msgtab);
 }
 
-const char *_version = "$Revision: 1.1.1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /* m_forcejoin()
@@ -121,6 +122,12 @@ mo_forcejoin(struct Client *client_p, struct Client *source_p,
   /* select our modes from parv[2] if they exist... (chanop)*/
   switch (parv[2][0])
   {
+    case '!':
+      type = CHFL_CHANOWNER;
+      mode = 'u';
+      sjmode = '!';
+      parv[2]++;
+      break;
     case '@':
       type = CHFL_CHANOP;
       mode = 'o';
@@ -162,7 +169,7 @@ mo_forcejoin(struct Client *client_p, struct Client *source_p,
       sendto_server(target_p, target_p, chptr, CAP_TS6, NOCAPS, LL_ICLIENT,
                     ":%s SJOIN %lu %s + :%c%s",
                     me.id, (unsigned long)chptr->channelts,
-                    chptr->chname, sjmode, target_p->id);
+                    chptr->chname, sjmode, ID(target_p));
       sendto_server(target_p, target_p, chptr, NOCAPS, CAP_TS6, LL_ICLIENT,
                     ":%s SJOIN %lu %s + :%c%s",
 	            me.name, (unsigned long)chptr->channelts,
@@ -171,7 +178,7 @@ mo_forcejoin(struct Client *client_p, struct Client *source_p,
 
     sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s JOIN :%s",
                          target_p->name, target_p->username,
-                         target_p->host, chptr->chname);
+                         GET_CLIENT_HOST(target_p), chptr->chname);
 
     if (type)
       sendto_channel_local(ALL_MEMBERS, chptr, ":%s MODE %s +%c %s",
@@ -230,7 +237,7 @@ mo_forcejoin(struct Client *client_p, struct Client *source_p,
     }
 
     chptr = get_or_create_channel(target_p, newch, NULL);
-    add_user_to_channel(chptr, target_p, CHFL_CHANOP);
+    add_user_to_channel(chptr, target_p, CHFL_CHANOWNER);
 
     /* send out a join, make target_p join chptr */
     if (chptr->chname[0] == '#')
@@ -239,15 +246,15 @@ mo_forcejoin(struct Client *client_p, struct Client *source_p,
                     ":%s SJOIN %lu %s +nt :@%s",
                     me.id, (unsigned long)chptr->channelts,
                     chptr->chname, ID(target_p));
-      sendto_server(target_p, target_p, chptr, NOCAPS, NOCAPS, LL_ICLIENT,
+      sendto_server(target_p, target_p, chptr, NOCAPS, CAP_TS6, LL_ICLIENT,
                     ":%s SJOIN %lu %s +nt :@%s",
                     me.name, (unsigned long)chptr->channelts,
-                    chptr->chname, ID(target_p));
+                    chptr->chname, target_p->name);
     }
 
     sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s JOIN :%s",
                          target_p->name, target_p->username,
-                         target_p->host, chptr->chname);
+                         GET_CLIENT_HOST(target_p), chptr->chname);
 
     chptr->mode.mode |= MODE_TOPICLIMIT | MODE_NOPRIVMSGS;
 
@@ -322,7 +329,7 @@ mo_forcepart(struct Client *client_p, struct Client *source_p,
 
   sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s PART %s :%s",
                        target_p->name, target_p->username,
- 	               target_p->host,chptr->chname,
+ 	               GET_CLIENT_HOST(target_p), chptr->chname,
 		       target_p->name);
   remove_user_from_channel(member);
 }
