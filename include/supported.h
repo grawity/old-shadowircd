@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: supported.h,v 3.3 2004/09/08 01:18:07 nenolod Exp $
+ *  $Id: supported.h,v 3.4 2004/09/22 19:47:20 nenolod Exp $
  */
 
 #ifndef INCLUDED_supported_h
@@ -69,7 +69,7 @@
 		  " NETWORK=%s"       \
 		  " CASEMAPPING=%s"   \
 		  " ELIST=%s LANGUAGE=%s"         \
-		  " GRANT ETRACE DCCALLOW CALLERID%s"
+		  " GRANT ETRACE DCCALLOW CALLERID SAFELIST"
 
 #ifndef DISABLE_CHAN_OWNER
 #define FEATURES2VALUES ConfigChannel.disable_local_channels ? "#" : "#&", \
@@ -77,16 +77,14 @@
                         ConfigChannel.use_except ? "e" : "", \
                         ConfigChannel.use_invex ? "I" : "", \
                         "bqd,k,l,imnpstTFczGETPScrVNOF", \
-                        ServerInfo.network_name, CASEMAP, "CTAU", get_locale(), \
-			(uplink && IsCapable(uplink, CAP_LL)) ? "" : " SAFELIST"
+                        ServerInfo.network_name, CASEMAP, "CTAU", get_locale()			
 #else
 #define FEATURES2VALUES ConfigChannel.disable_local_channels ? "#" : "#&", \
                         "(ohv)@%+", \
                         ConfigChannel.use_except ? "e" : "", \
                         ConfigChannel.use_invex ? "I" : "", \
                         "bqd,k,l,imnpstTFczGETPScrVNOF", \
-                        ServerInfo.network_name, CASEMAP, "CTAU", get_locale(), \
-			(uplink && IsCapable(uplink, CAP_LL)) ? "" : " SAFELIST"
+                        ServerInfo.network_name, CASEMAP, "CTAU", get_locale()
 #endif
 
 #endif /* INCLUDED_supported_h */

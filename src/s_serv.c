@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_serv.c,v 3.4 2004/09/22 19:27:01 nenolod Exp $
+ *  $Id: s_serv.c,v 3.5 2004/09/22 19:47:20 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -439,9 +439,6 @@ hunt_server(struct Client *client_p, struct Client *source_p, const char *comman
 
     if (!match(target_p->name, parv[server]))
       parv[server] = target_p->name;
-
-    /* Deal with lazylinks */
-    client_burst_if_needed(target_p, source_p);
 
     /* This is a little kludgy but should work... */
     if (IsClient(source_p) &&
