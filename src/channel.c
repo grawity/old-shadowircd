@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.c,v 1.4 2004/07/15 12:27:09 nenolod Exp $
+ *  $Id: channel.c,v 1.5 2004/07/16 16:04:02 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1119,5 +1119,13 @@ set_channel_topic(struct Channel *chptr, const char *topic,
 
     chptr->topic_time = 0;
   }
+}
+
+int
+get_channel_activity (struct Channel *chptr)
+{
+  time_t delta;
+  delta = time(NULL) - chptr->last_privmsg;
+  return delta / chptr->members.length; /* delta (div) member count */
 }
 
