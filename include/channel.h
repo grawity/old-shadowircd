@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.h,v 1.3 2004/06/09 21:07:27 nenolod Exp $
+ *  $Id: channel.h,v 1.4 2004/07/15 12:27:09 nenolod Exp $
  */
 
 #ifndef INCLUDED_channel_h
@@ -29,6 +29,7 @@
 #include "tools.h"
 
 struct Client;
+dlink_list global_filter_list;
 
 /* mode structure for channels */
 struct Mode
@@ -60,7 +61,6 @@ struct Channel
   dlink_list invexlist;      /* a double linked list of invite exempts */
   dlink_list quietlist;      /* a double linked list of quiets */
   dlink_list restrictlist;   /* a double linked list of restricts */
-  dlink_list filterlist;     /* a double linked list of filterwords */
 
   time_t first_received_message_time; /* channel flood control */
   int received_number_of_privmsgs;

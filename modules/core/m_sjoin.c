@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_sjoin.c,v 1.3 2004/06/09 21:07:27 nenolod Exp $
+ *  $Id: m_sjoin.c,v 1.4 2004/07/15 12:27:09 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,7 +63,7 @@ _moddeinit(void)
   mod_del_cmd(&sjoin_msgtab);
 }
 
-const char *_version = "$Revision: 1.3 $";
+const char *_version = "$Revision: 1.4 $";
 #endif
 
 static char modebuf[MODEBUFLEN];
@@ -298,8 +298,6 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
       if (dlink_list_length(&chptr->restrictlist) > 0)
         remove_ban_list(chptr, client_p, &chptr->restrictlist,
                         'd', CAP_IE);
-
-      free_filter_list(&chptr->filterlist);
     }
   }
 

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.c,v 1.3 2004/06/09 21:07:27 nenolod Exp $
+ *  $Id: channel.c,v 1.4 2004/07/15 12:27:09 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -43,20 +43,24 @@
 #include "balloc.h"
 #include "resv.h"
 
-
 struct config_channel_entry ConfigChannel;
 dlink_list global_channel_list = { NULL, NULL, 0 };
 dlink_list lazylink_channels = { NULL, NULL, 0 };
+
+/*
+ * global_filter_list is the list of the banwords
+ * to block with +G
+ */
+dlink_list global_filter_list = { NULL, NULL, 0 };
 BlockHeap *channel_heap;
 BlockHeap *ban_heap;
-
+BlockHeap *filter_heap;
 static char buf[BUFSIZE];
 static char modebuf[MODEBUFLEN];
 static char parabuf[MODEBUFLEN];
 
 static BlockHeap *topic_heap;
 static BlockHeap *member_heap;
-BlockHeap *filter_heap;
 
 static void destroy_channel(struct Channel *);
 static void send_mode_list(struct Client *, struct Channel *, dlink_list *, char);
@@ -84,7 +88,7 @@ init_channels(void)
   ban_heap = BlockHeapCreate(sizeof(struct Ban), BAN_HEAP_SIZE);
   topic_heap = BlockHeapCreate(TOPICLEN+1 + USERHOST_REPLYLEN, TOPIC_HEAP_SIZE);
   member_heap = BlockHeapCreate(sizeof(struct Membership), CHANNEL_HEAP_SIZE /* XXX */ );
-  filter_heap = BlockHeapCreate(sizeof(struct Filter), CHANNEL_HEAP_SIZE /* XXX */ );
+  filter_heap = BlockHeapCreate(sizeof(struct Filter), CHANNEL_HEAP_SIZE);
 }
 
 /* add_user_to_channel()
@@ -232,8 +236,6 @@ send_channel_modes(struct Client *client_p, struct Channel *chptr)
     send_mode_list(client_p, chptr, &chptr->quietlist, 'q');
   if (IsCapable(client_p, CAP_RE))
     send_mode_list(client_p, chptr, &chptr->restrictlist, 'd');
-  if (IsCapable(client_p, CAP_FILTER))
-    send_filter_list(client_p, chptr->chname, &chptr->filterlist, 'f');
 
 }
 

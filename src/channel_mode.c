@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 1.5 2004/07/06 02:46:50 nenolod Exp $
+ *  $Id: channel_mode.c,v 1.6 2004/07/15 12:27:09 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -51,7 +51,6 @@ static char *check_string (char *s);
 static char *pretty_mask (char *);
 static char *fix_key (char *);
 static char *fix_key_old (char *);
-
 
 static void chm_nosuch (struct Client *, struct Client *,
 			struct Channel *, int, int *, char **, int *, int,
@@ -747,96 +746,6 @@ chm_owneronly (struct Client *client_p, struct Client *source_p,
       mode_changes[mode_count].mems = ALL_MEMBERS;
       mode_changes[mode_count].id = NULL;
       mode_changes[mode_count++].arg = NULL;
-    }
-}
-
-static void
-chm_filter (struct Client *client_p, struct Client *source_p,
-	    struct Channel *chptr, int parc, int *parn,
-	    char **parv, int *errors, int alev, int dir, char c, void *d,
-	    const char *chname)
-{
-  char *word;
-  dlink_node *dl;
-  struct Filter *f;
-
-  if (dir == 0 || parc <= *parn)
-    {
-      if ((*errors & SM_ERR_RPL_B) != 0)
-	return;
-      *errors |= SM_ERR_RPL_B;
-
-      DLINK_FOREACH (dl, chptr->filterlist.head)
-      {
-	f = dl->data;
-	sendto_one (client_p, form_str (RPL_BANLIST), me.name, client_p->name,
-		    chname, f->word, f->who, f->when);
-      }
-
-      sendto_one (source_p, form_str (RPL_ENDOFBANLIST), me.name,
-		  source_p->name, chname);
-      return;
-    }
-
-
-  if ((alev < CHACCESS_CHANOP) && !IsServer(source_p))
-    {
-      if (!(*errors & SM_ERR_NOOPS))
-	sendto_one (source_p, form_str (alev == CHACCESS_NOTONCHAN ?
-					ERR_NOTONCHANNEL :
-					ERR_CHANOPRIVSNEEDED), me.name,
-		    source_p->name, chname);
-      *errors |= SM_ERR_NOOPS;
-      return;
-    }
-
-  if (MyClient (source_p) && (++mode_limit > (9 + MAXMODEPARAMS)))
-    return;
-
-  word = parv[(*parn)++];
-
-  if (EmptyString (word) || *word == ':')
-    return;
-
-  if (strlen (word) > (MODEBUFLEN - 2))
-    return;
-
-  if (dir == MODE_ADD)
-    {
-
-      if (!filter_add_word (source_p, chptr, word)
-	  && (MyClient (source_p) || IsServer (source_p)))
-	{
-	  sendto_realops_flags (UMODE_DEBUG, L_ALL,
-				"Error adding filter word.");
-	  return;
-	}
-
-      mode_changes[mode_count].letter = c;
-      mode_changes[mode_count].dir = MODE_ADD;
-      mode_changes[mode_count].caps = CAP_FILTER;
-      mode_changes[mode_count].nocaps = 0;
-      mode_changes[mode_count].mems = ALL_MEMBERS;
-      mode_changes[mode_count].id = NULL;
-      mode_changes[mode_count++].arg = word;
-    }
-  else if (dir == MODE_DEL)
-    {
-
-      if (filter_del_word (chptr, word) == 0)
-	{
-	  sendto_realops_flags (UMODE_DEBUG, L_ALL,
-				"Error removing filter word.");
-	  return;
-	}
-
-      mode_changes[mode_count].letter = c;
-      mode_changes[mode_count].dir = MODE_DEL;
-      mode_changes[mode_count].caps = CAP_FILTER;
-      mode_changes[mode_count].nocaps = 0;
-      mode_changes[mode_count].id = NULL;
-      mode_changes[mode_count].mems = ALL_MEMBERS;
-      mode_changes[mode_count++].arg = word;
     }
 }
 
@@ -2058,7 +1967,7 @@ static struct ChannelMode ModeTable[255] =
   {chm_simple, (void *) MODE_NOCOLOR},            /* c */
   {chm_restrict, NULL},                           /* d */
   {chm_except, NULL},                             /* e */
-  {chm_filter, NULL},                             /* f */
+  {chm_nosuch, NULL},                             /* f */
   {chm_nosuch, NULL},                             /* g */
   {chm_hop, NULL},                                /* h */
   {chm_simple, (void *) MODE_INVITEONLY},         /* i */

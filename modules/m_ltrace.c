@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_ltrace.c,v 1.2 2004/06/10 23:43:23 nenolod Exp $
+ *  $Id: m_ltrace.c,v 1.3 2004/07/15 12:27:09 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -40,7 +40,7 @@
 #include "msg.h"
 #include "parse.h"
 #include "modules.h"
-
+#include "irc_getnameinfo.h"
 
 static void m_ltrace(struct Client *, struct Client *, int, char **);
 static void mo_ltrace(struct Client *, struct Client *, int, char **);
@@ -66,7 +66,7 @@ _moddeinit(void)
   mod_del_cmd(&ltrace_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 static int report_this_status(struct Client *source_p, struct Client *target_p,int dow,

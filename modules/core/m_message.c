@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_message.c,v 1.6 2004/07/12 12:48:33 nenolod Exp $
+ *  $Id: m_message.c,v 1.7 2004/07/15 12:27:09 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -124,7 +124,7 @@ _moddeinit (void)
   mod_del_cmd (&notice_msgtab);
 }
 
-const char *_version = "$Revision: 1.6 $";
+const char *_version = "$Revision: 1.7 $";
 #endif
 
 /*
@@ -495,7 +495,7 @@ msg_channel (int p_or_n, const char *command, struct Client *client_p,
 
           if (chptr->mode.mode & MODE_USEFILTER)
           {
-            DLINK_FOREACH (ptr, chptr->filterlist.head)
+            DLINK_FOREACH (ptr, global_filter_list.head)
             {
               f = ptr->data;
               strcpy(text, check_text (text, f->word));

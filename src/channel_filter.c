@@ -20,7 +20,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_filter.c,v 1.1 2004/06/09 21:07:27 nenolod Exp $
+ *  $Id: channel_filter.c,v 1.2 2004/07/15 12:27:09 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -64,7 +64,7 @@ int filter_add_word (struct Client *client_p, struct Channel *chptr, char *word)
 		collapse(word);
 	}
 
-	list = &chptr->filterlist;
+	list = &global_filter_list;
 
 	DLINK_FOREACH (ptr, list->head)
 	{
@@ -77,8 +77,8 @@ int filter_add_word (struct Client *client_p, struct Channel *chptr, char *word)
 	}
 
 	/* Reject <censored> as one of the filter words
-     * Warning recieved from Hwy
-     */
+         * Warning recieved from Hwy
+         */
 	if (match(word, "<censored>"))
 	{
 		sendto_realops_flags (UMODE_DEBUG, L_ALL, "Forbidden filter word, aborting addition.");
@@ -119,7 +119,7 @@ int filter_del_word (struct Channel *chptr, char *word)
 
 	sendto_realops_flags (UMODE_DEBUG, L_ALL, "Searching for %s", word);
 
-	DLINK_FOREACH (ptr, chptr->filterlist.head)
+	DLINK_FOREACH (ptr, global_filter_list.head)
 	{
 		f = ptr->data;
 
@@ -129,7 +129,7 @@ int filter_del_word (struct Channel *chptr, char *word)
 			MyFree(f->who);
 			BlockHeapFree(filter_heap, f);
 
-			dlinkDelete(&f->node, &chptr->filterlist);
+			dlinkDelete(&f->node, &global_filter_list);
 			return 1;
 		}
 	}
