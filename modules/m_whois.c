@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_whois.c,v 1.2 2004/05/12 21:22:13 nenolod Exp $
+ *  $Id: m_whois.c,v 1.3 2004/05/13 19:23:58 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -84,7 +84,7 @@ _moddeinit (void)
   mod_del_cmd (&whois_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 /* m_whois
@@ -364,6 +364,11 @@ whois_person (struct Client *source_p, struct Client *target_p, int glob)
 
   server_p = target_p->user->server;
 
+  if (HasUmode(target_p, UMODE_WANTSWHOIS))
+    sendto_one (target_p, ":%s NOTICE %s :*** Notice -- %s (%s@%s) is doing a /whois on you.",
+                me.name, target_p->name, source_p->name, source_p->username, 
+                GET_CLIENT_HOST(source_p));
+
   sendto_one (source_p, form_str (RPL_WHOISUSER), me.name,
 	      source_p->name, target_p->name,
 	      target_p->username, GET_CLIENT_HOST (target_p), target_p->info);
@@ -463,6 +468,15 @@ whois_person (struct Client *source_p, struct Client *target_p, int glob)
   if (HasUmode(target_p, UMODE_HELPOP))
     sendto_one (source_p, form_str (RPL_WHOISHELPOP),
 		me.name, source_p->name, target_p->name);
+
+  if (IsOperAuspex (source_p))
+    sendto_one (source_p, form_str (RPL_WHOISUMODES),
+                me.name, source_p->name, target_p->name, 
+                umodes_as_string(&target_p->umodes));
+
+  if (HasUmode(target_p, UMODE_SENSITIVE))
+    sendto_one (source_p, form_str (RPL_WHOISSENSITIVE),
+                me.name, source_p->name, target_p->name);
 
   if (HasUmode(target_p, UMODE_SECURE))
     sendto_one (source_p, form_str (RPL_WHOISSECURE),

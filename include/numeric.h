@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: numeric.h,v 1.1 2004/04/30 18:14:20 nenolod Exp $
+ *  $Id: numeric.h,v 1.2 2004/05/13 19:23:58 nenolod Exp $
  */
 
 #ifndef INCLUDED_numeric_h
@@ -238,6 +238,8 @@ extern const char *get_locale(void);
 #define RPL_CHANNELMODEIS    324
 /*      RPL_CHANNELPASSIS    325           IRCnet extension */
 /*      RPL_UNIQOPIS         325           IRCnet extension */
+#define RPL_WHOISSENSITIVE   325
+#define RPL_WHOISUMODES      326
 /*      RPL_NOCHANPASS       326           IRCnet extension */
 /*      RPL_CHPASSUNKNOWN    327           IRCnet extension */
 /*      RPL_CHANNEL_URL      328           dalnet, anothernet */

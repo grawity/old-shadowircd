@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.9 2004/05/13 17:31:03 nenolod Exp $
+ *  $Id: s_user.c,v 1.10 2004/05/13 19:23:58 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -966,6 +966,8 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
         default:
           if ((flag = user_modes_from_c_to_bitmask[(unsigned char)*m]))
           {
+	    if (HasUmode(target_p, flag))
+              continue;
             if (MyConnect(target_p) && !IsOper(target_p) &&
               (user_mode_table[flag].operonly == 1))
             {
@@ -973,9 +975,6 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
             }
             else
             {
-              printf("setting usermode %d for char %c -- user %s\n",
-			flag, user_mode_table[flag].letter,
-			target_p->name);
               if (what == MODE_ADD)
                 SetUmode(target_p, flag);
               else
@@ -1005,6 +1004,7 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
   /* compare new flags with old flags and send string which
    * will cause servers to update correctly.
    */
+
   send_umode_out(target_p, target_p, &setflags);
 }
 
@@ -1023,26 +1023,24 @@ send_umode_out(struct Client *client_p, struct Client *source_p,
 
   char *mode_string = umode_difference(old, &client_p->umodes);
 
-  if (!(*mode_string))
-    return; /* usermode unchanged */
-
-  DLINK_FOREACH(ptr, serv_list.head)
+  if (*mode_string)
   {
-    target_p = ptr->data;
-
-    if ((target_p != client_p) && (target_p != source_p))
+    DLINK_FOREACH(ptr, serv_list.head)
     {
-      if ((!(ServerInfo.hub && IsCapable(target_p, CAP_LL))) ||
-          (target_p->localClient->serverMask &
-           source_p->lazyLinkClientExists))
-        sendto_one(target_p, ":%s MODE %s :%s",
-                   ID_or_name(source_p, target_p), ID_or_name(source_p, target_p), mode_string);
-    }
-  }
+      target_p = ptr->data; 
 
-  if (client_p && MyClient(client_p))
-    sendto_one(client_p, ":%s MODE %s :%s",
-                source_p->name, client_p->name, mode_string);
+      if ((target_p != client_p) && (target_p != source_p))
+      {
+          sendto_one(target_p, ":%s MODE %s :%s",
+                     ID_or_name(source_p, target_p), ID_or_name(source_p, target_p), mode_string);
+      }
+    }
+
+    if (MyClient(client_p))
+      sendto_one(client_p, ":%s MODE %s :%s",
+                  source_p->name, client_p->name, mode_string);
+
+  }
 }
 
 /* user_welcome()

@@ -2,7 +2,7 @@
  * shadowircd: an advanced IRC daemon.
  * umodes.h: part of new usermodes system
  *
- * $Id: umodes.h,v 1.3 2004/05/13 03:51:44 nenolod Exp $
+ * $Id: umodes.h,v 1.4 2004/05/13 19:23:58 nenolod Exp $
  */
 
 /* nice flashy bitfield math, care of asuffield and dancer-ircd.
@@ -35,7 +35,7 @@ extern char umode_list[];
 #define BITFIELD_SIZE 64
 
 /* one bit is always needed for invalid modes as a seperator */
-#define MAX_UMODE_COUNT (BITFIELD_SIZE - 1)
+#define MAX_UMODE_COUNT (BITFIELD_SIZE)
 
 /* do not change this. ever. not without changing the macros -- they are
  * hardcoded for two 32-bit bitfields.
@@ -63,48 +63,47 @@ typedef u_int32_t user_modes[2];
 #define ClearUmode(c,m) (ClearBit((c)->umodes,m))
 
 /* usermodes */
-#define UMODE_INVALID      0
-#define UMODE_SERVNOTICE   1 /* server notices     */                     /* +s */
-#define UMODE_CCONN        2 /* Client Connections */                     /* +c */
-#define UMODE_REJ          3 /* Bot Rejections */                         /* +j */
-#define UMODE_SKILL        4 /* Server Killed */                          /* +k */
-#define UMODE_FULL         5 /* Full messages */                          /* +f */
-#define UMODE_SPY          6 /* see STATS / LINKS */                      /* +y */
-#define UMODE_DEBUG        7 /* 'debugging' info */                       /* +d */
-#define UMODE_NCHANGE      8 /* Nick change notice */                     /* +n */
-#define UMODE_WALLOP       9 /* send wallops to them */                   /* +w */
-#define UMODE_OPERWALL    10  /* Operwalls */                             /* +z */
-#define UMODE_INVISIBLE   11 /* makes user invisible */                   /* +i */
-#define UMODE_BOTS        12 /* shows bots */                             /* +b */
-#define UMODE_EXTERNAL    13 /* show servers introduced and splitting */  /* +X */
-#define UMODE_CALLERID    14 /* block unless caller id's */               /* +g */
-#define UMODE_UNAUTH      15 /* show unauth connects here */              /* +u */
-#define UMODE_LOCOPS      16 /* show locops */                            /* +l */
-#define UMODE_OPER        17 /* Operator */                               /* +o */
-#define UMODE_ADMIN       18 /* Admin on server */                        /* +a */
-#define UMODE_IDENTIFY    19 /* Identified. */                            /* +e */
-#define UMODE_HIDEOPER    20 /* Hide operator status. */                  /* +h */
-#define UMODE_CLOAK       21 /* Usercloak. */                             /* +v */
-#define UMODE_BLOCKINVITE 22 /* Block Invites. */                         /* +I */
-#define UMODE_PMFILTER    23 /* Allow only registered users to PM */      /* +E */
-#define UMODE_HELPOP      24 /* Help operator. */                         /* +H */
-#define UMODE_SVSOPER     25 /* Services operator. */                     /* +O */
-#define UMODE_SVSADMIN    26 /* Services admin. */                        /* +A */
-#define UMODE_SVSROOT     27 /* Services root. */                         /* +R */
-#define UMODE_SERVICE     28 /* Network service. */                       /* +S */
-#define UMODE_SECURE      29 /* client is using SSL */                    /* +Z */
-#define UMODE_DEAF        30 /* User is deaf. */                          /* +D */
+#define UMODE_SERVNOTICE   0 /* server notices     */                     /* +s */
+#define UMODE_CCONN        1 /* Client Connections */                     /* +c */
+#define UMODE_REJ          2 /* Bot Rejections */                         /* +j */
+#define UMODE_SKILL        3 /* Server Killed */                          /* +k */
+#define UMODE_FULL         4 /* Full messages */                          /* +f */
+#define UMODE_SPY          5 /* see STATS / LINKS */                      /* +y */
+#define UMODE_DEBUG        6 /* 'debugging' info */                       /* +d */
+#define UMODE_NCHANGE      7 /* Nick change notice */                     /* +n */
+#define UMODE_WALLOP       8 /* send wallops to them */                   /* +w */
+#define UMODE_OPERWALL     9  /* Operwalls */                             /* +z */
+#define UMODE_INVISIBLE   10 /* makes user invisible */                   /* +i */
+#define UMODE_BOTS        11 /* shows bots */                             /* +b */
+#define UMODE_EXTERNAL    12 /* show servers introduced and splitting */  /* +X */
+#define UMODE_CALLERID    13 /* block unless caller id's */               /* +g */
+#define UMODE_UNAUTH      14 /* show unauth connects here */              /* +u */
+#define UMODE_LOCOPS      15 /* show locops */                            /* +l */
+#define UMODE_OPER        16 /* Operator */                               /* +o */
+#define UMODE_ADMIN       17 /* Admin on server */                        /* +a */
+#define UMODE_IDENTIFY    18 /* Identified. */                            /* +e */
+#define UMODE_HIDEOPER    19 /* Hide operator status. */                  /* +h */
+#define UMODE_CLOAK       20 /* Usercloak. */                             /* +v */
+#define UMODE_BLOCKINVITE 21 /* Block Invites. */                         /* +I */
+#define UMODE_PMFILTER    22 /* Allow only registered users to PM */      /* +E */
+#define UMODE_HELPOP      23 /* Help operator. */                         /* +H */
+#define UMODE_SVSOPER     24 /* Services operator. */                     /* +O */
+#define UMODE_SVSADMIN    25 /* Services admin. */                        /* +A */
+#define UMODE_SVSROOT     26 /* Services root. */                         /* +R */
+#define UMODE_SERVICE     27 /* Network service. */                       /* +S */
+#define UMODE_SECURE      28 /* client is using SSL */                    /* +Z */
+#define UMODE_DEAF        29 /* User is deaf. */                          /* +D */
 
 /* vanity flags */
-#define UMODE_NETADMIN    31 /* network administrator */                  /* +N */
-#define UMODE_TECHADMIN   32 /* technical administrator */                /* +T */
+#define UMODE_NETADMIN    30 /* network administrator */                  /* +N */
+#define UMODE_TECHADMIN   31 /* technical administrator */                /* +T */
 
-#define UMODE_NOCOLOUR    33 /* block message colours */                  /* +C */
-#define UMODE_SENSITIVE   34 /* user has "sensitive ears" */              /* +G */
+#define UMODE_NOCOLOUR    32 /* block message colours */                  /* +C */
+#define UMODE_SENSITIVE   33 /* user has "sensitive ears" */              /* +G */
 
-#define UMODE_ROUTING     35 /* user is on routing team */                /* +L */
+#define UMODE_ROUTING     34 /* user is on routing team */                /* +L */
 
-#define UMODE_WANTSWHOIS  36 /* Whois notifications */                    /* +W */
+#define UMODE_WANTSWHOIS  35 /* Whois notifications */                    /* +W */
 
 /* macros for tests... cleaner code */
 
@@ -145,9 +144,8 @@ typedef u_int32_t user_modes[2];
 #define SendLocops(x)           (HasUmode(x, UMODE_LOCOPS))
 #define SendUnauthorized(x)     (HasUmode(x, UMODE_UNAUTH))
 
-
+extern FLAG_ITEM user_mode_table[];
 extern void  init_umodes(void);
-extern user_modes user_umodes, null_umodes;
 extern char *umodes_as_string(user_modes *);
 extern void umodes_from_string(user_modes *, char *);
 extern char *umode_difference(user_modes *, user_modes *);

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: send.c,v 1.3 2004/05/12 21:22:13 nenolod Exp $
+ *  $Id: send.c,v 1.4 2004/05/13 19:23:58 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -122,9 +122,6 @@ send_message(struct Client *to, char *buf, int len)
     return;
   }
 #endif
-
-  if (HasUmode(to, UMODE_DEAF))
-    return;
 
   if (HasUmode(to, UMODE_NOCOLOUR))
     strip_colour(buf);
@@ -759,6 +756,9 @@ sendto_channel_local(int type, struct Channel *chptr, const char *pattern, ...)
     if (IsDefunct(target_p) || target_p->serial == current_serial)
       continue;
 
+    if (HasUmode(target_p, UMODE_DEAF))
+      continue;
+
     target_p->serial = current_serial;
 
     send_message(target_p, buffer, len);
@@ -1054,6 +1054,9 @@ sendto_anywhere(struct Client *to, struct Client *from,
   va_start(args, pattern);
   len += send_format(&buffer[len], IRCD_BUFSIZE - len, pattern, args);
   va_end(args);
+
+  if (HasUmode(to, UMODE_DEAF))
+    return;
 
   if(MyClient(to))
     send_message(send_to, buffer, len);
