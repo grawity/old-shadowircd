@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.c,v 3.4 2004/09/22 18:52:56 nenolod Exp $
+ *  $Id: client.c,v 3.5 2004/09/25 16:40:33 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -52,6 +52,7 @@
 #include "listener.h"
 #include "irc_res.h"
 #include "userhost.h"
+#include "hook.h"
 
 /* Pointer to beginning of Client list */
 dlink_list global_client_list = { NULL, NULL, 0 };
@@ -1271,6 +1272,11 @@ exit_client (struct Client *client_p,	/* The local client originating the
        */
       close_connection (source_p);
     }
+
+  if (MyClient(source_p))
+    hook_call_event("client_exit_local", source_p);
+  else
+    hook_call_event("client_exit_remote", source_p);
 
   if (IsServer (source_p))
     {
