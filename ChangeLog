@@ -1,4 +1,11 @@
-$Id: ChangeLog,v 1.14 2004/08/23 01:39:54 nenolod Exp $
+$Id: ChangeLog,v 1.15 2004/09/07 04:41:21 nenolod Exp $
+
+ShadowIRCd 3.2.1:
+
+* BUGFIX: Make +E channels work again.
+* BUGFIX: Make it where user cannot set himself identified.
+* Add DCCALLOW.
+* Add LANGUAGES 005 numeric.
 
 ShadowIRCd 3.2:
 
