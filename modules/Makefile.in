@@ -1,7 +1,7 @@
 #
 # Makefile.in for ircd/modules
 #
-# $Id: Makefile.in,v 1.15 2004/02/27 00:04:06 nenolod Exp $
+# $Id: Makefile.in,v 1.16 2004/03/22 23:41:57 nenolod Exp $
 #
 CC		= @CC@
 AR		= @AR@
@@ -93,6 +93,7 @@ SRCS =       \
   m_operspy.c \
   m_opme.c \
   m_pass.c \
+  m_persist.c \
   m_ping.c \
   m_pong.c \
   m_post.c \

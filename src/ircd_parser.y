@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.24 2004/03/11 06:05:23 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.25 2004/03/22 23:41:57 nenolod Exp $
  */
 
 %{
@@ -1355,7 +1355,8 @@ oper_admin: ADMIN '=' TBOOL ';'
   }
 };
 
-oper_flags_entry: FLAGS '{' oper_flags '}' ';'
+oper_flags_entry: FLAGS '{' oper_flags '}' ';';
+
 oper_flags: oper_flags oper_flag | oper_flag;
 oper_flag: oper_flag_auspex | oper_flag_admin | oper_flag_die |
            oper_flag_rehash | oper_flag_override |

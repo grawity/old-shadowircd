@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.c,v 1.9 2004/03/22 20:42:26 nenolod Exp $
+ *  $Id: client.c,v 1.10 2004/03/22 23:41:57 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -770,7 +770,7 @@ exit_one_client (struct Client *client_p, struct Client *source_p,
        */
       if (MyClient (source_p))
         {
-          if (source_p->peristpw[0] && (!(source_p->flags & FLAGS_KILLED)))
+          if (source_p->persistpw[0] && (!(source_p->flags & FLAGS_KILLED)))
             {
               source_p->flags |= FLAGS_PERSIST;
 	      fd_close (source_p->localClient->ctrlfd);

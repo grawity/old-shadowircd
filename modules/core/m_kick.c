@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_kick.c,v 1.5 2004/03/22 19:53:49 nenolod Exp $
+ *  $Id: m_kick.c,v 1.6 2004/03/22 23:41:57 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -60,7 +60,7 @@ _moddeinit(void)
   mod_del_cmd(&kick_msgtab);
 }
 
-const char *_version = "$Revision: 1.5 $";
+const char *_version = "$Revision: 1.6 $";
 #endif
 
 /* m_kick()
@@ -204,7 +204,7 @@ m_kick(struct Client *client_p, struct Client *source_p,
     /* half ops cannot kick other halfops, chanops or owners */
     if (has_member_flags(ms, CHFL_HALFOP) && !has_member_flags(ms, CHFL_CHANOP))
     {
-      if ((has_member_flags(ms_target, CHFL_CHANOP|CHFL_HALFOP|CHFL_CHANOWNER))
+      if ((has_member_flags(ms_target, CHFL_CHANOP|CHFL_HALFOP|CHFL_CHANOWNER)))
       {
         sendto_one(source_p, form_str(ERR_CHANOPRIVSNEEDED),
                    me.name, source_p->name, name);
