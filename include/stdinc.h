@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  stdinc.h: Pull in all of the necessary system headers
  *
  *  Copyright (C) 2002 Aaron Sethman <androsyn@ratbox.org>
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- * $Id: stdinc.h,v 1.1.1.1 2003/12/02 20:47:56 nenolod Exp $
+ * $Id: stdinc.h,v 1.2 2003/12/05 21:59:50 nenolod Exp $
  *
  */
 
@@ -112,6 +112,11 @@
 #include <errno.h>
 #else
 extern int errno;
+#endif
+
+#ifdef HAVE_LIBCRYPTO
+#include <openssl/ssl.h>
+#include <openssl/err.h>
 #endif
 
 #include "inet_misc.h"

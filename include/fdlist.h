@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  fdlist.h: The file descriptor list header.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: fdlist.h,v 1.2 2003/12/05 20:48:49 nenolod Exp $
+ *  $Id: fdlist.h,v 1.3 2003/12/05 21:59:50 nenolod Exp $
  */
 
 #ifndef INCLUDED_fdlist_h
@@ -129,7 +129,7 @@ extern fde_t *fd_table;
 
 void fdlist_init(void);
 
-extern void  fd_open(int, unsigned int, const char *);
+extern void  fd_open(int, unsigned int, const char *, int);
 extern void  fd_close(int);
 extern void  fd_dump(struct Client *source_p);
 #ifndef __GNUC__
