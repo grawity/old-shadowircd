@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.9 2004/09/06 22:06:49 nenolod Exp $
+# $Id: Makefile,v 1.10 2004/09/06 22:28:29 nenolod Exp $
 #
 RM            = /bin/rm
 MV            = /bin/mv

@@ -26,12 +26,12 @@
  *  along with this program; if not, write to the Free Software Foundation,
  *  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
  *
- * $Id: event.c,v 1.1 2004/09/06 22:21:07 nenolod Exp $
+ * $Id: event.c,v 1.2 2004/09/06 22:28:29 nenolod Exp $
  */
 
 #include "stdinc.h"
 
-#include "commio.h"
+#include "s_bsd.h"
 #include "internal.h"
 #include "memory.h"
 #include "tvarith.h"

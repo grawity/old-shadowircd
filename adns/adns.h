@@ -51,14 +51,14 @@
  *  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  *
- *  $Id: adns.h,v 1.1 2004/09/06 22:21:07 nenolod Exp $
+ *  $Id: adns.h,v 1.2 2004/09/06 22:28:29 nenolod Exp $
  */
 
 #ifndef ADNS_H_INCLUDED
 #define ADNS_H_INCLUDED
 
 #include "stdinc.h"
-#include "commio.h"
+#include "s_bsd.h"
 #include "ircd.h"
 #include "ircd_defs.h"
 #include "irc_string.h"
