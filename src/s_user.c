@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.8 2004/05/13 16:56:19 nenolod Exp $
+ *  $Id: s_user.c,v 1.9 2004/05/13 17:31:03 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -967,12 +967,15 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
           if ((flag = user_modes_from_c_to_bitmask[(unsigned char)*m]))
           {
             if (MyConnect(target_p) && !IsOper(target_p) &&
-              (user_mode_table[flag - 1].operonly == 1))
+              (user_mode_table[flag].operonly == 1))
             {
               badflag = 1;
             }
             else
             {
+              printf("setting usermode %d for char %c -- user %s\n",
+			flag, user_mode_table[flag].letter,
+			target_p->name);
               if (what == MODE_ADD)
                 SetUmode(target_p, flag);
               else
