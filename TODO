@@ -1,4 +1,4 @@
-$Id: TODO,v 1.4 2003/12/04 04:31:32 nenolod Exp $
+$Id: TODO,v 1.5 2003/12/04 05:29:23 nenolod Exp $
 
 - colorblock, colorstrip (done)
 - identified umode (done)
@@ -22,4 +22,7 @@ $Id: TODO,v 1.4 2003/12/04 04:31:32 nenolod Exp $
 - channel mode +L: Channel linking. (Eko)
                    (Eko, you should write a spec on how this will work.)
 - channel mode +F: Free Invite (nenolod)
+- usermode +Z: No private messages (Eko/Bagheera/Lunis)
+               (see detailed spec on this)
+- Automatically set +Z on client floods. (nenolod)
 
