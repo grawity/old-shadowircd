@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.16 2004/01/12 20:38:33 nenolod Exp $
+ *  $Id: s_user.c,v 1.17 2004/01/15 20:16:20 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -974,15 +974,7 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
   int what = MODE_ADD;
   int badflag = 0; /* Only send one bad flag notice */
   char buf[BUFSIZE];
-#if 0
-  /* already covered by m_mode */
-  if (parc < 2)
-  {
-    sendto_one(source_p, form_str(ERR_NEEDMOREPARAMS),
-               me.name, source_p->name, "MODE");
-    return;
-  }
-#endif
+
   if ((target_p = find_person(parv[1])) == NULL)
   {
     if (MyConnect(source_p))
@@ -991,17 +983,10 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
     return;
   }
 
-  /* Dont know why these were commented out..
-   * put them back using new sendto() funcs
+  /* We let servers change umodes for people, for services and whatnot.
+   * No need for SVSMODE --nenolod
    */
-  if (IsServer(source_p))
-  {
-     sendto_realops_flags(UMODE_ALL, L_ADMIN, "*** Mode for User %s from %s",
-                          parv[1], source_p->name);
-     return;
-  }
-
-  if (source_p != target_p || target_p->from != source_p->from)
+  if ((source_p != target_p || target_p->from != source_p->from) && !IsServer(source_p))
   {
      sendto_one(source_p, form_str(ERR_USERSDONTMATCH),
                 me.name, source_p->name);
@@ -1040,9 +1025,17 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
           what = MODE_DEL;
           break;
         case 'e':
-	  /* They can't +/-e. That's for services. Stop it.
-	   * Services uses SVSMODE, so do not worry about it.
-           */
+          /* Unless we are a server, we can't change this mode. */
+          if (!IsServer(source_p))
+             break;
+
+          /* We're a server, make the change... */
+          if (what == MODE_ADD)
+             target_p->umodes |= UMODE_IDENTIFY;
+          else
+             target_p->umodes &= ~UMODE_IDENTIFY;
+          
+          /* ...then break out. --nenolod */
 	  break;
         case 'o':
           if (what == MODE_ADD)
@@ -1248,21 +1241,6 @@ user_welcome(struct Client *source_p)
   sendto_one(source_p, form_str(RPL_YOURHOST), me.name, source_p->name,
 	     me.name, ircd_version);
   
-#if 0
-  /*
-  ** Don't mess with this one - IRCII needs it! -Avalon
-  */
-  /* No one has needed this in years, but I remember when IRCII did!
-   * It sure confused me why my IRCII client hung at start up
-   * when I was writing my first ircd from scratch. ;-)
-   * - Dianora
-   */
-  sendto_one(source_p,
-	     "NOTICE %s :*** Your host is %s, running version %s",
-	     source_p->name, me.name,
-	     ircd_version);
-#endif
-
   sendto_one(source_p, form_str(RPL_CREATED),
              me.name,source_p->name, creation);
   sendto_one(source_p, form_str(RPL_MYINFO),
@@ -1271,33 +1249,19 @@ user_welcome(struct Client *source_p)
   show_isupport(source_p);
   show_lusers(source_p);
 
-  if (ConfigFileEntry.short_motd)
-  {
-    sendto_one(source_p, "NOTICE %s :*** Notice -- motd was last changed at %s",
-               source_p->name, ConfigFileEntry.motd.lastChangedDate);
-    sendto_one(source_p,
-               "NOTICE %s :*** Notice -- Please read the motd if you haven't "
-               "read it", source_p->name);
-    sendto_one(source_p, form_str(RPL_MOTDSTART),
-               me.name, source_p->name, me.name);
-    sendto_one(source_p, form_str(RPL_MOTD),
-               me.name, source_p->name,
-               "*** This is the short motd ***");
-    sendto_one(source_p, form_str(RPL_ENDOFMOTD),
-               me.name, source_p->name);
+  if (ConfigFileEntry.motd.lastChangedDate) {
+     sendto_one(source_p, "NOTICE %s :*** Notice -- motd was last changed at %s",
+                source_p->name, ConfigFileEntry.motd.lastChangedDate);
+     sendto_one(source_p,
+                "NOTICE %s :*** Notice -- Please read the motd if you haven't "
+                "read it", source_p->name);
   }
+
+  if (ConfigFileEntry.short_motd)
+    send_message_file(source_p, &ConfigFileEntry.shortmotd);
   else  
     send_message_file(source_p, &ConfigFileEntry.motd);
-#if 0
-  /* restrictions are broken since diane commented out some code.
-   * local restrictions are just pointless
-   */
-  if (IsRestricted(source_p))
-  {
-    sendto_one(source_p,form_str(ERR_RESTRICTED),
-               me.name, source_p->name);
-  }
-#endif
+
 }
 
 /* check_x_line()

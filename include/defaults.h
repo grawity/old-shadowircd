@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  defaults.h: The ircd defaults header for values and paths.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: defaults.h,v 1.1.1.1 2003/12/02 20:47:55 nenolod Exp $
+ *  $Id: defaults.h,v 1.2 2004/01/15 20:16:20 nenolod Exp $
  */
 
 #ifndef INCLUDED_defaults_h
@@ -64,6 +64,7 @@
 #define GPATH   ETCPATH "/gline.conf"           /* gline conffile */
 #define XPATH   ETCPATH "/xline.conf"           /* xline file */
 #define MPATH   ETCPATH "/ircd.motd"            /* MOTD file */
+#define SMPATH  ETCPATH "/ircd.smotd"           /* Short MOTD file */
 #define LPATH   LOGPATH "/ircd.log"             /* ircd logfile */
 #define PPATH   ETCPATH "/ircd.pid"             /* pid file */
 #define OPATH   ETCPATH "/opers.motd"           /* oper MOTD file */
@@ -95,8 +96,8 @@
 #define TS_WARN_DELTA_DEFAULT 30        /* default for ts_warn_delta */
 
 /* ServerInfo default values */
-#define NETWORK_NAME_DEFAULT "EFnet"             /* default for network_name */
-#define NETWORK_DESC_DEFAULT "Eris Free Network" /* default for network_desc */
+#define NETWORK_NAME_DEFAULT "MyNet"              /* default for network_name */
+#define NETWORK_DESC_DEFAULT "This Is My Network" /* default for network_desc */
 
 /* General defaults */
 #define MAXIMUM_LINKS_DEFAULT 1         /* default for maximum_links */

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd.c,v 1.6 2004/01/12 20:01:26 nenolod Exp $
+ *  $Id: ircd.c,v 1.7 2004/01/15 20:16:20 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -369,9 +369,11 @@ initialize_message_files (void)
 {
   init_message_file (USER_MOTD, MPATH, &ConfigFileEntry.motd);
   init_message_file (OPER_MOTD, OPATH, &ConfigFileEntry.opermotd);
+  init_message_file (SHORT_MOTD, SMPATH, &ConfigFileEntry.shortmotd);
 
   read_message_file (&ConfigFileEntry.motd);
   read_message_file (&ConfigFileEntry.opermotd);
+  read_message_file (&ConfigFileEntry.shortmotd);
 }
 
 /* initialize_server_capabs()

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: motd.c,v 1.2 2003/12/11 18:16:47 nenolod Exp $
+ *  $Id: motd.c,v 1.3 2004/01/15 20:16:20 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -83,6 +83,29 @@ send_message_file(struct Client *source_p, MessageFile *motdToPrint)
   switch (motdType)
   {
     case USER_MOTD:
+      if (motdToPrint->contentsOfFile == NULL)
+      {
+        sendto_one(source_p, form_str(ERR_NOMOTD),
+                   from, to);
+        return(0);
+      }
+
+      sendto_one(source_p, form_str(RPL_MOTDSTART),
+                 from, to, me.name);
+
+      for (linePointer = motdToPrint->contentsOfFile; linePointer;
+           linePointer = linePointer->next)
+      {
+        sendto_one(source_p, form_str(RPL_MOTD),
+                   from, to, linePointer->line);
+      }
+
+      sendto_one(source_p, form_str(RPL_ENDOFMOTD), from, to);
+      return(0);
+      /* NOT REACHED */
+      break;
+
+    case SHORT_MOTD:
       if (motdToPrint->contentsOfFile == NULL)
       {
         sendto_one(source_p, form_str(ERR_NOMOTD),
