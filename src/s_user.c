@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.11 2004/05/21 21:49:06 nenolod Exp $
+ *  $Id: s_user.c,v 1.12 2004/05/22 18:03:10 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -157,8 +157,8 @@ show_lusers(struct Client *source_p)
   }
 
   sendto_one(source_p, form_str(RPL_LUSERCLIENT),
-               from, to, (Count.total-Count.invisi),
-               Count.invisi, dlink_list_length(&global_serv_list));
+               from, to, Count.total,
+               dlink_list_length(&global_serv_list));
 
   if (Count.oper > 0)
     sendto_one(source_p, form_str(RPL_LUSEROP),
@@ -870,6 +870,7 @@ void
 set_user_mode(struct Client *client_p, struct Client *source_p,
               int parc, char *parv[])
 {
+  int i;
   unsigned int flag;
   user_modes setflags;
   char **p;
@@ -919,6 +920,62 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
         case '-':
           what = MODE_DEL;
           break;
+        case 'a':
+          if (what == MODE_ADD)
+          {
+            if (IsServer(client_p) && !HasUmode(target_p, UMODE_ADMIN))
+            {
+              SetUmode(target_p, UMODE_ADMIN);
+            }
+          }
+          else
+          {
+            ClearUmode(target_p, UMODE_ADMIN);
+          }
+          break;
+
+        case 'N':
+          if (what == MODE_ADD)
+          {
+            if (IsServer(client_p) && !HasUmode(target_p, UMODE_NETADMIN))
+            {
+              SetUmode(target_p, UMODE_NETADMIN);
+            }
+          }
+          else
+          {
+            ClearUmode(target_p, UMODE_NETADMIN);
+          }
+          break;
+
+        case 'T':
+          if (what == MODE_ADD)
+          {
+            if (IsServer(client_p) && !HasUmode(target_p, UMODE_TECHADMIN))
+            {
+              SetUmode(target_p, UMODE_TECHADMIN);
+            }
+          }
+          else
+          {
+            ClearUmode(target_p, UMODE_TECHADMIN);
+          }
+          break;
+
+        case 'L':
+          if (what == MODE_ADD)
+          {
+            if (IsServer(client_p) && !HasUmode(target_p, UMODE_ROUTING))
+            {
+              SetUmode(target_p, UMODE_ROUTING);
+            }
+          }
+          else
+          {
+            ClearUmode(target_p, UMODE_ROUTING);
+          }
+          break;
+
         case 'o':
           if (what == MODE_ADD)
           {
@@ -937,7 +994,18 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
               break;
 
             ClearUmode(target_p, UMODE_OPER);
-            /* TODO: Remove all oper modes here from the user. */
+	    ClearUmode(target_p, UMODE_ADMIN);
+            ClearUmode(target_p, UMODE_NETADMIN);
+            ClearUmode(target_p, UMODE_TECHADMIN);
+            ClearUmode(target_p, UMODE_ROUTING);
+
+            /* clear operonly usermodes for this user */
+            for (i = 0; user_mode_table[i].flag; i++) {
+              if (user_mode_table[i].operonly == 1) {
+                ClearUmode(target_p, user_mode_table[i].mode);
+              }
+            }
+
             Count.oper--;
 
             if (MyConnect(source_p))
@@ -949,6 +1017,7 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
 
               if ((dm = dlinkFindDelete(&oper_list, target_p)) != NULL)
                 free_dlink_node(dm);
+
             }
           }
 
@@ -1173,6 +1242,15 @@ oper_up(struct Client *source_p)
   SetUmode(source_p, UMODE_OPERWALL);
   SetUmode(source_p, UMODE_SERVNOTICE);
   SetUmode(source_p, UMODE_LOCOPS);
+
+  if (source_p->localClient->operflags & OPER_FLAG_TECHADMIN)
+    SetUmode(source_p, UMODE_TECHADMIN);
+
+  if (source_p->localClient->operflags & OPER_FLAG_NETADMIN)
+    SetUmode(source_p, UMODE_NETADMIN);
+
+  if (source_p->localClient->operflags & OPER_FLAG_ROUTING)
+    SetUmode(source_p, UMODE_ROUTING);
 
   if (IsOperAdmin(source_p) || IsOperHiddenAdmin(source_p))
     SetUmode(source_p, UMODE_ADMIN);

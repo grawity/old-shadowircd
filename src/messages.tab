@@ -16,7 +16,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *   $Id: messages.tab,v 1.5 2004/05/22 04:12:36 nenolod Exp $
+ *   $Id: messages.tab,v 1.6 2004/05/22 18:03:10 nenolod Exp $
  */
 
 static struct NumericInfo replies[] = {
@@ -271,7 +271,7 @@ static struct NumericInfo replies[] = {
 /* 248 */  {"RPL_STATSULINE", ":%s 248 %s U %s %s %s %s", NULL},
 /* 249 */  {NULL, NULL, NULL},
 /* 250 */  {"RPL_STATSCONN", ":%s 250 %s :Highest connection count: %d (%d clients) (%d connections received)", NULL},
-/* 251 */  {"RPL_LUSERCLIENT", ":%s 251 %s :There are %d users and %d invisible on %d servers", NULL},
+/* 251 */  {"RPL_LUSERCLIENT", ":%s 251 %s :There are %d users on %d servers", NULL},
 /* 252 */  {"RPL_LUSEROP", ":%s 252 %s %d :IRC Operators online", NULL},
 /* 253 */  {"RPL_LUSERUNKNOWN", ":%s 253 %s %d :unknown connection(s)", NULL},
 /* 254 */  {"RPL_LUSERCHANNELS", ":%s 254 %s %d :channels formed", NULL},

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.5 2004/05/13 03:51:44 nenolod Exp $
+ *  $Id: client.h,v 1.6 2004/05/22 18:03:10 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -421,6 +421,9 @@ struct LocalUser
 #define OPER_FLAG_IMMUNE       0x00004000 /* oper is immune to all       */
 #define OPER_FLAG_OVERRIDE     0x00008000 /* oper can override channels  */
 #define OPER_FLAG_GRANT        0x00010000 /* oper can grant privileges   */
+#define OPER_FLAG_TECHADMIN    0x00020000 /* technical administrator     */
+#define OPER_FLAG_NETADMIN     0x00040000 /* network administrator       */
+#define OPER_FLAG_ROUTING      0x00080000 /* routing team member         */
 
 #define SetOFlag(x, y) ((x)->localClient->operflags |= (y))
 

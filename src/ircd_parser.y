@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.2 2004/05/12 19:41:47 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.3 2004/05/22 18:03:10 nenolod Exp $
  */
 
 %{
@@ -350,6 +350,10 @@ unhook_hub_leaf_confs(void)
 %token  XLINE
 %token  WARN
 %token  WARN_NO_NLINE
+
+%token  NETADMIN
+%token  TECHADMIN
+%token  ROUTING
 
 %token  WINGATE
 %token  MONITORBOT
@@ -1077,7 +1081,9 @@ oper_item:      oper_name  | oper_user | oper_password | oper_hidden_admin |
                 oper_die | oper_rehash | oper_admin |
 		oper_rsa_public_key_file | oper_auspex |
                 oper_set_owncloak | oper_set_anycloak |
-                oper_immune | oper_override | oper_grant | oper_flags_entry |
+                oper_immune | oper_override | oper_grant | 
+                oper_netadmin | oper_techadmin | 
+                oper_routing | oper_flags_entry |
                 error;
 
 oper_name: NAME '=' QSTRING ';'
@@ -1354,6 +1360,39 @@ oper_admin: ADMIN '=' TBOOL ';'
   }
 };
 
+oper_netadmin: NETADMIN '=' TBOOL ';'
+{
+  if (ypass == 2)
+  {
+    if (yylval.number)
+      yy_aconf->port |= OPER_FLAG_NETADMIN;
+    else
+      yy_aconf->port &= ~OPER_FLAG_NETADMIN;
+  }
+};
+
+oper_techadmin: TECHADMIN '=' TBOOL ';'
+{
+  if (ypass == 2)
+  {
+    if (yylval.number)
+      yy_aconf->port |= OPER_FLAG_TECHADMIN;
+    else
+      yy_aconf->port &= ~OPER_FLAG_TECHADMIN;
+  }
+};
+
+oper_routing: ROUTING '=' TBOOL ';'
+{
+  if (ypass == 2)
+  {
+    if (yylval.number)
+      yy_aconf->port |= OPER_FLAG_ROUTING;
+    else
+      yy_aconf->port &= ~OPER_FLAG_ROUTING;
+  }
+};
+
 oper_flags_entry: FLAGS '{' oper_flags '}' ';';
 
 oper_flags: oper_flags oper_flag | oper_flag;
@@ -1363,7 +1402,8 @@ oper_flag: oper_flag_auspex | oper_flag_admin | oper_flag_die |
            oper_flag_xline | oper_flag_grant | oper_flag_immune |
            oper_flag_remote | oper_flag_globalkill |
            oper_flag_setowncloak | oper_flag_setanycloak |
-           oper_flag_hiddenadmin | error;
+           oper_flag_hiddenadmin | oper_flag_netadmin | 
+           oper_flag_techadmin | oper_flag_routing | error;
 
 oper_flag_auspex: AUSPEX ';'
 {
@@ -1459,6 +1499,24 @@ oper_flag_hiddenadmin: HIDDEN_ADMIN ';'
 {
   if (ypass == 2)
     yy_aconf->port |= OPER_FLAG_HIDDEN_ADMIN;
+};
+
+oper_flag_netadmin: NETADMIN ';'
+{
+  if (ypass == 2)
+    yy_aconf->port |= OPER_FLAG_NETADMIN;
+};
+
+oper_flag_techadmin: TECHADMIN ';'
+{
+  if (ypass == 2)
+    yy_aconf->port |= OPER_FLAG_TECHADMIN;
+};
+
+oper_flag_routing: ROUTING ';'
+{
+  if (ypass == 2)
+    yy_aconf->port |= OPER_FLAG_ROUTING;
 };
 
 /***************************************************************************
