@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.c,v 1.2 2004/05/12 19:41:47 nenolod Exp $
+ *  $Id: channel.c,v 1.3 2004/06/09 21:07:27 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -56,6 +56,7 @@ static char parabuf[MODEBUFLEN];
 
 static BlockHeap *topic_heap;
 static BlockHeap *member_heap;
+BlockHeap *filter_heap;
 
 static void destroy_channel(struct Channel *);
 static void send_mode_list(struct Client *, struct Channel *, dlink_list *, char);
@@ -83,6 +84,7 @@ init_channels(void)
   ban_heap = BlockHeapCreate(sizeof(struct Ban), BAN_HEAP_SIZE);
   topic_heap = BlockHeapCreate(TOPICLEN+1 + USERHOST_REPLYLEN, TOPIC_HEAP_SIZE);
   member_heap = BlockHeapCreate(sizeof(struct Membership), CHANNEL_HEAP_SIZE /* XXX */ );
+  filter_heap = BlockHeapCreate(sizeof(struct Filter), CHANNEL_HEAP_SIZE /* XXX */ );
 }
 
 /* add_user_to_channel()
@@ -230,6 +232,9 @@ send_channel_modes(struct Client *client_p, struct Channel *chptr)
     send_mode_list(client_p, chptr, &chptr->quietlist, 'q');
   if (IsCapable(client_p, CAP_RE))
     send_mode_list(client_p, chptr, &chptr->restrictlist, 'd');
+  if (IsCapable(client_p, CAP_FILTER))
+    send_filter_list(client_p, chptr->chname, &chptr->filterlist, 'f');
+
 }
 
 /* send_mode_list()

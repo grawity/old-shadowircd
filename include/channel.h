@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.h,v 1.2 2004/05/22 04:12:36 nenolod Exp $
+ *  $Id: channel.h,v 1.3 2004/06/09 21:07:27 nenolod Exp $
  */
 
 #ifndef INCLUDED_channel_h
@@ -60,6 +60,7 @@ struct Channel
   dlink_list invexlist;      /* a double linked list of invite exempts */
   dlink_list quietlist;      /* a double linked list of quiets */
   dlink_list restrictlist;   /* a double linked list of restricts */
+  dlink_list filterlist;     /* a double linked list of filterwords */
 
   time_t first_received_message_time; /* channel flood control */
   int received_number_of_privmsgs;
@@ -105,6 +106,9 @@ extern void channel_modes(struct Channel *, struct Client *, char *, char *);
 extern void check_spambot_warning(struct Client *source_p, const char *name);
 extern void check_splitmode(void *);
 extern void free_channel_list(dlink_list *);
+extern void free_filter_list(dlink_list *);
+
+void send_filter_list(struct Client *, char *, dlink_list *, char flag);
 
 /*
 ** Channel Related macros follow
@@ -122,6 +126,14 @@ struct Ban          /* also used for exceptions -orabidoo */
 {
   dlink_node node;
   char *banstr;
+  char *who;
+  time_t when;
+};
+
+struct Filter
+{
+  dlink_node node;
+  char *word;
   char *who;
   time_t when;
 };

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_message.c,v 1.4 2004/06/09 01:38:26 nenolod Exp $
+ *  $Id: m_message.c,v 1.5 2004/06/09 21:07:27 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -95,6 +95,8 @@ static void handle_special (int p_or_n, const char *command,
 			    struct Client *client_p,
 			    struct Client *source_p, char *nick, char *text);
 
+char *check_text (char *, char *);
+
 struct Message privmsg_msgtab = {
   "PRIVMSG", 0, 0, 1, 0, MFLG_SLOW | MFLG_UNREG, 0L,
   {m_unregistered, m_privmsg, m_privmsg, m_privmsg, m_ignore}
@@ -122,7 +124,7 @@ _moddeinit (void)
   mod_del_cmd (&notice_msgtab);
 }
 
-const char *_version = "$Revision: 1.4 $";
+const char *_version = "$Revision: 1.5 $";
 #endif
 
 /*
@@ -464,6 +466,8 @@ static void
 msg_channel (int p_or_n, const char *command, struct Client *client_p,
 	     struct Client *source_p, struct Channel *chptr, char *text)
 {
+  dlink_node *ptr;
+  struct Filter *f;
   int result;
 
   if (MyClient (source_p))
@@ -488,6 +492,16 @@ msg_channel (int p_or_n, const char *command, struct Client *client_p,
 	    }
 	  if (chptr->mode.mode & MODE_STRIPCOLOR)
 	    strip_colour (text);
+
+          if (chptr->mode.mode & MODE_USEFILTER)
+          {
+            DLINK_FOREACH (ptr, chptr->filterlist.head)
+            {
+              f = ptr->data;
+              strcpy(text, check_text (text, f->word));
+            }
+          }
+
 	  sendto_channel_butone (client_p, source_p, chptr, command, ":%s",
 				 text);
 	}
@@ -1019,3 +1033,46 @@ find_userhost (char *user, char *host, int *count)
 
   return (res);
 }
+
+char *check_text (char *origstr, char *search)
+{
+  char *source_p;
+  char *target_p;
+  static char target[BUFSIZE + 1];
+  int slen;
+
+  /* Check for NULL */
+  if (!search)
+  {
+    sendto_realops_flags (UMODE_DEBUG, L_ALL, "Search string empty.");
+    return origstr;
+  }
+
+  target[0] = '\0';
+  source_p = origstr;
+  target_p = target;
+  slen = strlen(search);
+
+  /* XXX Check for running over your BUFSIZE */
+  while (*source_p != '\0')
+  {
+    if (strncasecmp(source_p, search, slen) == 0)
+    {
+      /* Found the target string */
+      *target_p = '\0';
+      strlcat(target_p, "<censored>", BUFSIZE + 1);
+      target_p += 10; /* strlen("<censored>") */
+      source_p += slen;
+    }
+    else
+    {
+      *target_p = *source_p;
+      target_p++;
+      source_p++;
+    }
+  }
+
+  *target_p = '\0';
+  return target;
+}
+

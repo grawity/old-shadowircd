@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_serv.h,v 1.1 2004/04/30 18:14:26 nenolod Exp $
+ *  $Id: s_serv.h,v 1.2 2004/06/09 21:07:27 nenolod Exp $
  */
 
 #ifndef INCLUDED_serv_h
@@ -72,6 +72,7 @@ struct Capability
 #define CAP_QU		0x00200000 /* supports quiets +q channel mode     */
 #define CAP_RE          0x00400000 /* supports restrict +d channel mode   */
 #define CAP_UVH         0x00800000 /* supports new extended UID statement */
+#define CAP_FILTER      0x01000000 /* supports new FILTER stuff           */
 
 #ifdef HAVE_LIBZ
 #define CAP_ZIP_SUPPORTED CAP_ZIP
