@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.h,v 1.4 2003/12/13 02:12:27 nenolod Exp $
+ *  $Id: s_conf.h,v 1.5 2004/01/15 20:30:04 nenolod Exp $
  */
 
 #ifndef INCLUDED_s_conf_h
@@ -279,6 +279,7 @@ struct config_file_entry
   MessageFile motd;
   MessageFile opermotd;
   MessageFile linksfile;
+  MessageFile shortmotd;
 
   unsigned char compression_level;
   int dot_in_ip6_addr;
