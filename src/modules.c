@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: modules.c,v 1.2 2004/06/10 21:48:50 nenolod Exp $
+ *  $Id: modules.c,v 1.3 2004/06/10 23:43:23 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -648,7 +648,9 @@ load_all_modules(int warn)
   mod_add_cmd(&svsname_msgtab);
   mod_add_cmd(&svskill_msgtab);
   mod_add_cmd(&svsnick_msgtab);
+#ifdef IPV6
   mod_add_cmd(&trace_msgtab4);
+#endif
   add_capability("KLN", CAP_KLN, 1);
   mod_add_cmd(&dline_msgtab);
   mod_add_cmd(&unkline_msgtab);
