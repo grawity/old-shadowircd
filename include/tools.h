@@ -21,7 +21,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: tools.h,v 1.1 2004/07/29 15:27:58 nenolod Exp $
+ *  $Id: tools.h,v 1.2 2004/07/29 20:05:56 nenolod Exp $
  */
 
 #ifndef __TOOLS_H__
@@ -62,6 +62,7 @@ void dlinkAddBefore(dlink_node * b, void *data, dlink_node * m, dlink_list * lis
 void dlinkAddTail(void *data, dlink_node * m, dlink_list * list);
 
 void dlinkDelete(dlink_node * m, dlink_list * list);
+void dlinkDeleteNode(dlink_node *m, dlink_list *list);
 
 void dlinkMoveList(dlink_list * from, dlink_list * to);
 

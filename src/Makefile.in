@@ -1,7 +1,7 @@
 #
 # Makefile.in for ircd/src
 #
-# $Id: Makefile.in,v 1.1 2004/07/29 15:27:29 nenolod Exp $
+# $Id: Makefile.in,v 1.2 2004/07/29 20:05:56 nenolod Exp $
 #
 CC		= @CC@
 INSTALL		= @INSTALL@
@@ -61,6 +61,7 @@ BASE_SRCS =                     \
   class.c                       \
   client.c                      \
   cluster.c			\
+  dh.c				\
   dynlink.c			\
   event.c                       \
   fdlist.c                      \
@@ -110,6 +111,7 @@ BASE_SRCS =                     \
   send.c                        \
   @SNPRINTF_C@			\
   sprintf_irc.c			\
+  ssl.c				\
   tools.c                       \
   whowas.c
 

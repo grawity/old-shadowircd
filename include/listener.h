@@ -21,7 +21,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: listener.h,v 1.1 2004/07/29 15:28:03 nenolod Exp $
+ *  $Id: listener.h,v 1.2 2004/07/29 20:05:56 nenolod Exp $
  */
 
 #ifndef INCLUDED_listener_h
@@ -41,16 +41,13 @@ struct Listener
 	int active;		/* current state of listener */
 	int index;		/* index into poll array */
 	time_t last_accept;	/* last time listener accepted */
-/* jdc -- this seems to be incorrect in comparison to src/listener.c */
-/*
-  struct in_addr    addr;
-*/
 	struct irc_inaddr addr;	/* virtual address or INADDR_ANY */
 	struct DNSQuery *dns_query;
 	char vhost[HOSTLEN + 1];	/* virtual name of listener */
+	int	is_ssl;
 };
 
-extern void add_listener(int port, const char *vaddr_ip);
+extern void add_listener(int port, const char *vaddr_ip, int is_ssl);
 extern void close_listener(struct Listener *listener);
 extern void close_listeners(void);
 extern const char *get_listener_name(const struct Listener *listener);

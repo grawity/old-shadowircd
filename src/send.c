@@ -21,7 +21,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: send.c,v 1.1 2004/07/29 15:26:57 nenolod Exp $
+ *  $Id: send.c,v 1.2 2004/07/29 20:05:56 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -45,6 +45,7 @@
 #include "s_log.h"
 #include "memory.h"
 #include "hook.h"
+#include "dh.h"
 
 #define LOG_BUFSIZE 2048
 
@@ -264,7 +265,7 @@ send_queued_write(int fd, void *data)
 	if(linebuf_len(&to->localClient->buf_sendq))
 	{
 		while ((retlen =
-			linebuf_flush(to->localClient->fd, &to->localClient->buf_sendq)) > 0)
+			linebuf_flush(to, to->localClient->fd, &to->localClient->buf_sendq)) > 0)
 		{
 			/* We have some data written .. update counters */
 #ifndef NDEBUG

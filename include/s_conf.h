@@ -21,7 +21,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.h,v 1.1 2004/07/29 15:28:01 nenolod Exp $
+ *  $Id: s_conf.h,v 1.2 2004/07/29 20:05:56 nenolod Exp $
  */
 
 #ifndef INCLUDED_s_conf_h
@@ -32,6 +32,7 @@
 
 #ifdef HAVE_LIBCRYPTO
 #include <openssl/rsa.h>
+#include <openssl/ssl.h>
 #endif
 
 #include "config.h"		/* defines */
@@ -84,6 +85,10 @@ struct ConfItem
 	char *rsa_public_key_file;
 	RSA *rsa_public_key;
 	struct EncCapability *cipher_preference;
+	char *ssl_certificate_file;
+	char *ssl_ca_certificate_file;
+	SSL_CTX *ctx;
+	SSL_METHOD *meth;
 #endif
 };
 
@@ -310,6 +315,10 @@ struct server_info
 #ifdef HAVE_LIBCRYPTO
 	char *rsa_private_key_file;
 	RSA *rsa_private_key;
+	char *ssl_certificate_file;
+	char *ssl_ca_certificate_file;
+	SSL_CTX *ctx;
+	SSL_METHOD *meth;
 #endif
 	int hub;
 	struct irc_inaddr ip;

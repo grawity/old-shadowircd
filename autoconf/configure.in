@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.1 2004/07/29 15:28:29 nenolod Exp $
+dnl $Id: configure.in,v 1.2 2004/07/29 20:05:56 nenolod Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl AC_INIT(include/class.h) <- what is this ? -TimeMr14C
 
@@ -405,7 +405,7 @@ int main(void) {
                 cf_openssl_ciphers="${cf_openssl_ciphers}DES/56 ")
         fi
         CPPFLAGS="$save_CPPFLAGS"
-        SSL_LIBS="$SSL_LIBS -lcrypto"
+        SSL_LIBS="$SSL_LIBS -lcrypto -lssl"
     else
         AC_MSG_RESULT(no - OpenSSL support disabled)
     fi

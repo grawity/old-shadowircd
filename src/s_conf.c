@@ -21,7 +21,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.c,v 1.1 2004/07/29 15:27:04 nenolod Exp $
+ *  $Id: s_conf.c,v 1.2 2004/07/29 20:05:56 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1351,6 +1351,7 @@ set_default_conf(void)
 #ifdef IPV6
 	ConfigFileEntry.fallback_to_ip6_int = YES;
 #endif
+	ssl_ok = 0;
 }
 
 #undef YES

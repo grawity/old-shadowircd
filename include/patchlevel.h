@@ -21,9 +21,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: patchlevel.h,v 1.1 2004/07/29 15:28:02 nenolod Exp $
+ *  $Id: patchlevel.h,v 1.2 2004/07/29 20:05:56 nenolod Exp $
  */
 
 #ifndef PATCHLEVEL
-#define PATCHLEVEL   "ShadowIRCd-4.0-alpha36"
+#define PATCHLEVEL   "ShadowIRCd-4.0-beta1"
 #endif

@@ -21,7 +21,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd.h,v 1.1 2004/07/29 15:28:03 nenolod Exp $
+ *  $Id: ircd.h,v 1.2 2004/07/29 20:05:56 nenolod Exp $
  */
 
 #ifndef INCLUDED_ircd_h
@@ -121,5 +121,6 @@ extern unsigned long get_maxrss(void);
 extern void set_time(void);
 
 extern int testing_conf;
+extern int ssl_ok;
 
 #endif

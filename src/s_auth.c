@@ -21,7 +21,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_auth.c,v 1.1 2004/07/29 15:27:07 nenolod Exp $
+ *  $Id: s_auth.c,v 1.2 2004/07/29 20:05:56 nenolod Exp $
  */
 
 /*
@@ -54,6 +54,7 @@
 #include "send.h"
 #include "memory.h"
 #include "config.h"
+#include "dh.h"
 
 /*
  * a bit different approach
@@ -93,8 +94,17 @@ typedef enum
 }
 ReportType;
 
+/* This is more efficient then my method of using a routine.. -nenolod */
+#ifdef HAVE_LIBCRYPTO
+#define sendheader(c, r) \
+   if (IsSSL(c)) \
+     safe_SSL_write(c, HeaderMessages[(r)].message, HeaderMessages[(r)].length); \
+   else \
+     send((c)->localClient->fd, HeaderMessages[(r)].message, HeaderMessages[(r)].length, 0)
+#else
 #define sendheader(c, r) \
    send((c)->localClient->fd, HeaderMessages[(r)].message, HeaderMessages[(r)].length, 0)
+#endif
 
 static dlink_list auth_poll_list;
 static BlockHeap *auth_heap;

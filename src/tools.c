@@ -20,7 +20,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: tools.c,v 1.1 2004/07/29 15:26:54 nenolod Exp $
+ *  $Id: tools.c,v 1.2 2004/07/29 20:05:56 nenolod Exp $
  *
  *  Here is the original header:
  *
@@ -256,6 +256,11 @@ dlinkMoveNode(dlink_node * m, dlink_list * oldlist, dlink_list * newlist)
 	newlist->length++;
 }
 
+void dlinkDeleteNode(dlink_node *m, dlink_list *list)
+{
+	dlinkDelete(m, list);
+	free_dlink_node(m);
+}
 
 /*
  * init_dlink_nodes

@@ -21,7 +21,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.1 2004/07/29 15:28:07 nenolod Exp $
+ *  $Id: client.h,v 1.2 2004/07/29 20:05:56 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -130,6 +130,10 @@ struct Client
 	unsigned short status;	/* Client type */
 	unsigned char handler;	/* Handler index */
 	unsigned long serial;	/* used to enforce 1 send per nick */
+
+#ifdef HAVE_LIBCRYPTO
+	SSL *ssl;
+#endif
 
 	/* client->name is the unique name for a client nick or host */
 	char name[HOSTLEN + 1];
@@ -416,7 +420,9 @@ struct LocalUser
 #define FLAGS2_IP_SPOOFING      0x400000
 #define FLAGS2_FLOODDONE        0x800000
 #define FLAGS2_EXEMPTSPAMBOT	0x1000000
-#define OPER_HIDDENOPER			0x2000000
+
+#define OPER_HIDDENOPER		0x2000000
+#define FLAGS2_SSL		0x4000000
 
 #define OPER_FLAGS      (OPER_GLOBAL_KILL | OPER_REMOTE | OPER_UNKLINE |\
                          OPER_GLINE | OPER_N | OPER_K | OPER_DIE |\
@@ -550,6 +556,9 @@ struct LocalUser
 
 #define IsFloodDone(x)          ((x)->flags2 & FLAGS2_FLOODDONE)
 #define SetFloodDone(x)         ((x)->flags2 |= FLAGS2_FLOODDONE)
+
+#define SetSSL(x)               ((x)->flags2 |= FLAGS2_SSL)
+#define IsSSL(x)                (((x)->flags2 & FLAGS2_SSL) && (x)->ssl)
 
 /*
  * definitions for get_client_name

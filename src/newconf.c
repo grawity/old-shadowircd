@@ -1,5 +1,5 @@
 /* This code is in the public domain.
- * $Id: newconf.c,v 1.1 2004/07/29 15:27:13 nenolod Exp $
+ * $Id: newconf.c,v 1.2 2004/07/29 20:05:56 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -31,6 +31,8 @@
 #include "ircd.h"
 
 #define CF_TYPE(x) ((x) & CF_MTYPE)
+
+int ssl_ok = 1;
 
 struct TopConf *conf_cur_block;
 static char *conf_cur_block_name;
@@ -425,6 +427,77 @@ conf_set_serverinfo_hub(void *data)
 	int hub = *(int *) data;
 
 	ServerInfo.hub = hub;
+}
+
+static void
+conf_set_serverinfo_ssl_cert (void *data)
+{
+#ifdef HAVE_LIBCRYPTO
+	if (ServerInfo.ctx)
+	{
+		if (ServerInfo.ssl_certificate_file)
+		{
+			MyFree (ServerInfo.ssl_certificate_file);
+			ServerInfo.ssl_certificate_file = NULL;
+		}
+
+		DupString (ServerInfo.ssl_certificate_file, (char *)data);
+
+		if (!ServerInfo.rsa_private_key_file)
+		{
+			conf_report_error ("Ignoring config file entry ssl_certificate -- no rsa_private_key");
+			ssl_ok = 0;
+			return;
+		}
+
+		if (SSL_CTX_use_certificate_file(ServerInfo.ctx, ServerInfo.ssl_certificate_file, SSL_FILETYPE_PEM) <= 0)
+		{
+			conf_report_error ("Error using config file entry ssl_certificate -- %s", ERR_error_string(ERR_get_error(), NULL));
+			ssl_ok = 0;
+			return;
+		}
+
+		if (SSL_CTX_use_PrivateKey_file(ServerInfo.ctx, ServerInfo.rsa_private_key_file, SSL_FILETYPE_PEM) <= 0)
+		{
+			conf_report_error ("Error using config file entry rsa_private_key -- %s", ERR_error_string(ERR_get_error(), NULL));
+			ssl_ok = 0;
+			return;
+		}
+
+		if (!SSL_CTX_check_private_key(ServerInfo.ctx))
+		{
+			conf_report_error ("RSA private key doesn't match the SSL certificate public key!");
+			ssl_ok = 0;
+			return;
+		}
+	}
+
+#endif
+
+}
+
+static void
+conf_set_serverinfo_ssl_ca_cert (void *data)
+{
+#ifdef HAVE_LIBCRYPTO
+	if (ServerInfo.ctx)
+	{
+		if (ServerInfo.ssl_ca_certificate_file)
+		{
+			MyFree (ServerInfo.ssl_ca_certificate_file);
+			ServerInfo.ssl_ca_certificate_file = NULL;
+		}
+
+		DupString (ServerInfo.ssl_ca_certificate_file, (char *)data);
+
+		if (ServerInfo.ssl_ca_certificate_file != NULL && SSL_CTX_load_verify_locations(ServerInfo.ctx, ServerInfo.ssl_ca_certificate_file, NULL) != 1)
+		{
+			conf_report_error ("Error using config file entry ssl_ca_certificate -- ");
+			ssl_ok = 0;
+			return;
+		}
+	}
+#endif
 }
 
 static void
@@ -1066,7 +1139,24 @@ conf_set_listen_port(void *data)
 			continue;
 		}
 
-		add_listener(args->v.number, listener_address);
+		add_listener(args->v.number, listener_address, 0);
+	}
+}
+
+static void
+conf_set_listen_sslport(void *data)
+{
+	conf_parm_t *args = data;
+
+	for (; args; args = args->next)
+	{
+		if((args->type & CF_MTYPE) != CF_INT)
+		{
+			conf_report_error("listener::sslport argument is not an integer -- ignoring.");
+			continue;
+		}
+
+		add_listener(args->v.number, listener_address, 1);
 	}
 }
 
@@ -2931,7 +3021,9 @@ newconf_init()
 	add_conf_item("serverinfo", "vhost", CF_QSTRING, conf_set_serverinfo_vhost);
 	add_conf_item("serverinfo", "vhost6", CF_QSTRING, conf_set_serverinfo_vhost6);
 	add_conf_item("serverinfo", "hub", CF_YESNO, conf_set_serverinfo_hub);
-
+	add_conf_item("serverinfo", "ssl_certificate_file", CF_QSTRING, conf_set_serverinfo_ssl_cert);
+	add_conf_item("serverinfo", "ssl_ca_certificate_file", CF_QSTRING, conf_set_serverinfo_ssl_ca_cert);
+ 
 	add_top_conf("admin", NULL, NULL);
 	add_conf_item("admin", "name", CF_QSTRING, conf_set_admin_name);
 	add_conf_item("admin", "description", CF_QSTRING, conf_set_admin_description);
@@ -2990,6 +3082,7 @@ newconf_init()
         
 	add_top_conf("listen", conf_begin_listen, conf_end_listen);
 	add_conf_item("listen", "port", CF_INT | CF_FLIST, conf_set_listen_port);
+	add_conf_item("listen", "sslport", CF_INT | CF_FLIST, conf_set_listen_sslport);
 	add_conf_item("listen", "ip", CF_QSTRING, conf_set_listen_address);
 	add_conf_item("listen", "host", CF_QSTRING, conf_set_listen_address);
 

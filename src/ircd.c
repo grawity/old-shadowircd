@@ -21,7 +21,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd.c,v 1.1 2004/07/29 15:27:18 nenolod Exp $
+ *  $Id: ircd.c,v 1.2 2004/07/29 20:05:56 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -74,7 +74,7 @@
 #include "newconf.h"
 #include "patricia.h"
 #include "reject.h"
-
+#include "dh.h"
 
 /*
  * Try and find the correct name to use with getrlimit() for setting the max.
@@ -86,8 +86,10 @@ struct SetOptions GlobalSetOptions;
 
 /* configuration set from ircd.conf */
 struct config_file_entry ConfigFileEntry;
+
 /* server info set from ircd.conf */
 struct server_info ServerInfo;
+
 /* admin info set from ircd.conf */
 struct admin_info AdminInfo;
 
@@ -118,7 +120,7 @@ char **myargv;
 int dorehash = 0;
 int doremotd = 0;
 int debuglevel = -1;		/* Server debug level */
-const char *debugmode = "";		/*  -"-    -"-   -"-  */
+const char *debugmode = "";	/*  -"-    -"-   -"-  */
 time_t nextconnect = 1;		/* time for next try_connections call */
 int kline_queued = 0;
 
@@ -153,7 +155,8 @@ get_vm_top(void)
 	 */
 #ifndef VMS
 	void *vptr = sbrk(0);
-	return (unsigned long) vptr;
+
+	return (unsigned long)vptr;
 #else
 	return 0;
 #endif
@@ -177,7 +180,7 @@ print_startup(int pid)
 	printf("ircd: version %s\n", ircd_version);
 	printf("ircd: pid %d\n", pid);
 	printf("ircd: running in %s mode from %s\n", !server_state.foreground ? "background"
-	       : "foreground", ConfigFileEntry.dpath);
+	    : "foreground", ConfigFileEntry.dpath);
 }
 
 /*
@@ -193,26 +196,23 @@ init_sys(void)
 #if defined(RLIMIT_FD_MAX) && !defined(VMS) && defined(HAVE_SYS_RLIMIT_H)
 	struct rlimit limit;
 
-	if(!getrlimit(RLIMIT_FD_MAX, &limit))
-	{
+	if(!getrlimit(RLIMIT_FD_MAX, &limit)) {
 
-		if(limit.rlim_max < MAXCONNECTIONS)
-		{
+		if(limit.rlim_max < MAXCONNECTIONS) {
 			fprintf(stderr, "ircd fd table too big\n");
 			fprintf(stderr, "Hard Limit: %ld IRC max: %d\n",
-				(long) limit.rlim_max, MAXCONNECTIONS);
+			    (long)limit.rlim_max, MAXCONNECTIONS);
 			fprintf(stderr, "Fix MAXCONNECTIONS\n");
 			exit(-1);
 		}
 
 		limit.rlim_cur = limit.rlim_max;	/* make soft limit the max */
-		if(setrlimit(RLIMIT_FD_MAX, &limit) == -1)
-		{
-			fprintf(stderr, "error setting max fd's to %ld\n", (long) limit.rlim_cur);
+		if(setrlimit(RLIMIT_FD_MAX, &limit) == -1) {
+			fprintf(stderr, "error setting max fd's to %ld\n", (long)limit.rlim_cur);
 			exit(EXIT_FAILURE);
 		}
 	}
-#endif /* RLIMIT_FD_MAX */
+#endif				/* RLIMIT_FD_MAX */
 }
 
 static int
@@ -221,24 +221,25 @@ make_daemon(void)
 #ifndef VMS
 	int pid;
 
-	if((pid = fork()) < 0)
-	{
+	if((pid = fork()) < 0) {
 		perror("fork");
 		exit(EXIT_FAILURE);
-	}
-	else if(pid > 0)
-	{
+	} else if(pid > 0) {
 		print_startup(pid);
 		exit(EXIT_SUCCESS);
 	}
 
 	setsid();
-	/*  fclose(stdin);
-	   fclose(stdout);
-	   fclose(stderr); */
+	/*
+	 * fclose(stdin);
+	 * fclose(stdout);
+	 * fclose(stderr); 
+	 */
 #else
-	/* if we get here, assume we've been detached.
-	   better set a process name. */
+	/*
+	 * if we get here, assume we've been detached.
+	 * better set a process name. 
+	 */
 	$DESCRIPTOR(myname, "IRCD-HYBRID-7");
 	SYS$SETPRN(&myname);
 #endif
@@ -249,25 +250,25 @@ static int printVersion = 0;
 
 struct lgetopt myopts[] = {
 	{"dlinefile", &ConfigFileEntry.dlinefile,
-	 STRING, "File to use for dlines.conf"},
+	    STRING, "File to use for dlines.conf"},
 	{"configfile", &ConfigFileEntry.configfile,
-	 STRING, "File to use for ircd.conf"},
+	    STRING, "File to use for ircd.conf"},
 	{"klinefile", &ConfigFileEntry.klinefile,
-	 STRING, "File to use for klines.conf"},
+	    STRING, "File to use for klines.conf"},
 	{"xlinefile", &ConfigFileEntry.xlinefile,
-	 STRING, "File to use for xlines.conf"},
+	    STRING, "File to use for xlines.conf"},
 	{"resvfile", &ConfigFileEntry.resvfile,
-	 STRING, "File to use for resv.conf"},
+	    STRING, "File to use for resv.conf"},
 	{"logfile", &logFileName,
-	 STRING, "File to use for ircd.log"},
+	    STRING, "File to use for ircd.log"},
 	{"pidfile", &pidFileName,
-	 STRING, "File to use for process ID"},
+	    STRING, "File to use for process ID"},
 	{"foreground", &server_state.foreground,
-	 YESNO, "Run in foreground (don't detach)"},
+	    YESNO, "Run in foreground (don't detach)"},
 	{"version", &printVersion,
-	 YESNO, "Print version and exit"},
+	    YESNO, "Print version and exit"},
 	{"conftest", &testing_conf,
-	 YESNO, "Test the configuration files and exit"},
+	    YESNO, "Test the configuration files and exit"},
 	{"help", NULL, USAGE, "Print this text"},
 	{NULL, NULL, STRING, NULL},
 };
@@ -277,20 +278,19 @@ set_time(void)
 {
 	static char to_send[200];
 	struct timeval newtime;
+
 	newtime.tv_sec = 0;
 	newtime.tv_usec = 0;
-	if(gettimeofday(&newtime, NULL) == -1)
-	{
+	if(gettimeofday(&newtime, NULL) == -1) {
 		ilog(L_ERROR, "Clock Failure (%d)", errno);
 		sendto_realops_flags(UMODE_ALL, L_ALL,
-				     "Clock Failure (%d), TS can be corrupted", errno);
+		    "Clock Failure (%d), TS can be corrupted", errno);
 
 		restart("Clock Failure");
 	}
-	if(newtime.tv_sec < CurrentTime)
-	{
+	if(newtime.tv_sec < CurrentTime) {
 		ircsprintf(to_send, "System clock is running backwards - (%lu < %lu)",
-			   (unsigned long) newtime.tv_sec, (unsigned long) CurrentTime);
+		    (unsigned long)newtime.tv_sec, (unsigned long)CurrentTime);
 		report_error(L_ALL, to_send, me.name, 0);
 		set_back_events(CurrentTime - newtime.tv_sec);
 	}
@@ -302,10 +302,11 @@ static void
 io_loop(void)
 {
 	time_t delay;
-	while (ServerRunning)
-	{
-		/* Run pending events, then get the number of seconds to the next
-		 * event
+
+	while (ServerRunning) {
+		/*
+		 * Run pending events, then get the number of seconds to the next
+		 * * event
 		 */
 
 		delay = eventNextTime();
@@ -316,16 +317,14 @@ io_loop(void)
 		/*
 		 * Check to see whether we have to rehash the configuration ..
 		 */
-		if(dorehash)
-		{
+		if(dorehash) {
 			rehash(1);
 			dorehash = 0;
 		}
-		if(doremotd)
-		{
+		if(doremotd) {
 			ReadMessageFile(&ConfigFileEntry.motd);
 			sendto_realops_flags(UMODE_ALL, L_ALL,
-					     "Got signal SIGUSR1, reloading ircd motd file");
+			    "Got signal SIGUSR1, reloading ircd motd file");
 			doremotd = 0;
 		}
 	}
@@ -342,7 +341,9 @@ static void
 initialize_global_set_options(void)
 {
 	memset(&GlobalSetOptions, 0, sizeof(GlobalSetOptions));
-	/* memset( &ConfigFileEntry, 0, sizeof(ConfigFileEntry)); */
+	/*
+	 * memset( &ConfigFileEntry, 0, sizeof(ConfigFileEntry)); 
+	 */
 
 	GlobalSetOptions.maxclients = MAX_CLIENTS;
 	GlobalSetOptions.autoconn = 1;
@@ -354,26 +355,31 @@ initialize_global_set_options(void)
 		GlobalSetOptions.floodcount = ConfigFileEntry.default_floodcount;
 	else
 		GlobalSetOptions.floodcount = 10;
-	
-	strlcpy(GlobalSetOptions.operstring, ConfigFileEntry.default_operstring,sizeof(GlobalSetOptions.operstring));
-	strlcpy(GlobalSetOptions.adminstring, ConfigFileEntry.default_adminstring, sizeof(GlobalSetOptions.adminstring));
-	
+
+	strlcpy(GlobalSetOptions.operstring, ConfigFileEntry.default_operstring,
+	    sizeof(GlobalSetOptions.operstring));
+	strlcpy(GlobalSetOptions.adminstring, ConfigFileEntry.default_adminstring,
+	    sizeof(GlobalSetOptions.adminstring));
+
 	split_servers = ConfigChannel.default_split_server_count;
 	split_users = ConfigChannel.default_split_user_count;
 	GlobalSetOptions.split_delay = ConfigChannel.default_split_delay;
 
 	if(split_users && split_servers && (ConfigChannel.no_create_on_split ||
-					    ConfigChannel.no_join_on_split))
-	{
+		ConfigChannel.no_join_on_split)) {
 		splitmode = 1;
 		splitchecking = 1;
 	}
 
 	GlobalSetOptions.ident_timeout = IDENT_TIMEOUT;
 
-	/* memset( &ConfigChannel, 0, sizeof(ConfigChannel)); */
+	/*
+	 * memset( &ConfigChannel, 0, sizeof(ConfigChannel)); 
+	 */
 
-	/* End of global set options */
+	/*
+	 * End of global set options 
+	 */
 
 }
 
@@ -421,21 +427,18 @@ write_pidfile(const char *filename)
 {
 	FBFILE *fb;
 	char buff[32];
-	if((fb = fbopen(filename, "w")))
-	{
-		unsigned int pid = (unsigned int) getpid();
+
+	if((fb = fbopen(filename, "w"))) {
+		unsigned int pid = (unsigned int)getpid();
 
 		ircsprintf(buff, "%u\n", pid);
-		if((fbputs(buff, fb) == -1))
-		{
+		if((fbputs(buff, fb) == -1)) {
 			ilog(L_ERROR, "Error writing %u to pid file %s (%s)",
-			     pid, filename, strerror(errno));
+			    pid, filename, strerror(errno));
 		}
 		fbclose(fb);
 		return;
-	}
-	else
-	{
+	} else {
 		ilog(L_ERROR, "Error opening pid file %s", filename);
 	}
 }
@@ -456,31 +459,30 @@ check_pidfile(const char *filename)
 	char buff[32];
 	pid_t pidfromfile;
 
-	/* Don't do logging here, since we don't have log() initialised */
-	if((fb = fopen(filename, "r")))
-	{
-		if(fgets(buff, 20, fb) == NULL)
-		{
+	/*
+	 * Don't do logging here, since we don't have log() initialised 
+	 */
+	if((fb = fopen(filename, "r"))) {
+		if(fgets(buff, 20, fb) == NULL) {
 			/*
-			   log(L_ERROR, "Error reading from pid file %s (%s)", filename,
-			   strerror(errno));
+			 * log(L_ERROR, "Error reading from pid file %s (%s)", filename,
+			 * strerror(errno));
 			 */
-		}
-		else if(errno != ENOENT)
-		{
+		} else if(errno != ENOENT) {
 			pidfromfile = atoi(buff);
-			if(!kill(pidfromfile, 0))
-			{
-				/* log(L_ERROR, "Server is already running"); */
+			if(!kill(pidfromfile, 0)) {
+				/*
+				 * log(L_ERROR, "Server is already running"); 
+				 */
 				printf("ircd: daemon is already running\n");
 				exit(-1);
 			}
 		}
 		fclose(fb);
-	}
-	else
-	{
-		/* log(L_ERROR, "Error opening pid file %s", filename); */
+	} else {
+		/*
+		 * log(L_ERROR, "Error opening pid file %s", filename); 
+		 */
 	}
 }
 
@@ -498,9 +500,10 @@ setup_corefile(void)
 #if !defined(VMS) && defined(HAVE_SYS_RESOURCE_H)
 	struct rlimit rlim;	/* resource limits */
 
-	/* Set corefilesize to maximum */
-	if(!getrlimit(RLIMIT_CORE, &rlim))
-	{
+	/*
+	 * Set corefilesize to maximum 
+	 */
+	if(!getrlimit(RLIMIT_CORE, &rlim)) {
 		rlim.rlim_cur = rlim.rlim_max;
 		setrlimit(RLIMIT_CORE, &rlim);
 	}
@@ -510,9 +513,10 @@ setup_corefile(void)
 int
 main(int argc, char *argv[])
 {
-	/* Check to see if the user is running us as root, which is a nono */
-	if(geteuid() == 0)
-	{
+	/*
+	 * Check to see if the user is running us as root, which is a nono 
+	 */
+	if(geteuid() == 0) {
 		fprintf(stderr, "Don't run ircd as root!!!\n");
 		return -1;
 	}
@@ -532,13 +536,17 @@ main(int argc, char *argv[])
 	initialVMTop = get_vm_top();
 
 	ServerRunning = 0;
-	/* It ain't random, but it ought to be a little harder to guess */
+	/*
+	 * It ain't random, but it ought to be a little harder to guess 
+	 */
 	srand(SystemTime.tv_sec ^ (SystemTime.tv_usec | (getpid() << 20)));
 	memset(&me, 0, sizeof(me));
 	memset(&meLocalUser, 0, sizeof(meLocalUser));
 	me.localClient = &meLocalUser;
 
-	/* Make sure all lists are zeroed */
+	/*
+	 * Make sure all lists are zeroed 
+	 */
 	memset(&unknown_list, 0, sizeof(unknown_list));
 	memset(&lclient_list, 0, sizeof(lclient_list));
 	memset(&serv_list, 0, sizeof(serv_list));
@@ -547,14 +555,16 @@ main(int argc, char *argv[])
 
 	dlinkAddTail(&me, &me.node, &global_client_list);
 
-	memset((void *) &Count, 0, sizeof(Count));
-	memset((void *) &server_state, 0, sizeof(server_state));
+	memset((void *)&Count, 0, sizeof(Count));
+	memset((void *)&server_state, 0, sizeof(server_state));
 
 	Count.server = 1;	/* us */
-	memset((void *) &ServerInfo, 0, sizeof(ServerInfo));
-	memset((void *) &AdminInfo, 0, sizeof(AdminInfo));
+	memset((void *)&ServerInfo, 0, sizeof(ServerInfo));
+	memset((void *)&AdminInfo, 0, sizeof(AdminInfo));
 
-	/* Initialise the channel capability usage counts... */
+	/*
+	 * Initialise the channel capability usage counts... 
+	 */
 	init_chcap_usage_counts();
 
 	ConfigFileEntry.dpath = DPATH;
@@ -570,17 +580,32 @@ main(int argc, char *argv[])
 
 	parseargs(&argc, &argv, myopts);
 
-	if(printVersion)
-	{
+	if(printVersion) {
 		printf("ircd: version %s\n", ircd_version);
 		exit(EXIT_SUCCESS);
 	}
 
-	if(chdir(ConfigFileEntry.dpath))
-	{
-		fprintf(stderr, "Unable to chdir to %s: %s\n", ConfigFileEntry.dpath, strerror(errno));
+	if(chdir(ConfigFileEntry.dpath)) {
+		fprintf(stderr, "Unable to chdir to %s: %s\n", ConfigFileEntry.dpath,
+		    strerror(errno));
 		exit(EXIT_FAILURE);
 	}
+
+#ifdef HAVE_LIBCRYPTO
+	dh_init();
+	fprintf(stderr, "SSL: Initialize\n");
+
+	SSL_load_error_strings();
+	SSLeay_add_ssl_algorithms();
+	ServerInfo.ctx = SSL_CTX_new(SSLv23_server_method());
+
+	if(!ServerInfo.ctx) {
+		ERR_print_errors_fp(stderr);
+		return 0;
+	}
+
+	fprintf(stderr, "SSL: Client based SSL connections are enabled.\n");
+#endif
 
 	setup_signals();
 
@@ -588,19 +613,21 @@ main(int argc, char *argv[])
 	server_state.foreground = 1;
 #endif
 
-	if (testing_conf)
+	if(testing_conf)
 		server_state.foreground = 1;
 
-	/* We need this to initialise the fd array before anything else */
+	/*
+	 * We need this to initialise the fd array before anything else 
+	 */
 	fdlist_init();
-	if(!server_state.foreground)
-	{
+	if(!server_state.foreground) {
 		close_all_connections();
 	}
 
-	/* Check if there is pidfile and daemon already running */
-	if(!testing_conf)
-	{
+	/*
+	 * Check if there is pidfile and daemon already running 
+	 */
+	if(!testing_conf) {
 		check_pidfile(pidFileName);
 
 		if(!server_state.foreground)
@@ -611,7 +638,9 @@ main(int argc, char *argv[])
 
 	init_netio();		/* This needs to be setup early ! -- adrian */
 
-	/* Init the event subsystem */
+	/*
+	 * Init the event subsystem 
+	 */
 	eventInit();
 	init_sys();
 
@@ -642,7 +671,7 @@ main(int argc, char *argv[])
 	init_auth();		/* Initialise the auth code */
 	init_resolver();	/* Needs to be setup before the io loop */
 
-	if (testing_conf)
+	if(testing_conf)
 		fprintf(stderr, "\nBeginning config test\n");
 	read_conf_files(YES);	/* cold start init conf files */
 #ifndef STATIC_MODULES
@@ -654,8 +683,7 @@ main(int argc, char *argv[])
 	initialize_server_capabs();	/* Set up default_server_capabs */
 	initialize_global_set_options();
 
-	if(ServerInfo.name == NULL)
-	{
+	if(ServerInfo.name == NULL) {
 		fprintf(stderr, "ERROR: No server name specified in serverinfo block.\n");
 		ilog(L_CRIT, "No server name specified in serverinfo block.");
 		exit(EXIT_FAILURE);
@@ -663,22 +691,21 @@ main(int argc, char *argv[])
 
 	strlcpy(me.name, ServerInfo.name, sizeof(me.name));
 
-	/* serverinfo{} description must exist.  If not, error out. */
-	if(ServerInfo.description == NULL)
-	{
+	/*
+	 * serverinfo{} description must exist.  If not, error out. 
+	 */
+	if(ServerInfo.description == NULL) {
 		fprintf(stderr, "ERROR: No server description specified in serverinfo block.\n");
 		ilog(L_CRIT, "ERROR: No server description specified in serverinfo block.");
 		exit(EXIT_FAILURE);
 	}
 	strlcpy(me.info, ServerInfo.description, sizeof(me.info));
 
-	if (testing_conf)
-	{
+	if(testing_conf) {
 		fprintf(stderr, "\nConfig testing complete.\n");
 		fflush(stderr);
 		exit(EXIT_SUCCESS);
 	}
-
 #ifdef USE_GETTEXT
 	/*
 	 * For 'locale' try (in this order):
@@ -687,9 +714,9 @@ main(int argc, char *argv[])
 	 *    Default of "" (so don't overwrite LANGUAGE here)
 	 */
 
-	if(!getenv("LANGUAGE"))
-	{
+	if(!getenv("LANGUAGE")) {
 		char lang[] = "LANGUAGE=";
+
 		putenv(lang);
 	}
 
@@ -720,18 +747,24 @@ main(int argc, char *argv[])
 	eventAddIsh("cleanup_temps_week", cleanup_temps_week, NULL, 604800);
 	eventAddIsh("cleanup_temp_xlines", cleanup_temp_xlines, NULL, 300);
 
-	/* We want try_connections to be called as soon as possible now! -- adrian */
-	/* No, 'cause after a restart it would cause all sorts of nick collides */
+	/*
+	 * We want try_connections to be called as soon as possible now! -- adrian 
+	 */
+	/*
+	 * No, 'cause after a restart it would cause all sorts of nick collides 
+	 */
 	eventAddIsh("try_connections", try_connections, NULL, STARTUP_CONNECTIONS_TIME);
 
 	eventAddIsh("collect_zipstats", collect_zipstats, NULL, ZIPSTATS_TIME);
 
-	/* Setup the timeout check. I'll shift it later :)  -- adrian */
+	/*
+	 * Setup the timeout check. I'll shift it later :)  -- adrian 
+	 */
 	eventAddIsh("comm_checktimeouts", comm_checktimeouts, NULL, 1);
 
 	if(ConfigServerHide.links_delay > 0)
 		eventAddIsh("write_links_file", write_links_file, NULL,
-			    ConfigServerHide.links_delay);
+		    ConfigServerHide.links_delay);
 	else
 		ConfigServerHide.links_disabled = 1;
 

@@ -21,7 +21,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: supported.h,v 1.1 2004/07/29 15:27:59 nenolod Exp $
+ *  $Id: supported.h,v 1.2 2004/07/29 20:05:56 nenolod Exp $
  */
 
 #ifndef INCLUDED_supported_h
@@ -66,7 +66,7 @@
 		  " WALLCHOPS" \
 		  " SAFELIST" \
 		  " ELIST=U" \
-                  " IPMASK"
+                  " IPMASK SSL"
 
 #define FEATURES2VALUES ConfigServerHide.disable_local_channels ? "#" : "#&", \
                         "(qaohv)~&@%+", \

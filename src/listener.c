@@ -21,7 +21,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: listener.c,v 1.1 2004/07/29 15:27:16 nenolod Exp $
+ *  $Id: listener.c,v 1.2 2004/07/29 20:05:56 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -131,8 +131,7 @@ show_ports(struct Client *source_p)
 		sendto_one(source_p, form_str(RPL_STATSPLINE),
 			   me.name,
 			   source_p->name,
-			   'P',
-			   listener->port,
+			   listener->is_ssl ? 'S' : 'P', listener->port,
 			   IsOperAdmin(source_p) ? listener->name : me.name,
 			   listener->ref_count, (listener->active) ? "active" : "disabled");
 	}
@@ -268,7 +267,7 @@ find_listener(int port, struct irc_inaddr *addr)
  * the format "255.255.255.255"
  */
 void
-add_listener(int port, const char *vhost_ip)
+add_listener(int port, const char *vhost_ip, int is_ssl)
 {
 	struct Listener *listener;
 	struct irc_inaddr vaddr;
@@ -299,8 +298,16 @@ add_listener(int port, const char *vhost_ip)
 	else
 	{
 		listener = make_listener(port, &vaddr);
+		listener->is_ssl = is_ssl;
 		listener->next = ListenerPollList;
 		ListenerPollList = listener;
+
+                if (listener->is_ssl && ssl_ok != 0)
+                {
+                    ilog (L_ERROR, "SSL incorrectly setup. Disabling listener [%s/%d]", vhost_ip, port);
+                    close_listener(listener);
+                    return;
+                }
 	}
 
 	listener->fd = -1;
