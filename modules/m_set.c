@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_set.c,v 1.1 2004/04/30 18:14:10 nenolod Exp $
+ *  $Id: m_set.c,v 1.2 2004/07/06 02:51:44 nenolod Exp $
  */
 
 /* rewritten by jdc */
@@ -64,7 +64,7 @@ _moddeinit(void)
   mod_del_cmd(&set_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /* Structure used for the SET table itself */
@@ -90,6 +90,7 @@ static void quote_spamtime(struct Client *, int);
 static void quote_splitmode(struct Client *, char *);
 static void quote_splitnum(struct Client *, int);
 static void quote_splitusers(struct Client *, int);
+static void quote_language(struct Client *, char *);
 static void list_quote_commands(struct Client *);
 
 
@@ -117,6 +118,7 @@ static struct SetStruct set_cmd_table[] =
   { "SPLITMODE",	quote_splitmode,	1,	0 },
   { "SPLITNUM",		quote_splitnum,		0,	1 },
   { "SPLITUSERS",	quote_splitusers,	0,	1 },
+  { "LANGUAGE",         quote_language,         1,      0 },
   /* -------------------------------------------------------- */
   { (char *)0,		(void(*)()) 0,		0,	0 }
 };
@@ -496,6 +498,23 @@ quote_splitusers(struct Client *source_p, int newval)
   else
     sendto_one(source_p, ":%s NOTICE %s :SPLITUSERS is currently %i", 
                me.name, source_p->name, split_users);
+}
+
+/* SET LANGUAGE */
+static void
+quote_language( struct Client *source_p, char *locale )
+{
+  if (locale != NULL)
+  {
+    set_locale(locale);
+    sendto_one(source_p, ":%s NOTICE %s :Set LANGUAGE to '%s'",
+               me.name, source_p->name, get_locale());
+  }
+  else
+  {
+    sendto_one(source_p, ":%s NOTICE %s :LANGUAGE is currently '%s'",
+               me.name, source_p->name, get_locale());
+  }
 }
 
 /*
