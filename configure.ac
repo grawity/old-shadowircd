@@ -1,4 +1,4 @@
-dnl $Id: configure.ac,v 1.6 2004/02/09 23:26:02 nenolod Exp $
+dnl $Id: configure.ac,v 1.7 2004/04/06 19:07:47 nenolod Exp $
 dnl Process this file with autoconf to produce a configure script.
 
 dnl TODO: clean up all the OpenSSL and shared module checking stuff;
@@ -8,7 +8,7 @@ dnl said functions need to be just about as complex as they already are.
 AC_PREREQ(2.57)
 
 dnl Sneaky way to get an Id tag into the configure script
-AC_COPYRIGHT([$Id: configure.ac,v 1.6 2004/02/09 23:26:02 nenolod Exp $])
+AC_COPYRIGHT([$Id: configure.ac,v 1.7 2004/04/06 19:07:47 nenolod Exp $])
 
 AC_INIT([shadowircd],[2.0])
 
@@ -1119,6 +1119,7 @@ AC_CONFIG_FILES(		\
 	servlink/Makefile	\
 	contrib/Makefile	\
 	src/Makefile		\
+	help/Makefile		\
 	include/Makefile	\
 	modules/Makefile	\
 	tools/Makefile		\
