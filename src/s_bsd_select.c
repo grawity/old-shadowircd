@@ -1,9 +1,9 @@
 /*
  *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
- *  s_bsd_select.c: select() compatible network routines.
+ *  s_bsd_select.c: windows functions
  *
  *  Originally by Adrian Chadd <adrian@creative.net.au>
- *  Copyright (C) 2002 Hybrid Development Team
+ *  Copyright (c) 2002 Hybrid Development Team.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_bsd_select.c,v 1.1.1.1 2003/12/02 20:46:37 nenolod Exp $
+ *  $Id: s_bsd_select.c,v 1.2 2004/02/18 20:32:12 nenolod Exp $
  */
 
 #include "stdinc.h"

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- * $Id: stdinc.h,v 1.3 2004/02/05 20:15:48 nenolod Exp $
+ * $Id: stdinc.h,v 1.4 2004/02/18 20:32:12 nenolod Exp $
  *
  */
 
@@ -94,35 +94,46 @@
 #include <dirent.h>
 #include <ctype.h>
 
+#ifndef _WIN32
 #include <netdb.h>
-#include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-
+#include <sys/socket.h>
+#include <sys/file.h>
+#include <sys/time.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
 #include <limits.h>
+#else
+#include <io.h>
+#include <time.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#endif
+
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 
-#include <sys/time.h>
-#include <sys/file.h>
 
 #ifdef HAVE_SYS_RESOURCE_H
 #include <sys/resource.h>
 #endif
 
-#include <sys/stat.h>
-#include <sys/wait.h>
 
 #ifdef HAVE_SYS_PARAM_H
 #include <sys/param.h>
 #endif
 
+#ifndef _WIN32
 #ifdef HAVE_ERRNO_H
 #include <errno.h>
 #else
 extern int errno;
+#endif
+#else
+#define errno WSAGetLastError();
 #endif
 
 #ifdef HAVE_LIBCRYPTO
