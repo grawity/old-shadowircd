@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_nick.c,v 1.4 2004/09/22 19:27:01 nenolod Exp $
+ *  $Id: m_nick.c,v 1.5 2004/09/22 21:40:43 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -99,7 +99,7 @@ _moddeinit(void)
   mod_del_cmd(&uid_msgtab);
 }
 
-const char *_version = "$Revision: 1.4 $";
+const char *_version = "$Revision: 1.5 $";
 const char *_desc = "Implements /nick command -- declares a client's nickname.";
 #endif
 
@@ -112,10 +112,9 @@ static void
 mr_nick(struct Client *client_p, struct Client *source_p,
         int parc, char *parv[])
 {
-  struct Client *target_p, *uclient_p;
+  struct Client *target_p;
   char nick[NICKLEN];
   char *s;
-  dlink_node *ptr;
 
   if (parc < 2 || EmptyString(parv[1]))
   {

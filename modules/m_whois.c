@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_whois.c,v 3.4 2004/09/22 19:27:01 nenolod Exp $
+ *  $Id: m_whois.c,v 3.5 2004/09/22 21:40:43 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -56,8 +56,6 @@ static int single_whois (struct Client *source_p, struct Client *target_p,
 			 int wilds, int glob);
 static void whois_person (struct Client *source_p, struct Client *target_p,
 			  int glob);
-static int global_whois (struct Client *source_p, char *nick, int wilds,
-			 int glob);
 
 static void m_whois (struct Client *, struct Client *, int, char **);
 static void mo_whois (struct Client *, struct Client *, int, char **);
@@ -83,7 +81,7 @@ _moddeinit (void)
   mod_del_cmd (&whois_msgtab);
 }
 
-const char *_version = "$Revision: 3.4 $";
+const char *_version = "$Revision: 3.5 $";
 #endif
 
 /* m_whois
@@ -212,53 +210,6 @@ do_whois (struct Client *client_p, struct Client *source_p,
 
   sendto_one (source_p, form_str (RPL_ENDOFWHOIS),
 	      me.name, source_p->name, parv[1]);
-}
-
-/* global_whois()
- *
- * Inputs	- source_p client to report to
- *		- target_p client to report on
- *		- wilds whether wildchar char or not
- * Output	- if found return 1
- * Side Effects	- do a single whois on given client
- * 		  writing results to source_p
- */
-static int
-global_whois (struct Client *source_p, char *nick, int wilds, int glob)
-{
-  dlink_node *ptr;
-  struct Client *target_p;
-  int found = 0;
-
-  DLINK_FOREACH (ptr, global_client_list.head)
-  {
-    target_p = ptr->data;
-
-    if (!IsPerson (target_p))
-      continue;
-
-    if (!match (nick, target_p->name))
-      continue;
-
-    assert (target_p->user->server != NULL);
-
-    /* 'Rules' established for sending a WHOIS reply:
-     *
-     *
-     * - if wildcards are being used dont send a reply if
-     *   the querier isnt any common channels and the
-     *   client in question is invisible and wildcards are
-     *   in use (allow exact matches only);
-     *
-     * - only send replies about common or public channels
-     *   the target user(s) are on;
-     */
-
-    if (single_whois (source_p, target_p, wilds, glob))
-      found = 1;
-
-  }
-  return (found);
 }
 
 /* single_whois()

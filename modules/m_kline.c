@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_kline.c,v 3.5 2004/09/22 18:13:15 nenolod Exp $
+ *  $Id: m_kline.c,v 3.6 2004/09/22 21:40:43 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -106,7 +106,7 @@ _moddeinit (void)
   delete_capability ("KLN");
 }
 
-const char *_version = "$Revision: 3.5 $";
+const char *_version = "$Revision: 3.6 $";
 #endif
 
 #define TK_SECONDS 0
@@ -1106,7 +1106,7 @@ mo_unkline (struct Client *client_p, struct Client *source_p,
    * happen.
    *       --nenolod
    */
-  flush_rejects();
+  flush_reject();
 
   if (remove_tkline_match (host, user))
     {

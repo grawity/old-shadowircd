@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_sjoin.c,v 1.4 2004/09/22 19:27:01 nenolod Exp $
+ *  $Id: m_sjoin.c,v 1.5 2004/09/22 21:40:43 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,7 +63,7 @@ _moddeinit(void)
   mod_del_cmd(&sjoin_msgtab);
 }
 
-const char *_version = "$Revision: 1.4 $";
+const char *_version = "$Revision: 1.5 $";
 const char *_desc = "Used in server to server communications";
 #endif
 
@@ -95,7 +95,7 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
          int parc, char *parv[])
 {
   struct Channel *chptr;
-  struct Client  *target_p, *lclient_p;
+  struct Client  *target_p;
   time_t         newts;
   time_t         oldts;
   time_t         tstosend;

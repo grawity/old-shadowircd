@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_userhost.c,v 3.4 2004/09/22 19:27:01 nenolod Exp $
+ *  $Id: m_userhost.c,v 3.5 2004/09/22 21:40:43 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -58,7 +58,7 @@ _moddeinit (void)
   mod_del_cmd (&userhost_msgtab);
 }
 
-const char *_version = "$Revision: 3.4 $";
+const char *_version = "$Revision: 3.5 $";
 #endif
 /*
  * m_userhost added by Darren Reed 13/8/91 to aid clients and reduce
@@ -72,7 +72,7 @@ m_userhost (struct Client *client_p, struct Client *source_p,
   struct Client *target_p;
   char response[NICKLEN * 2 + USERLEN + HOSTLEN + 30];
   char *t;
-  int i, n;			/* loop counter */
+  int i;			/* loop counter */
   int cur_len;
   int rl;
 

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_serv.c,v 3.5 2004/09/22 19:47:20 nenolod Exp $
+ *  $Id: s_serv.c,v 3.6 2004/09/22 21:40:43 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -67,7 +67,6 @@ static unsigned long freeMask;
 static void server_burst(struct Client *);
 static int fork_server(struct Client *);
 static void burst_all(struct Client *);
-static void cjoin_all(struct Client *);
 
 static CNCB serv_connect_callback;
 
@@ -1584,26 +1583,6 @@ burst_all(struct Client *client_p)
   /* Its simpler to just send EOB and use the time its been connected.. --fl_ */
   if (IsCapable(client_p, CAP_EOB))
     sendto_one(client_p, ":%s EOB", ID_or_name(&me, client_p));
-}
-
-/* cjoin_all()
- *
- * inputs       - server to ask for channel info from
- * output       - NONE
- * side effects	- CJOINS for all the leafs known channels is sent
- */
-static void
-cjoin_all(struct Client *client_p)
-{
-  dlink_node *gptr;
-  struct Channel *chptr;
-
-  DLINK_FOREACH(gptr, global_channel_list.head)
-  {
-    chptr = gptr->data;
-    sendto_one(client_p, ":%s CBURST %s",
-               me.name, chptr->chname);
-  }
 }
 
 /* burst_channel()
