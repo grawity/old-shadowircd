@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: supported.h,v 1.6 2004/02/12 23:02:22 nenolod Exp $
+ *  $Id: supported.h,v 1.7 2004/04/07 19:35:13 nenolod Exp $
  */
 
 #ifndef INCLUDED_supported_h
@@ -65,7 +65,7 @@
 		  " CHANMODES=%s%s%s" \
 		  " NETWORK=%s"       \
 		  " CASEMAPPING=%s"   \
-		  " GRANT ETRACE CALLERID%s"
+		  " PROP GRANT ETRACE CALLERID%s"
 
 #define FEATURES2VALUES ConfigChannel.disable_local_channels ? "#" : "#&", \
                         "(uohv)!@%+", \
