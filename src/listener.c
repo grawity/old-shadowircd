@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  listener.c: Listens on a port.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: listener.c,v 1.1.1.1 2003/12/02 20:46:43 nenolod Exp $
+ *  $Id: listener.c,v 1.2 2003/12/05 20:31:44 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -245,7 +245,7 @@ find_listener(int port, struct irc_ssaddr *addr)
  * the format "255.255.255.255"
  */
 void 
-add_listener(int port, const char* vhost_ip)
+add_listener(int port, const char* vhost_ip, int is_ssl)
 {
   struct Listener *listener;
   struct irc_ssaddr vaddr;
@@ -331,6 +331,8 @@ add_listener(int port, const char* vhost_ip)
 
   listener->fd = -1;
 
+  listener->is_ssl = is_ssl;
+
   if (inetport(listener))
     listener->active = 1;
   else
@@ -413,7 +415,7 @@ accept_connection(int pfd, void *data)
    * be accepted until some old is closed first.
    */
 
-  fd = comm_accept(listener->fd, &sai);
+  fd = comm_accept(listener->fd, &sai, listener->is_ssl);
 
   if (fd < 0)
   {

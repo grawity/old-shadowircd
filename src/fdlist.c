@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  fdlist.c: Maintains a list of file descriptors.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: fdlist.c,v 1.1.1.1 2003/12/02 20:46:49 nenolod Exp $
+ *  $Id: fdlist.c,v 1.2 2003/12/05 20:31:44 nenolod Exp $
  */
 #include "stdinc.h"
 #include "fdlist.h"
@@ -82,7 +82,7 @@ fdlist_init(void)
 
 /* Called to open a given filedescriptor */
 void
-fd_open(int fd, unsigned int type, const char *desc)
+fd_open(int fd, unsigned int type, const char *desc, void *ssl)
 {
   fde_t *F = &fd_table[fd];
   assert(fd >= 0);
@@ -112,6 +112,9 @@ fd_open(int fd, unsigned int type, const char *desc)
   if (desc)
     strlcpy(F->desc, desc, sizeof(F->desc));
   number_fd++;
+#ifdef HAVE_LIBCRYPTO
+  F->ssl = (SSL *)ssl;
+#endif
 }
 
 /* Called to close a given filedescriptor */
@@ -139,6 +142,18 @@ fd_close(int fd)
   number_fd--;
   memset(F, '\0', sizeof(fde_t));
   F->timeout = 0;
+
+#ifdef HAVE_LIBCRYPTO
+  F->flags.accept_read = 0;
+  F->flags.accept_write = 0;
+  F->accept_failures = 0;
+  if (F->ssl) {
+        SSL_shutdown(F->ssl);
+        SSL_free(F->ssl);
+        F->ssl = NULL;
+  }
+#endif
+
   /* Unlike squid, we're actually closing the FD here! -- adrian */
   close(fd);
 }

@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  s_bsd.c: Network functions.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_bsd.c,v 1.1.1.1 2003/12/02 20:46:38 nenolod Exp $
+ *  $Id: s_bsd.c,v 1.2 2003/12/05 20:31:44 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -806,7 +806,7 @@ comm_open(int family, int sock_type, int proto, const char *note)
  * comm_open() does.
  */
 int
-comm_accept(int fd, struct irc_ssaddr *pn)
+comm_accept(int fd, struct irc_ssaddr *pn, int is_ssl)
 {
   int newfd;
   socklen_t addrlen = sizeof(struct irc_ssaddr);
@@ -839,8 +839,85 @@ comm_accept(int fd, struct irc_ssaddr *pn)
       return -1;
     }
 
+#ifdef HAVE_LIBCRYPTO
+  if (is_ssl && ServerInfo.ctx) {
+    int retval;
+    extern char *get_ssl_error(int);
+        fde_t *F = &fd_table[newfd];
+
+        copy_s_addr(F->connect.hostaddr, *pn);
+
+        ssl = SSL_new(ServerInfo.ctx);
+        if (!ssl) {
+                ilog(L_CRIT, "SSL_new() ERROR! -- %s", ERR_error_string(ERR_get_error(), NULL));
+                close(newfd);
+                return -1;
+        }
+        SSL_set_fd(ssl, newfd);
+
+        sendto_realops_flags(FLAGS_DEBUG, L_ALL, "SSL_accept() for %s (socket %d) in progress...",
+                inetntoa((char *)&PS_ADDR(pn)), newfd);
+
+again:
+        retval = SSL_accept(ssl);
+        if (retval <= 0) {
+                switch ((retval = SSL_get_error(ssl, retval))) {
+
+                case SSL_ERROR_SYSCALL:
+                                if (errno==EINTR || errno==EWOULDBLOCK || errno==EAGAIN)
+
+                        case SSL_ERROR_WANT_READ:
+                        case SSL_ERROR_WANT_WRITE:
+                                sendto_realops_flags(FLAGS_DEBUG, L_ALL,
+                                        "SSL_accept() for %s wants read or write (%s), passing through...",
+                                        inetntoa((char *)&PS_ADDR(pn)), get_ssl_error(retval));
+
+                                /* let it through, SSL_read()/SSL_write() will finish the handshake...*/
+                                /*goto again;*/
+
+
+                                /*SSL_set_accept_state(ssl);*/
+                                if (retval == SSL_ERROR_WANT_READ)
+                                        F->flags.accept_read = 1;
+                                else if (retval == SSL_ERROR_WANT_WRITE)
+                                        F->flags.accept_write = 1;
+                                else
+                                        F->flags.accept_read = 1;
+                                break;
+
+                        default:
+                                sendto_realops_flags(FLAGS_DEBUG, L_ALL, "SSL_accept() ERROR! -- %s",
+                                        (retval == SSL_ERROR_SSL)?
+                                        ERR_error_string(ERR_get_error(), NULL) :
+                                        get_ssl_error(retval));
+                                SSL_free(ssl);
+                                close(newfd);
+                                return -1;
+                }
+        } else {
+                char *ssl_get_cipher(SSL *);
+                /*SSL_set_accept_state(ssl);*/
+
+                sendto_realops_flags(FLAGS_DEBUG, L_ALL, "SSL_accept() for %s succeeded!",
+                        inetntoa((char *)&PS_ADDR(pn)));
+                sendto_realops_flags(FLAGS_DEBUG, L_ALL, "SSL protocol/cipher: %s",
+                        ssl_get_cipher(ssl));
+                sendto_realops_flags(FLAGS_DEBUG, L_ALL, "SSL_state_string_long(): %s",
+                        SSL_state_string_long(ssl));
+        }
+  }
+#endif
+
   /* Next, tag the FD as an incoming connection */
-  fd_open(newfd, FD_SOCKET, "Incoming connection");
+#ifdef HAVE_LIBCRYPTO
+  if (is_ssl && ServerInfo.ctx)
+        fd_open(newfd, FD_SOCKET, "Incoming SSL connection", ssl);
+  else
+        fd_open(newfd, FD_SOCKET, "Incoming connection", ssl);
+#else
+  /* Next, tag the FD as an incoming connection */
+  fd_open(newfd, FD_SOCKET, "Incoming connection", ssl);
+#endif
 
   /* .. and return */
   return newfd;
@@ -878,3 +955,35 @@ remove_ipv6_mapping(struct irc_ssaddr *addr)
     addr->ss_len = sizeof(struct sockaddr_in);
 } 
 #endif
+
+#ifdef HAVE_LIBCRYPTO
+char *ssl_get_cipher(SSL *ssl)
+{
+        static char buf[400];
+        char bots[10];
+        int bits;
+        SSL_CIPHER *c;
+
+        buf[0] = '\0';
+        switch(ssl->session->ssl_version)
+        {
+                case SSL2_VERSION:
+                        strcat(buf, "SSLv2"); break;
+                case SSL3_VERSION:
+                        strcat(buf, "SSLv3"); break;
+                case TLS1_VERSION:
+                        strcat(buf, "TLSv1"); break;
+                default:
+                        strcat(buf, "UNKNOWN");
+        }
+        strcat(buf, "-");
+        strcat(buf, SSL_get_cipher(ssl));
+        c = SSL_get_current_cipher(ssl);
+        SSL_CIPHER_get_bits(c, &bits);
+        sprintf(bots, "-%d", bits);
+        strcat(buf, bots);
+        strcat(buf, "bits");
+        return (buf);
+}
+#endif
+
