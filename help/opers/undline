@@ -1,0 +1,6 @@
+# $Id: undline,v 1.1 2004/04/06 19:01:07 nenolod Exp $
+UNDLINE <ip>
+
+Will attempt to undline the given <ip>
+
+- Requires Oper Priv: U
