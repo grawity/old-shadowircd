@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_lexer.l,v 3.3 2004/09/08 01:18:08 nenolod Exp $
+ *  $Id: ircd_lexer.l,v 3.4 2004/09/25 05:37:27 nenolod Exp $
  */
 
 %option case-insensitive
@@ -240,6 +240,7 @@ network_desc    { return NETWORK_DESC; }
 network_name    { return NETWORK_NAME; }
 netadmin        { return NETADMIN; }
 techadmin       { return TECHADMIN; }
+oper_prefix     { return OPER_PREFIX; }
 routing         { return ROUTING; }
 nick		{ return NICK; }
 nick_changes	{ return NICK_CHANGES; }

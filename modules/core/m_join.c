@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_join.c,v 1.4 2004/09/22 19:27:01 nenolod Exp $
+ *  $Id: m_join.c,v 1.5 2004/09/25 05:37:27 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -88,7 +88,7 @@ _moddeinit(void)
   mod_del_cmd(&join_msgtab);
 }
 
-const char *_version = "$Revision: 1.4 $";
+const char *_version = "$Revision: 1.5 $";
 const char *_desc = "Implements /join command -- allows users to join channels.";
 #endif
 
@@ -167,6 +167,10 @@ m_join(struct Client *client_p, struct Client *source_p,
                            source_p->name, source_p->username,
                            GET_CLIENT_HOST(source_p), chptr->chname);
 
+      if(IsOper(source_p) && ConfigFileEntry.oper_prefix)
+        sendto_channel_local(ALL_MEMBERS, chptr, ":%s MODE %s +a %s",
+                             me.name, parv[2], source_p->name);
+
       sendto_channel_local(ALL_MEMBERS, chptr,
                            ":%s MODE %s +nt", me.name, chptr->chname);
     }
@@ -184,6 +188,10 @@ m_join(struct Client *client_p, struct Client *source_p,
       sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s JOIN :%s",
                            source_p->name, source_p->username,
                            GET_CLIENT_HOST(source_p), chptr->chname);
+
+      if(IsOper(source_p) && ConfigFileEntry.oper_prefix)
+        sendto_channel_local(ALL_MEMBERS, chptr, ":%s MODE %s +a %s",
+                             me.name, parv[2], source_p->name);
     }
 
     del_invite(chptr, source_p);

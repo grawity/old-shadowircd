@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_sjoin.c,v 1.5 2004/09/22 21:40:43 nenolod Exp $
+ *  $Id: m_sjoin.c,v 1.6 2004/09/25 05:37:27 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,7 +63,7 @@ _moddeinit(void)
   mod_del_cmd(&sjoin_msgtab);
 }
 
-const char *_version = "$Revision: 1.5 $";
+const char *_version = "$Revision: 1.6 $";
 const char *_desc = "Used in server to server communications";
 #endif
 
@@ -459,6 +459,9 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
       sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s JOIN :%s",
                            target_p->name, target_p->username,
                            GET_CLIENT_HOST(target_p), parv[2]);
+      if (IsOper(target_p) && ConfigFileEntry.oper_prefix)
+        sendto_channel_local(ALL_MEMBERS, chptr, ":%s MODE %s +a %s",
+			     me.name, parv[2], target_p->name);
     }
 
 #ifndef DIABLE_CHAN_OWNER

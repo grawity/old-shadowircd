@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.c,v 3.3 2004/09/08 01:18:08 nenolod Exp $
+ *  $Id: channel.c,v 3.4 2004/09/25 05:37:27 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -197,7 +197,7 @@ send_members(struct Client *client_p, struct Channel *chptr,
       t = start;
     }
 
-    strcpy(t, get_member_status(ms, YES));
+    strcpy(t, get_member_status(ms, YES, 0));
     t += strlen(t);
     if (IsCapable(client_p, CAP_TS6))
       strcpy(t, ID(ms->client_p));
@@ -464,7 +464,7 @@ channel_member_names(struct Client *source_p, struct Channel *chptr,
 	t = start;
       }
 
-      t += ircsprintf(t, "%s%s ", get_member_status(ms, NO),
+      t += ircsprintf(t, "%s%s ", get_member_status(ms, NO, 1),
                       target_p->name); /* XXX */
     }
 
@@ -568,7 +568,7 @@ del_invite(struct Channel *chptr, struct Client *who)
  * (like in get_client_name)
  */
 const char *
-get_member_status(struct Membership *ms, int combine)
+get_member_status(struct Membership *ms, int combine, int is_client)
 {
   static char buffer[5];
   char *p;
@@ -576,6 +576,9 @@ get_member_status(struct Membership *ms, int combine)
   if (ms == NULL)
     return("");
   p = buffer;
+
+  if (is_client && ConfigFileEntry.oper_prefix && IsOper(ms->client_p))
+    return("~");
 
 #ifndef DISABLE_CHAN_OWNER
   if (ms->flags & CHFL_CHANOWNER)

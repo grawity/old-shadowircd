@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.h,v 3.3 2004/09/08 01:18:07 nenolod Exp $
+ *  $Id: channel.h,v 3.4 2004/09/25 05:37:27 nenolod Exp $
  */
 
 #ifndef INCLUDED_channel_h
@@ -99,7 +99,7 @@ extern void remove_user_from_channel(struct Membership *);
 extern int check_channel_name(const char *name);
 extern void channel_member_names(struct Client *source_p, struct Channel *chptr,
                                  int show_eon);
-extern const char *get_member_status(struct Membership *, int);
+extern const char *get_member_status(struct Membership *, int, int);
 extern void add_invite(struct Channel *chptr, struct Client *who);
 extern void del_invite(struct Channel *chptr, struct Client *who);
 extern void send_channel_modes (struct Client *, struct Channel *);

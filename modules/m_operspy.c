@@ -16,7 +16,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *   $Id: m_operspy.c,v 3.3 2004/09/08 01:18:07 nenolod Exp $
+ *   $Id: m_operspy.c,v 3.4 2004/09/25 05:37:27 nenolod Exp $
  */
 
 /***  PLEASE READ ME  ***/
@@ -114,7 +114,7 @@ _moddeinit(void)
 {
   mod_del_cmd(&operspy_msgtab);
 }
-const char *_version = "$Revision: 3.3 $";
+const char *_version = "$Revision: 3.4 $";
 #endif
 
 #ifdef OPERSPY_LOG
@@ -395,7 +395,7 @@ void mo_operspy(struct Client *client_p, struct Client *source_p,
           ((struct Membership *)target_p_who->user->channel.head->data)->chptr;
 
         do_who(client_p, target_p_who, chptr_who->chname,
-               get_member_status(target_p_who->user->channel.head->data, NO));
+               get_member_status(target_p_who->user->channel.head->data, NO, 1));
       }
       else
       {
@@ -476,7 +476,7 @@ void mo_operspy(struct Client *client_p, struct Client *source_p,
 
       ircsprintf(t, "%s%s%s ",
                  ShowChannel(client_p, chptr_whois) ? "" : "%",
-                 get_member_status((struct Membership *)lp->data, YES),
+                 get_member_status((struct Membership *)lp->data, YES, 1),
                  chptr_whois->chname);
       tlen = strlen(t);
       t += tlen;
@@ -557,7 +557,7 @@ who_global(struct Client *source_p, char *mask, int server_oper)
 
         chptr = ((struct Membership *)(target_p->user->channel.head->data))->chptr;
         snprintf(fl, sizeof(fl), "%s",
-                 get_member_status((struct Membership *)(target_p->user->channel.head->data), NO));
+                 get_member_status((struct Membership *)(target_p->user->channel.head->data), NO, 1));
 
         do_who(source_p, target_p, chptr->chname, fl);
       }
@@ -583,7 +583,7 @@ do_who_on_channel(struct Client *source_p, struct Channel *chptr,
   DLINK_FOREACH(ptr, chptr->members.head)
   {
     ms = ptr->data;
-    do_who(source_p, ms->client_p, chname, get_member_status(ms, NO));
+    do_who(source_p, ms->client_p, chname, get_member_status(ms, NO, 1));
   }
 }
 #endif /* OPERSPY_WHO */

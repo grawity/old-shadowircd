@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_who.c,v 3.5 2004/09/23 18:08:46 nenolod Exp $
+ *  $Id: m_who.c,v 3.6 2004/09/25 05:37:27 nenolod Exp $
  */
 #include "stdinc.h"
 #include "tools.h"
@@ -62,7 +62,7 @@ _moddeinit(void)
   mod_del_cmd(&who_msgtab);
 }
 
-const char *_version = "$Revision: 3.5 $";
+const char *_version = "$Revision: 3.6 $";
 #endif
 
 static void who_global(struct Client *source_p, char *mask, int server_oper);
@@ -178,7 +178,7 @@ m_who(struct Client *client_p, struct Client *source_p,
 
     if (lp != NULL)
       do_who(source_p, target_p, ((struct Membership *) lp->data)->chptr->chname,
-             get_member_status(lp->data, NO));
+             get_member_status(lp->data, NO, 1));
     else
       do_who(source_p, target_p, NULL, "");
 
@@ -340,7 +340,7 @@ do_who_on_channel(struct Client *source_p, struct Channel *chptr,
     {
       if (server_oper && !IsOper(target_p))
 	continue;
-      do_who(source_p, target_p, chname, get_member_status(ms, NO));
+      do_who(source_p, target_p, chname, get_member_status(ms, NO, 1));
     }
   }
 }

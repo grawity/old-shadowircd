@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: supported.h,v 3.4 2004/09/22 19:47:20 nenolod Exp $
+ *  $Id: supported.h,v 3.5 2004/09/25 05:37:27 nenolod Exp $
  */
 
 #ifndef INCLUDED_supported_h
@@ -73,7 +73,7 @@
 
 #ifndef DISABLE_CHAN_OWNER
 #define FEATURES2VALUES ConfigChannel.disable_local_channels ? "#" : "#&", \
-                        "(uohv)!@%+", \
+                        ConfigFileEntry.oper_prefix ? "(auohv)~!@%+" : "(uohv)!@%+", \
                         ConfigChannel.use_except ? "e" : "", \
                         ConfigChannel.use_invex ? "I" : "", \
                         "bqd,k,l,imnpstTFczGETPScrVNOF", \

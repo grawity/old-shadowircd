@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 3.4 2004/09/22 19:27:01 nenolod Exp $
+ *  $Id: ircd_parser.y,v 3.5 2004/09/25 05:37:27 nenolod Exp $
  */
 
 %{
@@ -159,6 +159,7 @@ unhook_hub_leaf_confs(void)
 %token  CLOAKSTRING
 %token  CONFIGURATION
 %token  AUSPEX
+%token  OPER_PREFIX
 %token  GRANT
 %token  OVERRIDE
 %token  SET_OWNCLOAK
@@ -514,7 +515,7 @@ network_item:           network_name | network_description |
                         network_cloak_key_3 | network_on_oper_host |
                         network_cloak_on_oper | network_gline_address |
                         network_cloak_on_connect | network_disable_hostmasking |
-                        network_filter_on_connect | error;
+                        network_filter_on_connect | network_oper_prefix | error;
 
 network_name:           NAME '=' QSTRING ';'
 {
@@ -598,6 +599,12 @@ network_cloak_on_oper: CLOAK_ON_OPER '=' TBOOL ';'
 {
   if (ypass == 2)
     ServerInfo.network_cloak_on_oper = yylval.number;
+};
+
+network_oper_prefix: OPER_PREFIX '=' TBOOL ';'
+{
+  if (ypass == 2)
+    ConfigFileEntry.oper_prefix = yylval.number;
 };
 
 network_disable_hostmasking: DISABLE_HOSTMASKING '=' TBOOL ';'
