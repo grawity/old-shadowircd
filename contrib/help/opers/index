@@ -1,0 +1,24 @@
+# $Id: index,v 1.1 2004/09/07 04:50:36 nenolod Exp $
+Help topics available to opers:
+
+ACCEPT          ADMIN           AWAY            CAPAB
+CBURST          CHALLENGE       CJOIN           CLIENT
+CLOSE           CMODE           CONNECT         CREDITS
+CRYPTLINK       DIE             DLINE           DMEM
+DROP            EOB             ERROR           GLINE
+HELP            INDEX           INFO            INVITE
+ISON            JOIN            KICK            KILL
+KLINE           KNOCK           KNOCKLL         LINKS
+LIST            LLJOIN          LLNICK          LOCOPS
+LUSERS          MODLIST         MODLOAD         MODRESTART
+MODUNLOAD       MOTD            NAMES           NBURST
+NICK            NOTICE          OPER            OPERWALL
+PART            PASS            PING            PONG
+POST            PRIVMSG         QUIT            REHASH
+RESTART         RESV            SERVER          SET
+SJOIN           SQUIT           STATS           SVINFO
+TESTLINE        TIME            TOPIC           TRACE
+UHELP           UMODE           UNDLINE         UNGLINE
+UNKLINE         UNRESV          UNXLINE         USER
+USERHOST        USERS           VERSION         WALLOPS
+WHO             WHOIS           WHOWAS          XLINE

@@ -1,0 +1,13 @@
+Information on the SILENCE command.
+This implementation is done by nenolod.
+Silences are added to the list with:
+
+/silence +User!*@* or
+/silence +User
+
+If you want a silence on the nickname, i.e. it is a bot who is bugging you:
+/silence +AnnoyingBot!*
+will work.
+
+To delete a silence, do
+/silence -User!*@* or whatever.

@@ -1,0 +1,6 @@
+# $Id: motd,v 1.1 2004/09/07 04:50:36 nenolod Exp $
+MOTD [servername]
+
+MOTD will display the message of the day for the
+server name specified, or the local server if there
+was no parameter.

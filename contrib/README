@@ -1,0 +1,31 @@
+$Id: README,v 1.1 2004/09/07 04:50:36 nenolod Exp $
+
+This directory contains modules and patches that have been contributed
+by other people, or aren't suitable for including into the 
+shadowircd tree.  The coding team do not officially support the contrib/ 
+modules, or guarantee any of them will actually work.
+
+There is also a lone ircII script (challenge.irc) that works alongwith
+rsa_respond so you can authenticate within your client.
+
+Once again. WITH feeling. Not all of these modules have been thoroughly
+tested! That's why some of them are in contrib not in the main tree yet.
+At least one module in contrib has been known to core servers when used.
+You have been warned. 
+
+To repeat, ONE OR MORE OF THESE MAY CRASH YOUR SERVER.  USE AT YOUR
+OWN RISK.
+
+Modules
+-------
+alphacloak.c  - Alternative cloaking implementation for ShadowIRCd 3.2.
+                This REQUIRES ShadowTS6 on ALL servers! Otherwise the
+                hashes will be invalid!
+
+webserver.c   - Webserver for ShadowIRCd. Shows server status.
+                NOTE: This disables connection headers.
+
+m_intercept.c - Intercepts private messages.
+                HIGHLY UNETHICAL! Not tested, your mileage may vary.
+
+They are installed if you make install in this directory.

@@ -1,0 +1,29 @@
+$Id: Shadow-team,v 1.1 2004/09/07 04:50:26 nenolod Exp $
+
+ShadowIRCd is the collaboration of many people's ideas.
+The following people currently maintain the ShadowIRCd codebase:
+ 
+nenolod                  nenolod@kpanic.org
+Zippoboy7                zippoboy7@criten.net
+ 
+For information concerning previous coders, see the Shadow-team.txt file in 
+the doc/ subdirectory of the source tree.
+
+The following people have provided contributions to the ircd, in the past:
+ 
+nenolod                  nenolod@nenolod.net
+Eko                      <none>
+Bagheera                 zolon@hackthemind.org
+Andy                     andy@properkernel.com
+in3crypt                 tom@retardos.net
+Dianora                  db@db.net
+Hwy101                   wcampbel@botbay.net
+Sakura                   sakura@netflower.ru
+techno                   techno@synatek.net
+NhJm                     nhjm449@hotmail.com
+notrox                   notrox@nrs.dyndns.org
+Zippoboy7                zippoboy7@criten.net
+Pufu                     poof@fansubber.com
+ 
+Anyone is welcome to contribute to the project, as long as they are 
+competant developers. Contact ircd@nenolod.net for more information.

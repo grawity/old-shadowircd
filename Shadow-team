@@ -1,0 +1,38 @@
+$Id: Shadow-team,v 1.1 2004/09/07 04:50:25 nenolod Exp $
+ 
+The people on this list are people who have helped with the
+development of ShadowIRCd. These people are known as the
+ShadowIRCd project.
+ 
+Active members in the ShadowIRCd project:
+ 
+ - nenolod (nenolod@shadowircd.net)
+   Main developer.
+ 
+ - NhJm (nhjm449@shadowircd.net)
+   Additional development, web-related work, maintainance of
+   modules.shadowircd.net.
+ 
+ - Eko (eko@shadowircd.net)
+   Lots of work on shadowTS6, 
+ 
+ - Lucifer7 (schultz2003ca@watermelon.ath.cx)
+   Archival of ShadowIRCd releases and documentation.
+   ShadowIRCd "advocacy".
+ 
+ - Ashen (l43x@hotmail.com)
+   Crash reporting on Redhat/Mandrake systems.
+ 
+ - K6-2
+   Various maintainance stuff.
+ 
+The following people have requested that features be added,
+or have helped in the development process for this release 
+in some other manner:
+ 
+^daemon   DeimosFawkes  pinano      akba      kib     Hostile
+Inuyasha  Zippoboy7
+ 
+This list is growing! So...
+If you would like to help out with development, connect to
+irc.shadowircd.net and join #shadowircd.

@@ -1,0 +1,37 @@
+# These are the current modes implemented in the ircd.
+# when new channel modes are added, update this list.
+# $Id: chanmodes.txt,v 1.1 2004/09/07 04:50:26 nenolod Exp $
+
+# Channel modes
+bcdefhiklmnopqstuvzEFIKLNOPST
+
+b - ban
+c - colour block
+d - deny op status to user
+e - ban exception
+f - channel forwarding
+h - halfop status
+i - invite only channel
+k - channel key
+l - channel limit
+m - moderated
+n - no external messages
+o - channel operator
+p - paranoid channel
+q - quiet
+s - secret channel
+t - topic locked to halfops and higher
+u - channel owner
+v - channel voice
+z - disable message throttling
+E - only identified users may join
+F - free invite
+I - invite exception
+K - deny knocks
+L - channel message forwarding
+N - sticky nicks
+O - operator only channel
+P - channel in peace mode
+S - colour strip
+T - only channel owners may set topic
+

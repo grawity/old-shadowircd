@@ -1,0 +1,75 @@
+$Id: ChangeLog,v 1.1 2004/09/07 04:50:26 nenolod Exp $
+
+ShadowIRCd 3.2.1:
+
+* BUGFIX: Make +E channels work again.
+* BUGFIX: Make it where user cannot set himself identified.
+* Add DCCALLOW.
+* Add LANGUAGES 005 numeric.
+
+ShadowIRCd 3.2:
+
+* Changed hostmasking (+x) to MD5 (uncrackable).
+* Changed config parser.
+* Added a configuration creator by NhJm.
+* Imported 3.1-2 and 3.1-3 changes.
+* Fixed obscure nick collision bug.
+
+ShadowIRCd 3.1-1:
+
+* Really fix socket dequeing bug.
+* Make silence actually work.
+
+ShadowIRCd 3.1:
+
+* Fix socket dequeing bug in old hybrid basecode.
+* Finish language file implementation. (See messages/fantasy.lang for details on what nenolod 
+                                        means here)
+* Finish tools/sslsetup script.
+* Fix channel filterlist desync issues, hopefully.
+* Fix check_text() issue causing ircd to use patterns for filtering.
+
+ShadowIRCd 3.1-rc1:
+
+* Fix for Channel filtering II.
+* Allow static module compiling.
+
+ShadowIRCd 3.1-beta3 (still the Moonlight series):
+
+* Fix for Channel filtering.
+* Start working in PROTOCTL system as CAPAB is getting quickly obsolescent.
+
+ShadowIRCd 3.1-beta2 (still the Moonlight series):
+
+* Channel filtering.
+* Support for non-IRC protocols
+
+ShadowIRCd 3.1-beta1 (the Moonlight series):
+
+* UID is more paranoid now. (this stops the UID parc == 8 issue before
+                             it is harmful)
+* Silence support.
+* Ability to disable connection headers.
+
+ShadowIRCd 3.0 (Cortana)
+
+* Several bugfixes.
+* Whois notices are global.
+* No more forcejoin system.
+* Opers with override can now kick.
+* Opers with override can now set topics.
+
+ShadowIRCd 3.0-rc2:
+
+* CGI:IRC scripted client detection and optional banning.
+* Bugfixes concerning usermode desyncs. Thanks to several testers for 
+  noticing this bug.
+
+ShadowIRCd 3.0-rc1 and earlier:
+
+* More efficient protocol.
+* New usermode system, up to 64 modes can be supported at one time now.
+* Network Administrators
+* Technical Administrators
+* Routing Administrators
+* Oh so much more.
