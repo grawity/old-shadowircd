@@ -28,7 +28,7 @@
  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *
- *  $Id: m_etrace.c,v 1.1.1.1 2004/09/07 04:50:39 nenolod Exp $
+ *  $Id: m_etrace.c,v 3.3 2004/09/08 01:18:07 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -71,7 +71,7 @@ _moddeinit(void)
 {
 	mod_del_cmd(&etrace_msgtab);
 }
-const char *_version = "$Revision: 1.1.1.1 $";
+const char *_version = "$Revision: 3.3 $";
 #endif
 
 

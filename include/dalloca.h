@@ -1,5 +1,5 @@
 /* dalloca.h - alloca function for tinycc which doesn't have one natively
- * $Id: dalloca.h,v 1.1.1.1 2004/09/07 04:50:40 nenolod Exp $
+ * $Id: dalloca.h,v 3.3 2004/09/08 01:18:07 nenolod Exp $
  */
 
 /*

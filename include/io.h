@@ -15,7 +15,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *   $Id: io.h,v 1.1.1.1 2004/09/07 04:50:40 nenolod Exp $
+ *   $Id: io.h,v 3.3 2004/09/08 01:18:07 nenolod Exp $
  */
 
 #ifndef INCLUDED_servlink_io_h

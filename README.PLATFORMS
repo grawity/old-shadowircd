@@ -32,4 +32,4 @@ Alpha        cc               Tru64 5.2b    Joshua Kwan <joshk@triplehelix.org>
 PA-RISC 2.0  cc		      HP-UX B.11    Yusuf Iskenderoglu 
 						<uhc0@stud.uni-karlsruhe.de>
 
-$Id: README.PLATFORMS,v 1.1.1.1 2004/09/07 04:50:25 nenolod Exp $
+$Id: README.PLATFORMS,v 3.3 2004/09/08 01:18:06 nenolod Exp $

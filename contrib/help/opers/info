@@ -4,4 +4,4 @@ INFO displays the copyright, list of authors and contributors
 to ircd, and the server configuration (as defined in setup.h,
 defaults.h, and ircd.conf).
 
-# $Id: info,v 1.1.1.1 2004/09/07 04:50:36 nenolod Exp $
+# $Id: info,v 3.3 2004/09/08 01:18:07 nenolod Exp $

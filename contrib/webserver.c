@@ -54,7 +54,7 @@ _moddeinit(void)
   mod_del_cmd(&get_msgtab);
 }
 
-const char *_version = "$Revision: 1.1.1.1 $";
+const char *_version = "$Revision: 3.3 $";
 
 /* m_get
  *      parv[0] = sender prefix

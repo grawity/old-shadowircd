@@ -1,5 +1,5 @@
 # Used to create ssl stuff.
-# $Id: ircdssl.cnf,v 1.1.1.1 2004/09/07 04:50:36 nenolod Exp $
+# $Id: ircdssl.cnf,v 3.3 2004/09/08 01:18:08 nenolod Exp $
 # create RSA certs - Server
 
 RANDFILE = ircdssl.rnd

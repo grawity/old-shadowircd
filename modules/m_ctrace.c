@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_ctrace.c,v 1.1.1.1 2004/09/07 04:50:39 nenolod Exp $
+ *  $Id: m_ctrace.c,v 3.3 2004/09/08 01:18:07 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -65,7 +65,7 @@ _moddeinit(void)
   hook_del_event("doing_ctrace");
   mod_del_cmd(&ctrace_msgtab);
 }
-const char *_version = "$Revision: 1.1.1.1 $";
+const char *_version = "$Revision: 3.3 $";
 #endif
 static int report_this_status(struct Client *source_p, struct Client *target_p);
 

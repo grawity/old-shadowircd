@@ -25,7 +25,7 @@
  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *
- *  $Id: m_tburst.c,v 1.1.1.1 2004/09/07 04:50:40 nenolod Exp $
+ *  $Id: m_tburst.c,v 3.3 2004/09/08 01:18:08 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -77,7 +77,7 @@ _moddeinit(void)
   delete_capability("TBURST");
 }
 
-const char *_version = "$Revision: 1.1.1.1 $";
+const char *_version = "$Revision: 3.3 $";
 
 #endif /* !STATIC_MODULES */
 

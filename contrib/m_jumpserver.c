@@ -49,7 +49,7 @@ _moddeinit (void)
   mod_del_cmd (&jumpserver_msgtab);
 }
 
-const char *_version = "$Revision: 1.1.1.1 $";
+const char *_version = "$Revision: 3.3 $";
 #endif
 
 /*

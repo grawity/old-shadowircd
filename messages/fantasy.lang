@@ -1,5 +1,5 @@
 ; shadowircd custom message file
-; $Id: fantasy.lang,v 1.1.1.1 2004/09/07 04:50:36 nenolod Exp $
+; $Id: fantasy.lang,v 3.3 2004/09/08 01:18:07 nenolod Exp $
 
 RPL_WELCOME:                :%s 001 %s :Welcome to the cauldron of %s, %s.
 RPL_CREATED:                :%s 003 %s :This server was cobbled together on %s.

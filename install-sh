@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: install-sh,v 1.1.1.1 2004/09/07 04:50:25 nenolod Exp $
+# $Id: install-sh,v 3.3 2004/09/08 01:18:06 nenolod Exp $
 #
 # install - install a program, script, or datafile
 #

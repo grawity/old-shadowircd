@@ -1,4 +1,4 @@
-# $Id: umode,v 1.1.1.1 2004/09/07 04:50:36 nenolod Exp $
+# $Id: umode,v 3.3 2004/09/08 01:18:07 nenolod Exp $
 MODE <nick> <+|-><modes>
 
 Usermodes: (* designates that the umode is oper only)

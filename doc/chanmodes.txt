@@ -1,6 +1,6 @@
 # These are the current modes implemented in the ircd.
 # when new channel modes are added, update this list.
-# $Id: chanmodes.txt,v 1.1.1.1 2004/09/07 04:50:26 nenolod Exp $
+# $Id: chanmodes.txt,v 3.3 2004/09/08 01:18:07 nenolod Exp $
 
 # Channel modes
 bcdefhiklmnopqstuvzEFIKLNOPST

@@ -1,7 +1,7 @@
 #
 # Makefile.in for ircd/contrib
 #
-# $Id: Makefile.in,v 1.1.1.1 2004/09/07 04:50:36 nenolod Exp $
+# $Id: Makefile.in,v 3.3 2004/09/08 01:18:06 nenolod Exp $
 #
 CC		= @CC@
 RM		= @RM@
