@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_persist.c,v 1.2 2004/02/08 01:44:23 nenolod Exp $
+ *  $Id: m_persist.c,v 1.3 2004/02/08 02:25:40 nenolod Exp $
  */
 
 #include <string.h>
@@ -59,7 +59,7 @@ _moddeinit(void)
   mod_del_cmd(&persist_msgtab);
 }
 
-char *_version = "$Version$";
+char *_version = "$Id: m_persist.c,v 1.3 2004/02/08 02:25:40 nenolod Exp $";
 #endif
 
 /*
@@ -157,20 +157,17 @@ static void m_persist(struct Client* client_p, struct Client* source_p,
       /* Client is no longer persistent, also swap fd's for reattachment */
 
       target_p->flags &= ~FLAGS_PERSISTANT;
-      source_p = target_p; /* This is so wrong in so many ways. */
-#if 0
+
       target_p->localClient->fd = source_p->localClient->fd;
-      target_p->localClient->ctrlfd = source_p->localClient->ctrlfd;
+
+      assert(target_p->localClient->fd == source_p->localClient->fd);
+
+      exit_client(source_p, source_p, source_p, "User ate a cookie!");
 
 #ifndef HAVE_SOCKETPAIR
       target_p->localClient->fd_r = source_p->localClient->fd_r;
-      target_p->localClient->ctrlfd_r = source_p->localClient->ctrlfd_r;
-      source_p->localClient->fd_r = -1;
-      source_p->localClient->ctrlfd_r = -1;
 #endif
-      source_p->localClient->fd = -1;
-      source_p->localClient->ctrlfd = -1;
-#endif
+
       fd_note(target_p->localClient->fd, "Nick: %s", target_p->name);
 
       /* mark socket to be looked at for read events again */
