@@ -1,0 +1,13 @@
+So far in the ShadowIRCd 2.5 branch:
+* Fixed rogue +L target bug
+* Fixed -L * * bug
+* Fixed immunity bugs
+* Modechanges for users set by servers are now propigated
+* Added initial support for persistant clients. (not recommended for use yet)
+* Added technical/network administrator flags.
+* Added cmode +a -- auditorium.
+* Fixed topic bugs
+* Server to Server challenge authentication removed (unstable)
+* Modernized ircd.conf slightly.
+* Removed redundant notice flags, changed +e (identified) to +r.
+* Added umode +X -- invisiblity.

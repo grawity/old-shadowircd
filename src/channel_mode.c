@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 1.20 2004/04/01 18:20:18 nenolod Exp $
+ *  $Id: channel_mode.c,v 1.21 2004/04/07 19:24:22 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -362,6 +362,7 @@ static const struct mode_letter
   { MODE_REGONLY,    'E' },
   { MODE_OPERONLY,   'O' },
   { MODE_REGISTERED, 'r' },
+  { MODE_FILTER,     'G' },
   { 0, '\0' }
 };
 
@@ -2077,7 +2078,7 @@ static struct ChannelMode ModeTable[255] =
   {chm_nosuch, NULL},                             /* D */
   {chm_simple, (void *) MODE_REGONLY},            /* E */
   {chm_owneronly, (void *) MODE_FREEINVITE},      /* F */
-  {chm_nosuch, NULL},                             /* G */
+  {chm_simple, (void *) MODE_FILTER},             /* G */
   {chm_nosuch, NULL},                             /* H */
   {chm_invex, NULL},                              /* I */
   {chm_nosuch, NULL},                             /* J */

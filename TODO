@@ -1,26 +1,7 @@
-$Id: TODO,v 1.13 2004/03/11 00:01:14 nenolod Exp $
+$Id: TODO,v 1.14 2004/04/07 19:24:22 nenolod Exp $
 
-This is the TODO for ShadowIRCd-2.4-(Pyrashi).
+This is the TODO for ShadowIRCd-2.5.
 
-* GET CHANNEL FORWARDING WORKING. (+f)
-* Network Autojoin Channels.
-* Ability to disable cloaking.
-* Fix autocloaking of spoofs.
-* Fix server to server server-set umode propagation.
-* Fix auspex system.
-* flags { } block for operator blocks:
-
-  operator {
-    name = "whoever";
-    user = "*";
-    password = "ilikecheese";
-    
-    flags {
-      auspex;
-        ..
-      override;
-    };
-  };
-
-* Fix override on /kick.
+* Remove servlink all together.
+* WINDOWS PORT.
 

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.h,v 1.5 2003/12/18 18:12:06 nenolod Exp $
+ *  $Id: channel.h,v 1.6 2004/04/07 19:24:22 nenolod Exp $
  */
 
 #ifndef INCLUDED_channel_h
@@ -62,6 +62,7 @@ struct Channel
   dlink_list invexlist;      /* a double linked list of invite exempts */
   dlink_list quietlist;      /* a double linked list of quiets */
   dlink_list restrictlist;   /* a double linked list of restricts */
+  dlink_list filterlist;     /* a double linked list of badwords */
 
   time_t first_received_message_time; /* channel flood control */
   int received_number_of_privmsgs;
@@ -124,6 +125,14 @@ struct Ban          /* also used for exceptions -orabidoo */
 {
   dlink_node node;
   char *banstr;
+  char *who;
+  time_t when;
+};
+
+struct Filter
+{
+  dlink_node node;
+  char *word;
   char *who;
   time_t when;
 };
