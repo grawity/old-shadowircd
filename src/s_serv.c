@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_serv.c,v 1.2 2004/05/13 03:51:44 nenolod Exp $
+ *  $Id: s_serv.c,v 1.3 2004/05/13 16:56:19 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -839,18 +839,8 @@ send_capabilities(struct Client *client_p, struct AccessItem *aconf,
 void
 sendnick_TS(struct Client *client_p, struct Client *target_p)
 {
-  static char ubuf[12];
-
   if (!IsPerson(target_p))
     return;
-
-  send_umode(NULL, target_p, 0, 0, ubuf);
-
-  if (!*ubuf)
-  {
-    ubuf[0] = '+';
-    ubuf[1] = '\0';
-  }
 
   /* XXX Both of these need to have a :me.name or :mySID!?!?! */
   if (HasID(target_p) && IsCapable(client_p, CAP_TS6))
@@ -861,7 +851,7 @@ sendnick_TS(struct Client *client_p, struct Client *target_p)
                target_p->user->server->id,
                target_p->name, target_p->hopcount+1,
                (unsigned long)target_p->tsinfo,
-               ubuf, target_p->username, target_p->host,
+               umodes_as_string(&target_p->umodes), target_p->username, target_p->host,
                target_p->ipaddr, target_p->id,
                (target_p->flags & FLAGS_USERCLOAK) ? target_p->virthost : "*",
                target_p->info);
@@ -872,7 +862,7 @@ sendnick_TS(struct Client *client_p, struct Client *target_p)
              target_p->user->server->id,
 	     target_p->name, target_p->hopcount + 1,
 	     (unsigned long) target_p->tsinfo,
-	     ubuf, target_p->username, target_p->host,
+	     umodes_as_string(&target_p->umodes), target_p->username, target_p->host,
 	     target_p->ipaddr,
 	     target_p->id, target_p->info);
     }
@@ -881,7 +871,7 @@ sendnick_TS(struct Client *client_p, struct Client *target_p)
     sendto_one(client_p, "NICK %s %d %lu %s %s %s %s :%s",
 	       target_p->name, target_p->hopcount + 1,
 	       (unsigned long) target_p->tsinfo,
-	       ubuf, target_p->username, target_p->host,
+	       umodes_as_string(&target_p->umodes), target_p->username, target_p->host,
 	       target_p->user->server->name, target_p->info);
 
   if (!IsCapable(client_p, CAP_UVH))

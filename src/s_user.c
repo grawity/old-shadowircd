@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.7 2004/05/13 03:51:44 nenolod Exp $
+ *  $Id: s_user.c,v 1.8 2004/05/13 16:56:19 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -67,80 +67,6 @@ static int introduce_client(struct Client *, struct Client *);
 
 FLAG_ITEM user_mode_table[256];
 char umode_list[256];
-
-/* memory is cheap. map 0-255 to equivalent mode */
-const unsigned int user_modes_from_c_to_bitmask[] =
-{
-  /* 0x00 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 0x0F */
-  /* 0x10 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 0x1F */
-  /* 0x20 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 0x2F */
-  /* 0x30 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 0x3F */
-  0,                /* @ */
-  UMODE_SVSADMIN,   /* A */
-  0,                /* B */
-  UMODE_NOCOLOUR,   /* C */
-  UMODE_DEAF,       /* D */
-  UMODE_PMFILTER,   /* E */
-  0,                /* F */
-  UMODE_SENSITIVE,  /* G */
-  UMODE_HELPOP,     /* H */
-  UMODE_BLOCKINVITE, /* I */
-  0,                /* J */
-  0,                /* K */
-  UMODE_ROUTING,    /* L */
-  0,                /* M */
-  UMODE_NETADMIN,   /* N */
-  UMODE_SVSOPER,    /* O */
-  0,                /* P */
-  0,                /* Q */
-  UMODE_SVSROOT,    /* R */
-  0,                /* S */
-  UMODE_TECHADMIN,  /* T */
-  0,                /* U */
-  0,                /* V */
-  UMODE_WANTSWHOIS, /* W */
-  0,                /* X */
-  0,                /* Y */
-  UMODE_SECURE,     /* Z 0x5A */
-  0, 0, 0, 0, 0,    /* 0x5F   */ 
-  0,                /* 0x60   */
-  UMODE_ADMIN,      /* a */
-  UMODE_BOTS,       /* b */
-  UMODE_CCONN,      /* c */
-  UMODE_DEBUG,      /* d */
-  UMODE_IDENTIFY,   /* e */
-  UMODE_FULL,       /* f */
-  UMODE_CALLERID,   /* g */
-  UMODE_HIDEOPER,   /* h */
-  UMODE_INVISIBLE,  /* i */
-  0,                /* j */
-  UMODE_SKILL,      /* k */
-  UMODE_LOCOPS,     /* l */
-  0,                /* m */
-  UMODE_NCHANGE,    /* n */
-  UMODE_OPER,       /* o */
-  0,                /* p */
-  0,                /* q */
-  UMODE_REJ,        /* r */
-  UMODE_SERVNOTICE, /* s */
-  0,                /* t */
-  UMODE_UNAUTH,     /* u */
-  UMODE_CLOAK,      /* v */
-  UMODE_WALLOP,     /* w */
-  UMODE_EXTERNAL,   /* x */
-  UMODE_SPY,        /* y */
-  UMODE_OPERWALL,   /* z      0x7A */
-  0,0,0,0,0,        /* 0x7B - 0x7F */
-
-  /* 0x80 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 0x8F */
-  /* 0x90 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 0x9F */
-  /* 0xA0 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 0xAF */
-  /* 0xB0 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 0xBF */
-  /* 0xC0 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 0xCF */
-  /* 0xD0 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 0xDF */
-  /* 0xE0 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 0xEF */
-  /* 0xF0 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0  /* 0xFF */
-};
 
 /* init_user()
  *
@@ -536,6 +462,11 @@ register_local_user(struct Client *client_p, struct Client *source_p,
   if (ServerInfo.network_cloak_on_connect)
     SetUmode(source_p, UMODE_CLOAK);
 
+  /* Tell users what their initial mode is. */
+  sendto_one(source_p, ":%s!%s@%s MODE %s :+%s", source_p->name, source_p->username,
+             GET_CLIENT_HOST(source_p), source_p->name, 
+             umodes_as_string(&source_p->umodes));
+
   return(introduce_client(client_p, source_p));
 }
 
@@ -629,6 +560,7 @@ register_remote_user(struct Client *client_p, struct Client *source_p,
   if (source_p->virthost[0] == '*')
     make_virthost(source_p->host, source_p->virthost);
 
+
   return(introduce_client(client_p, source_p));
 }
 
@@ -644,34 +576,6 @@ static int
 introduce_client(struct Client *client_p, struct Client *source_p)
 {
   dlink_node *server_node;
-  static char ubuf[12];
-
-  if (MyClient(source_p))
-    send_umode(source_p, source_p, 0, 0, ubuf);
-  else
-    send_umode(NULL, source_p, 0, 0, ubuf);
-
-  if (!*ubuf)
-  {
-    ubuf[0] = '+';
-    ubuf[1] = '\0';
-  }
-
-  /* arghhh one could try not introducing new nicks to ll leafs
-   * but then you have to introduce them "on the fly" in SJOIN
-   * not fun.
-   * Its not going to cost much more bandwidth to simply let new
-   * nicks just ride on through.
-   */
-
-  /* We now introduce nicks "on the fly" in SJOIN anyway --
-   * you _need_ to if you aren't going to burst everyone initially.
-   *
-   * Only send to non CAP_LL servers, unless we're a lazylink leaf,
-   * in that case just send it to the uplink.
-   * -davidt
-   * rewritten to cope with SIDs .. eww eww eww --is
-   */
 
   /* XXX THESE NEED A PREFIX!?!?!? */
   if (!ServerInfo.hub && uplink && IsCapable(uplink, CAP_LL) &&
@@ -681,32 +585,35 @@ introduce_client(struct Client *client_p, struct Client *source_p)
     {
       if (IsCapable(uplink, CAP_UVH))
       {
-        sendto_one(uplink, ":%s UID %s %d %lu %s %s %s %s %s %s :%s",
+        sendto_one(uplink, ":%s UID %s %d %lu +%s %s %s %s %s %s :%s",
                  source_p->user->server->id,
                  source_p->name, source_p->hopcount+1,
                  (unsigned long)source_p->tsinfo,
-                 ubuf, source_p->username, source_p->host,
+                 umodes_as_string(&source_p->umodes),
+                 source_p->username, source_p->host,
                  source_p->ipaddr, source_p->id,
                  (source_p->flags & FLAGS_USERCLOAK) ? source_p->virthost : "*",
                  source_p->info);
       }
       else
       {
-        sendto_one(uplink, ":%s UID %s %d %lu %s %s %s %s %s :%s",
+        sendto_one(uplink, ":%s UID %s %d %lu +%s %s %s %s %s :%s",
                  source_p->user->server->id,
                  source_p->name, source_p->hopcount+1,
 		 (unsigned long)source_p->tsinfo,
-                 ubuf, source_p->username, source_p->host,
+                 umodes_as_string(&source_p->umodes), 
+                 source_p->username, source_p->host,
 		 source_p->ipaddr,
                  source_p->id, source_p->info);
       }
     }
     else
     {
-      sendto_one(uplink, "NICK %s %d %lu %s %s %s %s :%s",
+      sendto_one(uplink, "NICK %s %d %lu +%s %s %s %s :%s",
                  source_p->name, source_p->hopcount+1,
 		 (unsigned long)source_p->tsinfo,
-                 ubuf, source_p->username, source_p->host,
+                 umodes_as_string(&source_p->umodes),
+                 source_p->username, source_p->host,
 		 source_p->user->server->name,
                  source_p->info);
     }
@@ -728,32 +635,33 @@ introduce_client(struct Client *client_p, struct Client *source_p)
       {
         if (IsCapable(server, CAP_UVH))
         {
-          sendto_one(server, ":%s UID %s %d %lu %s %s %s %s %s %s :%s",
+          sendto_one(server, ":%s UID %s %d %lu +%s %s %s %s %s %s :%s",
                    source_p->user->server->id,
                    source_p->name, source_p->hopcount+1,
                    (unsigned long)source_p->tsinfo,
-                   ubuf, source_p->username, source_p->host,
+                   umodes_as_string(&source_p->umodes), source_p->username, source_p->host,
                    source_p->ipaddr, source_p->id,
                    (source_p->flags & FLAGS_USERCLOAK) ? source_p->virthost : "*", source_p->info);
         }
         else
         {
-          sendto_one(server, ":%s UID %s %d %lu %s %s %s %s %s :%s",
+          sendto_one(server, ":%s UID %s %d %lu +%s %s %s %s %s :%s",
                    source_p->user->server->id,
                    source_p->name, source_p->hopcount+1,
                    (unsigned long)source_p->tsinfo,
-                   ubuf, source_p->username, source_p->host,
+                   umodes_as_string(&source_p->umodes), source_p->username, source_p->host,
                    source_p->ipaddr,
                    source_p->id, source_p->info);
         }
       }
       else
-        sendto_one(server, "NICK %s %d %lu %s %s %s %s :%s",
+        sendto_one(server, "NICK %s %d %lu +%s %s %s %s :%s",
                    source_p->name, source_p->hopcount+1,
 		   (unsigned long)source_p->tsinfo,
-                   ubuf, source_p->username, source_p->host,
+                   umodes_as_string(&source_p->umodes), source_p->username, source_p->host,
 		   source_p->user->server->name,
                    source_p->info);
+
     if (!IsCapable(server, CAP_UVH))
       if (source_p->flags & FLAGS_USERCLOAK)
         sendto_one(server, ":%s SVSCLOAK %s :%s", source_p->user->server->name,
@@ -962,7 +870,6 @@ void
 set_user_mode(struct Client *client_p, struct Client *source_p,
               int parc, char *parv[])
 {
-  unsigned int i;
   unsigned int flag;
   user_modes setflags;
   char **p;
@@ -970,7 +877,6 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
   struct Client *target_p;
   int what = MODE_ADD;
   int badflag = 0; /* Only send one bad flag notice */
-  char buf[BUFSIZE];
 
   if ((target_p = find_person(parv[1])) == NULL)
   {
@@ -992,16 +898,8 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
 
   if (parc < 3)
   {
-    m = buf;
-    *m++ = '+';
-
-    for (i = 0; user_mode_table[i].letter && (m - buf < BUFSIZE - 4); i++)
-      if (HasUmode(target_p, user_mode_table[i].mode))
-        *m++ = user_mode_table[i].letter;
-    *m = '\0';
-
     sendto_one(target_p, form_str(RPL_UMODEIS),
-               me.name, source_p->name, buf);
+               me.name, source_p->name, umodes_as_string(&target_p->umodes));
     return;
   }
 
@@ -1104,58 +1002,7 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
   /* compare new flags with old flags and send string which
    * will cause servers to update correctly.
    */
-  send_umode_out(target_p, target_p, setflags);
-}
-
-/* send_umode()
- * send the MODE string for user (user) to connection client_p
- * -avalon
- */
-void
-send_umode(struct Client *client_p, struct Client *source_p,
-           user_modes old, unsigned int sendmask, char *umode_buf)
-{
-  int what = 0;
-  unsigned int i;
-  unsigned int flag;
-  char *m = umode_buf;
-
-  /* build a string in umode_buf to represent the change in the user's
-   * mode between the new (source_p->umodes) and 'old'.
-   */
-  for (i = 0; user_mode_table[i].letter; i++)
-  {
-    flag = user_mode_table[i].mode;
-
-    if ((TestBit(old, flag)) && !(HasUmode(source_p, flag)))
-    {
-      if (what == MODE_DEL)
-        *m++ = user_mode_table[i].letter;
-      else
-      {
-        what = MODE_DEL;
-        *m++ = '-';
-        *m++ = user_mode_table[i].letter;
-      }
-    }
-    else if (!(TestBit(old, flag)) && (HasUmode(source_p, flag)))
-    {
-      if (what == MODE_ADD)
-        *m++ = user_mode_table[i].letter;
-      else
-      {
-        what = MODE_ADD;
-        *m++ = '+';
-        *m++ = user_mode_table[i].letter;
-      }
-    }
-  }
-
-  *m = '\0';
-
-  if (*umode_buf && client_p)
-    sendto_one(client_p, ":%s MODE %s :%s",
-               source_p->name, source_p->name, umode_buf);
+  send_umode_out(target_p, target_p, &setflags);
 }
 
 /* send_umode_out()
@@ -1166,30 +1013,33 @@ send_umode(struct Client *client_p, struct Client *source_p,
  */
 void
 send_umode_out(struct Client *client_p, struct Client *source_p,
-               user_modes old)
+               user_modes *old)
 {
   struct Client *target_p;
-  char buf[BUFSIZE];
   dlink_node *ptr;
 
-  send_umode(NULL, source_p, old, 0, buf);
+  char *mode_string = umode_difference(old, &client_p->umodes);
+
+  if (!(*mode_string))
+    return; /* usermode unchanged */
 
   DLINK_FOREACH(ptr, serv_list.head)
   {
     target_p = ptr->data;
 
-    if ((target_p != client_p) && (target_p != source_p) && (*buf))
+    if ((target_p != client_p) && (target_p != source_p))
     {
       if ((!(ServerInfo.hub && IsCapable(target_p, CAP_LL))) ||
           (target_p->localClient->serverMask &
            source_p->lazyLinkClientExists))
         sendto_one(target_p, ":%s MODE %s :%s",
-                   ID_or_name(source_p, target_p), ID_or_name(source_p, target_p), buf);
+                   ID_or_name(source_p, target_p), ID_or_name(source_p, target_p), mode_string);
     }
   }
 
   if (client_p && MyClient(client_p))
-    send_umode(client_p, source_p, old, 0, buf);
+    sendto_one(client_p, ":%s MODE %s :%s",
+                source_p->name, client_p->name, mode_string);
 }
 
 /* user_welcome()
@@ -1308,6 +1158,8 @@ oper_up(struct Client *source_p)
 
   SetUmode(source_p, UMODE_OPER);
 
+  source_p->handler = OPER_HANDLER;
+
   Count.oper++;
 
   assert(dlinkFind(&oper_list, source_p) == NULL);
@@ -1317,6 +1169,11 @@ oper_up(struct Client *source_p)
   oconf = map_to_conf((source_p->localClient->confs.head)->data);
 
   SetOFlag(source_p, oconf->port);
+
+  SetUmode(source_p, UMODE_WALLOP);
+  SetUmode(source_p, UMODE_OPERWALL);
+  SetUmode(source_p, UMODE_SERVNOTICE);
+  SetUmode(source_p, UMODE_LOCOPS);
 
   if (IsOperAdmin(source_p) || IsOperHiddenAdmin(source_p))
     SetUmode(source_p, UMODE_ADMIN);
@@ -1345,7 +1202,7 @@ oper_up(struct Client *source_p)
 
   sendto_realops_flags(UMODE_ALL, L_ALL, "%s (%s@%s) is now an operator",
                        source_p->name, source_p->username, GET_CLIENT_HOST(source_p));
-  send_umode_out(source_p, source_p, old);
+  send_umode_out(source_p, source_p, &old);
   sendto_one(source_p, form_str(RPL_YOUREOPER), me.name, source_p->name);
   send_message_file(source_p, &ConfigFileEntry.opermotd);
 }

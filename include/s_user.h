@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.h,v 1.3 2004/05/13 03:51:44 nenolod Exp $
+ *  $Id: s_user.h,v 1.4 2004/05/13 16:56:19 nenolod Exp $
  */
 
 #ifndef INCLUDED_s_user_h
@@ -43,7 +43,7 @@ extern void free_user(struct User *, struct Client *);
 extern void set_user_mode(struct Client *, struct Client *, int, char **);
 extern void send_umode(struct Client *, struct Client *,
                        user_modes, unsigned int, char *);
-extern void send_umode_out(struct Client *, struct Client *, user_modes);
+extern void send_umode_out(struct Client *, struct Client *, user_modes *);
 extern void show_lusers(struct Client *);
 extern void show_isupport(struct Client *);
 extern void oper_up(struct Client *);
@@ -57,7 +57,7 @@ extern int register_remote_user(struct Client *, struct Client *,
 extern int do_local_user(const char *, struct Client *, struct Client *,
                          const char *, const char *, const char *,
                          const char *);
-extern const unsigned int user_modes_from_c_to_bitmask[];
+extern int user_modes_from_c_to_bitmask[];
 extern void init_uid(void);
 extern char *uid_get(void);
 #endif

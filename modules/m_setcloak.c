@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_setcloak.c,v 1.4 2004/05/13 03:51:44 nenolod Exp $
+ *  $Id: m_setcloak.c,v 1.5 2004/05/13 16:56:19 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,7 +63,7 @@ _moddeinit (void)
   mod_del_cmd (&setcloak_msgtab);
 }
 
-const char *_version = "$Revision: 1.4 $";
+const char *_version = "$Revision: 1.5 $";
 
 
 /* m_svscloak
@@ -111,7 +111,7 @@ m_setcloak (struct Client *client_p, struct Client *source_p, int parc,
       strncpy (target_p->virthost, hostname, HOSTLEN);
       CopyUmodes(old, target_p->umodes);
       SetUmode(target_p, UMODE_CLOAK);
-      send_umode_out (target_p, target_p, old);
+      send_umode_out (target_p, target_p, &old);
       target_p->flags |= FLAGS_USERCLOAK;	/* set the usercloak flag so that in the
 						 * future, the server will burst the new vhost
 						 * in case of netsplit.

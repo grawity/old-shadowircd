@@ -2,9 +2,10 @@
  * shadowircd: an advanced IRC daemon.
  * umodes.c: New usermode system, derived from dancer-ircd's usermode code.
  *
- * $Id: umodes.c,v 1.3 2004/05/13 03:51:44 nenolod Exp $
+ * $Id: umodes.c,v 1.4 2004/05/13 16:56:19 nenolod Exp $
  */
 #include "stdinc.h"
+#include "s_user.h"
 #include "umodes.h"
 
 FLAG_ITEM user_mode_table[256] = {
@@ -48,6 +49,8 @@ FLAG_ITEM user_mode_table[256] = {
 
 int user_modes_from_c_to_bitmask[256];
 char umode_list[256];
+
+struct  bitfield_lookup_t bitfield_lookup[BITFIELD_SIZE];
 
 void init_umodes(void)
 {

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_grant.c,v 1.3 2004/05/13 03:51:44 nenolod Exp $
+ *  $Id: m_grant.c,v 1.4 2004/05/13 16:56:19 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -67,7 +67,7 @@ _moddeinit (void)
   mod_del_cmd (&grant_msgtab);
 }
 
-const char *_version = "$Revision: 1.3 $";
+const char *_version = "$Revision: 1.4 $";
 #endif
 
 /* this is a struct, associating operator permissions with letters. */
@@ -232,7 +232,7 @@ mo_grant (struct Client *client_p, struct Client *source_p,
       if (target_p->localClient->operflags & OPER_FLAG_ADMIN)
 	SetUmode(target_p, UMODE_ADMIN);
 
-      send_umode_out (target_p, target_p, old);
+      send_umode_out (target_p, target_p, &old);
 
       sendto_one (target_p,
 		  ":%s NOTICE %s :*** Notice -- %s used GRANT to GIVE you operator permissions: %s",
@@ -299,7 +299,7 @@ mo_grant (struct Client *client_p, struct Client *source_p,
 			 target_p->virthost);
 	}
 
-      send_umode_out (target_p, target_p, old);
+      send_umode_out (target_p, target_p, &old);
 
       sendto_one (target_p,
 		  ":%s NOTICE %s :*** Notice -- %s used GRANT to TAKE operator permissions: %s",
