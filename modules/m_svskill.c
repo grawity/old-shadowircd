@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_svskill.c,v 1.2 2004/07/29 18:07:56 nenolod Exp $
+ *  $Id: m_svskill.c,v 1.3 2004/07/29 18:29:19 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -56,7 +56,7 @@ _moddeinit (void)
   mod_del_cmd (&svskill_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 /*
@@ -81,7 +81,7 @@ m_svskill (struct Client *client_p, struct Client *source_p,
 
   ircsprintf (reason, "%s", parv[2]);
 
-  SetKilled(target_p);
+  target_p->flags |= FLAGS_KILLED;
 
   exit_client (client_p, target_p, target_p, reason);
 
