@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.27 2004/02/05 20:15:48 nenolod Exp $
+ *  $Id: s_user.c,v 1.28 2004/02/12 19:41:52 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -645,7 +645,7 @@ register_remote_user(struct Client *client_p, struct Client *source_p,
   add_user_host(source_p->username, source_p->host, 1);
   SetUserHost(source_p);
 
-  strncpy(source_p->virthost, source_p->host, HOSTLEN);
+  make_virthost(source_p->host, source_p->virthost);
 
   return(introduce_client(client_p, source_p));
 }
