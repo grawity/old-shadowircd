@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.6 2003/12/12 20:22:57 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.7 2003/12/12 20:48:41 nenolod Exp $
  */
 
 %{
@@ -154,6 +154,11 @@ unhook_hub_leaf_confs(void)
 %token  CLOAKSTRING
 %token  CONFIGURATION
 %token  CRYPT_USERCLOAK
+%token  AUSPEX
+%token  OVERRIDE
+%token  SET_OWNCLOAK
+%token  SET_ANYCLOAK
+%token  IMMUNE
 %token  DEFAULT_CIPHER_PREFERENCE
 %token  DEFAULT_FLOODCOUNT
 %token  DEFAULT_SPLIT_SERVER_COUNT
@@ -1137,9 +1142,9 @@ oper_set_anycloak: SET_ANYCLOAK '=' TBOOL ';'
   if (ypass == 2)
   {
     if (yylval.number)
-      yy_aconf->port |= OPER_FLAG_ANYCLOAK;
+      yy_aconf->port |= OPER_FLAG_SETCLOAK;
     else
-      yy_aconf->port &= ~OPER_FLAG_ANYCLOAK;
+      yy_aconf->port &= ~OPER_FLAG_SETCLOAK;
   }
 };
 
@@ -1154,7 +1159,7 @@ oper_immune: IMMUNE '=' TBOOL ';'
   }
 };
 
-oper_override: AUSPEX '=' TBOOL ';'
+oper_override: OVERRIDE '=' TBOOL ';'
 {
   if (ypass == 2)
   {
