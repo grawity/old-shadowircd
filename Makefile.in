@@ -16,7 +16,7 @@
 #*   along with this program; if not, write to the Free Software
 #*   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #*
-#*   $Id: Makefile.in,v 1.1.1.1 2003/12/02 20:46:19 nenolod Exp $
+#*   $Id: Makefile.in,v 1.2 2003/12/03 20:47:43 nenolod Exp $
 #*/
 
 RM          = @RM@
@@ -28,7 +28,7 @@ BUILD_DIRS   = ${DEPEND_DIRS} tools
 INSTALL_DIRS = ${BUILD_DIRS} etc doc include
 CLEAN_DIRS   = ${BUILD_DIRS} contrib
 # Anywhere that we can make install, we obviously can rm -f Makefile
-DISTCLEAN_DIRS = ${INSTALL_DIRS} contrib messages
+DISTCLEAN_DIRS = ${INSTALL_DIRS} contrib
 
 # The make used HAS to set $(MAKE). But then, if we don't do it this
 # way, people lose the option to use a 'make' called something other 
