@@ -1,4 +1,4 @@
-# $Id: umode,v 1.1.1.1 2003/12/02 20:47:18 nenolod Exp $
+# $Id: umode,v 1.2 2003/12/05 19:57:14 nenolod Exp $
 MODE <nick> <+|-><modes>
 
 Usermodes: (* designates that the umode is oper only)
@@ -24,3 +24,6 @@ Usermodes: (* designates that the umode is oper only)
        * +b     - Can see possible bot warnings.
        * +a     - Is marked as a server admin in stats p/o.
          +g     - "caller id" mode only allow accept clients to message you
+         +v     - Enables hostname cloaking.
+       * +h     - Hide operator status
+         +I     - Block invites.

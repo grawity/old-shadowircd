@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  m_wallops.c: Sends a message to all operators.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_wallops.c,v 1.1.1.1 2003/12/02 20:47:46 nenolod Exp $
+ *  $Id: m_wallops.c,v 1.2 2003/12/05 19:57:14 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -57,7 +57,7 @@ _moddeinit(void)
   mod_del_cmd(&wallops_msgtab);
 }
  
-const char *_version = "$Revision: 1.1.1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /*
@@ -78,7 +78,7 @@ mo_wallops(struct Client *client_p, struct Client *source_p,
     return;
   }
 
-  sendto_wallops_flags(UMODE_OPERWALL, source_p, "OPERWALL - %s", message);
+  sendto_wallops_flags(UMODE_WALLOP, source_p, "%s", message);
   sendto_server(NULL, source_p, NULL, CAP_TS6, NOCAPS, LL_ICLIENT,
                 ":%s WALLOPS :%s", ID(source_p), message);
   sendto_server(NULL, source_p, NULL, NOCAPS, CAP_TS6, LL_ICLIENT,
@@ -99,10 +99,7 @@ ms_wallops(struct Client *client_p, struct Client *source_p,
   if (EmptyString(message))
     return;
 
-  if (IsClient(source_p))
-    sendto_wallops_flags(UMODE_OPERWALL, source_p, "OPERWALL - %s", message);
-  else
-    sendto_wallops_flags(UMODE_WALLOP, source_p, "%s", message); 
+  sendto_wallops_flags(UMODE_WALLOP, source_p, "%s", message); 
 
   sendto_server(client_p, source_p, NULL, CAP_TS6, NOCAPS, LL_ICLIENT,
                 ":%s WALLOPS :%s", ID(source_p), message);
