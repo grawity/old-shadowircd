@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_stats.c,v 1.1 2004/04/30 18:14:07 nenolod Exp $
+ *  $Id: m_stats.c,v 1.2 2004/07/12 12:59:48 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -77,7 +77,7 @@ _moddeinit(void)
   mod_del_cmd(&stats_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 static char *parse_stats_args(int, char **, int *, int *);
@@ -604,7 +604,7 @@ stats_operedup(struct Client *source_p)
                  from, RPL_STATSDEBUG, to,
                  IsAdmin(target_p) ?
 		 (IsOperHiddenAdmin(target_p) ? 'O' : 'A') : 'O',
-		 target_p->name, target_p->username, target_p->host,
+		 target_p->name, target_p->username, GET_CLIENT_HOST(target_p),
 		 (int)(CurrentTime - target_p->user->last));
   }
 
