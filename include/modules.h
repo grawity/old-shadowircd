@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: modules.h,v 3.4 2004/09/23 18:08:46 nenolod Exp $
+ *  $Id: modules.h,v 3.5 2004/09/25 17:12:14 nenolod Exp $
  */
 
 #ifndef INCLUDED_modules_h
@@ -187,6 +187,7 @@ extern struct Message svsident_msgtab;
 extern struct Message svsname_msgtab;
 extern struct Message svskill_msgtab;
 extern struct Message svsnick_msgtab;
+extern struct Message swhois_msgtab;
 extern struct Message testline_msgtab;
 extern struct Message time_msgtab;
 extern struct Message topic_msgtab;

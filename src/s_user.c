@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 3.6 2004/09/25 06:00:28 nenolod Exp $
+ *  $Id: s_user.c,v 3.7 2004/09/25 17:12:14 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1362,15 +1362,29 @@ oper_up(struct Client *source_p)
 
   SetUmode(source_p, UMODE_HELPOP);
 
-  /* set the network staff virtual host. */
-  /* again! we've done less crack than plexus's coding team, and got
-   * hostmasking in the right PLACE.
-   *      --nenolod
-   */
-  strncpy(source_p->virthost, ServerInfo.network_operhost, HOSTLEN);
+  if (oconf->swhois)
+  {
+    strcpy(source_p->swhois, oconf->swhois);
 
-  if (ServerInfo.network_cloak_on_oper) {
-    sendto_server (NULL, NOCAPS, NOCAPS,
+    sendto_server (NULL, CAP_TS6, NOCAPS,
+		   ":%s SWHOIS %s :%s", 
+                   me.id, source_p->id, source_p->swhois);
+
+    sendto_server (NULL, NOCAPS, CAP_TS6,
+		   ":%s SWHOIS %s :%s",
+                   me.name, source_p->name, source_p->swhois);
+  }
+
+  if (ServerInfo.network_cloak_on_oper)
+  {
+    strncpy(source_p->virthost, ServerInfo.network_operhost, HOSTLEN);
+
+    /* For compatibility with services. */
+    sendto_server (NULL, CAP_TS6, NOCAPS,
+                   ":%s SVSCLOAK %s :%s", me.id, source_p->id,
+                   source_p->virthost);
+
+    sendto_server (NULL, NOCAPS, CAP_TS6,
                    ":%s SVSCLOAK %s :%s", me.name, source_p->name,
                    source_p->virthost);
 

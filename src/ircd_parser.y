@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 3.6 2004/09/25 06:00:28 nenolod Exp $
+ *  $Id: ircd_parser.y,v 3.7 2004/09/25 17:12:14 nenolod Exp $
  */
 
 %{
@@ -161,6 +161,7 @@ unhook_hub_leaf_confs(void)
 %token  CONFIGURATION
 %token  AUSPEX
 %token  OPER_PREFIX
+%token  SWHOIS
 %token  GRANT
 %token  OVERRIDE
 %token  SET_OWNCLOAK
@@ -1111,7 +1112,7 @@ oper_item:      oper_name  | oper_user | oper_password | oper_hidden_admin |
                 oper_set_owncloak | oper_set_anycloak |
                 oper_immune | oper_override | oper_grant | 
                 oper_netadmin | oper_techadmin | oper_wantswhois |
-                oper_routing | oper_flags_entry | oper_umodes |
+                oper_routing | oper_flags_entry | oper_umodes | oper_swhois |
                 error;
 
 oper_name: NAME '=' QSTRING ';'
@@ -1166,6 +1167,15 @@ oper_password: PASSWORD '=' QSTRING ';'
 
     MyFree(yy_aconf->passwd);
     DupString(yy_aconf->passwd, yylval.string);
+  }
+};
+
+oper_swhois: SWHOIS '=' QSTRING ';'
+{
+  if (ypass == 2)
+  {
+    MyFree(yy_aconf->swhois);
+    DupString(yy_aconf->swhois, yylval.string);
   }
 };
 

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_whois.c,v 3.7 2004/09/25 05:37:27 nenolod Exp $
+ *  $Id: m_whois.c,v 3.8 2004/09/25 17:12:14 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -81,7 +81,7 @@ _moddeinit (void)
   mod_del_cmd (&whois_msgtab);
 }
 
-const char *_version = "$Revision: 3.7 $";
+const char *_version = "$Revision: 3.8 $";
 #endif
 
 /* m_whois
@@ -424,12 +424,18 @@ whois_person (struct Client *source_p, struct Client *target_p, int glob)
 
   if (HasUmode(target_p, UMODE_SECURE))
     sendto_one (source_p, form_str (RPL_WHOISSECURE),
-		me.name, source_p->name, target_p->name);
+		me.name, source_p->name, target_p->name,
+		"is using a secure connection (ssl)");
 
-    if (IsOperAuspex (source_p))
-      sendto_one (source_p, form_str (RPL_WHOISACTUALLY),
-                  me.name, source_p->name, target_p->name,
-                  target_p->host, target_p->ipaddr);
+  if (target_p->swhois)
+    sendto_one (source_p, form_str (RPL_WHOISSECURE),
+                me.name, source_p->name, target_p->name,
+                target_p->swhois);
+
+  if (IsOperAuspex (source_p))
+    sendto_one (source_p, form_str (RPL_WHOISACTUALLY),
+                me.name, source_p->name, target_p->name,
+                target_p->host, target_p->ipaddr);
 
   if (MyConnect (target_p))	/* Can't do any of this if not local! db */
     {

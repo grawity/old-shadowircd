@@ -1,4 +1,18 @@
-$Id: ChangeLog,v 3.3 2004/09/08 01:18:06 nenolod Exp $
+$Id: ChangeLog,v 3.4 2004/09/25 17:12:14 nenolod Exp $
+
+ShadowIRCd 3.3:
+
+* Oper prefix support.
+* Added user_modes to config file, user_modes to get when conditions
+  have been satisfied. See the example.conf for details.
+* Added protocol extensions for services.
+* BUGFIX: Make sure cloaking is hidden in channel banlists.
+* Rewrite the umode system. Now modules can introduce new usermodes.
+* Go back to oldschool naming system, seen in the 1.x branch.
+* Update NhJm's configuration maker tool for the new config file format.
+* Added network::user_modes to designate usermodes to get on connect.
+* Added operator::user_modes to designate usermodes to get on oper.
+* Add SWHOIS support.
 
 ShadowIRCd 3.2.1:
 

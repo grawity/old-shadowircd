@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.h,v 3.5 2004/09/25 06:00:28 nenolod Exp $
+ *  $Id: s_conf.h,v 3.6 2004/09/25 17:12:14 nenolod Exp $
  */
 
 #ifndef INCLUDED_s_conf_h
@@ -106,6 +106,7 @@ struct AccessItem
   char *	   oper_reason;
   char *           user;     /* user part of user@host */
   char *	   cloakstring;
+  char *           swhois;
   int              port;
   char *           fakename;   /* Mask name */
   time_t           hold;     /* Hold action until this time (calendar time) */

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 3.3 2004/09/08 01:18:07 nenolod Exp $
+ *  $Id: client.h,v 3.4 2004/09/25 17:12:14 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -189,6 +189,12 @@ struct Client
    * gcos field in /etc/passwd but anything can go here.
    */
   char              info[REALLEN + 1]; /* Free form additional client info */
+
+  /*
+   * client->swhois will contain custom whois information, set by the
+   * SWHOIS command.
+   */
+  char              swhois[REALLEN + 1];
 
   /* caller ID allow list */
   /* This has to be here, since a client on an on_allow_list could

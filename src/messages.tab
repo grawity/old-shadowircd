@@ -16,7 +16,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *   $Id: messages.tab,v 3.3 2004/09/08 01:18:08 nenolod Exp $
+ *   $Id: messages.tab,v 3.4 2004/09/25 17:12:14 nenolod Exp $
  */
 
 static struct NumericInfo replies[] = {
@@ -344,7 +344,7 @@ static struct NumericInfo replies[] = {
 /* 317 */  {"RPL_WHOISIDLE", ":%s 317 %s %s %d %d :seconds idle, signon time", NULL},
 /* 318 */  {"RPL_ENDOFWHOIS", ":%s 318 %s %s :End of /WHOIS list.", NULL},
 /* 319 */  {"RPL_WHOISCHANNELS", ":%s 319 %s %s :%s", NULL},
-/* 320 */  {"RPL_WHOISSECURE", ":%s 320 %s %s :is using a secure connection (ssl)", NULL},
+/* 320 */  {"RPL_WHOISSECURE", ":%s 320 %s %s :%s", NULL},
 /* 321 */  {"RPL_LISTSTART", ":%s 321 %s Channel :Users  Name", NULL},
 /* 322 */  {"RPL_LIST", ":%s 322 %s %s %d :%s", NULL},
 /* 323 */  {"RPL_LISTEND", ":%s 323 %s :End of /LIST", NULL},

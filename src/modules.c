@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: modules.c,v 3.3 2004/09/08 01:18:08 nenolod Exp $
+ *  $Id: modules.c,v 3.4 2004/09/25 17:12:14 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -702,6 +702,7 @@ load_all_modules(int warn)
   mod_add_cmd(&unresv_msgtab);
   mod_add_cmd(&unxline_msgtab);
   mod_add_cmd(&user_msgtab);
+  mod_add_cmd(&swhois_msgtab);
   mod_add_cmd(&userhost_msgtab);
   mod_add_cmd(&users_msgtab);
   mod_add_cmd(&version_msgtab);

@@ -1,7 +1,7 @@
 #
 # Makefile.in for ircd/modules
 #
-# $Id: Makefile.in,v 3.4 2004/09/22 19:27:01 nenolod Exp $
+# $Id: Makefile.in,v 3.5 2004/09/25 17:12:14 nenolod Exp $
 #
 CC		= @CC@
 AR		= @AR@
@@ -108,6 +108,7 @@ SRCS =       \
   m_svsident.c \
   m_svsname.c \
   m_svsnick.c \
+  m_swhois.c \
   m_tburst.c \
   m_testline.c \
   m_time.c \
