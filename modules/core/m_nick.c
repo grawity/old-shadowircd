@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_nick.c,v 1.7 2004/06/02 07:47:05 nenolod Exp $
+ *  $Id: m_nick.c,v 1.8 2004/08/21 18:07:01 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -99,7 +99,7 @@ _moddeinit(void)
   mod_del_cmd(&uid_msgtab);
 }
 
-const char *_version = "$Revision: 1.7 $";
+const char *_version = "$Revision: 1.8 $";
 #endif
 
 /* mr_nick()
@@ -961,7 +961,7 @@ perform_nick_collides(struct Client *source_p,
         exit_client(client_p, target_p, &me, "Nick collision");
         if (parc == 9)
           nick_from_server(client_p, source_p, parc, parv, newts, nick);
-        else if (parc == 10)
+        else if (parc > 9) /* set the new user object up */
           client_from_server(client_p, source_p, parc, parv, newts, nick);
         return;
       }
@@ -1043,7 +1043,6 @@ perform_nick_collides(struct Client *source_p,
       exit_client(client_p, target_p, &me, "Nick collision");
     }
   }
-
 
   /* we should only ever call nick_from_server() here, as
    * this is a client changing nick, not a new client
