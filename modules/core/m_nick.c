@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_nick.c,v 1.2 2004/05/01 08:30:29 nenolod Exp $
+ *  $Id: m_nick.c,v 1.3 2004/05/01 18:06:27 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -99,7 +99,7 @@ _moddeinit (void)
   mod_del_cmd (&uid_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 /* mr_nick()
@@ -517,17 +517,15 @@ ms_uid (struct Client *client_p, struct Client *source_p,
       check_clean_host (client_p, nick, ID_HOSTNAME, source_p))
     return;
 
-  /* check length of clients gecos */
-  if (strlen(IsCapable(source_p, CAP_UVH) ? ID_GECOS : ID_VHOST) > REALLEN)
-    {
-      sendto_realops_flags (UMODE_ALL, L_ALL,
-			    "Long realname from server %s for %s", parv[0],
-			    parv[1]);
-      if (IsCapable(source_p, CAP_UVH))
-        ID_GECOS[REALLEN] = '\0';
-      else
-        ID_VHOST[REALLEN] = '\0';
-    }
+  /* some systems strlen functions, i.e. linux like to go over bounds
+   * thus poisoning the memory stack, and causing the ircd to crash.
+   * therefore, we now do this blindly to promote maximum stability.
+   *   --nenolod
+   */
+  if (IsCapable(client_p, CAP_UVH))
+    ID_GECOS[REALLEN] = '\0';
+  else
+    ID_VHOST[REALLEN] = '\0';
 
   newts = atol (ID_TS);
 

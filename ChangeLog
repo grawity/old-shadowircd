@@ -1,5 +1,14 @@
 (n) = nenolod; (z) = Zippoboy7
 
+ShadowIRCd 2.4.4-3
+
+* Fixed some string overbounds checking to reduce crashes on systems
+  using a specific version of glibc. (n)
+
+ShadowIRCd 2.4.4-2
+
+* Fixed voicing issues. (n)
+
 ShadowIRCd 2.4.4-1
 
 * Fixed desync bug caused by silly typo. Sorry! (n)
