@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.17 2004/01/15 20:16:20 nenolod Exp $
+ *  $Id: s_user.c,v 1.18 2004/01/15 22:12:17 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -999,17 +999,17 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
     *m++ = '+';
 
     for (i = 0; user_modes[i].letter && (m - buf < BUFSIZE - 4); i++)
-      if (source_p->umodes & user_modes[i].mode)
+      if (target_p->umodes & user_modes[i].mode)
         *m++ = user_modes[i].letter;
     *m = '\0';
 
-    sendto_one(source_p, form_str(RPL_UMODEIS),
+    sendto_one(target_p, form_str(RPL_UMODEIS),
                me.name, source_p->name, buf);
     return;
   }
 
   /* find flags already set for user */
-  setflags = source_p->umodes;
+  setflags = target_p->umodes;
 
   /* parse mode change string(s) */
   for (p = &parv[2]; p && *p; p++)
@@ -1040,10 +1040,10 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
         case 'o':
           if (what == MODE_ADD)
           {
-            if (IsServer(client_p) && !IsOper(source_p))
+            if (IsServer(client_p) && !IsOper(target_p))
             {
               ++Count.oper;
-              SetOper(source_p);
+              SetOper(target_p);
             }
           }
           else
@@ -1051,21 +1051,21 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
             /* Only decrement the oper counts if an oper to begin with
              * found by Pat Szuta, Perly , perly@xnet.com 
              */
-            if (!IsOper(source_p))
+            if (!IsOper(target_p))
               break;
 
-            ClearOper(source_p);
-            source_p->umodes &= ~ConfigFileEntry.oper_only_umodes;
+            ClearOper(target_p);
+            target_p->umodes &= ~ConfigFileEntry.oper_only_umodes;
             Count.oper--;
 
             if (MyConnect(source_p))
             {
               dlink_node *dm;
 
-              detach_conf(source_p, OPER_TYPE);
-              ClearOperFlags(source_p);
+              detach_conf(target_p, OPER_TYPE);
+              ClearOperFlags(target_p);
 
-              if ((dm = dlinkFindDelete(&oper_list, source_p)) != NULL)
+              if ((dm = dlinkFindDelete(&oper_list, target_p)) != NULL)
                 free_dlink_node(dm);
             }
           }
@@ -1084,7 +1084,7 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
         default:
           if ((flag = user_modes_from_c_to_bitmask[(unsigned char)*m]))
           {
-            if (MyConnect(source_p) && !IsOper(source_p) &&
+            if (MyConnect(target_p) && !IsOper(target_p) &&
                 (ConfigFileEntry.oper_only_umodes & flag))
             {
               badflag = 1;
@@ -1092,14 +1092,14 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
             else
             {
               if (what == MODE_ADD)
-                source_p->umodes |= flag;
+                target_p->umodes |= flag;
               else
-                source_p->umodes &= ~flag;  
+                target_p->umodes &= ~flag;  
             }
           }
           else
           {
-            if (MyConnect(source_p))
+            if (MyConnect(target_p))
               badflag = 1;
           }
 
@@ -1108,34 +1108,34 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
     }
   }
 
-  if (badflag)
-    sendto_one(source_p, form_str(ERR_UMODEUNKNOWNFLAG),
-               me.name, source_p->name);
+  if (badflag && !IsServer(source_p))
+    sendto_one(target_p, form_str(ERR_UMODEUNKNOWNFLAG),
+               me.name, target_p->name);
 
-  if ((source_p->umodes & UMODE_NCHANGE) && !IsOperN(source_p))
+  if ((target_p->umodes & UMODE_NCHANGE) && !IsOperN(target_p))
   {
-    sendto_one(source_p, ":%s NOTICE %s :*** You need nick_changes = yes;",
-               me.name, source_p->name);
-    source_p->umodes &= ~UMODE_NCHANGE; /* only tcm's really need this */
+    sendto_one(target_p, ":%s NOTICE %s :*** You need nick_changes = yes;",
+               me.name, target_p->name);
+    target_p->umodes &= ~UMODE_NCHANGE; /* only tcm's really need this */
   }
 
   if (MyConnect(source_p) && (source_p->umodes & UMODE_ADMIN) &&
       !IsOperAdmin(source_p) && !IsOperHiddenAdmin(source_p))
   {
-    sendto_one(source_p, ":%s NOTICE %s :*** You need admin = yes;",
-               me.name, source_p->name);
-    source_p->umodes &= ~UMODE_ADMIN;
+    sendto_one(target_p, ":%s NOTICE %s :*** You need admin = yes;",
+               me.name, target_p->name);
+    target_p->umodes &= ~UMODE_ADMIN;
   }
 
-  if (!(setflags & UMODE_INVISIBLE) && IsInvisible(source_p))
+  if (!(setflags & UMODE_INVISIBLE) && IsInvisible(target_p))
     ++Count.invisi;
-  if ((setflags & UMODE_INVISIBLE) && !IsInvisible(source_p))
+  if ((setflags & UMODE_INVISIBLE) && !IsInvisible(target_p))
     --Count.invisi;
 
   /* compare new flags with old flags and send string which
    * will cause servers to update correctly.
    */
-  send_umode_out(client_p, source_p, setflags);
+  send_umode_out(target_p, target_p, setflags);
 }
 
 /* send_umode()
