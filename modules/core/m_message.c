@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_message.c,v 1.7 2003/12/06 20:25:09 eko Exp $
+ *  $Id: m_message.c,v 1.8 2003/12/16 18:08:25 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -118,7 +118,7 @@ _moddeinit(void)
   mod_del_cmd(&notice_msgtab);
 }
 
-const char *_version = "$Revision: 1.7 $";
+const char *_version = "$Revision: 1.8 $";
 #endif
 
 /*
@@ -259,6 +259,7 @@ build_target_list(int p_or_n, const char *command, struct Client *client_p,
   char *p, *nick, *target_list, ncbuf[BUFSIZE];
   struct Channel *chptr=NULL;
   struct Client *target_p;
+  struct Channel *chptr2;
 
   /* Sigh, we can't mutilate parv[1] incase we need it to send to a hub */
   if (!ServerInfo.hub && (uplink != NULL) && IsCapable(uplink, CAP_LL))
@@ -297,8 +298,25 @@ build_target_list(int p_or_n, const char *command, struct Client *client_p,
                        ID_or_name(source_p, client_p), nick);
             return (1);
           }
-          targets[ntargets].ptr = (void *)chptr;
-          targets[ntargets++].type = ENTITY_CHANNEL;
+          if (chptr->mode.linktarget[0] == '\0')
+          {  
+            targets[ntargets].ptr = (void *)chptr;
+            targets[ntargets++].type = ENTITY_CHANNEL;
+          }
+          else
+          {
+            if ((chptr2 = hash_find_channel(chptr->mode.forwardtarget)) != NULL)
+            {
+              if (chptr2->mode.forwardtarget == nick)
+              {
+                targets[ntargets].ptr = (void *)chptr2;
+                targets[ntargets++].type = ENTITY_CHANNEL;
+                ntargets++;
+              }
+            }
+            targets[ntargets].ptr = (void *)chptr;
+            targets[ntargets++].type = ENTITY_CHANNEL;
+          }            
         }
       }
       else
