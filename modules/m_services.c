@@ -1,7 +1,7 @@
 /*
  * shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  * 
- * $Id: m_services.c,v 1.1 2004/07/29 15:27:50 nenolod Exp $
+ * $Id: m_services.c,v 1.2 2004/07/29 18:07:56 nenolod Exp $
  */
 
 /* List of ircd includes from ../include/ */
@@ -59,47 +59,47 @@ static void m_hostserv(struct Client *client_p, struct Client *source_p,
  */
 struct Message global_msgtab = {
   "GLOBAL", 0, 0, 1, 0, MFLG_SLOW, 0,
-  {m_unregistered, m_global, m_ignore, m_global}
+  {m_unregistered, m_global, m_ignore, m_global, m_ignore}
 };
 struct Message nickserv_msgtab = {
   "NICKSERV", 0, 0, 1, 0, MFLG_SLOW, 0,
-  {m_unregistered, m_nickserv, m_ignore, m_nickserv}
+  {m_unregistered, m_nickserv, m_ignore, m_nickserv, m_ignore}
 };
 struct Message chanserv_msgtab = {
   "CHANSERV", 0, 0, 1, 0, MFLG_SLOW, 0,
-  {m_unregistered, m_chanserv, m_ignore, m_chanserv}
+  {m_unregistered, m_chanserv, m_ignore, m_chanserv, m_ignore}
 };
 struct Message memoserv_msgtab = {
   "MEMOSERV", 0, 0, 1, 0, MFLG_SLOW, 0,
-  {m_unregistered, m_memoserv, m_ignore, m_memoserv}
+  {m_unregistered, m_memoserv, m_ignore, m_memoserv, m_ignore}
 };
 struct Message seenserv_msgtab = {
   "SEENSERV", 0, 0, 1, 0, MFLG_SLOW, 0,
-  {m_unregistered, m_seenserv, m_ignore, m_seenserv}
+  {m_unregistered, m_seenserv, m_ignore, m_seenserv, m_ignore}
 };
 struct Message operserv_msgtab = {
   "OPERSERV", 0, 0, 1, 0, MFLG_SLOW, 0,
-  {m_unregistered, m_operserv, m_ignore, m_operserv}
+  {m_unregistered, m_operserv, m_ignore, m_operserv, m_ignore}
 };
 struct Message statserv_msgtab = {
   "STATSERV", 0, 0, 1, 0, MFLG_SLOW, 0,
-  {m_unregistered, m_statserv, m_ignore, m_statserv}
+  {m_unregistered, m_statserv, m_ignore, m_statserv, m_ignore}
 };
 struct Message helpserv_msgtab = {
   "HELPSERV", 0, 0, 1, 0, MFLG_SLOW, 0,
-  {m_unregistered, m_helpserv, m_ignore, m_helpserv}
+  {m_unregistered, m_helpserv, m_ignore, m_helpserv, m_ignore}
 };
 struct Message identify_msgtab = {
   "IDENTIFY", 0, 0, 0, 2, MFLG_SLOW, 0,
-  {m_unregistered, m_identify, m_ignore, m_identify}
+  {m_unregistered, m_identify, m_ignore, m_identify, m_ignore}
 };
 struct Message botserv_msgtab = {
   "BOTSERV", 0, 0, 1, 0, MFLG_SLOW, 0,
-  {m_unregistered, m_botserv, m_ignore, m_botserv}
+  {m_unregistered, m_botserv, m_ignore, m_botserv, m_ignore}
 };
 struct Message hostserv_msgtab = {
   "HOSTSERV", 0, 0, 1, 0, MFLG_SLOW, 0,
-  {m_unregistered, m_hostserv, m_ignore, m_hostserv}
+  {m_unregistered, m_hostserv, m_ignore, m_hostserv, m_ignore}
 };
 
 
@@ -108,27 +108,27 @@ struct Message hostserv_msgtab = {
  */
 struct Message ns_msgtab = {
   "NS", 0, 0, 1, 0, MFLG_SLOW, 0,
-  {m_unregistered, m_nickserv, m_ignore, m_nickserv}
+  {m_unregistered, m_nickserv, m_ignore, m_nickserv, m_ignore}
 };
 struct Message cs_msgtab = {
   "CS", 0, 0, 1, 0, MFLG_SLOW, 0,
-  {m_unregistered, m_chanserv, m_ignore, m_chanserv}
+  {m_unregistered, m_chanserv, m_ignore, m_chanserv, m_ignore}
 };
 struct Message ms_msgtab = {
   "MS", 0, 0, 1, 0, MFLG_SLOW, 0,
-  {m_unregistered, m_memoserv, m_ignore, m_memoserv}
+  {m_unregistered, m_memoserv, m_ignore, m_memoserv, m_ignore}
 };
 struct Message bs_msgtab = {
   "BS", 0, 0, 1, 0, MFLG_SLOW, 0,
-  {m_unregistered, m_botserv, m_ignore, m_botserv}
+  {m_unregistered, m_botserv, m_ignore, m_botserv, m_ignore}
 };
 struct Message ss_msgtab = {
   "SS", 0, 0, 1, 0, MFLG_SLOW, 0,
-  {m_unregistered, m_statserv, m_ignore, m_statserv}
+  {m_unregistered, m_statserv, m_ignore, m_statserv, m_ignore}
 };
 struct Message hs_msgtab = {
   "HS", 0, 0, 1, 0, MFLG_SLOW, 0,
-  {m_unregistered, m_hostserv, m_ignore, m_hostserv}
+  {m_unregistered, m_hostserv, m_ignore, m_hostserv, m_ignore}
 };
 
 #ifndef STATIC_MODULES
@@ -179,7 +179,7 @@ _moddeinit(void)
   mod_del_cmd(&ss_msgtab);
 }
 
-char *_version = "$Revision: 1.1 $";
+char *_version = "$Revision: 1.2 $";
 #endif
 
 /*

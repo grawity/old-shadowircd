@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_svskill.c,v 1.1 2004/07/29 15:27:50 nenolod Exp $
+ *  $Id: m_svskill.c,v 1.2 2004/07/29 18:07:56 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -40,7 +40,7 @@ static void m_svskill (struct Client *, struct Client *, int, char **);
 
 struct Message svskill_msgtab = {
   "SVSKILL", 0, 0, 0, 0, MFLG_SLOW | MFLG_UNREG, 0,
-  {m_unregistered, m_ignore, m_svskill, m_ignore}
+  {m_unregistered, m_ignore, m_svskill, m_ignore, m_ignore}
 };
 
 #ifndef STATIC_MODULES
@@ -56,7 +56,7 @@ _moddeinit (void)
   mod_del_cmd (&svskill_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /*

@@ -20,7 +20,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_svsnick.c,v 1.1 2004/07/29 15:27:49 nenolod Exp $
+ *  $Id: m_svsnick.c,v 1.2 2004/07/29 18:07:56 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -54,7 +54,7 @@ static int clean_nick_name (char *);
 
 struct Message svsnick_msgtab = {
   "SVSNICK", 0, 0, 3, 0, MFLG_SLOW, 0,
-  {m_unregistered, m_ignore, ms_svsnick, m_ignore}
+  {m_unregistered, m_ignore, ms_svsnick, m_ignore, m_ignore}
 };
 
 #ifndef STATIC_MODULES
@@ -70,7 +70,7 @@ _moddeinit (void)
   mod_del_cmd (&svsnick_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /*
