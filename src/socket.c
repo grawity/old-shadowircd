@@ -2,7 +2,7 @@
  * NetworkBOPM: The ShadowIRCd Anti-Proxy System.
  * socket.c: Socket handling functions.
  *
- * $Id: socket.c,v 1.3 2004/05/26 15:13:39 nenolod Exp $
+ * $Id: socket.c,v 1.4 2004/08/29 05:53:06 nenolod Exp $
  */
 
 #include "netbopm.h"
@@ -23,7 +23,7 @@ int
 conn(char *host, unsigned int port)
 {
     struct hostent *he;
-    struct sockaddr_in their_addr;	// connector's address information
+    struct sockaddr_in their_addr;
     unsigned long   flags;
 
     if ((he = gethostbyname(host)) == NULL) {	// get the host info

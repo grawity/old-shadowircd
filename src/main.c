@@ -2,7 +2,7 @@
  * NetworkBOPM: The ShadowIRCd Anti-Proxy System.
  * main.c: Main code
  *
- * $Id: main.c,v 1.2 2004/05/26 15:13:39 nenolod Exp $
+ * $Id: main.c,v 1.3 2004/08/29 05:53:06 nenolod Exp $
  */
 
 #include "netbopm.h"
@@ -15,7 +15,8 @@ int
 main()
 {
     daemon(1, 0);
-    config_file = sstrdup("./networkbopm.conf");
+    signal(SIGPIPE, SIG_IGN); /* it appears that libopm likes to break pipe */
+    config_file = sstrdup("../data/networkbopm.conf");
     conf_parse();
 
     conn(me.uplink, me.port);
@@ -39,8 +40,11 @@ main()
     me.bursting = 1;
 
     bopmuid =
-	init_psuedoclient("NetworkBOPM", "service", "NetworkBOPM",
-			  "shadowircd.net");
+	init_psuedoclient("NetworkBOPM", "antiproxy", "NetworkBOPM",
+			  "defender.linux-world.org");
+
+    sendto_server(":%s SJOIN %lu %s + :%s",
+                    me.sid, time(NULL), me.snoopchan, bopmuid);
 
     while (1) {
 	/*
@@ -55,8 +59,8 @@ OPM_T          *
 opm_initialize(void)
 {
     OPM_T          *scanner;
-    int             fdlimit = 1024;
-    int             scan_port = 6667;
+    int             fdlimit = 256;
+    int             scan_port = 7000;
     int             max_read = 4096;
     int             scan_timeout = 10;
     unsigned int    i,

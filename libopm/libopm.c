@@ -1161,7 +1161,7 @@ static void libopm_check_poll(OPM_T *scanner)
 
          for(i = 0; i < size; i++)
          {
-            if((ufds[i].fd == conn->fd) && (conn->state != OPM_STATE_CLOSED))
+            if((ufds[i].fd == conn->fd) && (conn->state == OPM_STATE_ESTABLISHED))
             {
                if(ufds[i].revents & POLLIN)
                   libopm_do_readready(scanner, scan, conn);

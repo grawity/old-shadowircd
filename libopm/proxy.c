@@ -49,9 +49,10 @@ int libopm_proxy_http_write(OPM_T *scanner, OPM_SCAN_T *scan, OPM_CONNECTION_T *
    snprintf(SENDBUF, SENDBUFLEN, "CONNECT %s:%d HTTP/1.0\r\n\r\n",
       (char *) libopm_config(scanner->config, OPM_CONFIG_SCAN_IP), 
       *(int *) libopm_config(scanner->config, OPM_CONFIG_SCAN_PORT));
- 
-   if(send(conn->fd, SENDBUF, strlen(SENDBUF), 0) == -1)
-      return 0; /* Return error code ? */
+
+   if (conn->fd > -1) 
+     if(send(conn->fd, SENDBUF, strlen(SENDBUF), 0) == -1)
+        return 0; /* Return error code ? */
 
    return OPM_SUCCESS;
 }
@@ -90,7 +91,8 @@ int libopm_proxy_socks4_write(OPM_T *scanner, OPM_SCAN_T *scan, OPM_CONNECTION_T
                  (char) (laddr >> 24) & 0xFF, (char) (laddr >> 16) & 0xFF,
                  (char) (laddr >> 8) & 0xFF, (char) laddr & 0xFF, 0);
 
-   send(conn->fd, SENDBUF, (unsigned int)len, 0);
+   if (conn->fd > -1) 
+     send(conn->fd, SENDBUF, (unsigned int)len, 0);
 
    return OPM_SUCCESS;
 }
@@ -155,6 +157,8 @@ int libopm_proxy_socks5_write(OPM_T *scanner, OPM_SCAN_T *scan, OPM_CONNECTION_T
    /* Form authentication string */
    /* Version 5, 1 number of methods, 0 method (no auth). */
    len = snprintf(SENDBUF, SENDBUFLEN, "%c%c%c", 5, 1, 0);
+
+   if (conn->fd > -1) 
    send(conn->fd, SENDBUF, (unsigned int)len, 0);
 
    /* Form request string */
@@ -168,6 +172,8 @@ int libopm_proxy_socks5_write(OPM_T *scanner, OPM_SCAN_T *scan, OPM_CONNECTION_T
                  (((unsigned short) scan_port) >> 8) & 0xFF,
                  (((unsigned short) scan_port) & 0xFF));
 
+
+   if (conn->fd > -1) 
    send(conn->fd, SENDBUF, (unsigned int)len, 0);
 
    return OPM_SUCCESS;
@@ -188,6 +194,8 @@ int libopm_proxy_wingate_write(OPM_T *scanner, OPM_SCAN_T *scan, OPM_CONNECTION_
    scan_port = *(int *) libopm_config(scanner->config, OPM_CONFIG_SCAN_PORT);
 
    len = snprintf(SENDBUF, SENDBUFLEN, "%s:%d\r\n", scan_ip, scan_port);
+
+   if (conn->fd > -1) 
    send(conn->fd, SENDBUF, (unsigned int)len, 0);
 
    return OPM_SUCCESS;
@@ -212,9 +220,11 @@ int libopm_proxy_router_write(OPM_T *scanner, OPM_SCAN_T *scan, OPM_CONNECTION_T
    scan_port = *(int *) libopm_config(scanner->config, OPM_CONFIG_SCAN_PORT);
 
    len = snprintf(SENDBUF, SENDBUFLEN, "cisco\r\n");
+   if (conn->fd > -1) 
    send(conn->fd, SENDBUF, (unsigned int)len, 0);
 
    len = snprintf(SENDBUF, SENDBUFLEN, "telnet %s %d\r\n", scan_ip, scan_port);
+   if (conn->fd > -1) 
    send(conn->fd, SENDBUF, (unsigned int)len, 0);
 
    return OPM_SUCCESS;
