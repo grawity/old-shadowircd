@@ -1,0 +1,149 @@
+/*
+ * shadowircd: an advanced IRC daemon.
+ * umodes.h: part of new usermodes system
+ *
+ * $Id: umodes.h,v 1.1 2004/05/12 19:21:25 nenolod Exp $
+ */
+
+/* nice flashy bitfield math, care of asuffield and dancer-ircd.
+ * adopted where necessary 05/12/04 by nenolod.
+ *
+ * some parts rewritten for efficiency too.
+ */
+#ifndef INCLUDED_UMODES_H
+#define INCLUDED_UMODES_H
+
+typedef struct {
+  int mode;
+  char letter;
+  int operonly;
+} FLAG_ITEM;
+
+struct bitfield_lookup_t
+{
+  unsigned int field;
+  u_int32_t bit;
+};
+
+/* This is initialised in init_umodes() in s_user.c, based on the value of 
+ * BITFIELD_SIZE
+ */
+extern struct bitfield_lookup_t bitfield_lookup[];
+extern char umode_list[];
+
+/* the BITFIELD_SIZE define is used to create the bitfield. */
+#define BITFIELD_SIZE 64
+
+#define SetBit(f,b)   (((f)[bitfield_lookup[b].field]) |=  bitfield_lookup[b].bit)
+#define ClearBit(f,b) (((f)[bitfield_lookup[b].field]) &= ~bitfield_lookup[b].bit)
+#define TestBit(f,b)  (((f)[bitfield_lookup[b].field]) &  bitfield_lookup[b].bit)
+
+/* Written out in full for speed.
+ * I never thought I would actually use the , operator. You live and learn.
+ *  -- asuffield
+ */
+#define CopyUmodes(d,s) (((d)[0] = (s)[0]), ((d)[1] = (s)[1]))
+#define AndUmodes(d,a,b) (((d)[0] = (a)[0] & (b)[0]), ((d)[1] = (a)[1] & (b)[1]))
+#define OrUmodes(d,a,b) (((d)[0] = (a)[0] | (b)[0]), ((d)[1] = (a)[1] | (b)[1]))
+#define AndNotUmodes(d,a,b) (((d)[0] = (a)[0] & ~(b)[0]), ((d)[1] = (a)[1] & ~(b)[1]))
+#define NotUmodes(d,s) (((d)[0] = ~s[0]), ((d)[1] = ~s[1]))
+#define AnyBits(d) ((d)[0] | (d)[1])
+#define SameBits(a,b) (((a)[0] == (b)[0]) && ((a)[1] == (b)[1]))
+
+#define ClearBitfield(b) (((b)[0] = 0), ((b)[1] = 0))
+
+/* These are usually used */
+#define HasUmode(c,m) (TestBit((c)->umodes,m))
+#define SetUmode(c,m) (SetBit((c)->umodes,m))
+#define ClearUmode(c,m) (ClearBit((c)->umodes,m))
+
+/* usermodes */
+#define UMODE_INVALID      0
+#define UMODE_SERVNOTICE   1 /* server notices     */                     /* +s */
+#define UMODE_CCONN        2 /* Client Connections */                     /* +c */
+#define UMODE_REJ          3 /* Bot Rejections */                         /* +j */
+#define UMODE_SKILL        4 /* Server Killed */                          /* +k */
+#define UMODE_FULL         5 /* Full messages */                          /* +f */
+#define UMODE_SPY          6 /* see STATS / LINKS */                      /* +y */
+#define UMODE_DEBUG        7 /* 'debugging' info */                       /* +d */
+#define UMODE_NCHANGE      8 /* Nick change notice */                     /* +n */
+#define UMODE_WALLOP       9 /* send wallops to them */                   /* +w */
+#define UMODE_OPERWALL    10  /* Operwalls */                             /* +z */
+#define UMODE_INVISIBLE   11 /* makes user invisible */                   /* +i */
+#define UMODE_BOTS        12 /* shows bots */                             /* +b */
+#define UMODE_EXTERNAL    13 /* show servers introduced and splitting */  /* +X */
+#define UMODE_CALLERID    14 /* block unless caller id's */               /* +g */
+#define UMODE_UNAUTH      15 /* show unauth connects here */              /* +u */
+#define UMODE_LOCOPS      16 /* show locops */                            /* +l */
+#define UMODE_OPER        17 /* Operator */                               /* +o */
+#define UMODE_ADMIN       18 /* Admin on server */                        /* +a */
+#define UMODE_IDENTIFY    19 /* Identified. */                            /* +e */
+#define UMODE_HIDEOPER    20 /* Hide operator status. */                  /* +h */
+#define UMODE_CLOAK       21 /* Usercloak. */                             /* +v */
+#define UMODE_BLOCKINVITE 22 /* Block Invites. */                         /* +I */
+#define UMODE_PMFILTER    23 /* Allow only registered users to PM */      /* +E */
+#define UMODE_HELPOP      24 /* Help operator. */                         /* +H */
+#define UMODE_SVSOPER     25 /* Services operator. */                     /* +O */
+#define UMODE_SVSADMIN    26 /* Services admin. */                        /* +A */
+#define UMODE_SVSROOT     27 /* Services root. */                         /* +R */
+#define UMODE_SERVICE     28 /* Network service. */                       /* +S */
+#define UMODE_SECURE      29 /* client is using SSL */                    /* +Z */
+#define UMODE_DEAF        30 /* User is deaf. */                          /* +D */
+
+/* vanity flags */
+#define UMODE_NETADMIN    31 /* network administrator */                  /* +N */
+#define UMODE_TECHADMIN   32 /* technical administrator */                /* +T */
+
+#define UMODE_NOCOLOUR    33 /* block message colours */                  /* +C */
+#define UMODE_SENSITIVE   34 /* user has "sensitive ears" */              /* +G */
+
+#define UMODE_ROUTING     35 /* user is on routing team */                /* +L */
+
+/* macros for tests... cleaner code */
+
+#define IsInvisible(x)          (HasUmode(x, UMODE_INVISIBLE))
+#define IsSetCallerId(x)        (HasUmode(x, UMODE_CALLERID))
+#define IsPMFiltered(x)         (HasUmode(x, UMODE_PMFILTER))
+#define IsIdentified(x)         (HasUmode(x, UMODE_IDENTIFY))
+#define IsBlockInvite(x)        (HasUmode(x, UMODE_BLOCKINVITE))
+#define IsDeaf(x)               (HasUmode(x, UMODE_DEAF))
+#define IsSensitive(x)          (HasUmode(x, UMODE_SENSITIVE))
+#define BlockColour(x)          (HasUmode(x, UMODE_NOCOLOUR))
+#define IsSecure(x)             (HasUmode(x, UMODE_SECURE))
+#define IsCloaked(x)            (HasUmode(x, UMODE_CLOAK))
+#define IsHiding(x)             (HasUmode(x, UMODE_HIDEOPER))
+
+#define IsOper(x)               (HasUmode(x, UMODE_OPER))
+#define IsAdmin(x)              (HasUmode(x, UMODE_ADMIN))
+#define IsHelpop(x)             (HasUmode(x, UMODE_HELPOP))
+#define IsNetadmin(x)           (HasUmode(x, UMODE_NETADMIN))
+#define IsTechadmin(x)          (HasUmode(x, UMODE_TECHADMIN))
+#define IsServicesRoot(x)       (HasUmode(x, UMODE_SVSROOT))
+#define IsServicesAdmin(x)      (HasUmode(x, UMODE_SVSADMIN))
+#define IsServicesOper(x)       (HasUmode(x, UMODE_SVSOPER))
+#define IsService(x)            (HasUmode(x, UMODE_SERVICE))
+#define IsRouting(x)            (HasUmode(x, UMODE_ROUTING))
+
+#define SendRejections(x)       (HasUmode(x, UMODE_REJ))
+#define SendNotices(x)          (HasUmode(x, UMODE_SERVNOTICE))
+#define SendConnects(x)         (HasUmode(x, UMODE_CCONN))
+#define SendServerKills(x)      (HasUmode(x, UMODE_SKILL))
+#define SendFullNotice(x)       (HasUmode(x, UMODE_FULL))
+#define SendDebugNotice(x)      (HasUmode(x, UMODE_DEBUG))
+#define SendNickChange(x)       (HasUmode(x, UMODE_NCHANGE))
+#define SendWallops(x)          (HasUmode(x, UMODE_WALLOP))
+#define SendOperwall(x)         (HasUmode(x, UMODE_OPERWALL))
+#define SendBotNotices(x)       (HasUmode(x, UMODE_BOTS))
+#define SendExternalNotices(x)  (HasUmode(x, UMODE_EXTERNAL))
+#define SendLocops(x)           (HasUmode(x, UMODE_LOCOPS))
+#define SendUnauthorized(x)     (HasUmode(x, UMODE_UNAUTH))
+
+extern void  init_umodes(void);
+extern user_modes user_umodes, null_umodes;
+extern char *umodes_as_string(user_modes *);
+extern void umodes_from_string(user_modes *, char *);
+extern char *umode_difference(user_modes *, user_modes *);
+extern user_modes *build_umodes(user_modes *, int, ...);
+
+#endif
+
