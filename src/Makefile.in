@@ -1,11 +1,3 @@
-# Copyright (c) 2003-2004 E. Will et al.
-# Rights to this code are documented in doc/LICENSE.
-#
-# This file contains build instructions.
-#
-# $Id: Makefile.in,v 1.1.1.1 2004/05/24 23:22:41 nenolod Exp $
-#
-
 CC		= @CC@
 RM		= @RM@
 MV		= @MV@
@@ -46,14 +38,8 @@ networkbopm: $(OBJS)
 .c.o:
 	${CC} ${CPPFLAGS} ${CFLAGS} -c $<
 
-.PHONY: depend clean distclean
-depend:
-	${MKDEP} ${CPPFLAGS} ${BASE_SRCS} > .depend
-
 clean:
-	${RM} -f *.o *.exe *~ version.c shrike.core core shrike
+	${RM} -f *.o *.exe *~ networkbopm.core core networkbopm
 
 distclean: clean
 	${RM} -f Makefile version.c.last
-
-include .depend
