@@ -1,42 +1,5 @@
-$Id: TODO,v 1.11 2003/12/12 18:21:42 nenolod Exp $
+$Id: TODO,v 1.12 2003/12/19 02:13:36 nenolod Exp $
 
-done (rc1):
+This is the TODO for ShadowIRCd-2.1-(Cyclops).
 
-- colorblock, colorstrip (done)
-- identified umode (done)
-- cloaking (done)
-- invite block, knock deny (done)
-- channel mode +z: Disable throttling (nenolod) - done
-- channel mode +u: Owner (Eko) -- done (nenolod)
-- channel mode +T: Channel owner sets topic. (Eko) -- DONE.
-- channel mode +F: Free Invite (nenolod) -- DONE.
-- channel mode +P: Peace (Eko) -- DONE.
-- channel mode +q: Quiet (nenolod) -- DONE.
-- channel mode +O: Oper only channel. (nenolod) -- DONE.
-
-rc2 / rc3 / rc4:
-
-- usermode +E: Registered users only (Eko) (done)
-- linking (done)
-- fix modules which arent fully TS6 yet. (nenolod)
-- Finish SSL. (nenolod)
-
-rc3:
-
-- channel mode +a: Auditorium (Eko)
-- usermode +B: Marked for bots. (+B would lower flood restrictions) (NhJm/Eko/Bagheera)
-
-rc4 and beyond:
-
-- usermode +Z: No private messages (Eko/Bagheera/Lunis)
-               (see detailed spec on this)
-- Automatically set +Z on client floods. (nenolod)
-- SSL Support (Eko/Bagheera) (Partially done as of rc1 -- nenolod)
-- channel mode +Z: SSL only (nenolod) (82% done)
-- channel mode +L: Channel linking. (Eko)
-                   Spec: l_spec.txt (Eko - Done)
-- usermode +S: Antispam (admin-defined pattern) (nenolod)
-- usermode +C: Block CTCP (nenolod)
-- channel mode +C: Block CTCP (nenolod)
-- channel mode +N: Stickynicks (Bagheera)
-
+* Nothing yet.
