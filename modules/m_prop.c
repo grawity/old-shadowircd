@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_prop.c,v 1.1 2004/04/07 19:24:22 nenolod Exp $
+ *  $Id: m_prop.c,v 1.2 2004/04/08 20:21:09 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -65,6 +65,44 @@ _moddeinit (void)
   mod_del_cmd (&prop_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
+/*
+ * m_prop
+ *  parv[0] = sender prefix
+ *  parv[1] = channel name
+ *  parv[2] = channel property
+ *  parv[3] = extra params
+ *  ..      = same
+ */
+
+static void
+m_prop(struct Client *client_p, struct Client *source_p,
+        int parc, char *parv[])
+{
+  struct Channel *chptr = NULL;
+  struct Membership *ms;
+  char   *command;
+
+  if (IsChanPrefix(*parv[1]))
+  {
+    if ((chptr = hash_find_channel(parv[1])) != NULL)
+    {
+      sendto_one(source_p, form_str(ERR_NOSUCHCHANNEL),
+        me.name, source_p->name, parv[1]);
+      return;
+    }
+  
+  if ((ms = find_channel_link(source_p, chptr)) == NULL)
+    {
+      if (MyClient(source_p))
+        {
+          /* If it's local, stop it, otherwise let it go. */
+	  sendto_one(source_p, form_str(ERR_NOTONCHANNEL), from,
+            to, parv[1]);
+          return;
+	}
+    }
+
+     

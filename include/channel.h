@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.h,v 1.6 2004/04/07 19:24:22 nenolod Exp $
+ *  $Id: channel.h,v 1.7 2004/04/08 20:21:09 nenolod Exp $
  */
 
 #ifndef INCLUDED_channel_h
@@ -80,6 +80,15 @@ struct Membership
   struct Channel *chptr;
   struct Client *client_p;
   unsigned int flags;
+};
+
+struct Properties
+{
+  char *onjoin;
+  char *url;
+  char *passwd;
+  char *creator;
+  char *desc;
 };
 
 extern dlink_list global_channel_list;
