@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  s_serv.c: Server related functions.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_serv.c,v 1.2 2003/12/05 22:42:56 nenolod Exp $
+ *  $Id: s_serv.c,v 1.3 2003/12/12 20:40:16 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -875,6 +875,10 @@ sendnick_TS(struct Client *client_p, struct Client *target_p)
 	       (unsigned long) target_p->tsinfo,
 	       ubuf, target_p->username, target_p->host,
 	       target_p->user->server->name, target_p->info);
+
+  if (target_p->flags & FLAGS_USERCLOAK)
+    sendto_one(client_p, ":%s SVSCLOAK %s :%s",
+		me.name, target_p->name, target_p->virthost);
 }
 
 /* client_burst_if_needed()

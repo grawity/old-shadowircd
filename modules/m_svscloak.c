@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_svscloak.c,v 1.1 2003/12/12 20:32:31 nenolod Exp $
+ *  $Id: m_svscloak.c,v 1.2 2003/12/12 20:40:16 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -44,23 +44,23 @@
 
 void m_svscloak(struct Client *client_p, struct Client *source_p, int parc, char *parv[]);
 
-struct Message map_msgtab = {
+struct Message svscloak_msgtab = {
       "SVSCLOAK", 0, 0, 1, 0, MFLG_SLOW, 0,
-        {m_unregistered, m_ignore, m_svscloak, m_ignore, m_ignore}
+        {m_unregistered, m_ignore, m_svscloak, m_ignore}
 };
 
 void _modinit(void)
 {
-      mod_add_cmd(&map_msgtab);
+      mod_add_cmd(&svscloak_msgtab);
 }
 
 void
 _moddeinit(void)
 {
-    mod_del_cmd(&map_msgtab);
+    mod_del_cmd(&svscloak_msgtab);
 }
 
-const char* _version = "$Revision: 1.1 $";
+const char* _version = "$Revision: 1.2 $";
 
 
 /* m_svscloak
@@ -93,6 +93,11 @@ void m_svscloak(struct Client *client_p, struct Client *source_p, int parc, char
       sendto_server(client_p, NULL, NULL, NOCAPS, NOCAPS, NOFLAGS, 
           ":%s SVSCLOAK %s :%s", parv[0], parv[1], parv[2]);
     strncpy(target_p->virthost, hostname, HOSTLEN);
+    target_p->flags |= FLAGS_USERCLOAK;  /* set the usercloak flag so that in the
+                                          * future, the server will burst the new vhost
+                                          * in case of netsplit.
+                                          *          --nenolod
+                                          */
     off_history(target_p);
   }
   else
