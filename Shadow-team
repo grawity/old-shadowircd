@@ -1,4 +1,4 @@
-$Id: Shadow-team,v 1.3 2004/02/12 01:47:12 nenolod Exp $
+$Id: Shadow-team,v 1.4 2004/02/14 01:25:10 nenolod Exp $
 
 The Shadowircd coding group is a group of developers who were annoyed with 
 the slowness of OpenIRCd. The original ircd was based on hybrid/6.3.1, 
@@ -23,7 +23,7 @@ Sakura                   sakura@netflower.ru
 techno                   techno@synatek.net
 NhJm                     nhjm449@hotmail.com
 notrox                   notrox@nrs.dyndns.org
-Zippoboy7                zippoboy7@users.berlios.de
+Zippoboy7                zippoboy7@criten.net
 Pufu                     poof@fansubber.com
 
 Anyone is welcome to contribute to the project, as long as they are 
