@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_kill.c,v 1.1 2004/04/30 18:19:27 nenolod Exp $
+ *  $Id: m_kill.c,v 1.2 2004/07/18 13:19:04 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -65,7 +65,7 @@ _moddeinit(void)
   mod_del_cmd(&kill_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /* mo_kill()
@@ -125,6 +125,13 @@ mo_kill(struct Client *client_p, struct Client *source_p,
 
     sendto_one(source_p, ":%s NOTICE %s :KILL changed from %s to %s",
                me.name, source_p->name, user, target_p->name);
+  }
+
+  if (HasUmode(target_p, UMODE_KILLPROT))
+  {
+    sendto_one(source_p, ":%s NOTICE %s :User cannot be killed, they are a protected Network Administrator (+K).",
+               me.name, source_p->name);
+    return;
   }
 
   if (IsServer(target_p) || IsMe(target_p))

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.18 2004/07/18 04:07:58 nenolod Exp $
+ *  $Id: s_user.c,v 1.19 2004/07/18 13:19:04 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -911,6 +911,25 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
      sendto_one(source_p, form_str(ERR_USERSDONTMATCH),
                 me.name, source_p->name);
      return;
+  }
+
+  if (IsServer(source_p) && !MyClient(target_p))
+  {
+    if (!ServerInfo.hub && uplink && source_p != uplink)
+    {
+      sendto_one(uplink, ":%s MODE %s %s", parv[0], parv[1],
+                    parv[2]);
+    }
+    else if (ServerInfo.hub)
+    {
+      DLINK_FOREACH(server_node, serv_list.head)
+      {
+        struct Client *server = server_node->data;
+
+        sendto_one(server, ":%s MODE %s %s", parv[0], parv[1],
+                      parv[2]);
+      }
+    }
   }
 
   if (parc < 3)
