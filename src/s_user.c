@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.9 2003/12/12 17:58:42 nenolod Exp $
+ *  $Id: s_user.c,v 1.10 2003/12/13 02:12:27 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1372,7 +1372,6 @@ oper_up(struct Client *source_p)
 
   assert(source_p->localClient->confs.head);
   oconf = map_to_conf((source_p->localClient->confs.head)->data);
-  operprivs = oper_privs_as_string(oconf->port);
 
   SetOFlag(source_p, oconf->port);
 
@@ -1385,8 +1384,6 @@ oper_up(struct Client *source_p)
                        source_p->name, source_p->username, source_p->host);
   send_umode_out(source_p, source_p, old);
   sendto_one(source_p, form_str(RPL_YOUREOPER), me.name, source_p->name);
-  sendto_one(source_p, ":%s NOTICE %s :*** Oper privs are %s",
-             me.name, source_p->name, operprivs);
   send_message_file(source_p, &ConfigFileEntry.opermotd);
 }
 

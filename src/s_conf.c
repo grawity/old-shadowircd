@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.c,v 1.3 2003/12/12 17:58:42 nenolod Exp $
+ *  $Id: s_conf.c,v 1.4 2003/12/13 02:12:27 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -689,12 +689,7 @@ report_confitem_types(struct Client *source_p, ConfType type)
       aconf = (struct AccessItem *)map_to_conf(conf);
       get_printable_conf(conf, &host, &reason, &user, &port, &classname);
 
-      /* Don't allow non opers to see oper privs */
-      if (IsOper(source_p))
-	sendto_one(source_p, form_str(RPL_STATSOLINE),
-		   me.name, source_p->name, 'O', user, host,
-		   conf->name, oper_privs_as_string(port), classname);
-      else
+      /* Hide oper privs. Period. */
 	sendto_one(source_p, form_str(RPL_STATSOLINE),
 		   me.name, source_p->name, 'O', user, host,
 		   conf->name, "0", classname);
@@ -2347,52 +2342,6 @@ expire_tklines(dlink_list *tklist)
       free_dlink_node(kill_node);
     }
   }
-}
-
-/* oper_privs_as_string()
- *
- * inputs        - pointer to client_p or NULL
- * output        - pointer to static string showing oper privs
- * side effects  - return as string, the oper privs as derived from port
- */
-static const struct oper_privs
-{
-  const unsigned int oprivs;
-  const unsigned int hidden;
-  const unsigned char c;
-} flag_list[] = {
-  { OPER_FLAG_ADMIN,       OPER_FLAG_HIDDEN_ADMIN,  'A' },
-  { OPER_FLAG_DIE,         0,                       'D' },
-  { OPER_FLAG_GLINE,       0,                       'G' },
-  { OPER_FLAG_REHASH,      0,                       'H' },
-  { OPER_FLAG_K,           0,                       'K' },
-  { OPER_FLAG_N,           0,                       'N' },
-  { OPER_FLAG_GLOBAL_KILL, 0,                       'O' },
-  { OPER_FLAG_REMOTE,      0,                       'R' },
-  { OPER_FLAG_UNKLINE,     0,                       'U' },
-  { OPER_FLAG_X,           0,                       'X' },
-  { 0, 0, '\0' }
-};
-
-char *
-oper_privs_as_string(const unsigned int port)
-{
-  static char privs_out[12];
-  char *privs_ptr = privs_out;
-  unsigned int i;
-
-  for (i = 0; flag_list[i].oprivs; i++)
-  {
-    if ((port & flag_list[i].oprivs) &&
-        (port & flag_list[i].hidden) == 0)
-      *privs_ptr++ = flag_list[i].c;
-    else
-      *privs_ptr++ = ToLowerTab[flag_list[i].c];
-  }
-
-  *privs_ptr = '\0';
-
-  return(privs_out);
 }
 
 /*

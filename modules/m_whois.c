@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  m_whois.c: Shows who a user is.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_whois.c,v 1.3 2003/12/03 18:17:28 nenolod Exp $
+ *  $Id: m_whois.c,v 1.4 2003/12/13 02:12:27 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -82,7 +82,7 @@ _moddeinit(void)
   mod_del_cmd(&whois_msgtab);
 }
 
-const char *_version = "$Revision: 1.3 $";
+const char *_version = "$Revision: 1.4 $";
 #endif
 
 /* m_whois
@@ -433,16 +433,10 @@ whois_person(struct Client *source_p,struct Client *target_p, int glob)
     if ((glob) || (MyClient(source_p) && (IsOper(source_p) ||
         !ConfigServerHide.hide_servers)) || (source_p == target_p))
     {
-      if (ConfigFileEntry.hide_spoof_ips)
-        sendto_one(source_p, form_str(RPL_WHOISACTUALLY), 
-		   me.name, source_p->name, target_p->name,
-                   !IsIPSpoof(target_p) ?
-		   target_p->localClient->sockhost : "255.255.255.255");
-      else
+      if (IsOperAuspex(source_p)
         sendto_one(source_p, form_str(RPL_WHOISACTUALLY),
                    me.name, source_p->name, target_p->name,
-                   IsIPSpoof(target_p) && IsOper(target_p) ?
-                   "255.255.255.255" : target_p->localClient->sockhost);
+                   target_p->localClient->sockhost);
 
       sendto_one(source_p, form_str(RPL_WHOISIDLE),
                  me.name, source_p->name, target_p->name,
