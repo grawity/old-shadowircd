@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.c,v 1.6 2004/02/09 22:43:42 nenolod Exp $
+ *  $Id: client.c,v 1.7 2004/02/12 01:47:12 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -145,7 +145,6 @@ make_client(struct Client *from)
 
   client_p->hnext  = client_p;
   client_p->status = STAT_UNKNOWN;
-  client_p->persistpw[0] = '\0';
   strcpy(client_p->username, "unknown");
 
   return(client_p);

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: packet.c,v 1.6 2004/02/05 20:15:48 nenolod Exp $
+ *  $Id: packet.c,v 1.7 2004/02/12 01:47:12 nenolod Exp $
  */
 #include "stdinc.h"
 #include "tools.h"
@@ -429,9 +429,10 @@ read_packet(int fd, void *data)
    *     -- adrian
    */
 #ifdef HAVE_LIBCRYPTO
-  if (IsSSL(client_p))
+  if (IsSSL(client_p)) {
     length = safe_SSL_read(client_p, readBuf, READBUF_SIZE);
-  else
+    printf("read: %s", readBuf);
+  } else
 #endif
     length = recv(fd_r, readBuf, READBUF_SIZE, 0);
 

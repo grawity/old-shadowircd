@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_bsd.c,v 1.9 2004/02/05 22:39:31 nenolod Exp $
+ *  $Id: s_bsd.c,v 1.10 2004/02/12 01:47:12 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -484,12 +484,15 @@ add_connection(struct Listener* listener, int fd)
       return;
     }
   }
-#endif
-  if (new_ssl != 1)
+
+  if (IsSSL(new_client) && new_ssl)
   {
-    start_auth(new_client);
+    /* If we are SSL, we handle things specially. */
+    comm_setselect(fd, FDLIST_SERVER, COMM_SELECT_READ|COMM_SELECT_WRITE, comm_tryssl_callback, new_client, 0);
   }
-  comm_setselect(fd, FDLIST_SERVER, COMM_SELECT_WRITE, comm_tryssl_callback, new_client, 0);
+  else
+#endif
+    start_auth(new_client);
 }
 
 /*
@@ -799,6 +802,8 @@ comm_tryssl_callback(int fd, void *data)
   fdlist = FDLIST_SERVER;
   doauth = 1;
 
+  printf("comm_tryssl_callback called. client_ssl = %d\n", IsSSL(new_client) ? 1 : 0);
+
 #ifdef HAVE_LIBCRYPTO
   if (IsSSL(new_client))
   {
@@ -806,20 +811,27 @@ comm_tryssl_callback(int fd, void *data)
     {
       if (!safe_SSL_accept(new_client, new_client->localClient->fd))
       {
-        dead_link_on_read(new_client, errno);
+        /* BAD SAKURA!
+         *
+         * there isn't proper checks on ssl. it could fail for any reason!
+         *  --nenolod
+         *  dead_link_on_read(new_client, errno); 
+         */
         return;
       }
       else
       {
-        comm_setselect(fd, fdlist, COMM_SELECT_WRITE, comm_tryssl_callback, new_client, 0);
+        comm_setselect(fd, fdlist, COMM_SELECT_READ|COMM_SELECT_WRITE, comm_tryssl_callback, new_client, 0);
         return;
       }
+    }
+    else if (!IsDoingAuth(new_client))
+    {
+      start_auth(new_client);
     }
   }
 #endif
 
-  if (doauth == 1)
-    start_auth(new_client);
 }
 
 /*

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: send.c,v 1.6 2004/02/05 20:15:48 nenolod Exp $
+ *  $Id: send.c,v 1.7 2004/02/12 01:47:12 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -282,7 +282,10 @@ send_queued_write(struct Client *to)
 #ifdef HAVE_LIBCRYPTO
       if(IsSSL(to))
       {
-        if ((retlen = safe_SSL_write(to, first->data, first->size)) <= 0)
+        retlen = safe_SSL_write(to, first->data, first->size);
+        printf("safe_ssl_write: writing: %s\n", first->data);
+        printf("safe_ssl_write: %d written\n", retlen);
+        if (retlen <= 0)
          break;
       }
       else

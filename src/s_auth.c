@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_auth.c,v 1.3 2004/02/05 22:39:31 nenolod Exp $
+ *  $Id: s_auth.c,v 1.4 2004/02/12 01:47:12 nenolod Exp $
  */
 
 /*
@@ -411,6 +411,9 @@ start_auth(struct Client *client)
 {
   struct AuthRequest *auth = NULL;
 
+  if (client->flags & FLAGS_DOINGAUTH)
+    return;
+
   assert(client != NULL);
 
   if (client == NULL)
@@ -428,6 +431,8 @@ start_auth(struct Client *client)
   gethost_byaddr(&client->localClient->ip, client->localClient->dns_query);
   SetDNSPending(auth);
   dlinkAdd(auth, &auth->dns_node, &auth_doing_dns_list);
+
+  client->flags |= FLAGS_DOINGAUTH;
 
   if(ConfigFileEntry.disable_auth == 0)
     (void)start_auth_query(auth);
