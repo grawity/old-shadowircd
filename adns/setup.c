@@ -25,7 +25,7 @@
  *  along with this program; if not, write to the Free Software Foundation,
  *  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
  *
- * $Id: setup.c,v 1.3 2004/09/06 22:47:46 nenolod Exp $
+ * $Id: setup.c,v 1.4 2004/09/07 00:03:46 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -33,6 +33,7 @@
 #include "s_bsd.h"
 #include "internal.h"
 #include "s_log.h"
+#include "inet_misc.h"
 
 /* For some reason BSD/OS doesn't define INADDR_LOOPBACK */
 #ifndef INADDR_LOOPBACK

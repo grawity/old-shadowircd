@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_bsd.c,v 1.3 2004/05/22 18:14:50 nenolod Exp $
+ *  $Id: s_bsd.c,v 1.4 2004/09/07 00:03:46 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -40,7 +40,7 @@
 #include "numeric.h"
 #include "packet.h"
 #include "reject.h"
-#include "irc_res.h"
+#include "res.h"
 #include "inet_misc.h"
 #include "restart.h"
 #include "s_auth.h"

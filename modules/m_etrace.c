@@ -28,7 +28,7 @@
  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *
- *  $Id: m_etrace.c,v 1.1 2004/04/30 18:14:15 nenolod Exp $
+ *  $Id: m_etrace.c,v 1.2 2004/09/07 00:03:46 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -40,7 +40,7 @@
 #include "hash.h"
 #include "irc_string.h"
 #include "ircd.h"
-#include "irc_res.h"
+#include "res.h"
 #include "irc_getnameinfo.h"
 #include "numeric.h"
 #include "fdlist.h"
@@ -71,7 +71,7 @@ _moddeinit(void)
 {
 	mod_del_cmd(&etrace_msgtab);
 }
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 

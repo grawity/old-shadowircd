@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_auth.c,v 1.2 2004/06/09 05:45:02 nenolod Exp $
+ *  $Id: s_auth.c,v 1.3 2004/09/07 00:03:46 nenolod Exp $
  */
 
 /*
@@ -47,7 +47,7 @@
 #include "ircdauth.h"
 #include "numeric.h"
 #include "packet.h"
-#include "irc_res.h"
+#include "res.h"
 #include "s_bsd.h"
 #include "s_log.h"
 #include "s_stats.h"

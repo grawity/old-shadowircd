@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.c,v 1.2 2004/06/09 05:45:02 nenolod Exp $
+ *  $Id: client.c,v 1.3 2004/09/07 00:03:46 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -50,7 +50,7 @@
 #include "hostmask.h"
 #include "balloc.h"
 #include "listener.h"
-#include "irc_res.h"
+#include "res.h"
 #include "userhost.h"
 
 /* Pointer to beginning of Client list */

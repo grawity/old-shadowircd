@@ -19,13 +19,13 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_auth.h,v 1.1 2004/04/30 18:14:23 nenolod Exp $
+ *  $Id: s_auth.h,v 1.2 2004/09/07 00:03:46 nenolod Exp $
  */
 
 #ifndef INCLUDED_s_auth_h
 #define INCLUDED_s_auth_h
 
-#include "irc_res.h"
+#include "res.h"
 
 /* How many auth allocations to allocate in a block. I'm guessing that
  * a good number here is 64, because these are temporary and don't live

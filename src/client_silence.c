@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client_silence.c,v 1.6 2004/06/09 05:45:02 nenolod Exp $
+ *  $Id: client_silence.c,v 1.7 2004/09/07 00:03:46 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -51,7 +51,7 @@
 #include "hostmask.h"
 #include "balloc.h"
 #include "listener.h"
-#include "irc_res.h"
+#include "res.h"
 #include "userhost.h"
 
 static int check_silenced(struct Client *, const char *, const char *, const char *);

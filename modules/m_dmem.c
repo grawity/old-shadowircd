@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_dmem.c,v 1.1 2004/04/30 18:14:18 nenolod Exp $
+ *  $Id: m_dmem.c,v 1.2 2004/09/07 00:03:46 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -31,7 +31,7 @@
 #include "ircd_defs.h"
 #include "list.h"
 #include "numeric.h"
-#include "irc_res.h"
+#include "res.h"
 #include "s_conf.h"
 #include "s_log.h"
 #include "send.h"
@@ -59,7 +59,7 @@ _moddeinit(void)
   mod_del_cmd(&dmem_msgtab);
 }
 
-const char *_version = "$Revision: 1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 #ifdef MEMDEBUG
 void ReportAllocated(struct Client*);

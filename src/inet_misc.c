@@ -1,5 +1,5 @@
 /* inet_misc.c - inet_pton and inet_ntop for those who don't have it.
- * $Id: inet_misc.c,v 1.1 2004/04/30 18:13:40 nenolod Exp $
+ * $Id: inet_misc.c,v 1.2 2004/09/07 00:03:46 nenolod Exp $
  *
  * Copyright (c) 1983, 1990, 1993
  *		The Regents of the University of California.  All rights reserved.
@@ -43,7 +43,7 @@
  */
 
 #include "stdinc.h"
-#include "irc_res.h"
+#include "res.h"
 
 #ifdef NO_IN6ADDR_ANY
 /* Stolen from glibc */

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_rehash.c,v 1.2 2004/04/30 22:57:59 nenolod Exp $
+ *  $Id: m_rehash.c,v 1.3 2004/09/07 00:03:46 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -30,7 +30,7 @@
 #include "ircd.h"
 #include "list.h"
 #include "numeric.h"
-#include "irc_res.h"
+#include "res.h"
 #include "s_conf.h"
 #include "s_log.h"
 #include "send.h"
@@ -59,7 +59,7 @@ _moddeinit(void)
   mod_del_cmd(&rehash_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 /*

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.c,v 1.7 2004/08/21 08:11:53 nenolod Exp $
+ *  $Id: s_conf.c,v 1.8 2004/09/07 00:03:46 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -51,7 +51,7 @@
 #include "send.h"
 #include "fileio.h"
 #include "memory.h"
-#include "irc_res.h"
+#include "res.h"
 #include "userhost.h"
 #include "reject.h"
 

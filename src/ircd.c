@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd.c,v 1.9 2004/08/26 05:42:19 nenolod Exp $
+ *  $Id: ircd.c,v 1.10 2004/09/07 00:03:46 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -45,7 +45,7 @@
 #include "hostmask.h"
 #include "numeric.h"
 #include "parse.h"
-#include "irc_res.h"
+#include "res.h"
 #include "restart.h"
 #include "s_auth.h"
 #include "s_bsd.h"
