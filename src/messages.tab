@@ -16,7 +16,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *   $Id: messages.tab,v 1.13 2004/01/15 23:15:11 nenolod Exp $
+ *   $Id: messages.tab,v 1.14 2004/01/15 23:57:05 nenolod Exp $
  */
 
 static struct NumericInfo replies[] = {
@@ -24,7 +24,7 @@ static struct NumericInfo replies[] = {
 /* 001 */  {"RPL_WELCOME", ":%s 001 %s :Welcome to the %s Internet Relay Chat Network %s", NULL},
 /* 002 */  {"RPL_YOURHOST", ":%s 002 %s :Your host is %s, running version %s", NULL},
 /* 003 */  {"RPL_CREATED", ":%s 003 %s :This server was created %s", NULL},
-/* 004 */  {"RPL_MYINFO", ":%s 004 %s %s %s abcdeEfghiklnorsuvwxyz bcdeEfFhiIkKlLmnNoOpPqsStTuvz bdehkloquI", NULL},
+/* 004 */  {"RPL_MYINFO", ":%s 004 %s %s %s aAbcdeEfghHiIklnoOrRsuvwxyz bcdeEfFhiIkKlLmnNoOpPqrsStTuvz bdehkloquI", NULL},
 /* 005 */  {"RPL_ISUPPORT", ":%s 005 %s %s :are supported by this server", NULL},
 /* 006 */  {NULL, NULL, NULL},
 /* 007 */  {NULL, NULL, NULL},

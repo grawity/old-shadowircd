@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.20 2004/01/15 23:19:00 nenolod Exp $
+ *  $Id: s_user.c,v 1.21 2004/01/15 23:57:05 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1029,27 +1029,9 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
         case '-':
           what = MODE_DEL;
           break;
-	case 'A':
-        case 'O':
-        case 'R':
-          if (!IsServer(source_p))
-             break;
         case 'H':
           if (!IsOper(target_p))
              break;
-        case 'e':
-          /* Unless we are a server, we can't change this mode. */
-          if (!IsServer(source_p))
-             break;
-
-          /* We're a server, make the change... */
-          if (what == MODE_ADD)
-             target_p->umodes |= UMODE_IDENTIFY;
-          else
-             target_p->umodes &= ~UMODE_IDENTIFY;
-          
-          /* ...then break out. --nenolod */
-	  break;
         case 'o':
           if (what == MODE_ADD)
           {
@@ -1093,6 +1075,16 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
         case '\r':
         case '\t':
           break;
+
+	/*
+	 * just some quick checks on services modes
+	 */
+        case 'A':
+        case 'O':
+        case 'R':
+	case 'e':
+          if (!IsServer(source_p))
+             break;
 
         default:
           if ((flag = user_modes_from_c_to_bitmask[(unsigned char)*m]))
