@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_bsd.c,v 1.5 2004/09/07 01:00:03 nenolod Exp $
+ *  $Id: s_bsd.c,v 1.6 2004/09/07 02:38:05 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -639,7 +639,7 @@ comm_connect_tcp(int fd, const char *host, unsigned short port,
         F->connect.data = data;
                                                                                                                                                
         memset(&F->connect.hostaddr, 0, sizeof(F->connect.hostaddr));
-        struct sockaddr_in *in = (struct sockaddr_in *)&F->connect.hostaddr;
+        struct sockaddr_in *in = (struct sockaddr_in *)&F->connect.hostaddr.ss;
         in->sin_port = htons(port);
         in->sin_family = AF_INET;
         ipptr = &in->sin_addr;
@@ -723,6 +723,7 @@ static void
 comm_connect_dns_callback(void *vptr, adns_answer * reply)
 {
         fde_t *F = vptr;
+        struct sockaddr_in *in = (struct sockaddr_in *)&F->connect.hostaddr.ss;
                                                                                                                                                
         if(!reply)
         {
@@ -749,6 +750,10 @@ comm_connect_dns_callback(void *vptr, adns_answer * reply)
          * the DNS record around, and the DNS cache is gone anyway..
          *     -- adrian
          */
+
+	/* irc_ssaddr sucks --nenolod */
+	in->sin_addr.s_addr = reply->rrs.addr->addr.inet.sin_addr.s_addr;
+
         /* Now, call the tryconnect() routine to try a connect() */
         MyFree(reply);
         comm_setselect(F->fd, FDLIST_SERVER, COMM_SELECT_WRITE,

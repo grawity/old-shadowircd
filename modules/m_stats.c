@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_stats.c,v 1.3 2004/08/21 08:11:53 nenolod Exp $
+ *  $Id: m_stats.c,v 1.4 2004/09/07 02:38:05 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -77,7 +77,7 @@ _moddeinit(void)
   mod_del_cmd(&stats_msgtab);
 }
 
-const char *_version = "$Revision: 1.3 $";
+const char *_version = "$Revision: 1.4 $";
 #endif
 
 static char *parse_stats_args(int, char **, int *, int *);
@@ -314,7 +314,7 @@ mo_stats(struct Client *client_p, struct Client *source_p,
 static void
 stats_dns_servers(struct Client *source_p)
 {
-  report_dns_servers(source_p);
+  report_adns_servers(source_p);
 }
 
 static void

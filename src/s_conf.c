@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.c,v 1.9 2004/09/07 01:00:03 nenolod Exp $
+ *  $Id: s_conf.c,v 1.10 2004/09/07 02:38:05 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -157,10 +157,10 @@ conf_dns_callback(void *vptr, adns_answer * reply)
 
         if(reply && reply->status == adns_s_ok)
         {
-                struct irc_ssaddr *in = (struct irc_ssaddr *)&server_p->ipnum;
+                struct sockaddr_in *in = (struct sockaddr_in *)&server_p->ipnum.ss;
                 server_p->ipnum.ss_len = sizeof(struct sockaddr_in);
-		in->ss_port = 0;
-                in->ss.sin_addr.s_addr = reply->rrs.addr->addr.inet.sin_addr.s_addr;
+		server_p->ipnum.ss_port = 0;
+                in->sin_addr.s_addr = reply->rrs.addr->addr.inet.sin_addr.s_addr;
                 MyFree(reply);
         }
                                                                                                                                                
@@ -183,7 +183,7 @@ conf_dns_lookup(struct AccessItem *aconf)
     aconf->dns_query = MyMalloc(sizeof(struct DNSQuery));
     aconf->dns_query->ptr = aconf;
     aconf->dns_query->callback = conf_dns_callback;
-    gethost_byname(aconf->host, aconf->dns_query);
+    adns_gethost(aconf->host, AF_INET, aconf->dns_query);
   }
 }
 
@@ -337,7 +337,7 @@ delete_conf_item(struct ConfItem *conf)
     aconf = (struct AccessItem *)map_to_conf(conf);
     if (aconf->dns_query != NULL)
     {
-      delete_resolver_queries(aconf->dns_query);
+      delete_adns_queries(aconf->dns_query);
       MyFree(aconf->dns_query);
     }
     if (aconf->passwd != NULL)

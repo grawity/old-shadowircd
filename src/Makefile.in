@@ -1,7 +1,7 @@
 #
 # Makefile.in for ircd/src
 #
-# $Id: Makefile.in,v 1.11 2004/09/06 23:01:29 nenolod Exp $
+# $Id: Makefile.in,v 1.12 2004/09/07 02:38:05 nenolod Exp $
 #
 @SET_MAKE@
 
@@ -74,6 +74,8 @@ BASE_SRCS =	\
  hash.c	\
  hook.c	\
  hostmask.c \
+ irc_getnameinfo.c \
+ irc_getaddrinfo.c \
  irc_string.c \
  ircd.c \
  ircd_signal.c \

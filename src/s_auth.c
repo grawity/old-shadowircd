@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_auth.c,v 1.4 2004/09/07 01:00:02 nenolod Exp $
+ *  $Id: s_auth.c,v 1.5 2004/09/07 02:38:05 nenolod Exp $
  */
 
 /*
@@ -94,7 +94,7 @@ static void sendheader (struct Client *c, int r)
     if (IsSSL(c))
        safe_SSL_write(c, HeaderMessages[(r)].message, HeaderMessages[(r)].length);
     else
-       send((c)->localClient->fd, HeaderMessages[(r)].message, HeaderMessages[(r)].length, 0); \
+       send((c)->localClient->fd, HeaderMessages[(r)].message, HeaderMessages[(r)].length, 0);
   }
 }
 
@@ -102,7 +102,7 @@ static void sendheader (struct Client *c, int r)
 static void sendheader (struct Client *c, int r)
 {
   if (ConfigFileEntry.send_connection_headers != 0)
-    send((c)->localClient->fd, HeaderMessages[(r)].message, HeaderMessages[(r)].length, 0); \
+    send((c)->localClient->fd, HeaderMessages[(r)].message, HeaderMessages[(r)].length, 0);
 }
 #endif
 
@@ -140,7 +140,7 @@ make_auth_request(struct Client *client)
     (struct AuthRequest *)MyMalloc(sizeof(struct AuthRequest));
   request->fd      = -1;
   request->client  = client;
-  request->timeout = CurrentTime + CONNECTTIMEOUT;
+  request->timeout = CurrentTime + 5;
   return(request);
 }
 
@@ -172,6 +172,7 @@ auth_dns_callback(void *vptr, adns_answer * reply)
 {                                                                                                                                               
         struct AuthRequest *auth = (struct AuthRequest *) vptr;
         ClearDNSPending(auth);
+	auth->client->flags &= ~FLAGS_DOINGAUTH;
         if(reply && (reply->status == adns_s_ok))
         {
                 if(strlen(*reply->rrs.str) <= HOSTLEN)
@@ -420,6 +421,47 @@ timeout_auth_queries_event(void *notused)
   DLINK_FOREACH_SAFE(ptr, next_ptr, auth_doing_ident_list.head)
   {
     auth = ptr->data;
+
+    printf("checking for %X", auth->client);
+
+    if (auth->timeout < CurrentTime)
+    {
+      if (auth->fd >= 0)
+	fd_close(auth->fd);
+
+      if (IsDoingAuth(auth))
+	sendheader(auth->client, REPORT_FAIL_ID);
+
+      if (IsDNSPending(auth))
+      {
+	struct Client *client_p=auth->client;
+
+	ClearDNSPending(auth);
+	dlinkDelete(&auth->dns_node, &auth_doing_dns_list);
+	if (client_p->localClient->dns_query != NULL)
+    {
+	  delete_adns_queries(client_p->localClient->dns_query);
+      MyFree(client_p->localClient->dns_query);
+    }
+	auth->client->localClient->dns_query = NULL;
+	sendheader(client_p, REPORT_FAIL_DNS);
+      }
+      ilog(L_INFO, "DNS/AUTH timeout %s",
+	   get_client_name(auth->client, SHOW_IP));
+
+      auth->client->since = CurrentTime;
+      if (IsAuthPending(auth))
+	dlinkDelete(&auth->ident_node, &auth_doing_ident_list);
+      release_auth_client(auth->client);
+      MyFree(auth);
+    }
+  }
+
+  DLINK_FOREACH_SAFE(ptr, next_ptr, auth_doing_dns_list.head)
+  {
+    auth = ptr->data;
+
+    printf("checking for %X", auth->client);
 
     if (auth->timeout < CurrentTime)
     {

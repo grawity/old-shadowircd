@@ -24,7 +24,7 @@
  *  along with this program; if not, write to the Free Software Foundation,
  *  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
  *
- * $Id: types.c,v 1.1 2004/09/06 22:21:07 nenolod Exp $
+ * $Id: types.c,v 1.2 2004/09/07 02:38:05 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -820,7 +820,7 @@ static adns_status pa_ptr6(const parseinfo *pai, int dmstart, int max, void *dat
     ap->len= sizeof(struct sockaddr_in6);
     memset(&ap->addr,0,sizeof(ap->addr.inet6));
     ap->addr.inet6.sin6_family=AF_INET6;
-    inetpton(AF_INET6, ip6, ap->addr.inet6.sin6_addr.s6_addr);
+    inet_pton(AF_INET6, ip6, ap->addr.inet6.sin6_addr.s6_addr);
   }
 
   st= adns__mkquery_frdgram(pai->ads, &pai->qu->vb, &id,
@@ -899,7 +899,7 @@ static adns_status pa_ptr6_old(const parseinfo *pai, int dmstart, int max, void 
     ap->len= sizeof(struct sockaddr_in6);
     memset(&ap->addr,0,sizeof(ap->addr.inet6));
     ap->addr.inet6.sin6_family=AF_INET6;
-    inetpton(AF_INET6, ip6, ap->addr.inet6.sin6_addr.s6_addr);
+    inet_pton(AF_INET6, ip6, ap->addr.inet6.sin6_addr.s6_addr);
   }
 
   st= adns__mkquery_frdgram(pai->ads, &pai->qu->vb, &id,

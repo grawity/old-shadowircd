@@ -20,7 +20,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_bsd_devpoll.c,v 1.2 2004/09/07 00:03:46 nenolod Exp $
+ *  $Id: s_bsd_devpoll.c,v 1.3 2004/09/07 02:38:05 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -36,8 +36,8 @@
 # endif
 #endif
 
-#include "fdlist.h"
 #include "s_bsd.h"
+#include "fdlist.h"
 #include "client.h"
 #include "common.h"
 #include "irc_string.h"
