@@ -1,7 +1,7 @@
 #
 # Makefile.in for ircd/src
 #
-# $Id: Makefile.in,v 1.5 2004/09/06 22:47:46 nenolod Exp $
+# $Id: Makefile.in,v 1.6 2004/09/06 23:01:29 nenolod Exp $
 #
 CC		= @CC@
 INSTALL		= @INSTALL@
@@ -58,7 +58,7 @@ libadns.a: ${OBJS}
 .c.o:
 	${CC} ${CPPFLAGS} ${CFLAGS} -c $<
 
-.PHONY: .depend clean distclean
+.PHONY: clean distclean
 
 install: 
 

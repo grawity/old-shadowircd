@@ -51,14 +51,13 @@
  *  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  *
- *  $Id: adns.h,v 1.2 2004/09/06 22:28:29 nenolod Exp $
+ *  $Id: adns.h,v 1.3 2004/09/06 23:01:29 nenolod Exp $
  */
 
 #ifndef ADNS_H_INCLUDED
 #define ADNS_H_INCLUDED
 
 #include "stdinc.h"
-#include "s_bsd.h"
 #include "ircd.h"
 #include "ircd_defs.h"
 #include "irc_string.h"
@@ -873,4 +872,7 @@ const char *adns_errtypeabbrev(adns_status st);
  */
 
 int adns__rereadconfig(adns_state st);
+
+#include "s_bsd.h"
+
 #endif

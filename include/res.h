@@ -21,7 +21,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: res.h,v 1.1 2004/09/06 22:47:46 nenolod Exp $
+ *  $Id: res.h,v 1.2 2004/09/06 23:01:29 nenolod Exp $
  */
 
 #ifndef _RES_H_INCLUDED
@@ -29,6 +29,7 @@
 
 #include "setup.h"
 #include "ircd_defs.h"
+#include "fileio.h"
 #include "adns.h"
 
 #define DNS_BLOCK_SIZE 64

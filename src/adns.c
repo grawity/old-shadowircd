@@ -21,13 +21,13 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: adns.c,v 1.3 2004/09/06 22:51:14 nenolod Exp $
+ *  $Id: adns.c,v 1.4 2004/09/06 23:01:29 nenolod Exp $
  */
 
 #include "stdinc.h"
 #include "setup.h"
 
-#include "irc_res.h"
+#include "res.h"
 #include "send.h"
 #include "s_conf.h"
 #include "s_bsd.h"
