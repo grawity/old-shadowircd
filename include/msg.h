@@ -204,7 +204,6 @@ extern int m_fjoin (aClient *, aClient *, int, char **);
 extern int m_fmode (aClient *, aClient *, int, char **);
 extern int m_client (aClient *, aClient *, int, char **);
 extern int m_netctrl (aClient *, aClient *, int, char **);
-extern int m_smode (aClient *, aClient *, int, char **);
 extern int  m_resynch(aClient *, aClient *, int, char **);
 
 #ifdef MSGTAB
@@ -309,7 +308,6 @@ struct Message msgtab[] = {
   {MSG_FMODE, m_fmode, 0, MAXPARA, 1, 0, 0, 0L},
  {MSG_CLIENT, m_client, 0, MAXPARA, 1, 1, 0, 0L},
  {MSG_NETCTRL, m_netctrl, 0, MAXPARA, 1, 1, 0, 0L},
- {MSG_SMODE, m_smode, 0, MAXPARA, 1, 0, 0, 0L},
  {MSG_RESYNCH, m_resynch, 0, MAXPARA, 1, 0, 0, 0L},
   {(char *) 0, (int (*)()) 0, 0, 0, 0, 0, 0, 0L}
 };

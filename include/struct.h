@@ -295,6 +295,9 @@ struct Capability {
 #define CAP_UID		0x00000080
 #define CAP_CLI		0x00000100
 
+#define CAPABS		(CAP_NOQUIT | CAP_EXCEPT | CAP_INVEX | CAP_QUIET | CAP_KNOCK | CAP_HUB | \
+			 CAP_GLINE | CAP_UID | CAP_CLI)
+
 #define SetTS3(x)   	((x)->capabilities |= CAPAB_TS3)
 #define IsTS3(x)       	((x)->capabilities & CAPAB_TS3)
 

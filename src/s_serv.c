@@ -185,8 +185,8 @@ m_version (aClient * client_p, aClient * source_p, int parc, char *parv[])
   return 0;
 }
 
-send_capabilities(struct Client *client_p, struct ConfItem *aconf,
-                  int cap_can_send, int enc_can_send )
+void
+send_capabilities(struct Client *client_p, int cap_can_send)
 {
   struct Capability *cap;
   char  msgbuf[BUFSIZE];
@@ -1324,51 +1324,7 @@ m_server_estab (aClient * client_p)
 
       /* Pass my info to the new server */
 
-#if defined(HAVE_ENCRYPTION_ON) && defined(TS5)
-      if (!WantDKEY (client_p))
-	sendto_one (client_p,
-		    "CAPAB TS5 NOQUIT SSJ3 SSJ4 SSJ5 BURST UNCONNECT ZIP NICKIP TSMODE CLIENT"
-# ifdef INET6
-		    " IPV6"
-# endif
-	  );
-      else
-	sendto_one (client_p,
-		    "CAPAB TS5 NOQUIT SSJ3 SSJ4 SSJ5 BURST UNCONNECT DKEY ZIP NICKIP TSMODE CLIENT"
-# ifdef INET6
-		    " IPV6"
-# endif
-	  );
-#elif defined(HAVE_ENCRYPTION_ON)
-      if (!WantDKEY (client_p))
-	sendto_one (client_p,
-		    "CAPAB TS3 NOQUIT SSJ3 SSJ4 SSJ5 BURST UNCONNECT ZIP NICKIP TSMODE CLIENT"
-# ifdef INET6
-		    " IPV6"
-# endif
-	  );
-      else
-	sendto_one (client_p,
-		    "CAPAB TS3 NOQUIT SSJ3 SSJ4 SSJ5 BURST UNCONNECT DKEY ZIP NICKIP TSMODE CLIENT"
-# ifdef INET6
-		    " IPV6"
-# endif
-	  );
-#elif defined(TS5)
-      sendto_one (client_p,
-		  "CAPAB TS5 NOQUIT SSJ3 SSJ4 SSJ5 BURST UNCONNECT ZIP NICKIP TSMODE CLIENT"
-# ifdef INET6
-		  " IPV6"
-# endif
-	);
-#else
-      sendto_one (client_p,
-		  "CAPAB TS3 NOQUIT SSJ3 SSJ4 SSJ5 BURST UNCONNECT ZIP NICKIP TSMODE CLIENT"
-# ifdef INET6
-		  " IPV6"
-# endif
-	);
-#endif
+      send_capabilities (client_p, CAPABS);
 
       sendto_one (client_p, "SERVER %s 1 :%s",
 		  my_name_for_link (me.name, aconf),
@@ -5008,7 +4964,7 @@ m_die (aClient * client_p, aClient * source_p, int parc, char *parv[])
   return 0;
 }
 
-int m_capab(struct aClient *client_p, struct aClient *source_p,
+int m_capab(aClient *client_p, aClient *source_p,
                     int parc, char *parv[])
 {
   struct Capability *cap;

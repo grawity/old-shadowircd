@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_bsd.c,v 1.2 2003/11/04 07:35:16 nenolod Exp $
+ *  $Id: s_bsd.c,v 1.3 2003/11/05 05:05:49 nenolod Exp $
  *
  */
 
@@ -1031,54 +1031,7 @@ completed_connection (aClient * client_p)
   if (!BadPtr (aconf->passwd))
     sendto_one (client_p, "PASS %s :TS", aconf->passwd);
 
-  /* pass on our capabilities to the server we /connect'd */
-  /* Ugly ugly ugly ugly - ShadowMaster */
-
-#if defined(HAVE_ENCRYPTION_ON) && defined(TS5)
-  if (!(nconf->port & CAPAB_DODKEY))
-    sendto_one (client_p,
-		"CAPAB TS5 NOQUIT SSJ3 SSJ4 SSJ5 BURST UNCONNECT ZIP NICKIP TSMODE CLIENT"
-#ifdef INET6
-		" IPV6"
-#endif
-      );
-  else
-    sendto_one (client_p,
-		"CAPAB TS5 NOQUIT SSJ3 SSJ4 SSJ5 BURST UNCONNECT DKEY ZIP NICKIP TSMODE CLIENT"
-#ifdef INET6
-		" IPV6"
-#endif
-      );
-#elif defined(HAVE_ENCRYPTION)
-  if (!(nconf->port & CAPAB_DODKEY))
-    sendto_one (client_p,
-		"CAPAB TS3 NOQUIT SSJ3 SSJ4 SSJ5 BURST UNCONNECT ZIP NICKIP TSMODE CLIENT"
-#ifdef INET6
-		" IPV6"
-#endif
-      );
-  else
-    sendto_one (client_p,
-		"CAPAB TS3 NOQUIT SSJ3 SSJ4 SSJ5 BURST UNCONNECT DKEY ZIP NICKIP TSMODE CLIENT"
-#ifdef INET6
-		" IPV6"
-#endif
-      );
-#elif defined(TS5)
-  sendto_one (client_p,
-	      "CAPAB TS5 NOQUIT SSJ3 SSJ4 SSJ5 BURST UNCONNECT ZIP NICKIP TSMODE CLIENT"
-#ifdef INET6
-	      " IPV6"
-#endif
-    );
-#else
-  sendto_one (client_p,
-	      "CAPAB TS3 NOQUIT SSJ3 SSJ4 SSJ5 BURST UNCONNECT ZIP NICKIP TSMODE CLIENT"
-#ifdef INET6
-	      " IPV6"
-#endif
-    );
-#endif
+  send_capabilities (client_p, CAPABS);
 
   aconf = nconf;
   sendto_one (client_p, "SERVER %s 1 :%s",
