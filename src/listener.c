@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: listener.c,v 1.5 2004/01/12 20:20:13 nenolod Exp $
+ *  $Id: listener.c,v 1.6 2004/01/12 20:28:48 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -310,7 +310,7 @@ add_listener(int port, const char* vhost_ip)
   {
     /* add the ipv4 listener if we havent already */
     pass = 1;
-    add_listener(port, "0.0.0.0", 0);
+    add_listener(port, "0.0.0.0");
   }
   pass = 0;
 #endif

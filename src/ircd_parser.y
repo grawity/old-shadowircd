@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.8 2004/01/12 20:01:26 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.9 2004/01/12 20:28:48 nenolod Exp $
  */
 
 %{
@@ -1356,7 +1356,7 @@ port_items: port_items ',' port_item | port_item;
 port_item: NUMBER
 {
   if (ypass == 2)
-    add_listener($1, listener_address, 0);
+    add_listener($1, listener_address);
 } | NUMBER TWODOTS NUMBER
 {
   if (ypass == 2)
@@ -1365,7 +1365,7 @@ port_item: NUMBER
 
     for (i = $1; i <= $3; i++)
     {
-      add_listener(i, listener_address, 0);
+      add_listener(i, listener_address);
     }
   }
 };
