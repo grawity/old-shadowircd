@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.32 2004/02/18 18:07:33 nenolod Exp $
+ *  $Id: s_user.c,v 1.33 2004/03/11 05:31:50 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -567,7 +567,8 @@ register_local_user(struct Client *client_p, struct Client *source_p,
 
   make_virthost(source_p->host, source_p->virthost);
 
-  source_p->umodes |= UMODE_CLOAK;
+  if (ServerInfo.cloak_on_connect)
+    source_p->umodes |= UMODE_CLOAK;
 
   return(introduce_client(client_p, source_p));
 }
@@ -1356,14 +1357,16 @@ oper_up(struct Client *source_p)
    */
   strncpy(source_p->virthost, ServerInfo.network_operhost, HOSTLEN);
 
-  sendto_server (NULL, source_p, NULL, NOCAPS, NOCAPS, NOFLAGS,
-                 ":%s SVSCLOAK %s :%s", me.name, source_p->name,
-                 source_p->virthost);
+  if (ServerInfo.cloak_on_oper) {
+    sendto_server (NULL, source_p, NULL, NOCAPS, NOCAPS, NOFLAGS,
+                   ":%s SVSCLOAK %s :%s", me.name, source_p->name,
+                   source_p->virthost);
 
-  source_p->flags |= FLAGS_USERCLOAK;
+    source_p->flags |= FLAGS_USERCLOAK;
+  }
 
   sendto_realops_flags(UMODE_ALL, L_ALL, "%s (%s@%s) is now an operator",
-                       source_p->name, source_p->username, source_p->host);
+                       source_p->name, source_p->username, GET_CLIENT_HOST(source_p));
   send_umode_out(source_p, source_p, old);
   sendto_one(source_p, form_str(RPL_YOUREOPER), me.name, source_p->name);
   send_message_file(source_p, &ConfigFileEntry.opermotd);
