@@ -2,7 +2,7 @@
  * shadowircd: an advanced IRC daemon.
  * umodes.h: part of new usermodes system
  *
- * $Id: umodes.h,v 1.2 2004/05/12 20:41:49 nenolod Exp $
+ * $Id: umodes.h,v 1.3 2004/05/13 03:51:44 nenolod Exp $
  */
 
 /* nice flashy bitfield math, care of asuffield and dancer-ircd.
@@ -33,6 +33,9 @@ extern char umode_list[];
 
 /* the BITFIELD_SIZE define is used to create the bitfield. */
 #define BITFIELD_SIZE 64
+
+/* one bit is always needed for invalid modes as a seperator */
+#define MAX_UMODE_COUNT (BITFIELD_SIZE - 1)
 
 /* do not change this. ever. not without changing the macros -- they are
  * hardcoded for two 32-bit bitfields.

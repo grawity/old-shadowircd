@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.6 2004/05/12 21:22:13 nenolod Exp $
+ *  $Id: s_user.c,v 1.7 2004/05/13 03:51:44 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -66,7 +66,7 @@ static int check_x_line(struct Client *, struct Client *);
 static int introduce_client(struct Client *, struct Client *);
 
 FLAG_ITEM user_mode_table[256];
-char user_modes[256];
+char umode_list[256];
 
 /* memory is cheap. map 0-255 to equivalent mode */
 const unsigned int user_modes_from_c_to_bitmask[] =
@@ -78,7 +78,7 @@ const unsigned int user_modes_from_c_to_bitmask[] =
   0,                /* @ */
   UMODE_SVSADMIN,   /* A */
   0,                /* B */
-  UMODE_NOCOLOR,    /* C */
+  UMODE_NOCOLOUR,   /* C */
   UMODE_DEAF,       /* D */
   UMODE_PMFILTER,   /* E */
   0,                /* F */
@@ -647,9 +647,9 @@ introduce_client(struct Client *client_p, struct Client *source_p)
   static char ubuf[12];
 
   if (MyClient(source_p))
-    send_umode(source_p, source_p, 0, SEND_UMODES, ubuf);
+    send_umode(source_p, source_p, 0, 0, ubuf);
   else
-    send_umode(NULL, source_p, 0, SEND_UMODES, ubuf);
+    send_umode(NULL, source_p, 0, 0, ubuf);
 
   if (!*ubuf)
   {
@@ -1006,7 +1006,7 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
   }
 
   /* find flags already set for user */
-  setflags = target_p->umodes;
+  CopyUmodes(setflags, target_p->umodes);
 
   /* parse mode change string(s) */
   for (p = &parv[2]; p && *p; p++)
@@ -1038,7 +1038,7 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
             if (!IsOper(target_p))
               break;
 
-            ClearOper(target_p);
+            ClearUmode(target_p, UMODE_OPER);
             /* TODO: Remove all oper modes here from the user. */
             Count.oper--;
 
@@ -1210,7 +1210,7 @@ user_welcome(struct Client *source_p)
   sendto_one(source_p, form_str(RPL_CREATED),
              me.name,source_p->name, creation);
   sendto_one(source_p, form_str(RPL_MYINFO),
-             me.name, source_p->name, me.name, ircd_version, user_modes);
+             me.name, source_p->name, me.name, ircd_version, umode_list);
 
   show_isupport(source_p);
   show_lusers(source_p);
@@ -1301,8 +1301,10 @@ check_x_line(struct Client *client_p, struct Client *source_p)
 void
 oper_up(struct Client *source_p)
 {
-  oper_flags old = source_p->umodes;
+  user_modes old;
   struct AccessItem *oconf;
+
+  CopyUmodes(old, source_p->umodes);
 
   SetUmode(source_p, UMODE_OPER);
 
@@ -1335,7 +1337,7 @@ oper_up(struct Client *source_p)
                    ":%s SVSCLOAK %s :%s", me.name, source_p->name,
                    source_p->virthost);
 
-    if (!(HasUmode(source_p, UMODE_CLOAK))
+    if (!(HasUmode(source_p, UMODE_CLOAK)))
       SetUmode(source_p, UMODE_CLOAK);
 
     source_p->flags |= FLAGS_USERCLOAK;

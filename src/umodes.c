@@ -2,8 +2,9 @@
  * shadowircd: an advanced IRC daemon.
  * umodes.c: New usermode system, derived from dancer-ircd's usermode code.
  *
- * $Id: umodes.c,v 1.2 2004/05/12 20:41:49 nenolod Exp $
+ * $Id: umodes.c,v 1.3 2004/05/13 03:51:44 nenolod Exp $
  */
+#include "stdinc.h"
 #include "umodes.h"
 
 FLAG_ITEM user_mode_table[256] = {

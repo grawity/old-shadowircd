@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.4 2004/05/12 21:22:13 nenolod Exp $
+ *  $Id: client.h,v 1.5 2004/05/13 03:51:44 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -325,7 +325,6 @@ struct LocalUser
 #define IsUnknown(x)            ((x)->status == STAT_UNKNOWN)
 #define IsServer(x)             ((x)->status == STAT_SERVER)
 #define IsClient(x)             ((x)->status == STAT_CLIENT)
-#define IsService(x)		((x)->status == STAT_SERVICE)
 
 #define SetConnecting(x)        {(x)->status = STAT_CONNECTING; \
 				 (x)->handler = UNREGISTERED_HANDLER; }

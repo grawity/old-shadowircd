@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_grant.c,v 1.2 2004/05/12 21:22:13 nenolod Exp $
+ *  $Id: m_grant.c,v 1.3 2004/05/13 03:51:44 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -43,6 +43,7 @@
 #include "modules.h"
 #include "packet.h"
 #include "hash.h"
+#include "umodes.h"
 
 static void string_to_bitmask (char *, struct Client *);
 static void remove_from_bitmask (char *, struct Client *);
@@ -66,7 +67,7 @@ _moddeinit (void)
   mod_del_cmd (&grant_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 /* this is a struct, associating operator permissions with letters. */
@@ -159,7 +160,7 @@ mo_grant (struct Client *client_p, struct Client *source_p,
 	  int parc, char *parv[])
 {
   struct Client *target_p;
-  oper_flags old;
+  user_modes old;
   dlink_node *dm;
 
   if (!strcasecmp (parv[1], "GIVE"))
@@ -193,9 +194,9 @@ mo_grant (struct Client *client_p, struct Client *source_p,
 	}
 
       /* Since we're granting privs, lets make sure the user has umode +o. */
-      if (!(HasUmode(target_p, UMODE_OPER))
+      if (!(HasUmode(target_p, UMODE_OPER)))
 	{
-	  old = target_p->umodes;
+	  CopyUmodes(target_p->umodes, old);
           SetUmode(target_p, UMODE_OPER);
 	  SetUmode(target_p, UMODE_HELPOP);
 
@@ -276,7 +277,7 @@ mo_grant (struct Client *client_p, struct Client *source_p,
 
       if (target_p->localClient->operflags == 0)
 	{
-	  old = target_p->umodes;
+	  CopyUmodes (target_p->umodes, old);
 	  ClearUmode (target_p, UMODE_OPER);
 	  ClearUmode (target_p, UMODE_HELPOP);
 

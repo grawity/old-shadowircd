@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_svsname.c,v 1.2 2004/05/12 21:22:13 nenolod Exp $
+ *  $Id: m_svsname.c,v 1.3 2004/05/13 03:51:44 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,7 +63,7 @@ _moddeinit (void)
   mod_del_cmd (&svsname_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 
 
 /* m_svscloak
@@ -91,7 +91,6 @@ m_svsname (struct Client *client_p, struct Client *source_p, int parc,
       sendto_server (client_p, NULL, NULL, NOCAPS, NOCAPS, NOFLAGS,
 		     ":%s SVSNAME %s :%s", parv[0], parv[1], parv[2]);
       strncpy (target_p->info, hostname, HOSTLEN);
-      send_umode_out (target_p, target_p, old);
     }
   else
     {

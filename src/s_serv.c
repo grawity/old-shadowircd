@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_serv.c,v 1.1 2004/04/30 18:13:45 nenolod Exp $
+ *  $Id: s_serv.c,v 1.2 2004/05/13 03:51:44 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -844,7 +844,7 @@ sendnick_TS(struct Client *client_p, struct Client *target_p)
   if (!IsPerson(target_p))
     return;
 
-  send_umode(NULL, target_p, 0, SEND_UMODES, ubuf);
+  send_umode(NULL, target_p, 0, 0, ubuf);
 
   if (!*ubuf)
   {

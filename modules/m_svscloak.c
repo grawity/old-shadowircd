@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_svscloak.c,v 1.2 2004/05/12 21:22:13 nenolod Exp $
+ *  $Id: m_svscloak.c,v 1.3 2004/05/13 03:51:44 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -61,7 +61,7 @@ _moddeinit(void)
     mod_del_cmd(&svscloak_msgtab);
 }
 
-const char* _version = "$Revision: 1.2 $";
+const char* _version = "$Revision: 1.3 $";
 
 
 /* m_svscloak
@@ -95,7 +95,7 @@ void m_svscloak(struct Client *client_p, struct Client *source_p, int parc, char
       sendto_server(client_p, NULL, NULL, NOCAPS, NOCAPS, NOFLAGS, 
           ":%s SVSCLOAK %s :%s", parv[0], parv[1], parv[2]);
     strncpy(target_p->virthost, hostname, HOSTLEN);
-    old = target_p->umodes;
+    CopyUmodes(old, target_p->umodes);
     SetUmode(target_p, UMODE_CLOAK);
     send_umode_out(target_p, target_p, old);
     target_p->flags |= FLAGS_USERCLOAK;  /* set the usercloak flag so that in the

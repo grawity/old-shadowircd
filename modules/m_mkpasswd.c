@@ -6,7 +6,7 @@
  *
  *  You can use this code in any way as long as these names remain.
  *
- *  $Id: m_mkpasswd.c,v 1.2 2004/05/12 20:41:49 nenolod Exp $
+ *  $Id: m_mkpasswd.c,v 1.3 2004/05/13 03:51:44 nenolod Exp $
  */
 
 /* List of ircd includes from ../include/ */
@@ -52,7 +52,7 @@ void _moddeinit(void)
   mod_del_cmd(&mkpasswd_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 static void
@@ -60,7 +60,6 @@ m_mkpasswd(struct Client *client_p, struct Client *source_p,
            int parc, char *parv[])
 {
   static time_t last_used = 0;
-  int is_md5 = 1;
 
   if ((last_used + ConfigFileEntry.pace_wait) > CurrentTime)
   {
@@ -77,7 +76,7 @@ m_mkpasswd(struct Client *client_p, struct Client *source_p,
                me.name, parv[0], "MKPASSWD");
   else
     sendto_one(source_p, ":%s NOTICE %s :Encryption for [%s]:  %s",
-               me.name, parv[0], parv[1], crypt(parv[1], make_md5_salt());
+               me.name, parv[0], parv[1], crypt(parv[1], make_md5_salt()));
 }
 
 /*
@@ -89,7 +88,6 @@ static void
 mo_mkpasswd(struct Client *client_p, struct Client *source_p,
 	    int parc, char *parv[])
 {		 
-  int is_md5 = 1;
 
   if (parc == 1)
     sendto_one(source_p, form_str(ERR_NEEDMOREPARAMS),
