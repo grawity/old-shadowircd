@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: cluster.c,v 1.2 2004/02/09 23:02:24 nenolod Exp $
+ *  $Id: cluster.c,v 1.3 2004/02/09 23:07:39 nenolod Exp $
  */
 
 #include "cluster.h"
@@ -37,15 +37,15 @@ cluster_kline (struct Client *source_p, int tkline_time, const char *user,
 	       const char *host, const char *reason)
 {
   sendto_match_servs (source_p, "*", CAP_KLN,
-		      "KLINE %s %d %s %s :%s",
-		      conf->name, tkline_time, user, host, reason);
+		      "KLINE * %d %s %s :%s",
+		      tkline_time, user, host, reason);
 }
 
 void
 cluster_unkline (struct Client *source_p, const char *user, const char *host)
 {
   sendto_match_servs (source_p, "*", CAP_UNKLN,
-		      "UNKLINE %s %s %s", conf->name, user, host);
+		      "UNKLINE * %s %s", user, host);
 }
 
 void
@@ -53,28 +53,28 @@ cluster_xline (struct Client *source_p, const char *gecos,
 	       int xtype, const char *reason)
 {
   sendto_match_servs (source_p, "*", CAP_CLUSTER,
-		      "XLINE %s %s %d :%s", conf->name, gecos, xtype, reason);
+		      "XLINE * %s %d :%s", gecos, xtype, reason);
 }
 
 void
 cluster_unxline (struct Client *source_p, const char *gecos)
 {
   sendto_match_servs (source_p, "*", CAP_CLUSTER,
-		      "UNXLINE %s %s", conf->name, gecos);
+		      "UNXLINE * %s", gecos);
 }
 
 void
 cluster_resv (struct Client *source_p, const char *name, const char *reason)
 {
   sendto_match_servs (source_p, "*", CAP_CLUSTER,
-		      "RESV %s %s :%s", conf->name, name, reason);
+		      "RESV * %s :%s", name, reason);
 }
 
 void
 cluster_unresv (struct Client *source_p, const char *name)
 {
   sendto_match_servs (source_p, "*", CAP_CLUSTER,
-		      "UNRESV %s %s", conf->name, name);
+		      "UNRESV * %s", name);
 }
 
 /* remind me to take out locops... it's pointless. --nenolod */
@@ -82,5 +82,5 @@ void
 cluster_locops (struct Client *source_p, const char *message)
 {
   sendto_match_servs (source_p, "*", CAP_CLUSTER,
-		      "LOCOPS %s :%s", conf->name, message);
+		      "LOCOPS * :%s", message);
 }

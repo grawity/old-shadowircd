@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_hidehost.c,v 1.6 2004/01/16 00:24:43 nenolod Exp $
+ *  $Id: s_hidehost.c,v 1.7 2004/02/09 23:07:39 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -260,7 +260,8 @@ char *hidehost(char *rhost)
 		if (*p) {
 			int len;
 			p++;
-			snprintf(cloaked, sizeof cloaked, "%lX.", l[0]);
+			snprintf(cloaked, sizeof cloaked, "%s-%lX.", 
+                                 ServerInfo.network_name, l[0]);
 			len = strlen(cloaked) + strlen(p);
 			if (len <= HOSTLEN)
 				strcat(cloaked, p);
@@ -268,7 +269,8 @@ char *hidehost(char *rhost)
 				strcat(cloaked, p + (len - HOSTLEN));
 		}
 		else
-			snprintf(cloaked, sizeof cloaked, "%lX", l[0]);
+			snprintf(cloaked, sizeof cloaked, "%s-%lX", 
+                                 ServerInfo.network_name, l[0]);
 		return cloaked;
 	}
 	/* Couldn't cloak, -WTF? */
