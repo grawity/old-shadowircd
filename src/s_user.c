@@ -21,7 +21,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.1 2004/07/29 15:26:58 nenolod Exp $
+ *  $Id: s_user.c,v 1.2 2004/07/29 20:28:47 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -61,6 +61,7 @@ static int check_X_line(struct Client *client_p, struct Client *source_p);
 void user_welcome(struct Client *source_p);
 int oper_up(struct Client *source_p, struct ConfItem *aconf);
 char *ret_maskip(struct Client *);
+extern char *ssl_get_cipher(SSL *);
 
 extern char *crypt();
 
@@ -484,6 +485,9 @@ register_local_user(struct Client *client_p, struct Client *source_p, char *nick
 
 	source_p->umodes |= UMODE_INVISIBLE;
 
+	if(source_p->ssl)
+		sendto_one(source_p, ":%s NOTICE %s :*** You are connected to %s with %s",
+				me.name, source_p->name, me.name, ssl_get_cipher(source_p->ssl));
 	Count.invisi++;
 
 	if((++Count.local) > Count.max_loc) {
