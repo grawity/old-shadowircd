@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: hash.c,v 1.3 2004/02/14 01:24:18 nenolod Exp $
+ *  $Id: hash.c,v 1.4 2004/02/14 02:49:18 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1134,8 +1134,9 @@ list_one_channel(struct Client *source_p, struct Channel *chptr,
 {
   char modebuf[32];
   char parabuf[64];
-  *modebuf = *parabuf = '\0';
   char modes_and_topic[TOPICLEN + 100];
+
+  *modebuf = *parabuf = '\0';
   channel_modes(chptr, source_p, modebuf, parabuf);
 
   ircsprintf(modes_and_topic, "[%s %s] %s", modebuf,
