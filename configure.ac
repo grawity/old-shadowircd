@@ -1,4 +1,4 @@
-dnl $Id: configure.ac,v 1.2 2003/12/03 20:47:43 nenolod Exp $
+dnl $Id: configure.ac,v 1.3 2003/12/05 22:42:56 nenolod Exp $
 dnl Process this file with autoconf to produce a configure script.
 
 dnl TODO: clean up all the OpenSSL and shared module checking stuff;
@@ -8,7 +8,7 @@ dnl said functions need to be just about as complex as they already are.
 AC_PREREQ(2.57)
 
 dnl Sneaky way to get an Id tag into the configure script
-AC_COPYRIGHT([$Id: configure.ac,v 1.2 2003/12/03 20:47:43 nenolod Exp $])
+AC_COPYRIGHT([$Id: configure.ac,v 1.3 2003/12/05 22:42:56 nenolod Exp $])
 
 AC_INIT([shadowircd],[2.0])
 
@@ -541,7 +541,7 @@ if test "$cf_enable_openssl" != no; then
 		CPPFLAGS="$CPPFLAGS $SSL_LIBS"
 		AC_CHECK_LIB(crypto, RSA_free)
 		if test "$ac_cv_lib_crypto_RSA_free" = yes; then
-			LIBS="$LIBS -lcrypto"
+			LIBS="$LIBS -lcrypto -lssl"
 			cf_openssl_ciphers=''
 			AC_CHECK_FUNCS(EVP_bf_cfb,
 			cf_openssl_ciphers="${cf_openssl_ciphers}BF/168 BF/128 ")

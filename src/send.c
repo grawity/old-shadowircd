@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: send.c,v 1.2 2003/12/05 20:48:49 nenolod Exp $
+ *  $Id: send.c,v 1.3 2003/12/05 22:42:56 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -256,7 +256,7 @@ void
 send_queued_write(struct Client *to)
 {
 #ifdef HAVE_LIBCRYPTO
-  fde_t *F = (fd > -1)? &fd_table[to->localClient->fd] : NULL;
+  fde_t *F = (to->localClient->fd > -1)? &fd_table[to->localClient->fd] : NULL;
 #endif
   int retlen;
 #ifndef NDEBUG

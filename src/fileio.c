@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  fileio.c: Provides a file input-output interface to ircd.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: fileio.c,v 1.1.1.1 2003/12/02 20:46:43 nenolod Exp $
+ *  $Id: fileio.c,v 1.2 2003/12/05 22:42:56 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -50,7 +50,7 @@ file_open(const char *filename, int mode, int fmode)
     fd = -1;
   }
   else if (fd >= 0)
-    fd_open(fd, FD_FILE, filename);
+    fd_open(fd, FD_FILE, filename, NULL);
 
   return(fd);
 }

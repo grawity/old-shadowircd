@@ -1,12 +1,12 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  csvlib.c - set of functions to deal with csv type of conf files
  *
  *  Copyright (C) 2003 by Diane Bruce, Stuart Walsh
  *  Use it anywhere you like, if you like it buy us a beer.
  *  If it's broken, don't bother us with the lawyers.
  *
- *  $Id: csvlib.c,v 1.1.1.1 2003/12/02 20:46:40 nenolod Exp $
+ *  $Id: csvlib.c,v 1.2 2003/12/05 22:42:56 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -108,6 +108,7 @@ parse_csv_file(FBFILE *file, ConfType conf_type)
       (void)create_nick_resv(name_field, reason_field, 0);
       break;
 
+    case CLOAK_TYPE:
     case GLINE_TYPE:
     case GDENY_TYPE:
     case CONF_TYPE:

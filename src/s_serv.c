@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_serv.c,v 1.1.1.1 2003/12/02 20:47:03 nenolod Exp $
+ *  $Id: s_serv.c,v 1.2 2003/12/05 22:42:56 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1507,13 +1507,13 @@ fork_server(struct Client *server)
 #endif
 
 #ifdef HAVE_SOCKETPAIR
-    fd_open(server->localClient->ctrlfd, FD_SOCKET, NULL);
-    fd_open(server->localClient->fd, FD_SOCKET, NULL);
+    fd_open(server->localClient->ctrlfd, FD_SOCKET, NULL, NULL);
+    fd_open(server->localClient->fd, FD_SOCKET, NULL, NULL);
 #else
-    fd_open(server->localClient->ctrlfd, FD_PIPE, NULL);
-    fd_open(server->localClient->fd, FD_PIPE, NULL);
-    fd_open(server->localClient->ctrlfd_r, FD_PIPE, NULL);
-    fd_open(server->localClient->fd_r, FD_PIPE, NULL);
+    fd_open(server->localClient->ctrlfd, FD_PIPE, NULL, NULL);
+    fd_open(server->localClient->fd, FD_PIPE, NULL, NULL);
+    fd_open(server->localClient->ctrlfd_r, FD_PIPE, NULL, NULL);
+    fd_open(server->localClient->fd_r, FD_PIPE, NULL, NULL);
 #endif
 
    read_ctrl_packet(slink_fds[0][1][0], server);

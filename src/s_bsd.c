@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_bsd.c,v 1.2 2003/12/05 20:31:44 nenolod Exp $
+ *  $Id: s_bsd.c,v 1.3 2003/12/05 22:42:56 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -795,7 +795,7 @@ comm_open(int family, int sock_type, int proto, const char *note)
     }
 
   /* Next, update things in our fd tracking */
-  fd_open(fd, FD_SOCKET, note);
+  fd_open(fd, FD_SOCKET, note, NULL);
   return fd;
 }
 
@@ -810,6 +810,10 @@ comm_accept(int fd, struct irc_ssaddr *pn, int is_ssl)
 {
   int newfd;
   socklen_t addrlen = sizeof(struct irc_ssaddr);
+#ifdef HAVE_LIBCRYPTO
+  SSL *ssl = NULL;
+#endif
+
   if (number_fd >= MASTER_MAX)
     {
       errno = ENFILE;
@@ -845,8 +849,6 @@ comm_accept(int fd, struct irc_ssaddr *pn, int is_ssl)
     extern char *get_ssl_error(int);
         fde_t *F = &fd_table[newfd];
 
-        copy_s_addr(F->connect.hostaddr, *pn);
-
         ssl = SSL_new(ServerInfo.ctx);
         if (!ssl) {
                 ilog(L_CRIT, "SSL_new() ERROR! -- %s", ERR_error_string(ERR_get_error(), NULL));
@@ -855,8 +857,6 @@ comm_accept(int fd, struct irc_ssaddr *pn, int is_ssl)
         }
         SSL_set_fd(ssl, newfd);
 
-        sendto_realops_flags(FLAGS_DEBUG, L_ALL, "SSL_accept() for %s (socket %d) in progress...",
-                inetntoa((char *)&PS_ADDR(pn)), newfd);
 
 again:
         retval = SSL_accept(ssl);
@@ -868,9 +868,6 @@ again:
 
                         case SSL_ERROR_WANT_READ:
                         case SSL_ERROR_WANT_WRITE:
-                                sendto_realops_flags(FLAGS_DEBUG, L_ALL,
-                                        "SSL_accept() for %s wants read or write (%s), passing through...",
-                                        inetntoa((char *)&PS_ADDR(pn)), get_ssl_error(retval));
 
                                 /* let it through, SSL_read()/SSL_write() will finish the handshake...*/
                                 /*goto again;*/
@@ -886,7 +883,7 @@ again:
                                 break;
 
                         default:
-                                sendto_realops_flags(FLAGS_DEBUG, L_ALL, "SSL_accept() ERROR! -- %s",
+                                sendto_realops_flags(UMODE_DEBUG, L_ALL, "SSL_accept() ERROR! -- %s",
                                         (retval == SSL_ERROR_SSL)?
                                         ERR_error_string(ERR_get_error(), NULL) :
                                         get_ssl_error(retval));
@@ -898,11 +895,9 @@ again:
                 char *ssl_get_cipher(SSL *);
                 /*SSL_set_accept_state(ssl);*/
 
-                sendto_realops_flags(FLAGS_DEBUG, L_ALL, "SSL_accept() for %s succeeded!",
-                        inetntoa((char *)&PS_ADDR(pn)));
-                sendto_realops_flags(FLAGS_DEBUG, L_ALL, "SSL protocol/cipher: %s",
+                sendto_realops_flags(UMODE_DEBUG, L_ALL, "SSL protocol/cipher: %s",
                         ssl_get_cipher(ssl));
-                sendto_realops_flags(FLAGS_DEBUG, L_ALL, "SSL_state_string_long(): %s",
+                sendto_realops_flags(UMODE_DEBUG, L_ALL, "SSL_state_string_long(): %s",
                         SSL_state_string_long(ssl));
         }
   }
