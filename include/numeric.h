@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: numeric.h,v 1.5 2003/12/12 17:58:42 nenolod Exp $
+ *  $Id: numeric.h,v 1.6 2003/12/13 02:44:11 nenolod Exp $
  */
 
 #ifndef INCLUDED_numeric_h
@@ -348,6 +348,8 @@ extern const char *get_locale(void);
 #define ERR_NICKCOLLISION    436
 #define ERR_UNAVAILRESOURCE  437
 #define ERR_NICKTOOFAST	     438	/* We did it first Undernet! ;) db */
+
+#define ERR_BANNICKCHANGE    439
 
 /*	ERR_SERVICESDOWN     440	Dalnet,unreal */
 

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 1.10 2003/12/12 20:22:57 nenolod Exp $
+ *  $Id: channel_mode.c,v 1.11 2003/12/13 02:44:11 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -344,6 +344,7 @@ static const struct mode_letter
   { MODE_PEACE,      'P' },
   { MODE_TOPICLOCK,  'T' },
   { MODE_FREEINVITE, 'F' },
+  { MODE_STICKYNICK, 'N' },
   { 0, '\0' }
 };
 
@@ -1830,7 +1831,7 @@ static struct ChannelMode ModeTable[255] =
   {chm_simple, (void *) MODE_NOKNOCK},            /* K */
   {chm_nosuch, NULL},                             /* L */
   {chm_nosuch, NULL},                             /* M */
-  {chm_nosuch, NULL},                             /* N */
+  {chm_simple, (void *) MODE_STICKYNICK},         /* N */
   {chm_nosuch, NULL},                             /* O */
   {chm_owneronly, (void *) MODE_PEACE},           /* P */
   {chm_nosuch, NULL},                             /* Q */

@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  m_nick.c: Sets a users nick.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_nick.c,v 1.2 2003/12/03 18:17:28 nenolod Exp $
+ *  $Id: m_nick.c,v 1.3 2003/12/13 02:44:11 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -97,7 +97,7 @@ _moddeinit(void)
   mod_del_cmd(&uid_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 /* mr_nick()
@@ -203,6 +203,11 @@ m_nick(struct Client *client_p, struct Client *source_p,
   char nick[NICKLEN];
   struct Client *target_p;
 
+  /* The following are used for checks. */
+  dlink_node *lp;
+  struct Membership *ms;
+  struct Channel *chptr;
+
   if (parc < 2 || EmptyString(parv[1]))
   {
     sendto_one(source_p, form_str(ERR_NONICKNAMEGIVEN),
@@ -245,6 +250,29 @@ m_nick(struct Client *client_p, struct Client *source_p,
       /* check the nick isnt exactly the same */
       if(strcmp(target_p->name, nick))
       {
+        /* don't jump in quite yet, we got to make sure that we aren't
+         * changing nicks on a stickynick channel or if we are 
+         * quieted/banned or on a moderated channel.
+         *                  --nenolod
+         */
+        DLINK_FOREACH(lp, source_p->user->channel.head)
+        {
+          ms = lp->data;
+          chptr = ms->chptr;
+
+          if (can_send(chptr, source_p) != 0)
+          {
+            /* Well, we can't send... */
+            sendto_one(source_p, form_str (ERR_BANNICKCHANGE),
+			me.name, source_p->name, chptr->name);
+            return;
+          }
+          else if (chptr->mode.mode & MODE_STICKYNICK)
+          {
+            sendto_one(source_p, form_str (ERR_BANNICKCHANGE),
+                        me.name, source_p->name, chptr->name);
+            return;
+          }
         change_local_nick(client_p, source_p, nick);
 	return;
       }

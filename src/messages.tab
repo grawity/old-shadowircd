@@ -16,7 +16,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *   $Id: messages.tab,v 1.6 2003/12/12 17:58:42 nenolod Exp $
+ *   $Id: messages.tab,v 1.7 2003/12/13 02:44:11 nenolod Exp $
  */
 
 static struct NumericInfo replies[] = {
@@ -459,7 +459,7 @@ static struct NumericInfo replies[] = {
 /* 436 */  {"ERR_NICKCOLLISION", ":%s 436 %s %s :Nickname collision KILL", NULL},
 /* 437 */  {"ERR_UNAVAILRESOURCE", ":%s 437 %s %s :Nick/channel is temporarily unavailable", NULL},
 /* 438 */  {"ERR_NICKTOOFAST", ":%s 438 %s %s %s :Nick change too fast. Please wait %d seconds.", NULL},
-/* 439 */  {NULL, NULL, NULL},
+/* 439 */  {"ERR_BANNICKCHANGE", ":%s 439 %s %s :Cannot change nickname while banned or quieted on a channel, while effected by a moderated channel, or while on a stickynick channel.", NULL},
 /* 440 */  {NULL, NULL, NULL},
 /* 441 */  {"ERR_USERNOTINCHANNEL", ":%s 441 %s %s %s :They aren't on that channel", NULL},
 /* 442 */  {"ERR_NOTONCHANNEL", ":%s 442 %s %s :You're not on that channel", NULL},
