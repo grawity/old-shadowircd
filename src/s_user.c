@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.18 2004/01/15 22:12:17 nenolod Exp $
+ *  $Id: s_user.c,v 1.19 2004/01/15 23:15:11 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -93,7 +93,12 @@ static const struct flag_item
   { UMODE_EXTERNAL,   'x' },
   { UMODE_SPY,        'y' },
   { UMODE_OPERWALL,   'z' },
+  { UMODE_SVSADMIN,   'A' },
   { UMODE_PMFILTER,   'E' },
+  { UMODE_HELPOP,     'H' },
+  { UMODE_BLOCKINVITE, 'I' },
+  { UMODE_SVSOPER,    'O' },
+  { UMODE_SVSROOT,    'R' },
   { 0, '\0' }
 };
 
@@ -105,24 +110,24 @@ const unsigned int user_modes_from_c_to_bitmask[] =
   /* 0x20 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 0x2F */
   /* 0x30 */ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 0x3F */
   0,                /* @ */
-  0,                /* A */
+  UMODE_SVSADMIN,   /* A */
   0,                /* B */
   0,                /* C */
   0,                /* D */
   UMODE_PMFILTER,   /* E */
   0,                /* F */
   0,                /* G */
-  0,                /* H */
-  0,                /* I */
+  UMODE_HELPOP,     /* H */
+  UMODE_BLOCKINVITE, /* I */
   0,                /* J */
   0,                /* K */
   0,                /* L */
   0,                /* M */
   0,                /* N */
-  0,                /* O */
+  UMODE_SVSOPER,    /* O */
   0,                /* P */
   0,                /* Q */
-  0,                /* R */
+  UMODE_SVSROOT,    /* R */
   0,                /* S */
   0,                /* T */
   0,                /* U */
@@ -1024,6 +1029,14 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
         case '-':
           what = MODE_DEL;
           break;
+	case 'A':
+        case 'O':
+        case 'R':
+          if (!IsServer(source_p))
+             break;
+        case 'H':
+          if (!IsOper(target_p))
+             break;
         case 'e':
           /* Unless we are a server, we can't change this mode. */
           if (!IsServer(source_p))
@@ -1349,6 +1362,11 @@ oper_up(struct Client *source_p)
   if (!IsOperN(source_p))
     source_p->umodes &= ~UMODE_NCHANGE;
 
+  if (!IsOperHelpOp(source_p))
+    source_p->umodes &= ~UMODE_HELPOP;
+  else
+    source_p->umodes |= UMODE_HELPOP;
+
   sendto_realops_flags(UMODE_ALL, L_ALL, "%s (%s@%s) is now an operator",
                        source_p->name, source_p->username, source_p->host);
   send_umode_out(source_p, source_p, old);
@@ -1359,6 +1377,8 @@ oper_up(struct Client *source_p)
 /*
  * Quick and dirty UID code for new proposed SID on EFnet
  *
+ * I like SID, we'll keep it, but this should be it's own file eventually.
+ *                               --nenolod
  */
 
 static char new_uid[TOTALSIDUID+1];     /* allow for \0 */

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.3 2003/12/12 20:32:31 nenolod Exp $
+ *  $Id: client.h,v 1.4 2004/01/15 23:15:11 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -378,7 +378,9 @@ struct LocalUser
 /*                        0x80000000  */
 
 
-/* umodes, settable flags */
+/* umodes, settable flags
+ * currently: +abcdeghiklnorsvwxyzAEIRS
+ */
 #define UMODE_SERVNOTICE   0x000001 /* server notices such as kill */
 #define UMODE_CCONN        0x000002 /* Client Connections */
 #define UMODE_REJ          0x000004 /* Bot Rejections */
@@ -396,20 +398,24 @@ struct LocalUser
 #define UMODE_UNAUTH       0x004000 /* show unauth connects here */
 #define UMODE_LOCOPS       0x008000 /* show locops */
 
-/* user information flags, only settable by remote mode or local oper */
 #define UMODE_OPER         0x010000 /* Operator */
 #define UMODE_ADMIN        0x020000 /* Admin on server */
 #define UMODE_IDENTIFY     0x040000 /* Identified. */
 #define UMODE_HIDEOPER     0x080000 /* Hide operator status. */
 #define UMODE_CLOAK	   0x100000 /* Usercloak. */
 #define UMODE_BLOCKINVITE  0x200000 /* Block Invites. */
-#define UMODE_PMFILTER     0x400000  /* Allow only registered users to PM */
-
+#define UMODE_PMFILTER     0x400000 /* Allow only registered users to PM */
+#define UMODE_HELPOP       0x800000 /* Help operator. */
+#define UMODE_SVSOPER      0x1000000 /* Services operator. */
+#define UMODE_SVSADMIN     0x2000000 /* Services admin. */
+#define UMODE_SVSROOT      0x4000000 /* Services root. */
+#define UMODE_SERVICE      0x8000000 /* Network service. */
 
 #define UMODE_ALL	   UMODE_SERVNOTICE /* what is that? */
 
 #define SEND_UMODES  (UMODE_INVISIBLE | UMODE_OPER | UMODE_WALLOP | \
-                      UMODE_ADMIN | UMODE_CLOAK | UMODE_IDENTIFY | UMODE_HIDEOPER)
+                      UMODE_ADMIN | UMODE_CLOAK | UMODE_IDENTIFY | UMODE_HIDEOPER | \
+                      UMODE_HELPOP | UMODE_SVSOPER | UMODE_SVSADMIN | UMODE_SVSROOT)
 #define ALL_UMODES   (SEND_UMODES | UMODE_SERVNOTICE | UMODE_CCONN | \
                       UMODE_REJ | UMODE_SKILL | UMODE_FULL | UMODE_SPY | \
                       UMODE_NCHANGE | UMODE_OPERWALL | UMODE_DEBUG | \

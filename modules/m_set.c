@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_set.c,v 1.2 2004/01/15 19:48:08 nenolod Exp $
+ *  $Id: m_set.c,v 1.3 2004/01/15 23:15:11 nenolod Exp $
  */
 
 /* rewritten by jdc */
@@ -64,7 +64,7 @@ _moddeinit(void)
   mod_del_cmd(&set_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 /* Structure used for the SET table itself */
@@ -85,7 +85,6 @@ static void quote_identtimeout(struct Client *, int);
 static void quote_idletime(struct Client *, int);
 static void quote_log(struct Client *, int);
 static void quote_max(struct Client *, int);
-static void quote_msglocale(struct Client *, char *);
 static void quote_spamnum(struct Client *, int);
 static void quote_spamtime(struct Client *, int);
 static void quote_splitmode(struct Client *, char *);
