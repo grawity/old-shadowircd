@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.28 2004/04/01 22:48:18 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.29 2004/04/02 04:27:00 nenolod Exp $
  */
 
 %{
@@ -3226,10 +3226,6 @@ umode_oitem:     T_BOTS
 {
   if (ypass == 2)
     ConfigFileEntry.oper_umodes |= UMODE_FULL;
-} | T_SKILL
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_umodes |= UMODE_SKILL;
 } | T_NCHANGE
 {
   if (ypass == 2)
@@ -3295,10 +3291,6 @@ umode_item:	T_BOTS
 { 
   if (ypass == 2)
     ConfigFileEntry.oper_only_umodes |= UMODE_FULL;
-} | T_SKILL
-{
-  if (ypass == 2)
-    ConfigFileEntry.oper_only_umodes |= UMODE_SKILL;
 } | T_NCHANGE
 {
   if (ypass == 2)

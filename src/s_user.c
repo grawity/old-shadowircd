@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.36 2004/04/01 20:07:14 nenolod Exp $
+ *  $Id: s_user.c,v 1.37 2004/04/02 04:27:00 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -80,7 +80,6 @@ static const struct flag_item
   { UMODE_CALLERID,   'g' },
   { UMODE_HIDEOPER,   'h' },
   { UMODE_INVISIBLE,  'i' },
-  { UMODE_SKILL,      'k' },
   { UMODE_LOCOPS,     'l' },
   { UMODE_NCHANGE,    'n' },
   { UMODE_OPER,       'o' },
@@ -101,6 +100,7 @@ static const struct flag_item
   { UMODE_SVSROOT,    'R' },
   { UMODE_TECHADMIN,  'T' },
   { UMODE_WHOIS,      'W' },
+  { UMODE_INVISIBILITY, 'X' },
   { UMODE_SECURE,     'Z' },
   { UMODE_DEAF,       'D' },
   { 0, '\0' }
@@ -137,7 +137,7 @@ const unsigned int user_modes_from_c_to_bitmask[] =
   0,                /* U */
   0,                /* V */
   UMODE_WHOIS,      /* W */
-  0,                /* X */
+  UMODE_INVISIBILITY, /* X */
   0,                /* Y */
   UMODE_SECURE,     /* Z 0x5A */
   0, 0, 0, 0, 0,    /* 0x5F   */ 
@@ -152,7 +152,7 @@ const unsigned int user_modes_from_c_to_bitmask[] =
   UMODE_HIDEOPER,   /* h */
   UMODE_INVISIBLE,  /* i */
   0,                /* j */
-  UMODE_SKILL,      /* k */
+  0,                /* k */
   UMODE_LOCOPS,     /* l */
   0,                /* m */
   UMODE_NCHANGE,    /* n */
@@ -1053,20 +1053,6 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
             }
           }
 
-          break;
-
-	case 'N':
-	  if (MyClient(target_p))
-             if (!target_p->localClient->operflags & OPER_FLAG_NETADMIN)
-                break;
-	case 'T':
-          if (MyClient(target_p))
-             if (!target_p->localClient->operflags & OPER_FLAG_TECHADMIN)
-                break;
-        case 'H':
-          if (!IsOper(target_p))
-             break;
-
         /* we may not get these,
          * but they shouldnt be in default
          */
@@ -1076,8 +1062,10 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
         case '\t':
           break;
 
-
-
+        case 'N':
+        case 'T':
+          if (!IsOper(source_p) || source_p->localClient->operflags & OPER_FLAG_NETADMIN)
+            break;
 	/*
 	 * just some quick checks on services modes
 	 */

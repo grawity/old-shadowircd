@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_sjoin.c,v 1.13 2004/04/01 22:48:18 nenolod Exp $
+ *  $Id: m_sjoin.c,v 1.14 2004/04/02 04:27:00 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,7 +63,7 @@ _moddeinit(void)
   mod_del_cmd(&sjoin_msgtab);
 }
 
-const char *_version = "$Revision: 1.13 $";
+const char *_version = "$Revision: 1.14 $";
 #endif
 
 static char modebuf[MODEBUFLEN];
@@ -490,12 +490,15 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
       add_user_to_channel(chptr, target_p, fl);
       if (chptr->mode.mode & MODE_AUDITORIUM)
       {
-        sendto_channel_local(CHFL_CHANOWNER | CHFL_CHANOP, chptr,
+        if (!(IsOper(target_p) && target_p->umodes & UMODE_INVISIBILITY))
+        {
+          sendto_channel_local(CHFL_CHANOWNER | CHFL_CHANOP, chptr,
                              ":%s!%s@%s JOIN :%s",
                              target_p->name, target_p->username,
                              GET_CLIENT_HOST(target_p), chptr->chname);
+        }
       }
-      else
+      else if (!(IsOper(target_p) && target_p->umodes & UMODE_INVISIBILITY))
         sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s JOIN :%s",
                            target_p->name, target_p->username,
                            GET_CLIENT_HOST(target_p), chptr->chname);

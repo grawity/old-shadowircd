@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_join.c,v 1.11 2004/04/01 18:20:18 nenolod Exp $
+ *  $Id: m_join.c,v 1.12 2004/04/02 04:27:00 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -88,7 +88,7 @@ _moddeinit(void)
   mod_del_cmd(&join_msgtab);
 }
 
-const char *_version = "$Revision: 1.11 $";
+const char *_version = "$Revision: 1.12 $";
 #endif
 
 /* m_join()
@@ -167,12 +167,15 @@ m_join(struct Client *client_p, struct Client *source_p,
         sendto_one(source_p, ":%s!%s@%s JOIN :%s",
                    source_p->name, source_p->username,
                    GET_CLIENT_HOST(source_p), chptr->chname);
-        sendto_channel_local(CHFL_CHANOWNER | CHFL_CHANOP, chptr,
+        if (!(IsOper(source_p) && source_p->umodes & UMODE_INVISIBILITY))
+        {
+          sendto_channel_local(CHFL_CHANOWNER | CHFL_CHANOP, chptr,
                              ":%s!%s@%s JOIN :%s",
                              source_p->name, source_p->username,
                              GET_CLIENT_HOST(source_p), chptr->chname);
+        }
       }
-      else
+      else if (!(IsOper(source_p) && source_p->umodes & UMODE_INVISIBILITY))
         sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s JOIN :%s",
                            source_p->name, source_p->username,
                            GET_CLIENT_HOST(source_p), chptr->chname);
@@ -196,12 +199,15 @@ m_join(struct Client *client_p, struct Client *source_p,
         sendto_one(source_p, ":%s!%s@%s JOIN :%s",
                    source_p->name, source_p->username,
                    GET_CLIENT_HOST(source_p), chptr->chname);
-        sendto_channel_local(CHFL_CHANOWNER | CHFL_CHANOP, chptr,
+        if (!(IsOper(source_p) && source_p->umodes & UMODE_INVISIBILITY))
+        {
+          sendto_channel_local(CHFL_CHANOWNER | CHFL_CHANOP, chptr,
                              ":%s!%s@%s JOIN :%s",
                              source_p->name, source_p->username,
                              GET_CLIENT_HOST(source_p), chptr->chname);
+        }
       }
-      else
+      else if (!(IsOper(source_p) && source_p->umodes & UMODE_INVISIBILITY))
         sendto_channel_local(ALL_MEMBERS, chptr, ":%s!%s@%s JOIN :%s",
                            source_p->name, source_p->username,
                            GET_CLIENT_HOST(source_p), chptr->chname);

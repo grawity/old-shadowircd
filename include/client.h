@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.17 2004/04/01 20:07:14 nenolod Exp $
+ *  $Id: client.h,v 1.18 2004/04/02 04:27:00 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -408,7 +408,7 @@ struct LocalUser
 #define UMODE_SERVNOTICE   0x000001 /* server notices such as kill */
 #define UMODE_CCONN        0x000002 /* Client Connections */
 #define UMODE_WHOIS        0x000004 /* Send whois notices. */
-#define UMODE_SKILL        0x000008 /* Server Killed */
+#define UMODE_INVISIBILITY 0x000008 /* Invisibility */
 #define UMODE_FULL         0x000010 /* Full messages */
 #define UMODE_SPY          0x000020 /* see STATS / LINKS */
 #define UMODE_DEBUG        0x000040 /* 'debugging' info */
@@ -445,9 +445,9 @@ struct LocalUser
                       UMODE_ADMIN | UMODE_CLOAK | UMODE_IDENTIFY | UMODE_HIDEOPER | \
                       UMODE_HELPOP | UMODE_SVSOPER | UMODE_SVSADMIN | UMODE_SVSROOT | \
                       UMODE_SERVICE | UMODE_SECURE | UMODE_DEAF | UMODE_NETADMIN | \
-                      UMODE_TECHADMIN | UMODE_WHOIS)
+                      UMODE_TECHADMIN | UMODE_WHOIS | UMODE_INVISIBILITY )
 #define ALL_UMODES   (SEND_UMODES | UMODE_SERVNOTICE | UMODE_CCONN | \
-                      UMODE_WHOIS | UMODE_SKILL | UMODE_FULL | UMODE_SPY | \
+                      UMODE_WHOIS | UMODE_INVISIBILITY | UMODE_FULL | UMODE_SPY | \
                       UMODE_NCHANGE | UMODE_OPERWALL | UMODE_DEBUG | \
                       UMODE_BOTS | UMODE_EXTERNAL | UMODE_LOCOPS | \
                       UMODE_ADMIN | UMODE_UNAUTH | UMODE_CALLERID | \

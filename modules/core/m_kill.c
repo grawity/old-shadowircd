@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_kill.c,v 1.3 2004/01/20 19:56:34 nenolod Exp $
+ *  $Id: m_kill.c,v 1.4 2004/04/02 04:27:00 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -65,7 +65,7 @@ _moddeinit(void)
   mod_del_cmd(&kill_msgtab);
 }
 
-const char *_version = "$Revision: 1.3 $";
+const char *_version = "$Revision: 1.4 $";
 #endif
 
 /* mo_kill()
@@ -170,9 +170,14 @@ mo_kill(struct Client *client_p, struct Client *source_p,
       ** set in any other place)
       */
     SetKilled(target_p);
+    ircsprintf(buf, "Killed (%s (%s))", source_p->name, reason);
+  }
+  else
+  {
+    ircsprintf(buf, "[%s] Local Kill by %s (%s)", me.name, source_p->name,
+               reason);
   }
 
-  ircsprintf(buf, "Killed (%s (%s))", source_p->name, reason);
   exit_client(client_p, target_p, source_p, buf);
 }
 
@@ -268,19 +273,10 @@ ms_kill(struct Client *client_p, struct Client *source_p,
   /* path must contain at least 2 !'s, or bitchx falsely declares it
    * local --fl
    */
-  if (IsOper(source_p)) /* send it normally */
-  {
-    sendto_realops_flags(UMODE_ALL, L_ALL,
+  sendto_realops_flags(UMODE_ALL, L_ALL,
                          "Received KILL message for %s. From %s Path: %s!%s!%s!%s %s",
                          target_p->name, source_p->name, source_p->user->server->name, 
                          GET_CLIENT_HOST(source_p), source_p->username, source_p->name, reason);
-  }
-  else
-  {
-    sendto_realops_flags(UMODE_SKILL, L_ALL,
-                         "Received KILL message for %s. From %s %s",
-                         target_p->name, source_p->name, reason);
-  }
 
   ilog(L_INFO,"KILL From %s For %s Path %s %s",
        source_p->name, target_p->name, source_p->name, reason);
