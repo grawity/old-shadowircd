@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_pong.c,v 1.2 2004/02/27 00:04:06 nenolod Exp $
+ *  $Id: m_pong.c,v 1.3 2004/02/27 00:12:47 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -57,7 +57,7 @@ _moddeinit(void)
   mod_del_cmd(&pong_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 static void
@@ -66,6 +66,7 @@ ms_pong(struct Client *client_p, struct Client *source_p,
 {
   struct Client *target_p;
   const char *origin, *destination;
+  struct timeval tv;
 
   if (parc < 2 || *parv[1] == '\0')
   {
