@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 1.9 2003/12/12 18:21:42 nenolod Exp $
+ *  $Id: channel_mode.c,v 1.10 2003/12/12 20:22:57 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1891,6 +1891,10 @@ get_channel_access(struct Client *source_p, struct Membership *member)
 {
   /* Let hacked servers in for now... */
   if (!MyClient(source_p))
+    return(CHACCESS_CHANOWNER);
+
+  /* Opers with override are CHACCESS_CHANOWNER --nenolod */
+  if (IsOperOverride(source_p))
     return(CHACCESS_CHANOWNER);
 
   if (member == NULL)

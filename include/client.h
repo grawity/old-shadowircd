@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.h,v 1.1 2003/12/11 18:16:47 nenolod Exp $
+ *  $Id: client.h,v 1.2 2003/12/12 20:22:57 nenolod Exp $
  */
 
 #ifndef INCLUDED_client_h
@@ -431,6 +431,11 @@ struct LocalUser
 #define OPER_FLAG_REHASH       0x00000100 /* oper can rehash             */
 #define OPER_FLAG_ADMIN        0x00000200 /* oper can set umode +a       */
 #define OPER_FLAG_HIDDEN_ADMIN 0x00000400 /* admin is hidden             */
+#define OPER_FLAG_AUSPEX       0x00000800 /* oper can see the invisible  */
+#define OPER_FLAG_OWNCLOAK     0x00001000 /* oper can set his own host   */
+#define OPER_FLAG_SETCLOAK     0x00002000 /* oper can set anyone's host  */
+#define OPER_FLAG_IMMUNE       0x00004000 /* oper is immune to all       */
+#define OPER_FLAG_OVERRIDE     0x00008000 /* oper can override channels  */
 
 #define SetOFlag(x, y) ((x)->localClient->operflags |= (y))
 
@@ -480,6 +485,7 @@ struct LocalUser
 #define IsSetCallerId(x)	((x)->umodes & UMODE_CALLERID)
 #define IsPMFiltered(x)         ((x)->umodes & UMODE_PMFILTER)
 #define IsIdentified(x)         ((x)->umodes & UMODE_IDENTIFY)
+#define IsBlockInvite(x)	((x)->umodes & UMODE_BLOCKINVITE)
 
 #define SetSendQExceeded(x)	((x)->flags |= FLAGS_SENDQEX)
 #define IsSendQExceeded(x)	((x)->flags &  FLAGS_SENDQEX)
@@ -541,8 +547,13 @@ struct LocalUser
 #define IsOperDie(x)            (MyConnect(x) ? (x)->localClient->operflags & OPER_FLAG_DIE : 0)
 #define IsOperRehash(x)         (MyConnect(x) ? (x)->localClient->operflags & OPER_FLAG_REHASH : 0)
 #define IsOperAdmin(x)          (MyConnect(x) ? (x)->localClient->operflags & OPER_FLAG_ADMIN : 0)
-#define IsOperHiddenAdmin(x)	(MyConnect(x) ? (x)->localClient->operflags  & OPER_FLAG_HIDDEN_ADMIN : 0)
+#define IsOperHiddenAdmin(x)	(MyConnect(x) ? (x)->localClient->operflags & OPER_FLAG_HIDDEN_ADMIN : 0)
 #define IsOperX(x)              (MyConnect(x) ? (x)->localClient->operflags & OPER_FLAG_X : 0)
+#define IsOperAuspex(x)         (MyConnect(x) ? (x)->localClient->operflags & OPER_FLAG_AUSPEX : 0)
+#define IsOperSetOwnCloak(x)    (MyConnect(x) ? (x)->localClient->operflags & OPER_FLAG_OWNCLOAK : 0)
+#define IsOperSetAnyCloak(x)    (MyConnect(x) ? (x)->localClient->operflags & OPER_FLAG_SETCLOAK : 0)
+#define IsOperImmune(x)         (MyConnect(x) ? (x)->localClient->operflags & OPER_FLAG_IMMUNE : 0)
+#define IsOperOverride(x)       (MyConnect(x) ? (x)->localClient->operflags & OPER_FLAG_OVERRIDE : 0)
 
 /*
  * definitions for get_client_name

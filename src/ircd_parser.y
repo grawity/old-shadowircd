@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.5 2003/12/12 17:58:42 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.6 2003/12/12 20:22:57 nenolod Exp $
  */
 
 %{
@@ -152,6 +152,7 @@ unhook_hub_leaf_confs(void)
 %token  CRYPTLINK
 %token  USERCLOAK
 %token  CLOAKSTRING
+%token  CONFIGURATION
 %token  CRYPT_USERCLOAK
 %token  DEFAULT_CIPHER_PREFERENCE
 %token  DEFAULT_FLOODCOUNT
@@ -350,9 +351,10 @@ unhook_hub_leaf_confs(void)
 %type <number> sizespec_
 
 %%
-conf:   
-        | conf conf_item
-        ;
+configuration: CONFIGURATION
+ '{' conf '}' ';';
+
+conf: conf conf_item | conf_item;
 
 conf_item:        admin_entry
                 | logging_entry
@@ -962,7 +964,9 @@ oper_item:      oper_name  | oper_user | oper_password | oper_hidden_admin |
                 oper_kline | oper_xline | oper_unkline |
 		oper_gline | oper_nick_changes |
                 oper_die | oper_rehash | oper_admin |
-		oper_rsa_public_key_file | error;
+		oper_rsa_public_key_file | oper_auspex |
+                oper_set_owncloak | oper_set_anycloak |
+                oper_immune | oper_override | error;
 
 oper_name: NAME '=' QSTRING ';'
 {
@@ -1103,6 +1107,61 @@ oper_kline: KLINE '=' TBOOL ';'
       yy_aconf->port |= OPER_FLAG_K;
     else
       yy_aconf->port &= ~OPER_FLAG_K;
+  }
+};
+
+oper_auspex: AUSPEX '=' TBOOL ';'
+{
+  if (ypass == 2)
+  {
+    if (yylval.number)
+      yy_aconf->port |= OPER_FLAG_AUSPEX;
+    else
+      yy_aconf->port &= ~OPER_FLAG_AUSPEX;
+  }
+};
+
+oper_set_owncloak: SET_OWNCLOAK '=' TBOOL ';'
+{
+  if (ypass == 2)
+  {
+    if (yylval.number)
+      yy_aconf->port |= OPER_FLAG_OWNCLOAK;
+    else
+      yy_aconf->port &= ~OPER_FLAG_OWNCLOAK;
+  }
+};
+
+oper_set_anycloak: SET_ANYCLOAK '=' TBOOL ';'
+{
+  if (ypass == 2)
+  {
+    if (yylval.number)
+      yy_aconf->port |= OPER_FLAG_ANYCLOAK;
+    else
+      yy_aconf->port &= ~OPER_FLAG_ANYCLOAK;
+  }
+};
+
+oper_immune: IMMUNE '=' TBOOL ';'
+{
+  if (ypass == 2)
+  {
+    if (yylval.number)
+      yy_aconf->port |= OPER_FLAG_IMMUNE;
+    else
+      yy_aconf->port &= ~OPER_FLAG_IMMUNE;
+  }
+};
+
+oper_override: AUSPEX '=' TBOOL ';'
+{
+  if (ypass == 2)
+  {
+    if (yylval.number)
+      yy_aconf->port |= OPER_FLAG_OVERRIDE;
+    else
+      yy_aconf->port &= ~OPER_FLAG_OVERRIDE;
   }
 };
 

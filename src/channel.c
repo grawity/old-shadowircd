@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel.c,v 1.4 2003/12/12 17:58:42 nenolod Exp $
+ *  $Id: channel.c,v 1.5 2003/12/12 20:22:57 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -799,6 +799,10 @@ can_join(struct Client *source_p, struct Channel *chptr, const char *key)
   if ((check_banned(chptr, src_host, src_iphost)) == CHFL_BAN)
     return(ERR_BANNEDFROMCHAN);
 
+  /* Immune opers can walk through bans. --nenolod */
+  if (IsOperImmune(source_p))
+    return(0);
+
   if (chptr->mode.mode & MODE_INVITEONLY)
   {
     DLINK_FOREACH(lp, source_p->user->invited.head)
@@ -872,6 +876,9 @@ can_send(struct Channel *chptr, struct Client *source_p)
   struct Membership *ms;
 
   if (IsServer(source_p))
+    return(CAN_SEND_OPV);
+
+  if (IsOperImmune(source_p))
     return(CAN_SEND_OPV);
 
   if (MyClient(source_p) &&
