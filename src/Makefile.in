@@ -1,0 +1,86 @@
+LD		= @LD@
+CC		= @CC@
+RM		= @RM@
+IRCDLIBS	= @LIBS@
+INCLUDEDIR	= -I../include
+OPENSSLINC	= @SSL_INCLUDES@
+CFLAGS		= $(INCLUDEDIR) $(OPENSSLINC) @CFLAGS@
+
+BASE_SRCS =                     \
+blalloc.c			\
+bsd.c				\
+channel.c			\
+class.c				\
+dbuf.c				\
+dich_conf.c			\
+dynconf.c			\
+drone.c				\
+fdlist.c			\
+hash.c				\
+inet_addr.c			\
+inet_ntop.c			\
+inet_pton.c			\
+ircd.c				\
+ircsprintf.c			\
+ircstring.c			\
+list.c				\
+match.c				\
+m_nick.c			\
+m_who.c				\
+packet.c			\
+parse.c				\
+res.c				\
+s_auth.c			\
+s_bsd.c				\
+s_conf.c			\
+s_debug.c			\
+s_err.c				\
+s_gline.c			\
+s_help.c			\
+s_hidehost.c			\
+s_misc.c			\
+s_numeric.c			\
+s_services.c			\
+s_serv.c			\
+s_shadow.c			\
+s_snomask.c			\
+s_user.c			\
+send.c				\
+support.c			\
+scache.c			\
+ssl.c				\
+throttle.c			\
+userban.c			\
+whowas.c			\
+zlink.c				\
+@ENCRYPT_SRC@
+
+SRCS = ${BASE_SRCS}
+OBJS = ${SRCS:.c=.o} version.o
+
+all: ircd
+
+build: all
+
+depend: ${CC} -MM ${CFLAGS} ${SRCS} > .depend
+
+clean:
+	$(RM) -f $(OBJS) *~ ircd.core core ircd
+
+distclean: clean
+	$(RM) -f Makefile version.c version.c.last
+
+.c.o:
+	$(CC) $(INCLUDEDIR) $(OPENSSLINC) $(CFLAGS) -c $<
+
+ircd:   $(OBJS)
+	$(CC) ${LDFLAGS} -o ircd $(OBJS) $(IRCDLIBS)
+	mv version.c version.c.last
+
+install: build
+	@echo "Please do a make install from the top level directory"
+
+version.c: version.c.SH
+	/bin/sh ./version.c.SH
+
+include .depend

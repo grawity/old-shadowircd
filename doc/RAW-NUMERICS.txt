@@ -1,0 +1,155 @@
+# 348 #
+
+:<servername> 348 <yournick> <channel> <exemptmask> <setby> <time>,
+
+Returned in a /mode #Channel +e
+
+
+# 349 #
+
+:<servername> 349 <yournick> <channel> :End of Channel Exempt List
+
+Returned at the end of a /mode #Channel +e
+
+
+# 404 #
+
+:<servername> 404 <yournick> <channel> :Cannot send to channel(<reason>)
+
+Returned when you try to send a /PRIVMSG (/MSG) to a channel you cannot send to.
+
+
+# 613 #
+
+:<servername> 613 <yournick> <tagetnick> :Is a Services Client on <server>
+
+Returned in a /WHOIS if the nickname has the usermode +S set.
+
+
+
+# 614 #
+
+:<servername> 614 <yournick> <tagetnick> :Is availible for help
+
+Returned in a /WHOIS if the nickname has the usermode +h set.
+
+
+# 615 #
+
+:<servername> 615 <yournick> <tagetnick> :Is Using modes <[modes]>
+
+Returned in a /WHOIS.
+
+
+# 616 #
+
+:<servername> 616 <yournick> <tagetnick> :Realhost <hostname> <[ip]>
+
+Returned in a /WHOIS if the nickname is +x.
+
+
+# 630 #
+
+:<servername> 630 <yournick> :<text>
+
+Returned in a /SETTINGS.
+
+
+# 631 #
+
+:<servername> 631 <yournick> :End of SETTINGS
+
+Returned at the end of a /SETTINGS.
+
+
+# 632 #
+
+:<servername> 630 <yournick> :<text>
+
+Returned in a /IRCOPS
+
+
+# 633 #
+
+:<servername> 631 <yournick> :End of SETTINGS
+
+Returned at the end of a /IRCOPS
+
+
+# 640 #
+
+:<servername> 640 <yournick> :- <servername> Operator message of the Day -
+
+Returned at the beginning of an /OPERMOTD command or when /OPER is used successfully.
+Only returned IF the OPERMOTD file is present.
+
+
+# 641 #
+
+:<servername> 641 <yournick> :- <text>
+
+Returned with each line of an /OPERMOTD command or when /OPER is used succesfully.
+Only returned IF the OPERMOTD file is present.
+
+
+# 642 #
+
+:<servername> 642 <yournick> :End of /OPERMOTD command.
+
+Returned at the end of an /OPERMOTD command or when /OPER is used successfully.
+Only returnd IF the OPERMOTD file is present.
+
+
+# 644 #
+
+:<servername> 644 <yournick> :- <servername> Rules -
+
+Returned at the beginning of a /RULES command.
+Only returned IF the RULES file is present.
+
+
+# 645 #
+
+:<servername> 645 <yournick> :- <text>
+
+Returned with each line of a /RULES command.
+Only returned IF the RULES file is present.
+
+
+# 646 #
+
+:<servername> 646 <yournick> :End of /RULES command.
+
+Returned at the end of a /RULES command.
+Only returnd IF the RULES file is present.
+
+
+# 670 #
+
+:<servername> 670 <yournick> <targetnick> :Real Hostname <hostname> [<ip>]
+
+Returned in a /WHOWAS if the targetnick was +x.
+Only returned for IRC Operators.
+
+
+# 700 #
+
+:<servername> 700 <yournick> <channel> <mask> :Channel exempt list is full
+
+Returned when trying to set an exempt on a channel (+e) and the exempt
+list is full.
+
+
+# 710 #
+
+:<servername> 710 <yournick> :RULES File is missing
+
+Returned if the RULES file is missing.
+
+
+# 711 #
+
+:<servername> 711 <yournick> :OPERMOTD File is missing
+
+Returned if the OPERMOTD file is missing.
+

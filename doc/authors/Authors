@@ -1,0 +1,118 @@
+/*
+ *  UltimateIRCd - an Internet Relay Chat daemon, doc/authors/Authors
+ *
+ *  Copyright (C) 2002 by the past and present ircd coders, and others.
+ *  Refer to the documentation within docs/authors/ for full credits and copyrights.
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
+ *  USA
+ *
+ * $Id: Authors,v 1.1 2003/11/04 07:11:06 nenolod Exp $
+ */
+
+ /*
+  * This file attempts to remember and give credits to all who have helped in
+  * the development of UltimateIRCd over the years.
+  * Names can only be added to this file, no name should ever be removed.
+  * This file must be included in all distribuitions of UltimateIRCd and derived works.
+  */
+
+IRC was conceived of and written by Jarkko Oikarinen <jto@tolsun.oulu.fi>.
+IRC was originally written in University of Oulu, Computing Center.
+See doc/authors/IRC-Authors for the original IRC credits.
+
+UltimateIRCd3.0.x is a derived work of the DALnet Bahamut IRCd which is derived from the
+Hybrid and DreamForge IRCd's.
+See docs/authors/Hybrid-team and docs/authors/Bahamut-team for full credits.
+
+UltimateIRCd is maintained by Thomas Juberg Stensås <ShadowMaster@Shadow-Realm.org>
+Current developers aswell as past developers who have directly worked with the UltimateIRCd project
+contributing their code, advice, skills and time to help out.
+
+	Adam Rutter			Shmad			<shmad@neostats.net>
+	Daniel Moss			Acidic32		<Acidic32@Shadow-Realm.org>
+	John M. Hoyt			WarNPeace		<amicon@amicon.net>
+ 	K. Hawkes			Miles			<k.hawkes@zombies.force9.net>
+	Mathias Vörös			AgAiNaWaY		<Againaway@Shadow-Realm.org>
+	Ray Akey			HMetal			<rakey@Amiga.com>
+					Belinda			<Belinda@Shadow-Realm.org>
+					Dief			<Dief@Shadow-Realm.org>
+					Dooley			<Dooley@Shadow-Realm.org>
+					Will			<Will@Shadow-Realm.org>
+
+
+
+In addition the following have contributed to IRCd development in one way or another in the past and present:
+
+	Daniel Engel 			dengel			<dane@zero.org>
+	Roger Yerramsetti		RogerY 			<rogery@austnet.org>
+	Joar Sivertsen			Sp^			<jsiv@start.no>
+	Robert E. Plummer		Toymaster		<ToyMaster@UltimateIRC.net>
+	Joe Lindstöm			Nak			<Nak@VillageIRC.net>
+	Scott Hildenbrand		DarkWolf/Scott		<DarkWolf@VillageIRC.net>
+	Michael Lawson			WeaZeL			<WeaZeL@VillageIRC.net>
+	Rossi Marcello			vejeta			<vjt@users.sourceforge.net>
+	Pierre-Luc Brunet		Fuitad
+	Helen Rose
+	Darren Reed
+	Armin Gruner
+	Markku Savela
+	Philippe Levan
+	Carsten Munk
+	Chip Norkus
+	Joan Touzet
+	Lucas Madar
+	Chelsea Ashley Dyerman
+					Graham			<Graham@Demonkarma.net>
+					n3rd
+					Crash
+					larelian{DeS}
+	Massachusetts Institute of Technology (M.I.T)
+	Rhe Regents of the University of California
+        Bahamut, Hybrid, StarChat, RageIRCd, EliteIRCd, UnrealIRCd and LiquidIRCd development teams.
+
+The following people and companies have aided the development in one way or another:
+
+	Joel Comm			Infomedia Inc.		<jcomm@worldvillage.com>
+        Scott Hildenbrand		TheBitz Inc.		<DarkWolf@TheBitz.com>
+
+The author would like to thank everyone at VillageIRC.net for your patience
+and support. This includes but is in no way limited to the following persons:
+
+        Marvie, Emerald, Serena, DKay, Nak, Zave, Kerrne, Snazzy, Rhapsody,
+        Allan, Auntie, Molly, Magic, Nuclear-X, ZJ, XT.
+
+Also thanks to:
+	NoverNet.com staff
+        uirc.net staff
+        Risanet.com staff
+        DemonKarma.net staff
+        Fractured.net staff
+        Clan-Forsaken.com staff
+	irc-chat.net staff
+	All members of the Shadow-Realm.org community
+        Crash
+        Binary
+        Derelict
+        ToyMaster
+        CM
+        JyNx
+        Benjamin
+        Rascle
+        CJ
+        DodGeR
+        Pierre-Luc
+        StrikerST
+        n3rd

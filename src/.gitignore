@@ -1,0 +1,5 @@
+Makefile
+ircd
+version.c.last
+version.c
+

@@ -1,0 +1,82 @@
+1.3
+
+  * Removed stoopid vanity flags.
+  * Removed broken proxy checker.
+
+1.2(00) -- Moonflow
+
+  * Added support for stats g.
+  * Fixed resolving code (redhat/mandrake/slackware/gentoo) systems
+    don't have to use old resolver code as a crutch anymore.
+  * Actually made a decent example.conf... for now.
+  * Merged in NhJm's smallaliases patch, adding support for
+    /ns, /cs, /ms, /os, /bs.
+  * Extended the default topiclength to 512 characters, and
+    extended the default nicklength to 32 characters, from 30.
+  * Changed the version display a tad.
+  * Removed need for ./config. Dont use this anymore.
+  * Added crutches for RFC1459 compliant clients.
+  * Added support for ! channels.
+
+1.1(16) -- Wildflower
+
+  * GLINE fix #2.
+  * Useless commands like info removed.
+
+1.1(12) -- Wildflower
+
+  * GLINE fix?!
+
+1.1(09) -- Wildflower
+
+  * Lots of stupid netinfo shit removed.
+
+1.1(06) -- Wildflower
+
+  * G:Line code from ViagraIRCd ported over, modified to meet
+    network specifications.
+
+1.1(03) -- Wildflower
+
+  * G:Line code rewritten.
+
+1.1(01) -- Wildflower
+
+  * G:Lines added.
+
+1.0(37) -- Psyche
+
+  * Connects are now *properly* distributed across the whole net
+  * SNOMASK system frozen.
+
+1.0(33) -- Psyche
+
+  * More adaptation to SNOMASKS. This should be done by now...
+  * Connects are now distributed across the whole net
+  * Deprecated send commands removed. (some of them)
+
+1.0(32) -- Psyche
+
+  * Fixed IPv6 support (almost!)
+  * Fixed a lot of SSL bugs.
+
+1.0(31) -- Psyche
+
+  * Removed the onconnect messages, replaced with something more streamlined.
+
+1.0(29) -- Psyche
+
+  * Finished implementation of SNOMASKs.
+  * Added SNOMASK for Nick Changes. +N.
+  * Removed stagnant modes.
+
+1.0(23) -- Psyche
+
+ * Began implementation of SNOMASKs.
+
+Changes in 1.0(20) -- Psyche
+
+ * +q channel mode, +c strips colour instead of blocking it, removed DCC deny crap --nenolod
+ * improvements to ircd messages --nenolod
+ * added SETIDENT
+

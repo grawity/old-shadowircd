@@ -1,0 +1,256 @@
+# IRC--
+# Copyright (c) 1988 Jarkko Okarinen
+#           (c) 1992 Darren Reed
+#           (c) 1992 Helen Rose
+# 
+# ShadowIRCd--
+# Copyright (c) 2003 ShadowIRCd development group
+#
+# The following example configuration describes a server called 
+# hades.arpa, which is an example server on the OpenIRC network.
+#
+# You only need ShadowIRCd if you are running an IRC server. If you are
+# just looking to connect to an IRC server, you only need a stand-alone
+# client.
+#
+# It is recommended that you check your configuration files before
+# rehashing. To do this, use the included "chkconf" utility, which is
+# in the tools subdirectory.
+#
+# This document was rewritten by nenolod, for use with ShadowIRCd. The 
+# original author of the example configuration file was Jarkko Okarinen.
+#
+# The following is a legend of importance:
+#
+# [REQUIRED] - You have to have these lines to make the server start.
+# [NETWORKED] - You need these if you are linking elsewhere.
+# [STRONGLY RECOMMENDED] - It is strongly recommended that you use these 
+# 			   lines.
+# [RECOMMENDED] - It is recommended that you use these lines.
+# [OPTIONAL] - Usage of these lines are optional.
+# [DISCOURAGED] - Dont use these lines unless it is absolutely necessary.
+# [DEPRECATED] - Deprecated.
+#
+# NOTE: This configuration file is read in reverse, so if you have to add
+# something in a specific order, add them backwords, so that they work
+# properly.
+#
+# [REQUIRED] - M:Line
+# The M:Line is used to establish an identity for your server. The first 
+# field is the servername, the second field is an optional IP to bind to
+# for connecting outwards, the third field is a description for the 
+# server, and the fourth field is the default port to listen on.
+M:hades.arpa:*:ShadowIRCd-1.3 test server:7000
+
+# [REQUIRED] - A:Line
+# The A:Line is used to set administrative information for the server.
+# Each field can be one freeform line shown in the /admin output.
+A:Bob Smith:Generic Internet Access:<widely@used.name>
+
+# [STRONGLY RECOMMENDED] - Y:Line
+# Y:Lines define connection classes. The fields in order are, class 
+# number, ping frequency (in seconds), connect frequency (in seconds),
+# maximum number of links, and maximum sendq.
+#
+# Some Y:Lines have been provided.
+Y:50:90:60:0:4000000
+Y:51:90:60:1:4000000
+
+Y:60:90:0:0:3500000
+Y:61:180:0:0:3500000
+Y:62:300:0:0:3500000
+
+Y:40:90:90:1:3500000
+Y:41:180:90:1:3500000
+Y:42:300:120:1:3500000
+
+Y:30:90:90:0:3500000
+Y:31:180:90:0:3500000
+Y:32:300:120:0:3500000
+
+Y:10:90:0:20:400000
+Y:5:90:0:20:400000
+Y:1:90:0:1000:100000
+
+# [REQUIRED] - I:Lines
+# I:Lines authorize clients to connect. You must have them in order
+# to accept clients.
+#
+# The first field is a mask for IPs, the second field is an optional
+# password, the third field is a mask for domain reversing, the fourth
+# field is not in use yet, and the fifth field is the connection class
+# that the client should be assigned to.
+#
+# Standard I:Line allowing anyone to connect:
+I:*::*@*::1
+
+# O:Line - [RECOMMENDED]
+# O:lines are used to define Operator access to the irc server.
+# An admin should only give operator access to admins that the can 
+# consider trustworthy, and not going to abuse his access to the server. 
+#
+# OpenIRC server admins are responsible for the actions of the people
+# who they grant access to. Be warned.
+#
+# ShadowIRCd uses flags to determine what access an operator will have.
+#
+############# PERMISSIONS #############
+#
+# a = see invisible users / channels
+# A = allow user to walk through bans
+# b = /kline
+# B = /unkline
+# c = local routing
+# C = global routing
+# D = die
+# g = User can send global notices
+# G = gline
+# k = Local kill
+# K = Global kill
+# l = User can send local notices
+# L = Can use SETHOST, SETIDENT, SETGECOS on others
+# m = Immune
+# n = edit channels (/fmode, /ftopic)
+# p = Can use SETHOST, SETIDENT, SETGECOS on self
+# r = rehash
+# R = restart
+# w = user can send wallops
+#
+# O:hostname (ident "@" permitted):password:Login:Access Flags:class
+#
+# Examples:
+#
+# O:*:GooFeR:serveradministrator:OAbcCkKrRDphwlgE:10
+#
+# O:*:INsaNIty:localop:obckl:5
+#
+O:*:tumuson:nenolod:aAbcCDgGkKlLmnprRw:10
+
+# X:Line - [OPTIONAL] 
+# The X:Line designates restart and die passwords for the server.
+#
+# The first field is the die password, and the second field is the
+# restart password.
+X:pavrah:pilashi
+
+# U:Lines - [RECOMMENDED]
+# 
+# U:Lined servers can make direct changes to the network environment. This
+# is good for services and statistics programs.
+#
+U:services.openirc.org:*:*::
+U:stats.openirc.org:*:*::
+
+# C/N:Lines - [NETWORKED]
+#
+# These lines negotiate connections to uplinks, thus creating an actual
+# server network.
+#
+# The first field is the IP of the remote server, the second field is a
+# password to use for authentication, the third password is the name
+# of the remote server, the fourth field is either flags for the uplink
+# (listed below), or a port number to connect to, the fifth field is the 
+# connection class to use.
+#
+# Link Flags:
+# E == Encrypted links (Requires encryption to be enabled during ./configure)
+# Z == Compressed links
+#
+C:192.168.0.1:pahraeni:psyche.arpa:7000:51
+N:192.168.0.1:quernica:psyche.arpa:Z:51
+
+# H:Lines - [DEPRECATED]
+#
+# H:Lines define hub masks. Since ShadowIRCd is designed to slave off it's
+# peers, this functionality has been deprecated.
+#
+# The first field is a mask of servernames allowed to link through the 
+# hub, the second field is unused, the third field is the name of the
+# server allowed to hub.
+#
+# An example H:Line is:
+# H:*::services.openirc.org::
+#
+#
+# L:Lines - [DEPRECATED]
+#
+# L:Lines do the opposite of H:Lines. See above.
+#
+# Some examples follow:
+# L:*.uk::*.au:
+#
+# L:*::Wintermute.Shadow-Realm.org:1
+#
+# P:Lines - [STRONGLY RECOMMENDED]
+#
+# P:Lines designate secondary ports to listen to connections on.
+#
+# The first field is an IP mask designating who can connect to the port.
+# The second field is the IP to bind to, the third field is for flags,
+# such as SSL, which makes that port SSL connections.
+#
+# Examples:
+#
+# P:*:195.159.32.103::6660
+#
+# P:195.159.*:195.159.32.103::8888
+#
+P:*:*::6667
+P:*:*:SSL:9999
+
+# Q:Lines - [OPTIONAL]
+#
+# Q:Lines are used to Quarantine nicknames. 
+#
+# The fields in order are: unused, reason, nickname.
+#
+Q:*:Reserved for real IRC Operators:*IRCop*
+Q:*:Reserved for services:*C*h*a*n*S*e*r*v*
+Q:*:Reserved for services:*N*i*c*k*S*e*r*v*
+Q:*:Reserved for services:*M*e*m*o*S*e*r*v*
+Q:*:Reserved for services:*O*p*e*r*S*e*r*v*
+Q:*:Reserved for services:*H*e*l*p*S*e*r*v*
+
+# K:Lines - [OPTIONAL]
+#
+# K:Lines deny access to the server.
+#
+# The fields in order are: hostmask, reason, optional username.
+#
+K:*:Dont IRC as root:root
+#
+# The following K:Line denies access from *.sytes.net, for username
+# nhjm449.
+K:*.sytes.net:Hacking #shadowircd:nhjm449
+#
+
+# Z:Lines - [DISCOURAGED]
+#
+# Z:Lines disconnect people from certain IPs immediately upon connection.
+# The syntax is the same as K:Line, except an IP mask is used, and the
+# username must be an asterisk. An example Z:Line follows.
+#
+# Z:199.234.13.*:Insecure shell box responsible for massive clone attacks:*
+#
+
+# E:Lines - [STRONGLY DISCOURAGED]
+#
+# E:Lines denote AKILL/KLINE/GLINE exemptions. These will fight services,
+# use them wisely.
+#
+# The fields are in order: hostmask, unused, username.
+#
+# An example of an E:Line is shown below.
+#
+# E:Tsunami.Shadow-Realm.org::darkshadow
+#
+
+# F:Lines - [STRONGLY DISCOURAGED]
+#
+# Same as E: but with more exemptions, see notes on E: for details.
+#
+# An example of an F:Line is shown below.
+#
+# F:Arcadia.Shadow-Realm.org::shadow
+#
+

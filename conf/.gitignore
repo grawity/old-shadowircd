@@ -1,0 +1,7 @@
+.ircd.entropy
+.maxclients
+ircd.conf
+ircd.crt
+ircd.key
+ircd.pid
+
