@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  m_kill.c: Kills a user.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_kill.c,v 1.2 2003/12/03 18:17:28 nenolod Exp $
+ *  $Id: m_kill.c,v 1.3 2004/01/20 19:56:34 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -65,7 +65,7 @@ _moddeinit(void)
   mod_del_cmd(&kill_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 /* mo_kill()
@@ -254,13 +254,8 @@ ms_kill(struct Client *client_p, struct Client *source_p,
   {
     if (IsServer(source_p))
     {
-      /* dont send clients kills from a hidden server */
-      if ((IsHidden(source_p) || ConfigServerHide.hide_servers) && !IsOper(target_p))
-        sendto_one(target_p, ":%s KILL %s :%s",
- 		   me.name, target_p->name, reason);
-      else
-	sendto_one(target_p, ":%s KILL %s :%s",
-	           source_p->name, target_p->name, reason);
+      sendto_one(target_p, ":%s KILL %s :%s",
+	         source_p->name, target_p->name, reason);
     }
     else
       sendto_one(target_p, ":%s!%s@%s KILL %s :%s",
@@ -293,11 +288,7 @@ ms_kill(struct Client *client_p, struct Client *source_p,
   relay_kill(client_p, source_p, target_p, path, reason);
   SetKilled(target_p);
 
-  /* reason comes supplied with its own ()'s */
-  if (IsServer(source_p) && (IsHidden(source_p) || ConfigServerHide.hide_servers))
-    ircsprintf(buf, "Killed (%s %s)", me.name, reason);
-  else
-    ircsprintf(buf, "Killed (%s %s)", source_p->name, reason);
+  ircsprintf(buf, "Killed (%s %s)", source_p->name, reason);
 
   exit_client(client_p, target_p, source_p, buf);
 }

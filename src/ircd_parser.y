@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd_parser.y,v 1.13 2004/01/20 17:53:57 nenolod Exp $
+ *  $Id: ircd_parser.y,v 1.14 2004/01/20 19:56:34 nenolod Exp $
  */
 
 %{
@@ -202,6 +202,7 @@ unhook_hub_leaf_confs(void)
 %token  HAVENT_READ_CONF
 %token  HIDDEN
 %token  HIDDEN_ADMIN
+%token  CLOAK_ON_OPER
 %token	HIDE_SPOOF_IPS
 %token  HOST
 %token  HUB
@@ -381,7 +382,6 @@ conf_item:        admin_entry
 		| gline_entry
                 | gecos_entry
                 | modules_entry
-		| usercloak_entry
                 | error ';'
                 | error '}'
         ;
@@ -470,17 +470,18 @@ network_items:          network_items network_item |
 network_item:           network_name | network_description |
                         network_cloak_key_1 | network_cloak_key_2 |
                         network_cloak_key_3 | network_on_oper_host |
-                        network_gline_address;
+                        network_cloak_on_oper | network_gline_address |
+			error;
 
 network_name:           NAME '=' QSTRING ';'
 {
   if (ypass == 2)
   {
     char *p;
-                                                                                                                                               
+
     if ((p = strchr(yylval.string, ' ')) != NULL)
       p = '\0';
-                                                                                                                                               
+
     MyFree(ServerInfo.network_name);
     DupString(ServerInfo.network_name, yylval.string);
   }
@@ -547,6 +548,12 @@ network_cloak_key_3:  CLOAK_KEY_3 '=' NUMBER ';'
   }
 };
 
+network_cloak_on_oper: CLOAK_ON_OPER '=' TBOOL ';'
+{
+  if (ypass == 2)
+    ServerInfo.network_cloak_on_oper = yylval.number;
+};
+  
 /***************************************************************************
  *  section serverinfo
  ***************************************************************************/

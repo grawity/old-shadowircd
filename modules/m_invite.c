@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_invite.c,v 1.2 2003/12/12 20:22:57 nenolod Exp $
+ *  $Id: m_invite.c,v 1.3 2004/01/20 19:56:34 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,7 +63,7 @@ _moddeinit(void)
   mod_del_cmd(&invite_msgtab);
 }
 
-const char *_version = "$Revision: 1.2 $";
+const char *_version = "$Revision: 1.3 $";
 #endif
 
 /*
@@ -130,8 +130,7 @@ m_invite(struct Client *client_p, struct Client *source_p,
 
   if (!MyConnect(target_p) && (parv[2][0] == '&'))
   {
-    if (ConfigServerHide.hide_servers == 0)
-      sendto_one(source_p, form_str(ERR_USERNOTONSERV),
+    sendto_one(source_p, form_str(ERR_USERNOTONSERV),
                  me.name, parv[0], parv[1]);
     return;
   }

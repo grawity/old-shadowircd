@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.h,v 1.7 2004/01/16 00:21:05 nenolod Exp $
+ *  $Id: s_conf.h,v 1.8 2004/01/20 19:56:34 nenolod Exp $
  */
 
 #ifndef INCLUDED_s_conf_h
@@ -315,7 +315,6 @@ struct config_file_entry
   int oper_only_umodes;
   int oper_umodes;
   int crypt_oper_password;
-  int crypt_usercloak;
   int max_targets;
   int caller_id_wait;
   int min_nonwildcard;
@@ -351,17 +350,6 @@ struct config_channel_entry
   int default_split_user_count;
 };
 
-struct config_server_hide
-{
-  int flatten_links;
-  int hide_servers;
-  int links_delay;
-  int links_disabled;
-  int hidden;
-  int disable_hidden;
-  int hide_server_ips;
-};
-
 struct server_info
 {
   char *name;
@@ -373,6 +361,7 @@ struct server_info
   long network_cloakkey1;
   long network_cloakkey2;
   long network_cloakkey3;
+  int  network_cloak_on_oper;
 #ifdef HAVE_LIBCRYPTO
   char *rsa_private_key_file;
   RSA *rsa_private_key;
@@ -422,7 +411,6 @@ extern dlink_list temporary_dlines;
 extern struct logging_entry ConfigLoggingEntry;
 extern struct config_file_entry ConfigFileEntry;/* defined in ircd.c*/
 extern struct config_channel_entry ConfigChannel;/* defined in channel.c*/
-extern struct config_server_hide ConfigServerHide; /* defined in s_conf.c */
 extern struct server_info ServerInfo;       /* defined in ircd.c */
 extern struct admin_info AdminInfo;        /* defined in ircd.c */
 /* End GLOBAL section */

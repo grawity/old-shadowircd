@@ -25,7 +25,7 @@
  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *
- *  $Id: m_tburst.c,v 1.1.1.1 2003/12/02 20:47:50 nenolod Exp $
+ *  $Id: m_tburst.c,v 1.2 2004/01/20 19:56:34 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -77,7 +77,7 @@ _moddeinit(void)
   delete_capability("TBURST");
 }
 
-const char *_version = "$Revision: 1.1.1.1 $";
+const char *_version = "$Revision: 1.2 $";
 
 #endif /* !STATIC_MODULES */
 
@@ -117,8 +117,7 @@ set_topic(struct Client *source_p, struct Channel *chptr,
 {
   set_channel_topic(chptr, topic, topicwho, newtopicts);
 
-  sendto_channel_local(ALL_MEMBERS, chptr, ":%s TOPIC %s :%s",
-		       ConfigServerHide.hide_servers ? me.name : source_p->name,
+  sendto_channel_local(ALL_MEMBERS, chptr, ":%s TOPIC %s :%s", source_p->name,
 		       chptr->chname, chptr->topic == NULL ? "" : chptr->topic);
 
 #ifdef TBURST_PROPAGATE

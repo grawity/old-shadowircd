@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_sjoin.c,v 1.10 2003/12/19 02:12:08 nenolod Exp $
+ *  $Id: m_sjoin.c,v 1.11 2004/01/20 19:56:34 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -63,7 +63,7 @@ _moddeinit(void)
   mod_del_cmd(&sjoin_msgtab);
 }
 
-const char *_version = "$Revision: 1.10 $";
+const char *_version = "$Revision: 1.11 $";
 #endif
 
 static char modebuf[MODEBUFLEN];
@@ -115,8 +115,6 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
   char           *p; /* pointer used making sjbuf */
   int            i;
   dlink_node     *m;
-  const char *servername = (ConfigServerHide.hide_servers || IsHidden(source_p)) ?
-			    me.name : source_p->name;  
 
   sjbuf_nhops[0] = '\0';
 
@@ -311,7 +309,7 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
     /* This _SHOULD_ be to ALL_MEMBERS
      * It contains only +imnpstlk, etc */
     sendto_channel_local(ALL_MEMBERS, chptr, ":%s MODE %s %s %s",
-	                 servername, chptr->chname, modebuf, parabuf);
+	                 source_p->name, chptr->chname, modebuf, parabuf);
   }
 
   modebuf[0] = parabuf[0] = '\0';
@@ -502,7 +500,7 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
       {
         *mbuf = '\0';
         sendto_channel_local(ALL_MEMBERS, chptr, ":%s MODE %s %s %s %s %s %s",
-                             servername, chptr->chname, modebuf, para[0],
+                             source_p->name, chptr->chname, modebuf, para[0],
                              para[1], para[2], para[3]);
         mbuf = modebuf;
         *mbuf++ = '+';
@@ -520,7 +518,7 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
       {
         *mbuf = '\0';
         sendto_channel_local(ALL_MEMBERS, chptr, ":%s MODE %s %s %s %s %s %s",
-                             servername, chptr->chname, modebuf, para[0],
+                             source_p->name, chptr->chname, modebuf, para[0],
                              para[1], para[2], para[3]);
         mbuf = modebuf;
         *mbuf++ = '+';
@@ -538,7 +536,7 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
       {
         *mbuf = '\0';
         sendto_channel_local(ALL_MEMBERS, chptr, ":%s MODE %s %s %s %s %s %s",
-                             servername, chptr->chname, modebuf, para[0],
+                             source_p->name, chptr->chname, modebuf, para[0],
                              para[1], para[2], para[3]);
         mbuf = modebuf;
         *mbuf++ = '+';
@@ -556,7 +554,7 @@ ms_sjoin(struct Client *client_p, struct Client *source_p,
       {
         *mbuf = '\0';
         sendto_channel_local(ALL_MEMBERS, chptr, ":%s MODE %s %s %s %s %s %s",
-                             servername, chptr->chname, modebuf, para[0],
+                             source_p->name, chptr->chname, modebuf, para[0],
                              para[1], para[2], para[3]);
         mbuf = modebuf;
         *mbuf++ = '+';
@@ -592,7 +590,7 @@ nextnick:
   if (pargs != 0)
   {
     sendto_channel_local(ALL_MEMBERS, chptr, ":%s MODE %s %s %s %s %s %s",
-                         servername, chptr->chname, modebuf, para[0],
+                         source_p->name, chptr->chname, modebuf, para[0],
                          para[1], para[2], para[3]);
   }
 
@@ -784,9 +782,7 @@ void remove_a_mode(struct Channel *chptr, struct Client *source_p,
       *mbuf = '\0';
       sendto_channel_local(ALL_MEMBERS, chptr,
 		           ":%s MODE %s %s %s %s %s %s",
-			   (IsHidden(source_p) ||
-			   ConfigServerHide.hide_servers) ?
-			   me.name : source_p->name,
+			   source_p->name,
 			   chptr->chname, lmodebuf,
 			   lpara[0], lpara[1], lpara[2], lpara[3]);
       mbuf = lmodebuf;
@@ -801,8 +797,7 @@ void remove_a_mode(struct Channel *chptr, struct Client *source_p,
     *mbuf = '\0';
     sendto_channel_local(ALL_MEMBERS, chptr,
 			 ":%s MODE %s %s %s %s %s %s",
-			 (IsHidden(source_p) || ConfigServerHide.hide_servers) ?
-			 me.name : source_p->name,
+			 source_p->name,
 			 chptr->chname, lmodebuf,
 			 lpara[0], lpara[1], lpara[2], lpara[3]);
   }

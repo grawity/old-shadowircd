@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_join.c,v 1.7 2004/01/15 22:37:06 nenolod Exp $
+ *  $Id: m_join.c,v 1.8 2004/01/20 19:56:34 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -88,7 +88,7 @@ _moddeinit(void)
   mod_del_cmd(&join_msgtab);
 }
 
-const char *_version = "$Revision: 1.7 $";
+const char *_version = "$Revision: 1.8 $";
 #endif
 
 /* m_join()
@@ -230,7 +230,6 @@ ms_join(struct Client *client_p, struct Client *source_p,
   int keep_new_modes = 1;
   int isnew;
   char *s;
-  const char *servername;
 
   if ((parv[1][0] == '0') && (parv[1][1] == '\0') && parc == 2)
   {
@@ -365,13 +364,10 @@ ms_join(struct Client *client_p, struct Client *source_p,
 
   if (*modebuf != '\0')
   {
-    servername = (ConfigServerHide.hide_servers || IsHidden(source_p)) ?
-      me.name : source_p->name;
-
     /* This _SHOULD_ be to ALL_MEMBERS
      * It contains only +imnpstlk, etc */
     sendto_channel_local(ALL_MEMBERS, chptr, ":%s MODE %s %s %s",
-                         servername, chptr->chname, modebuf, parabuf);
+                         source_p->name, chptr->chname, modebuf, parabuf);
   }
 
   if (!IsMember(source_p, chptr))
@@ -775,9 +771,7 @@ static
       *mbuf = '\0';
       sendto_channel_local(ALL_MEMBERS, chptr,
                            ":%s MODE %s %s %s %s %s %s",
-                           (IsHidden(source_p) ||
-                            ConfigServerHide.hide_servers) ?
-                           me.name : source_p->name,
+                           source_p->name,
                            chptr->chname, lmodebuf,
                            lpara[0], lpara[1], lpara[2], lpara[3]);
 
@@ -793,9 +787,7 @@ static
     *mbuf = '\0';
     sendto_channel_local(ALL_MEMBERS, chptr,
                          ":%s MODE %s %s %s %s %s %s",
-                         (IsHidden(source_p)
-                          || ConfigServerHide.hide_servers) ? me.
-                         name : source_p->name, chptr->chname, lmodebuf,
+                         source_p->name, chptr->chname, lmodebuf,
                          lpara[0], lpara[1], lpara[2], lpara[3]);
   }
 }

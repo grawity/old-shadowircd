@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_topic.c,v 1.5 2003/12/12 18:21:42 nenolod Exp $
+ *  $Id: m_topic.c,v 1.6 2004/01/20 19:56:34 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -62,7 +62,7 @@ _moddeinit(void)
   mod_del_cmd(&topic_msgtab);
 }
 
-const char *_version = "$Revision: 1.5 $";
+const char *_version = "$Revision: 1.6 $";
 #endif
 
 /* m_topic()
@@ -202,24 +202,10 @@ m_topic(struct Client *client_p, struct Client *source_p,
                      from, to,
                      chptr->chname, chptr->topic);
 
-          /* client on LL needing the topic - if we have serverhide, say
-           * its the actual LL server that set the topic, not us the
-           * uplink -- fl_
-           */
-          if (ConfigServerHide.hide_servers && !MyClient(source_p)
-              && IsCapable(client_p, CAP_LL) && ServerInfo.hub)
-          {
-            sendto_one(source_p, form_str(RPL_TOPICWHOTIME),
-  	               from, to, chptr->chname,
-                       client_p->name, chptr->topic_time);
-          }
-          else
-          {
-            sendto_one(source_p, form_str(RPL_TOPICWHOTIME),
+          sendto_one(source_p, form_str(RPL_TOPICWHOTIME),
                        from, to, chptr->chname,
                        chptr->topic_info,
                        chptr->topic_time);
-          }
         }
       }
       else
@@ -269,21 +255,9 @@ ms_topic(struct Client *client_p, struct Client *source_p,
 
     set_channel_topic(chptr, parv[4], parv[2], atoi(parv[3]));
 
-    if (ConfigServerHide.hide_servers)
-    {
-      sendto_channel_local(ALL_MEMBERS,
-                           chptr, ":%s TOPIC %s :%s",
-                           me.name,
-                           parv[1],
-                           chptr->topic == NULL ? "" : chptr->topic);
-
-    }
-    else
-    {
-      sendto_channel_local(ALL_MEMBERS,
-                           chptr, ":%s TOPIC %s :%s",
-                           source_p->name,
-                           parv[1], chptr->topic == NULL ? "" : chptr->topic);
-    }
+    sendto_channel_local(ALL_MEMBERS,
+                         chptr, ":%s TOPIC %s :%s",
+                         source_p->name,
+                         parv[1], chptr->topic == NULL ? "" : chptr->topic);
   }
 }

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_serv.c,v 1.4 2004/01/12 20:16:36 nenolod Exp $
+ *  $Id: s_serv.c,v 1.5 2004/01/20 19:56:34 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -300,10 +300,6 @@ write_links_file(void* notused)
     if (IsMe(target_p))
       continue;
 
-    /* skip hidden servers */
-    if (IsHidden(target_p) && !ConfigServerHide.disable_hidden)
-      continue;
-
     if (target_p->info[0])
       p = target_p->info;
     else
@@ -546,11 +542,7 @@ try_connections(void *unused)
        * error afterwards if it fails.
        *   -- adrian
        */
-      if (ConfigServerHide.hide_server_ips)
-        sendto_realops_flags(UMODE_ALL, L_ALL, "Connection to %s activated.",
-                             conf->name);
-      else
-        sendto_realops_flags(UMODE_ALL, L_ALL, "Connection to %s[%s] activated.",
+      sendto_realops_flags(UMODE_ALL, L_ALL, "Connection to %s[%s] activated.",
                              conf->name, aconf->host);
 
       serv_connect(aconf, NULL);
@@ -1052,9 +1044,8 @@ server_estab(struct Client *client_p)
      * currently we only need to call send_queued_write,
      * Nagle is already disabled at this point --adx
      */
-    sendto_one(client_p, "SERVER %s 1 :%s%s",
+    sendto_one(client_p, "SERVER %s 1 :%s",
                my_name_for_link(conf), 
-               ConfigServerHide.hidden ? "(H) " : "",
                (me.info[0]) ? (me.info) : "IRCers United");
     send_queued_write(client_p);
   }
@@ -2150,12 +2141,7 @@ serv_connect_callback(int fd, int status, void *data)
     /* We have an error, so report it and quit
      * Admins get to see any IP, mere opers don't *sigh*
      */
-     if (ConfigServerHide.hide_server_ips)
-       sendto_realops_flags(UMODE_ALL, L_ADMIN,
-                            "Error connecting to %s: %s",
-                            client_p->name, comm_errstr(status));
-     else
-       sendto_realops_flags(UMODE_ALL, L_ADMIN,
+     sendto_realops_flags(UMODE_ALL, L_ADMIN,
 	      		    "Error connecting to %s[%s]: %s", client_p->name,
 			    client_p->host, comm_errstr(status));
 
@@ -2213,9 +2199,8 @@ serv_connect_callback(int fd, int status, void *data)
 		    | ((aconf->flags & CONF_FLAGS_COMPRESSED) ? CAP_ZIP_SUPPORTED : 0)
 		    , 0);
 
-  sendto_one(client_p, "SERVER %s 1 :%s%s",
+  sendto_one(client_p, "SERVER %s 1 :%s",
              my_name_for_link(conf), 
-	     ConfigServerHide.hidden ? "(H) " : "", 
 	     me.info);
 
   /* If we've been marked dead because a send failed, just exit
@@ -2307,9 +2292,9 @@ cryptlink_init(struct Client *client_p, struct ConfItem *conf, int fd)
     		    | ((aconf->flags & CONF_FLAGS_COMPRESSED) ? CAP_ZIP_SUPPORTED : 0) ,
          	    CAP_ENC_MASK);
 
-  sendto_one(client_p, "CRYPTLINK SERV %s %s :%s%s",
+  sendto_one(client_p, "CRYPTLINK SERV %s %s :%s",
              my_name_for_link(conf), key_to_send,
-             ConfigServerHide.hidden ? "(H) " : "", me.info);
+             me.info);
 
   SetHandshake(client_p);
   SetWaitAuth(client_p);

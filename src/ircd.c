@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: ircd.c,v 1.8 2004/01/15 20:34:41 nenolod Exp $
+ *  $Id: ircd.c,v 1.9 2004/01/20 19:56:34 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -673,12 +673,6 @@ main (int argc, char *argv[])
 
   /* Setup the timeout check. I'll shift it later :)  -- adrian */
   eventAddIsh ("comm_checktimeouts", comm_checktimeouts, NULL, 1);
-
-  if (ConfigServerHide.links_delay > 0)
-    eventAddIsh ("write_links_file", write_links_file, NULL,
-		 ConfigServerHide.links_delay);
-  else
-    ConfigServerHide.links_disabled = 1;
 
   if (splitmode)
     eventAddIsh ("check_splitmode", check_splitmode, NULL, 60);

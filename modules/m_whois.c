@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_whois.c,v 1.6 2004/01/15 23:15:11 nenolod Exp $
+ *  $Id: m_whois.c,v 1.7 2004/01/20 19:56:34 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -84,7 +84,7 @@ _moddeinit (void)
   mod_del_cmd (&whois_msgtab);
 }
 
-const char *_version = "$Revision: 1.6 $";
+const char *_version = "$Revision: 1.7 $";
 #endif
 
 /* m_whois
@@ -117,18 +117,10 @@ m_whois (struct Client *client_p, struct Client *source_p,
       else
 	last_used = CurrentTime;
 
-      /* if we have serverhide enabled, they can either ask the clients
-       * server, or our server.. I dont see why they would need to ask
-       * anything else for info about the client.. --fl_
-       */
-      if (ConfigFileEntry.disable_remote)
-	parv[1] = parv[2];
-
       if (hunt_server (client_p, source_p, ":%s WHOIS %s :%s", 1, parc, parv)
 	  != HUNTED_ISME)
 	return;
 
-      parv[1] = parv[2];
     }
   do_whois (client_p, source_p, parc, parv);
 }
@@ -409,14 +401,8 @@ whois_person (struct Client *source_p, struct Client *target_p, int glob)
   if (reply_to_send)
     sendto_one (source_p, "%s", buf);
 
-  if ((IsOper (source_p) || !ConfigServerHide.hide_servers)
-      || target_p == source_p)
-    sendto_one (source_p, form_str (RPL_WHOISSERVER), me.name, source_p->name,
+  sendto_one (source_p, form_str (RPL_WHOISSERVER), me.name, source_p->name,
 		target_p->name, server_p->name, server_p->info);
-  else
-    sendto_one (source_p, form_str (RPL_WHOISSERVER),
-		me.name, source_p->name, target_p->name,
-		ServerInfo.network_name, ServerInfo.network_desc);
 
   if (target_p->user->away)
     sendto_one (source_p, form_str (RPL_AWAY), me.name,
@@ -475,11 +461,7 @@ whois_person (struct Client *source_p, struct Client *target_p, int glob)
 
   if (MyConnect (target_p))	/* Can't do any of this if not local! db */
     {
-      if ((glob)
-	  || (MyClient (source_p)
-	      && (IsOper (source_p)
-		  || !ConfigServerHide.hide_servers))
-	  || (source_p == target_p))
+      if ((glob) || (MyClient (source_p))
 	{
 	  if (IsOperAuspex (source_p))
 	    sendto_one (source_p, form_str (RPL_WHOISACTUALLY),

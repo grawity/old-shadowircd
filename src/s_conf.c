@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.c,v 1.5 2003/12/19 02:12:08 nenolod Exp $
+ *  $Id: s_conf.c,v 1.6 2004/01/20 19:56:34 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -54,8 +54,6 @@
 #include "memory.h"
 #include "irc_res.h"
 #include "userhost.h"
-
-struct config_server_hide ConfigServerHide;
 
 /* general conf items link list root, other than k lines etc. */
 dlink_list server_items  = { NULL, NULL, 0 };
@@ -744,14 +742,9 @@ report_confitem_types(struct Client *source_p, ConfType type)
       /* Allow admins to see actual ips
        * unless hide_server_ips is enabled
        */
-      if (!ConfigServerHide.hide_server_ips && IsAdmin(source_p))
 	sendto_one(source_p, form_str(RPL_STATSCLINE),
 		   me.name, source_p->name, 'C', host,
 		   sbuf, conf->name, port, classname);
-        else
-          sendto_one(source_p, form_str(RPL_STATSCLINE),
-                     me.name, source_p->name, 'C',
-		     "*@127.0.0.1", sbuf, conf->name, port, classname);
     }
     break;
 
@@ -1996,13 +1989,6 @@ set_default_conf(void)
   ConfigChannel.default_split_server_count = 0;
   ConfigChannel.no_join_on_split = NO;
   ConfigChannel.no_create_on_split = NO;
-
-  ConfigServerHide.flatten_links = NO;
-  ConfigServerHide.links_delay = 300;
-  ConfigServerHide.hidden = NO;
-  ConfigServerHide.disable_hidden = NO;
-  ConfigServerHide.hide_servers = NO;
-  ConfigServerHide.hide_server_ips = NO;
 
   ConfigFileEntry.hide_spoof_ips = YES;
   ConfigFileEntry.ignore_bogus_ts = NO;

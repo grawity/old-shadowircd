@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  m_map.c: Sends an Undernet compatible map to a user.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_map.c,v 1.1.1.1 2003/12/02 20:47:41 nenolod Exp $
+ *  $Id: m_map.c,v 1.2 2004/01/20 19:56:34 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -39,7 +39,7 @@ static void dump_map(struct Client *client_p,struct Client *root, char *pbuf);
 
 struct Message map_msgtab = {
   "MAP", 0, 0, 0, 0, MFLG_SLOW, 0,
-  {m_unregistered, m_map, m_ignore, mo_map, m_ignore}
+  {m_unregistered, m_map, m_ignore, m_map, m_ignore}
 };
 
 #ifndef STATIC_MODULES
@@ -53,7 +53,7 @@ void _moddeinit(void)
   mod_del_cmd(&map_msgtab);
 }
 
-const char *_version = "$Revision: 1.1.1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 static char buf[BUFSIZE];
@@ -65,26 +65,9 @@ static void
 m_map(struct Client *client_p, struct Client *source_p,
       int parc, char *parv[])
 {
-  if (!ConfigServerHide.flatten_links)
-  {
-    dump_map(client_p, &me, buf);
-    sendto_one(client_p, form_str(RPL_MAPEND), me.name, client_p->name);
-    return;
-  }
-
-  m_not_oper(client_p,source_p,parc,parv);
-  return;
-}
-
-/* mo_map()
- *      parv[0] = sender prefix
- */
-static void
-mo_map(struct Client *client_p, struct Client *source_p,
-                    int parc, char *parv[])
-{
-  dump_map(client_p,&me,buf);
+  dump_map(client_p, &me, buf);
   sendto_one(client_p, form_str(RPL_MAPEND), me.name, client_p->name);
+  return;
 }
 
 /* dump_map()

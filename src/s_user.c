@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.25 2004/01/18 02:44:37 nenolod Exp $
+ *  $Id: s_user.c,v 1.26 2004/01/20 19:56:34 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -264,13 +264,9 @@ show_lusers(struct Client *source_p)
     to = source_p->name;
   }
 
-  if (!ConfigServerHide.hide_servers || IsOper(source_p))
-    sendto_one(source_p, form_str(RPL_LUSERCLIENT),
+  sendto_one(source_p, form_str(RPL_LUSERCLIENT),
                from, to, (Count.total-Count.invisi),
                Count.invisi, dlink_list_length(&global_serv_list));
-  else
-    sendto_one(source_p, form_str(RPL_LUSERCLIENT), from, to,
-	      (Count.total-Count.invisi), Count.invisi, 1);
 
   if (Count.oper > 0)
     sendto_one(source_p, form_str(RPL_LUSEROP),
@@ -285,28 +281,17 @@ show_lusers(struct Client *source_p)
 	       from, to,
 	       dlink_list_length(&global_channel_list));
 
-  if (!ConfigServerHide.hide_servers || IsOper(source_p))
-  {
-    sendto_one(source_p, form_str(RPL_LUSERME),
+  sendto_one(source_p, form_str(RPL_LUSERME),
 	       from, to,
 	       Count.local, Count.myserver);
-    sendto_one(source_p, form_str(RPL_LOCALUSERS),
+  sendto_one(source_p, form_str(RPL_LOCALUSERS),
 	       from, to,
 	       Count.local, Count.max_loc);
-  }
-  else
-  {
-    sendto_one(source_p, form_str(RPL_LUSERME),
-	       from, to, Count.total, 0);
-    sendto_one(source_p, form_str(RPL_LOCALUSERS), 
-	       from, to, Count.total, Count.max_tot);
-  }
 
   sendto_one(source_p, form_str(RPL_GLOBALUSERS),
              from, to, Count.total, Count.max_tot);
 
-  if (!ConfigServerHide.hide_servers || IsOper(source_p))
-    sendto_one(source_p, form_str(RPL_STATSCONN), from, to,
+  sendto_one(source_p, form_str(RPL_STATSCONN), from, to,
 	       MaxConnectionCount, MaxClientCount, Count.totalrestartcount);
 
   if (Count.local > MaxClientCount)
@@ -1073,6 +1058,11 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
         case '\t':
           break;
 
+        case 'H':
+          if (!IsOper(target_p))
+             break;
+
+
 	/*
 	 * just some quick checks on services modes
 	 */
@@ -1081,10 +1071,6 @@ set_user_mode(struct Client *client_p, struct Client *source_p,
         case 'R':
 	case 'e':
           if (!IsServer(source_p))
-             break;
-
-        case 'H':
-          if (!IsOper(target_p))
              break;
 
         default:

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: parse.c,v 1.2 2003/12/12 17:58:42 nenolod Exp $
+ *  $Id: parse.c,v 1.3 2004/01/20 19:56:34 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -843,11 +843,7 @@ do_numeric(char numeric[], struct Client *client_p, struct Client *source_p,
     if ((atoi(numeric) == ERR_UMODEUNKNOWNFLAG) && MyClient(target_p))
       return;
     
-    /* Fake it for server hiding, if its our client */
-    if (ConfigServerHide.hide_servers &&
-        MyClient(target_p) && !IsOper(target_p))
-      sendto_one(target_p, ":%s %s %s%s", me.name, numeric, target_p->name, buffer);
-    else if (!MyClient(target_p) && IsCapable(target_p->from, CAP_TS6) && HasID(source_p))
+    if (!MyClient(target_p) && IsCapable(target_p->from, CAP_TS6) && HasID(source_p))
       sendto_one(target_p, ":%s %s %s%s", source_p->id, numeric, target_p->id, buffer);
     else /* either it is our client, or a client linked throuh a non-ts6 server. must use names! */
       sendto_one(target_p, ":%s %s %s%s", source_p->name, numeric, target_p->name, buffer);

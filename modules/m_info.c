@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  m_info.c: Sends information about the server.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_info.c,v 1.1.1.1 2003/12/02 20:47:35 nenolod Exp $
+ *  $Id: m_info.c,v 1.2 2004/01/20 19:56:34 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -71,7 +71,7 @@ _moddeinit(void)
   mod_del_cmd(&info_msgtab);
 }
 
-const char *_version = "$Revision: 1.1.1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /*
@@ -433,12 +433,6 @@ static struct InfoStruct info_table[] =
     "Failed operator log file"
   },
   {
-    "disable_hidden",
-    OUTPUT_BOOLEAN_YN,
-    &ConfigServerHide.disable_hidden,
-    "Prevent servers from hiding themselves from a flattened /links",
-  },
-  {
     "disable_local_channels",
     OUTPUT_BOOLEAN_YN,
     &ConfigChannel.disable_local_channels,
@@ -449,30 +443,6 @@ static struct InfoStruct info_table[] =
     OUTPUT_BOOLEAN_YN,
     &ConfigFileEntry.disable_remote,
     "Prevent users issuing commands on remote servers",
-  },
-  {
-    "flatten_links",
-    OUTPUT_BOOLEAN_YN,
-    &ConfigServerHide.flatten_links,
-    "Flatten /links list",
-  },
-  {
-    "hidden",
-    OUTPUT_BOOLEAN_YN,
-    &ConfigServerHide.hidden,
-    "Hide this server from a flattened /links on remote servers",
-  },
-  {
-    "hide_servers",
-    OUTPUT_BOOLEAN_YN,
-    &ConfigServerHide.hide_servers,
-    "Hide servernames from users",
-  },
-  {
-    "links_delay",
-    OUTPUT_DECIMAL,
-    &ConfigServerHide.links_delay,
-    "Links rehash delay"
   },
   /* --[  END OF TABLE  ]---------------------------------------------- */
   {

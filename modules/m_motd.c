@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  m_motd.c: Shows the current message of the day.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_motd.c,v 1.1.1.1 2003/12/02 20:47:36 nenolod Exp $
+ *  $Id: m_motd.c,v 1.2 2004/01/20 19:56:34 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -70,7 +70,7 @@ _moddeinit(void)
   mod_del_cmd(&motd_msgtab);
 }
 
-const char *_version = "$Revision: 1.1.1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /* mr_motd()
@@ -106,12 +106,8 @@ m_motd(struct Client *client_p, struct Client *source_p,
   else
     last_used = CurrentTime;
 
-  /* This is safe enough to use during non hidden server mode */
-  if (!ConfigFileEntry.disable_remote && !ConfigServerHide.hide_servers)
-  {
-    if (hunt_server(client_p, source_p, ":%s MOTD :%s", 1,parc,parv)!=HUNTED_ISME)
+  if (hunt_server(client_p, source_p, ":%s MOTD :%s", 1,parc,parv)!=HUNTED_ISME)
       return;
-  }
 
   motd_spy(source_p);
   send_message_file(source_p,&ConfigFileEntry.motd);

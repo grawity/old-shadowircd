@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  m_connect.c: Connects to a remote IRC server.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_connect.c,v 1.1.1.1 2003/12/02 20:47:48 nenolod Exp $
+ *  $Id: m_connect.c,v 1.2 2004/01/20 19:56:34 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -60,7 +60,7 @@ _moddeinit(void)
   mod_del_cmd(&connect_msgtab);
 }
 
-const char *_version = "$Revision: 1.1.1.1 $";
+const char *_version = "$Revision: 1.2 $";
 #endif
 
 /*
@@ -190,13 +190,9 @@ mo_connect(struct Client* client_p, struct Client* source_p,
    */
   if (serv_connect(aconf, source_p))
   {
-    if (!ConfigServerHide.hide_server_ips && IsAdmin(source_p))
-      sendto_one(source_p, ":%s NOTICE %s :*** Connecting to %s[%s].%d",
+    sendto_one(source_p, ":%s NOTICE %s :*** Connecting to %s[%s].%d",
                  me.name, source_p->name, aconf->host,
                  conf->name, aconf->port);
-    else
-      sendto_one(source_p, ":%s NOTICE %s :*** Connecting to %s.%d",
-                 me.name, source_p->name, conf->name, aconf->port);
   }
   else
   {

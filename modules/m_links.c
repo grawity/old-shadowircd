@@ -1,5 +1,5 @@
 /*
- *  ircd-hybrid: an advanced Internet Relay Chat Daemon(ircd).
+ *  shadowircd: an advanced Internet Relay Chat Daemon(ircd).
  *  m_links.c: Shows what servers are currently connected.
  *
  *  Copyright (C) 2002 by the past and present ircd coders, and others.
@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_links.c,v 1.5 2004/01/15 20:16:20 nenolod Exp $
+ *  $Id: m_links.c,v 1.6 2004/01/20 19:56:34 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -62,7 +62,7 @@ _moddeinit(void)
   mod_del_cmd(&links_msgtab);
 }
 
-const char *_version = "$Revision: 1.5 $";
+const char *_version = "$Revision: 1.6 $";
 #endif
 
 /*
@@ -78,27 +78,7 @@ static void
 m_links(struct Client *client_p, struct Client *source_p,
         int parc, char *parv[])
 {
-  if (!ConfigServerHide.flatten_links)
-  {
-    mo_links(client_p, source_p, parc, parv);
-    return;
-  }
-
-  send_message_file(source_p, &ConfigFileEntry.linksfile);
-
-/*
- * Print our own info so at least it looks like a normal links
- * then print out the file (which may or may not be empty)
- */
-  
-  sendto_one(source_p, form_str(RPL_LINKS),
-             MyConnect(source_p) ? me.name : me.id,
-             MyConnect(source_p) ? parv[0] : ID(source_p),
-             me.name, me.name, 0, me.info);
-      
-  sendto_one(source_p, form_str(RPL_ENDOFLINKS),
-             MyConnect(source_p) ? me.name : me.id, 
-             MyConnect(source_p) ? parv[0] : ID(source_p), "*");
+  mo_links(client_p, source_p, parc, parv);
 }
 
 static void

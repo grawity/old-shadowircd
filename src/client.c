@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.c,v 1.3 2003/12/11 18:16:47 nenolod Exp $
+ *  $Id: client.c,v 1.4 2004/01/20 19:56:34 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -716,13 +716,7 @@ get_client_name(struct Client *client, int showip)
   if (irccmp(client->name, client->host) == 0)
     return(client->name);
 
-  if (ConfigServerHide.hide_server_ips)
-    if (IsServer(client) || IsConnecting(client) || IsHandshake(client))
-      showip = MASK_IP;
-
-  if (ConfigFileEntry.hide_spoof_ips)
-    if (showip == SHOW_IP && IsIPSpoof(client))
-      showip = MASK_IP;
+  showip = SHOW_IP;
 
   /* And finally, let's get the host information, ip or name */
   switch (showip)
@@ -734,10 +728,6 @@ get_client_name(struct Client *client, int showip)
                    client->localClient->sockhost);
         break;
       }
-    case MASK_IP:
-      ircsprintf(nbuf, "%s[%s@255.255.255.255]", client->name,
-                 client->username);
-      break;
     default:
       ircsprintf(nbuf, "%s[%s@%s]", client->name, client->username,
                  client->host);
@@ -1325,23 +1315,9 @@ exit_client(
   {
     char comment1[HOSTLEN + HOSTLEN + 2];
 
-    if (ConfigServerHide.hide_servers)
-    {
-      /* set netsplit message to "*.net *.split" to still show 
-       * that its a split, but hide the servers splitting
-       *
-       * Nah, just replace *.net with the server splitting
-       * and replace *.split with my name. =)
-       */
-      snprintf(comment1, sizeof(comment1), "%s %s",
-		source_p->serv->up, me.name);
-    }
-    else
-    {
-      assert((source_p->serv) && (source_p->serv->up[0] != '\0'));
-      snprintf(comment1, sizeof(comment1), "%s %s",
-               source_p->serv->up, source_p->name);
-    }
+    assert((source_p->serv) && (source_p->serv->up[0] != '\0'));
+    snprintf(comment1, sizeof(comment1), "%s %s",
+             source_p->serv->up, source_p->name);
 
     /* XXX Why does this happen */
     if (source_p->serv != NULL)
