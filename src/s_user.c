@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.31 2004/02/18 18:06:17 nenolod Exp $
+ *  $Id: s_user.c,v 1.32 2004/02/18 18:07:33 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1359,6 +1359,8 @@ oper_up(struct Client *source_p)
   sendto_server (NULL, source_p, NULL, NOCAPS, NOCAPS, NOFLAGS,
                  ":%s SVSCLOAK %s :%s", me.name, source_p->name,
                  source_p->virthost);
+
+  source_p->flags |= FLAGS_USERCLOAK;
 
   sendto_realops_flags(UMODE_ALL, L_ALL, "%s (%s@%s) is now an operator",
                        source_p->name, source_p->username, source_p->host);
