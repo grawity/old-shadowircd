@@ -849,42 +849,6 @@ register_user (aClient * client_p, aClient * source_p, char *nick,
 #endif
       pwaconf = source_p->confs->value.aconf;
 
-      if (source_p->flags & FLAGS_DOID && !(source_p->flags & FLAGS_GOTID))
-	{
-	  /*
-	   * because username may point to user->username
-	   */
-	  char temp[USERLEN + 1];
-
-	  strncpyzt (temp, username, USERLEN + 1);
-	  *user->username = '~';
-	  (void) strncpy (&user->username[1], temp, USERLEN);
-	  user->username[USERLEN] = '\0';
-#ifdef IDENTD_COMPLAIN
-	  /*
-	   * tell them to install identd -Taner 
-	   */
-	  sendto_one (source_p,
-		      ":%s NOTICE %s :*** Notice -- It seems that you don't have identd installed on your host.",
-		      me.name, client_p->name);
-	  sendto_one (source_p,
-		      ":%s NOTICE %s :*** Notice -- If you wish to have your username show up without the ~ (tilde),",
-		      me.name, client_p->name);
-	  sendto_one (source_p,
-		      ":%s NOTICE %s :*** Notice -- then install identd.",
-		      me.name, client_p->name);
-	  /*
-	   * end identd hack
-	   */
-#endif
-	}
-#ifndef FOLLOW_IDENT_RFC
-      else if (source_p->flags & FLAGS_GOTID && *source_p->username != '-')
-	strncpyzt (user->username, source_p->username, USERLEN + 1);
-#endif
-      else if (username != user->username)	/* don't overlap */
-	strncpyzt (user->username, username, USERLEN + 1);
-
       if (!BadPtr (pwaconf->passwd)
 	  && !StrEq (source_p->passwd, pwaconf->passwd))
 	{
@@ -909,20 +873,6 @@ register_user (aClient * client_p, aClient * source_p, char *nick,
 	    }
 	}
 
-
-
-      /*
-       * Limit clients
-       */
-      /*
-       * We want to be able to have servers and F-line clients connect,
-       * so save room for "buffer" connections. Smaller servers may
-       * want to decrease this, and it should probably be just a
-       * percentage of the MAXCLIENTS... -Taner
-       */
-      /*
-       * Except "F:" clients 
-       */
       if ((Count.local >= (MAXCLIENTS - 10)) && !(find_fline (source_p)))
 	{
 	  sendto_snomask (SNOMASK_REJECTS, "Too many clients, rejecting %s[%s].",
@@ -1174,15 +1124,17 @@ register_user (aClient * client_p, aClient * source_p, char *nick,
         if (gline)
         {
 	  char tmpbuf[2048];
-          ircsprintf(tmpbuf, "You are banned from %s: %s (%s) (contact %s for more information)",
+	  char tmpbuf2[2048];
+          ircsprintf(tmpbuf, "banned from %s: %s (%s) (contact %s for more information)",
                 IRCNETWORK_NAME, gline->reason, gline->set_on, NETWORK_KLINE_ADDRESS);
-          sendto_one(source_p, ":%s NOTICE %s :*** %s", me.name, source_p->name, tmpbuf);
+          sendto_one(source_p, ":%s NOTICE %s :*** You are %s", me.name, source_p->name, tmpbuf);
+	  ircsprintf(tmpbuf2, "User is %s", tmpbuf);
 	  ircstp->is_ref++;
 	  ircstp->is_ref_1++;
 #ifdef THROTTLE_ENABLE
 	  throttle_force (source_p->hostip);
 #endif
-          exit_client(source_p, source_p, &me, tmpbuf);
+          exit_client(source_p, source_p, &me, tmpbuf2);
 	  return 0;
         }
  
@@ -1293,9 +1245,11 @@ register_user (aClient * client_p, aClient * source_p, char *nick,
       sendto_one (source_p, rpl_str (RPL_YOURHOST), me.name, nick,
 		  get_listener_name(source_p), version);
 
+#ifdef IRCII_KLUDGE
       sendto_one (source_p,
 		  "NOTICE %s :*** Your host is %s, running %s",
 		  nick, get_listener_name(source_p), version);
+#endif
 
       sendto_one (source_p, rpl_str (RPL_CREATED), me.name, nick, creation);
 
@@ -1305,10 +1259,6 @@ register_user (aClient * client_p, aClient * source_p, char *nick,
       show_isupport (source_p);
 
       send_lusers (source_p, source_p, 1, parv);
-
-      sendto_one (source_p,
-		  ":%s NOTICE %s :*** Notice -- motd was last changed at %s",
-		  me.name, nick, motd_last_changed_date);
 
       if (SHORT_MOTD == 1)
 	{
@@ -1396,33 +1346,6 @@ register_user (aClient * client_p, aClient * source_p, char *nick,
 	}
     }
 
-  /*
-   * If this is a remote client from a NON-Client capable server we wont have recieved the true hiddenhost for this user yet.
-   * However we will have recieved his usermodes so we know he is hidden or not.
-   * In order to correctly pass data along to other Client capable servers we need to create a hiddenhost for the user.
-   * The correct hiddenhost will be sent after the CLIENT in a SETHOST. This is mostly a cludge for backwards compactibility
-   * with older Ultimate3 alphas.
-   */
-  /*
-   * OK here we go now .... it is not possible to transfer the _REAL_ hostip
-   * to our servers :( .. but we want to use the advanteges of CLIENT/NICKIP
-   * We spimly send no ip to him (under ipv6 ::) will be displayed to get the
-   * real ip a oper needs to query the server the user is on (/whois server nick) - Againaway
-   */
-  if (IsHidden (source_p))
-    {
-#ifndef INET6
-      if (strlen (user->virthost) <= 2)	/* smaller then 2 ... there is no virthost */
-	make_virthost (source_p->hostip, user->host, user->virthost);
-#else
-      /* some question whitch may be interesting
-       * We are get the virthost from our link .. But why do we generate it again ? (source_p->hostip == ::)
-       * Coz we didnt trust him ? But he need to trust him ... else we are lost. (source_p->hostip != ::)
-       */
-      if (strlen (user->virthost) <= 2)	/* smaller then 2 ... there is no virthost */
-	make_ipv6virthost (source_p->hostip, user->host, user->virthost);
-#endif
-    }
   send_umode (NULL, source_p, 0, SEND_UMODES, ubuf);
   if (!*ubuf)
     {
@@ -1449,32 +1372,6 @@ register_user (aClient * client_p, aClient * source_p, char *nick,
 				   htonl (source_p->ip.s_addr),
 				   source_p->info);
 
-  sendto_nickip_servs_butone (1, client_p,
-			      "NICK %s %d %ld %s %s %s %s %lu %lu :%s",
-			      nick, source_p->hopcount + 1, source_p->tsinfo,
-			      ubuf, user->username, user->host, user->server,
-			      source_p->user->servicestamp,
-			      htonl (source_p->ip.s_addr), source_p->info);
-
-  sendto_nickip_servs_butone (0, client_p,
-			      "NICK %s %d %ld %s %s %s %s %lu :%s", nick,
-			      source_p->hopcount + 1, source_p->tsinfo, ubuf,
-			      user->username, user->host, user->server,
-			      source_p->user->servicestamp, source_p->info);
-
-  /*
-   * If the client has a hiddenhost, tell the other servers about it. But _NOT_ CLIENT capab servers
-   * as they will already have recieved this.
-   * This is a very ugly cludge to ensure that the hiddenhost is sent out.
-   * This will send out double messages and is only a temporary cludge till a24.
-   */
-  if (IsHidden (source_p))
-    {
-      sendto_clientcapab_servs_butone (0, client_p, ":%s SETHOST %s %s",
-				       me.name, nick,
-				       source_p->user->virthost);
-    }
-
   if (MyClient (source_p))
     {
       /* if the I:line doesn't have a password and the user does, send it over to NickServ */
@@ -1495,40 +1392,10 @@ register_user (aClient * client_p, aClient * source_p, char *nick,
       if (sbuf[1])
 	send_smode (client_p, source_p, 0, SEND_SMODES, sbuf);
 
-      /*
-       * Ugly hack
-       */
-      if (irccmp (USERS_AUTO_JOIN, "0") != 0)
-	{
-	  strncpyzt (tmpstr2, USERS_AUTO_JOIN, 512);
-	}
-      if (irccmp (USERS_AUTO_JOIN, "0") != 0)
-	{
-	  char *chans[3] = {
-	    source_p->name, tmpstr2, NULL
-	  };
-
-
-	  sendto_one (source_p,
-		      ":%s NOTICE %s :*** Notice -- Network has Auto Join enabled for Channel(s): \2%s\2",
-		      me.name, source_p->name, USERS_AUTO_JOIN);
-
-	  (void) m_join (source_p, source_p, 3, chans);
-
-	}
-
     }
 
   return 0;
 }
-
-/*
- * Code provided by orabidoo
- */
-/*
- * a random number generator loosely based on RC5; assumes ints are at
- * least 32 bit
- */
 
 unsigned long
 my_rand ()
