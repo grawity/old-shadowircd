@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: numeric.h,v 1.7 2003/12/18 18:12:06 nenolod Exp $
+ *  $Id: numeric.h,v 1.8 2003/12/19 02:12:08 nenolod Exp $
  */
 
 #ifndef INCLUDED_numeric_h
@@ -466,6 +466,8 @@ extern const char *get_locale(void);
 	RPL_DUMPRPL	     641	unreal
 	RPL_EODUMP	     642	unreal
 */
+
+#define RPL_FORWARDING       701
 
 #define RPL_MODLIST          702
 #define RPL_ENDOFMODLIST     703

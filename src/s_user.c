@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_user.c,v 1.10 2003/12/13 02:12:27 nenolod Exp $
+ *  $Id: s_user.c,v 1.11 2003/12/19 02:12:08 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -1354,7 +1354,6 @@ void
 oper_up(struct Client *source_p)
 {
   unsigned int old = (source_p->umodes & ALL_UMODES);
-  const char *operprivs = "";
   struct AccessItem *oconf;
 
   SetOper(source_p);

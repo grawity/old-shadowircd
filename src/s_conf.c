@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: s_conf.c,v 1.4 2003/12/13 02:12:27 nenolod Exp $
+ *  $Id: s_conf.c,v 1.5 2003/12/19 02:12:08 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -243,6 +243,7 @@ make_conf_item(ConfType type)
       status = CONF_CLIENT;
       break;
 
+    case CLOAK_TYPE:
     case OPER_TYPE:
       status = CONF_OPERATOR;
       dlinkAdd(conf, &conf->node, &oconf_items);
@@ -780,6 +781,7 @@ report_confitem_types(struct Client *source_p, ConfType type)
   case GLINE_TYPE:
   case CRESV_TYPE:
   case NRESV_TYPE:
+  case CLOAK_TYPE:
   case CLUSTER_TYPE:
     break;
   }

@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: channel_mode.c,v 1.13 2003/12/18 18:12:06 nenolod Exp $
+ *  $Id: channel_mode.c,v 1.14 2003/12/19 02:12:08 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -61,6 +61,10 @@ static void chm_simple(struct Client *, struct Client *, struct Channel *,
                        int, int *, char **, int *, int, int, char, void *,
                        const char *chname);
 
+static void chm_operonly(struct Client *, struct Client *, struct Channel *,
+                       int, int *, char **, int *, int, int, char, void *,
+                       const char *chname);
+
 static void chm_limit(struct Client *, struct Client *, struct Channel *,
                       int, int *, char **, int *, int, int, char, void *,
                       const char *chname);
@@ -70,6 +74,10 @@ static void chm_key(struct Client *, struct Client *, struct Channel *,
                     const char *chname);
 
 static void chm_linktarget(struct Client *, struct Client *, struct Channel *,
+                    int, int *, char **, int *, int, int, char, void *,
+                    const char *chname);
+
+static void chm_forward(struct Client *, struct Client *, struct Channel *,
                     int, int *, char **, int *, int, int, char, void *,
                     const char *chname);
 
@@ -349,6 +357,8 @@ static const struct mode_letter
   { MODE_TOPICLOCK,  'T' },
   { MODE_FREEINVITE, 'F' },
   { MODE_STICKYNICK, 'N' },
+  { MODE_REGONLY,    'E' },
+  { MODE_OPERONLY,   'O' },
   { 0, '\0' }
 };
 
@@ -764,6 +774,74 @@ chm_simple(struct Client *client_p, struct Client *source_p, struct Channel *chp
   /* dont allow halfops to set +-p, as this controls whether they can set
    * +-h or not.. all other simple modes are ok   
    */ 
+  if ((alev < CHACCESS_HALFOP) ||
+      ((mode_type == MODE_PRIVATE) && (alev < CHACCESS_CHANOP)))
+  {
+    if (!(*errors & SM_ERR_NOOPS))
+      sendto_one(source_p, form_str(alev == CHACCESS_NOTONCHAN ?
+                                    ERR_NOTONCHANNEL : ERR_CHANOPRIVSNEEDED),
+                 me.name, source_p->name, chname);
+    *errors |= SM_ERR_NOOPS;
+    return;
+  }
+
+  /* If have already dealt with this simple mode, ignore it */
+  if (simple_modes_mask & mode_type)
+    return;
+
+  simple_modes_mask |= mode_type;
+
+  /* setting + */
+  /* Apparently, (though no one has ever told the hybrid group directly) 
+   * admins don't like redundant mode checking. ok. It would have been nice 
+   * if you had have told us directly. I've left the original code snippets 
+   * in place. 
+   * 
+   * -Dianora 
+   */ 
+  if ((dir == MODE_ADD)) /* && !(chptr->mode.mode & mode_type)) */
+  {
+    chptr->mode.mode |= mode_type;
+
+    mode_changes[mode_count].letter = c;
+    mode_changes[mode_count].dir = MODE_ADD;
+    mode_changes[mode_count].caps = 0;
+    mode_changes[mode_count].nocaps = 0;
+    mode_changes[mode_count].id = NULL;
+    mode_changes[mode_count].mems = ALL_MEMBERS;
+    mode_changes[mode_count++].arg = NULL;
+  }
+  else if ((dir == MODE_DEL)) /* && (chptr->mode.mode & mode_type)) */
+  {
+    /* setting - */
+
+    chptr->mode.mode &= ~mode_type;
+
+    mode_changes[mode_count].letter = c;
+    mode_changes[mode_count].dir = MODE_DEL;
+    mode_changes[mode_count].caps = 0;
+    mode_changes[mode_count].nocaps = 0;
+    mode_changes[mode_count].mems = ALL_MEMBERS;
+    mode_changes[mode_count].id = NULL;
+    mode_changes[mode_count++].arg = NULL;
+  }
+}
+
+static void
+chm_operonly(struct Client *client_p, struct Client *source_p, struct Channel *chptr,
+           int parc, int *parn, char **parv, int *errors, int alev, int dir,
+           char c, void *d, const char *chname)
+{
+  long mode_type;
+
+  mode_type = (long)d;
+
+  /* dont allow halfops to set +-p, as this controls whether they can set
+   * +-h or not.. all other simple modes are ok   
+   */ 
+  if (!IsOper(source_p))
+    return;
+
   if ((alev < CHACCESS_HALFOP) ||
       ((mode_type == MODE_PRIVATE) && (alev < CHACCESS_CHANOP)))
   {
@@ -1898,6 +1976,82 @@ chm_linktarget(struct Client *client_p, struct Client *source_p,
   }
 }
 
+static void
+chm_forward(struct Client *client_p, struct Client *source_p,
+        struct Channel *chptr, int parc, int *parn,
+        char **parv, int *errors, int alev, int dir, char c, void *d,
+        const char *chname)
+{
+  int i;
+  char *key;
+
+  if (!IsOper(source_p))
+    return;
+
+  if (alev < CHACCESS_CHANOWNER)
+  {
+    if (!(*errors & SM_ERR_NOOPS))
+      sendto_one(source_p, form_str(alev == CHACCESS_NOTONCHAN ?
+                                    ERR_NOTONCHANNEL : ERR_CHANOPRIVSNEEDED),
+                 me.name, source_p->name, chname);
+    *errors |= SM_ERR_NOOPS;
+    return;
+  }
+
+  if (dir == MODE_QUERY)
+    return;
+
+  if ((dir == MODE_ADD) && parc > *parn)
+  {
+    key = parv[(*parn)++];
+
+    if (MyClient(source_p))
+      fix_key(key);
+    else
+      fix_key_old(key);
+
+    if (*key == '\0')
+      return;
+
+    assert(key[0] != ' ');
+    strlcpy(chptr->mode.forwardtarget, key, sizeof(chptr->mode.forwardtarget));
+
+    /* if somebody does MODE #channel +kk a b, accept latter --fl */
+    for (i = 0; i < mode_count; i++)
+    {
+      if (mode_changes[i].letter == c && mode_changes[i].dir == MODE_ADD)
+        mode_changes[i].letter = 0;
+    }
+
+    mode_changes[mode_count].letter = c;
+    mode_changes[mode_count].dir = MODE_ADD;
+    mode_changes[mode_count].caps = 0;
+    mode_changes[mode_count].nocaps = 0;
+    mode_changes[mode_count].mems = ALL_MEMBERS;
+    mode_changes[mode_count].id = NULL;
+    mode_changes[mode_count++].arg = chptr->mode.linktarget;
+  }
+  else if (dir == MODE_DEL)
+  {
+    if (parc > *parn)
+      (*parn)++;
+
+    if ((*chptr->mode.forwardtarget) == '\0')
+      return;
+
+    *chptr->mode.forwardtarget = '\0';
+
+    mode_changes[mode_count].letter = c;
+    mode_changes[mode_count].dir = MODE_DEL;
+    mode_changes[mode_count].caps = 0;
+    mode_changes[mode_count].nocaps = 0;
+    mode_changes[mode_count].mems = ALL_MEMBERS;
+    mode_changes[mode_count].id = NULL;
+    mode_changes[mode_count++].arg = "*";
+    mode_changes[mode_count++].arg = "*";
+  }
+}
+
 struct ChannelMode
 {
   void (*func) (struct Client *client_p, struct Client *source_p,
@@ -1915,7 +2069,7 @@ static struct ChannelMode ModeTable[255] =
   {chm_nosuch, NULL},                             /* B */
   {chm_nosuch, NULL},                             /* C */
   {chm_nosuch, NULL},                             /* D */
-  {chm_nosuch, NULL},                             /* E */
+  {chm_simple, (void *) MODE_REGONLY},           /* E */
   {chm_owneronly, (void *) MODE_FREEINVITE},      /* F */
   {chm_nosuch, NULL},                             /* G */
   {chm_nosuch, NULL},                             /* H */
@@ -1925,7 +2079,7 @@ static struct ChannelMode ModeTable[255] =
   {chm_linktarget, NULL},                         /* L */
   {chm_nosuch, NULL},                             /* M */
   {chm_simple, (void *) MODE_STICKYNICK},         /* N */
-  {chm_nosuch, NULL},                             /* O */
+  {chm_operonly, NULL},                            /* O */
   {chm_owneronly, (void *) MODE_PEACE},           /* P */
   {chm_nosuch, NULL},                             /* Q */
   {chm_nosuch, NULL},                             /* R */
@@ -1948,7 +2102,7 @@ static struct ChannelMode ModeTable[255] =
   {chm_simple, (void *) MODE_NOCOLOR},            /* c */
   {chm_restrict, NULL},                           /* d */
   {chm_except, NULL},                             /* e */
-  {chm_nosuch, NULL},                             /* f */
+  {chm_forward, NULL},                            /* f */
   {chm_nosuch, NULL},                             /* g */
   {chm_hop, NULL},                                /* h */
   {chm_simple, (void *) MODE_INVITEONLY},         /* i */

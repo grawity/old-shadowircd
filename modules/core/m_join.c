@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: m_join.c,v 1.3 2003/12/05 17:48:04 nenolod Exp $
+ *  $Id: m_join.c,v 1.4 2003/12/19 02:12:08 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -87,7 +87,7 @@ _moddeinit(void)
   mod_del_cmd(&join_msgtab);
 }
 
-const char *_version = "$Revision: 1.3 $";
+const char *_version = "$Revision: 1.4 $";
 #endif
 
 /* m_join()
@@ -559,8 +559,12 @@ build_target_list(struct Client *client_p, struct Client *source_p,
       }
     }
 
+    if (chptr->mode.forwardtarget)
+      chptr = hash_find_channel(chptr->mode.forwardtarget);
+
     if (is_target(chptr))
       continue;
+
 
     targets[ntargets].chptr = chptr;
     targets[ntargets].key = key;

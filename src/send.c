@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: send.c,v 1.4 2003/12/12 17:58:42 nenolod Exp $
+ *  $Id: send.c,v 1.5 2003/12/19 02:12:08 nenolod Exp $
  */
 
 #include "stdinc.h"
@@ -257,9 +257,6 @@ slinkq_unblocked(int fd, struct Client *client_p)
 void
 send_queued_write(struct Client *to)
 {
-#ifdef HAVE_LIBCRYPTO
-  fde_t *F = (to->localClient->fd > -1)? &fd_table[to->localClient->fd] : NULL;
-#endif
   int retlen;
 #ifndef NDEBUG
   struct hook_io_data hdata;
