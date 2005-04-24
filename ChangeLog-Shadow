@@ -1,3 +1,7 @@
+ShadowIRCd 4.0 alpha17 (public):
+
+* Changed "Ping timeout: <number> seconds" to "Ping timeout"
+
 ShadowIRCd 4.0 alpha16 (public):
 
 * Implement keyless cloaking (MD5).

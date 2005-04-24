@@ -21,7 +21,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  *  USA
  *
- *  $Id: client.c,v 1.1 2004/07/29 15:27:25 nenolod Exp $
+ *  $Id: client.c,v 1.2 2005/04/24 23:50:48 eddie Exp $
  */
 #include "stdinc.h"
 #include "config.h"
@@ -303,8 +303,7 @@ check_pings_list(dlink_list * list)
 					     log_client_name(client_p, HIDE_IP));
 				}
 				(void) ircsprintf(scratch,
-						  "Ping timeout: %d seconds",
-						  (int) (CurrentTime - client_p->lasttime));
+						  "Ping timeout");
 
 				(void) exit_client(client_p, client_p, &me, scratch);
 				continue;
